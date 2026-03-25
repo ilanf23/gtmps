@@ -143,37 +143,38 @@ const HeroSection = () => {
             ))}
           </div>
 
-          {/* Definition callout block */}
-          <div
-            className="mt-12 scroll-reveal text-center"
-            style={{
-              background: "rgba(184,147,58,0.08)",
-              borderTop: "3px solid #B8933A",
-              borderBottom: "3px solid #B8933A",
-              padding: "32px 48px",
-              maxWidth: 800,
-              margin: "48px auto 0",
-            }}
-          >
-            <span
-              className="font-mono uppercase block"
-              style={{ fontSize: 9, color: "#B8933A", letterSpacing: "0.2em", marginBottom: 12 }}
-            >
-              THE DEFINITION THAT CHANGES EVERYTHING
-            </span>
-            <p
-              className="font-serif italic"
-              style={{ fontSize: "clamp(20px, 2.5vw, 26px)", color: "#0D1117", lineHeight: 1.3 }}
-            >
-              "GTM for professional services is not a plan for entering a new market. It is a system for activating the one you already own."
-            </p>
-          </div>
         </div>
 
         {/* Right column - desktop */}
         <div className="hidden lg:block w-[45%]">
           <BookDisplay />
         </div>
+      </div>
+
+      {/* Definition callout block */}
+      <div
+        className="scroll-reveal text-center mx-6 md:mx-auto"
+        style={{
+          background: "rgba(184,147,58,0.08)",
+          borderTop: "3px solid #B8933A",
+          borderBottom: "3px solid #B8933A",
+          padding: "32px 48px",
+          maxWidth: 800,
+          marginBottom: 0,
+        }}
+      >
+        <span
+          className="font-mono uppercase block"
+          style={{ fontSize: 9, color: "#B8933A", letterSpacing: "0.2em", marginBottom: 12 }}
+        >
+          THE DEFINITION THAT CHANGES EVERYTHING
+        </span>
+        <p
+          className="font-serif italic"
+          style={{ fontSize: "clamp(20px, 2.5vw, 26px)", color: "rgba(255,255,255,0.85)", lineHeight: 1.3 }}
+        >
+          "GTM for professional services is not a plan for entering a new market. It is a system for activating the one you already own."
+        </p>
       </div>
     </section>
   );
