@@ -1,3 +1,5 @@
+import scienceOfStoryCover from "@/assets/science-of-story-cover.png";
+
 const MissionSection = () => {
   return (
     <section
@@ -66,16 +68,40 @@ const MissionSection = () => {
 
         {/* Callout box */}
         <div
-          className="mt-14 scroll-reveal rounded-lg"
+          className="mt-14 scroll-reveal rounded-xl flex flex-col sm:flex-row items-start gap-6"
           style={{
-            background: "rgba(184,147,58,0.06)",
-            borderLeft: "3px solid #B8933A",
+            background: "#F5F0E8",
             padding: "28px 32px",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
           }}
         >
-          <p className="font-sans" style={{ fontSize: 15, lineHeight: 1.75, color: "rgba(255,255,255,0.55)" }}>
-            This is the same research model Adam used for The Science of Story. 500 interviews, 100 podcast episodes, one book that changed how brands think about narrative. GTM for Professional Services applies the same method to the problem professional services firms have never had a framework to solve.
-          </p>
+          <a
+            href="https://www.amazon.com/Science-Story-Brand-Reflection-Culture/dp/0999876503"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
+            <img
+              src={scienceOfStoryCover}
+              alt="The Science of Story book cover"
+              className="rounded-md shadow-md"
+              style={{ width: 80 }}
+            />
+          </a>
+          <div>
+            <p className="font-sans" style={{ fontSize: 15, lineHeight: 1.75, color: "#1a1a1a" }}>
+              This is the same research model Adam used for The Science of Story. 500 interviews, 100 podcast episodes, one book that changed how brands think about narrative. GTM for Professional Services applies the same method to the problem professional services firms have never had a framework to solve.
+            </p>
+            <a
+              href="https://www.amazon.com/Science-Story-Brand-Reflection-Culture/dp/0999876503"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-gold inline-block mt-3 hover:underline"
+              style={{ fontSize: 12, letterSpacing: "0.05em" }}
+            >
+              View on Amazon →
+            </a>
+          </div>
         </div>
       </div>
     </section>
