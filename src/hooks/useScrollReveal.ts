@@ -16,6 +16,15 @@ export function useScrollReveal() {
     const elements = document.querySelectorAll(".scroll-reveal");
     elements.forEach((el) => observer.observe(el));
 
-    return () => observer.disconnect();
+    // Mark the page as ready so CSS can safely hide un-revealed elements.
+    // Use requestAnimationFrame to ensure observers are attached first.
+    requestAnimationFrame(() => {
+      document.documentElement.classList.add("reveal-ready");
+    });
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove("reveal-ready");
+    };
   }, []);
 }

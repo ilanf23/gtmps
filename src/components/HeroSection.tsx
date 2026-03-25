@@ -30,7 +30,7 @@ const HeroSection = () => {
         </div>
 
         {/* Left column */}
-        <div className="w-full lg:w-[55%] scroll-reveal">
+        <div className="w-full lg:w-[55%]">
           {/* Eyebrow */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-px bg-gold" />
