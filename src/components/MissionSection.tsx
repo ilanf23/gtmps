@@ -235,7 +235,7 @@ const MissionSection = () => {
 
         {/* Callout box */}
         <div
-          className="mt-14 scroll-reveal rounded-2xl flex flex-col sm:flex-row items-start gap-6"
+          className="mt-14 rounded-2xl flex flex-col sm:flex-row items-start gap-6"
           style={{
             background: "linear-gradient(135deg, #F5F0E8 0%, #EDE7DB 100%)",
             padding: "32px 36px",

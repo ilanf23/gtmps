@@ -94,16 +94,17 @@
 
 /* Scroll animations — fail-safe: content visible by default.
    Only hidden when JS has confirmed observers are attached. */
+/* Visible by default. Only hidden when JS confirms it's off-screen. */
 .scroll-reveal {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
-.reveal-ready .scroll-reveal {
+.scroll-reveal.reveal-pending {
   opacity: 0;
   transform: translateY(20px);
 }
-.reveal-ready .scroll-reveal.visible {
+.scroll-reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
