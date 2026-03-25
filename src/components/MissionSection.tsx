@@ -90,7 +90,7 @@ const MissionSection = () => {
       <div className="max-w-[1080px] mx-auto">
         {/* Header */}
         <div className="max-w-[780px]">
-          <div className="scroll-reveal">
+          <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-px bg-gold" />
               <span className="font-mono uppercase tracking-[0.2em] text-gold" style={{ fontSize: 10 }}>
@@ -100,14 +100,14 @@ const MissionSection = () => {
           </div>
 
           <h2
-            className="font-display font-black text-text-dark scroll-reveal"
+            className="font-display font-black text-text-dark"
             style={{ fontSize: "clamp(36px, 4.5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}
           >
             Professional services firms deserve marketing as sophisticated as the work they sell.
           </h2>
 
           <p
-            className="font-serif italic text-gold mt-4 scroll-reveal"
+            className="font-serif italic text-gold mt-4"
             style={{ fontSize: "clamp(20px, 2.5vw, 28px)" }}
           >
             Nobody built them a growth engine. Until now.
@@ -172,7 +172,7 @@ const MissionSection = () => {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center justify-center gap-4 my-16 scroll-reveal">
+        <div className="flex items-center justify-center gap-4 my-16">
           <div className="flex-1 h-px" style={{ background: "rgba(0,0,0,0.08)" }} />
           <span
             className="font-mono uppercase tracking-[0.2em]"
@@ -235,7 +235,7 @@ const MissionSection = () => {
 
         {/* Callout box */}
         <div
-          className="mt-14 scroll-reveal rounded-2xl flex flex-col sm:flex-row items-start gap-6"
+          className="mt-14 rounded-2xl flex flex-col sm:flex-row items-start gap-6"
           style={{
             background: "linear-gradient(135deg, #F5F0E8 0%, #EDE7DB 100%)",
             padding: "32px 36px",

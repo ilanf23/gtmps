@@ -7,6 +7,8 @@ export function useScrollReveal() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
+            entry.target.classList.remove("reveal-pending");
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -14,17 +16,17 @@ export function useScrollReveal() {
     );
 
     const elements = document.querySelectorAll(".scroll-reveal");
-    elements.forEach((el) => observer.observe(el));
-
-    // Mark the page as ready so CSS can safely hide un-revealed elements.
-    // Use requestAnimationFrame to ensure observers are attached first.
-    requestAnimationFrame(() => {
-      document.documentElement.classList.add("reveal-ready");
+    elements.forEach((el) => {
+      // If already in viewport, reveal immediately
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add("visible");
+      } else {
+        el.classList.add("reveal-pending");
+        observer.observe(el);
+      }
     });
 
-    return () => {
-      observer.disconnect();
-      document.documentElement.classList.remove("reveal-ready");
-    };
+    return () => observer.disconnect();
   }, []);
 }
