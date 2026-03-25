@@ -68,6 +68,10 @@ const ApplySection = () => {
           We review every application personally before confirming a session. We are prioritizing firms between $5M and $100M in revenue with an active business development or marketing function where the managing partner is genuinely involved in growth decisions. If your firm is outside this profile, we will let you know within 48 hours.
         </p>
 
+        <p className="font-serif italic mt-4 scroll-reveal" style={{ fontSize: 16, color: "#5A6A7A" }}>
+          If your firm has ever wondered why every GTM playbook you have tried was built for someone else, this research session is the answer.
+        </p>
+
         <p className="font-mono text-gold mt-4 mb-10 scroll-reveal" style={{ fontSize: 11, letterSpacing: "0.12em" }}>
           46 of 50 sessions remaining · Research open March 2026 · Manuscript enters final draft Q3 2026
         </p>

@@ -49,6 +49,10 @@ const BookSection = () => {
           The Relationship Revenue OS
         </p>
 
+        <p className="font-sans mt-4 mx-auto scroll-reveal" style={{ fontSize: 15, color: "rgba(13,17,23,0.6)", textAlign: "center", maxWidth: 600, marginBottom: 32 }}>
+          The first GTM system built for the market you already own. Not for finding strangers. For activating relationships.
+        </p>
+
         {/* Book display */}
         <div className="relative mx-auto mt-12 scroll-reveal max-w-[320px] sm:max-w-[520px] h-[220px] sm:h-[300px]">
           <img

@@ -29,7 +29,7 @@ const Footer = () => {
               mabbly
             </span>
             <span className="font-sans block mt-1" style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
-              Signal Activated Growth for Professional Services
+              GTM for the market you already own.
             </span>
           </div>
 

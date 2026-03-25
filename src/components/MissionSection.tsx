@@ -41,7 +41,7 @@ const MissionSection = () => {
             {
               num: "01",
               title: "The Problem Has a Name.",
-              body: "The Dead Zone is not bad luck or a difficult market. It is the predictable result of applying the wrong GTM architecture to a relationship driven business. This book names it, quantifies it, and replaces it entirely.",
+              body: "The Dead Zone is not bad luck or a difficult market. It is the predictable result of applying the wrong GTM architecture to a relationship driven business. This book names it, quantifies it, and replaces it entirely. It also gives professional services GTM its first correct definition.",
             },
             {
               num: "02",
