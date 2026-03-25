@@ -39,6 +39,11 @@
     --gold: #B8933A;
     --gold-light: rgba(184,147,58,0.08);
     --gold-border: rgba(184,147,58,0.2);
+    --cream: 38 33% 94%;
+    --warm-white: 0 0% 100%;
+    --soft-navy: 216 30% 15%;
+    --text-dark: 0 0% 10%;
+    --text-body: 0 0% 29%;
     --sage: #3D5A4A;
     --rust: #8B3A2A;
     --slate: #5A6A7A;
