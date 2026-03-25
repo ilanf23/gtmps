@@ -54,7 +54,7 @@ const BookSection = () => {
         </p>
 
         {/* Book display */}
-        <div className="relative mx-auto mt-12 scroll-reveal max-w-[320px] sm:max-w-[520px] h-[220px] sm:h-[300px]">
+        <div className="relative mx-auto mt-8 max-w-[320px] sm:max-w-[520px] h-[220px] sm:h-[300px]">
           <img
             src={bookCover}
             alt="GTM for Professional Services"
