@@ -38,8 +38,6 @@ const EpisodeSection = () => {
         <div className="flex flex-wrap justify-center gap-3 mt-8 scroll-reveal">
           {[
             { label: "Signal Activated Growth Podcast →", href: "#" },
-            { label: "Listen on Spotify →", href: "#" },
-            { label: "Listen on Apple Podcasts →", href: "#" },
           ].map((link) => (
             <a
               key={link.label}
