@@ -155,7 +155,20 @@ const ApplySection = () => {
           ) : (
             <button
               type="button"
-              onClick={() => setSubmitted(true)}
+              onClick={() => {
+                const body = [
+                  `Full Name: ${form.name}`,
+                  `Firm Name: ${form.firm}`,
+                  `Role: ${form.role}`,
+                  `Firm Type: ${form.firmType}`,
+                  `Annual Revenue: ${form.revenue}`,
+                  `Employees: ${form.employees}`,
+                  `Biggest GTM/BD Challenge: ${form.challenge}`,
+                  `How they heard about us: ${form.source}`,
+                ].join("\n");
+                window.location.href = `mailto:adam@mabbly.com?subject=${encodeURIComponent("Research Session Application")}&body=${encodeURIComponent(body)}`;
+                setSubmitted(true);
+              }}
               className="w-full font-sans font-bold cursor-pointer border-none rounded-full transition-all duration-200 hover:scale-[1.01] hover:bg-[#C9A845] mt-2"
               style={{
                 background: "#B8933A",
