@@ -68,9 +68,7 @@ const HeroSection = () => {
               maxWidth: 480,
             }}
           >
-            Adam Fridman and Richard Ashbaugh are conducting 50 Discovery
-            Sessions with managing partners. The session is free. The research
-            shapes the book. The insight is yours to keep.
+            GTM has one universally accepted definition: a plan for bringing a product to a market that does not know you yet. That definition has never applied to professional services firms. This book fixes that. Adam Fridman and Richard Ashbaugh are conducting 50 Discovery Sessions with managing partners as the research foundation. The session is free. The insight is yours to keep.
           </p>
 
           {/* Urgency strip */}
