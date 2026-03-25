@@ -172,7 +172,7 @@ const MissionSection = () => {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center justify-center gap-4 my-16 scroll-reveal">
+        <div className="flex items-center justify-center gap-4 my-16">
           <div className="flex-1 h-px" style={{ background: "rgba(0,0,0,0.08)" }} />
           <span
             className="font-mono uppercase tracking-[0.2em]"
