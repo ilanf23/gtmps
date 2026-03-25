@@ -120,14 +120,14 @@ const HeroSection = () => {
           </div>
 
           {/* Stat strip */}
-          <div className="flex gap-8 mt-12">
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 mt-12">
             {[
               { num: "96%", label: "of PS firm CRM contacts are dormant" },
               { num: "70%", label: "of revenue from existing relationships" },
               { num: "1.3%", label: "average reply rate, generic outreach" },
             ].map((stat) => (
-              <div key={stat.num} className="flex-shrink-0">
-                <span className="font-display font-black text-gold block" style={{ fontSize: 36 }}>
+              <div key={stat.num}>
+                <span className="font-display font-black text-gold block text-2xl sm:text-4xl">
                   {stat.num}
                 </span>
                 <span

@@ -52,7 +52,7 @@ const Footer = () => {
             ))}
           </div>
 
-          <div className="text-right">
+          <div className="md:text-right">
             <span className="font-sans block" style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
               GTM for Professional Services © 2026 Mabbly LLC
             </span>

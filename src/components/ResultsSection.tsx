@@ -18,13 +18,13 @@ const ResultsSection = () => {
           RESULTS FROM THE SYSTEM THE BOOK DOCUMENTS
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 stagger-children">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 stagger-children">
           {results.map((r) => (
             <div
               key={r.num}
-              className="glass-card-light rounded-xl text-center p-8 scroll-reveal"
+              className="glass-card-light rounded-xl text-center p-5 sm:p-8 scroll-reveal"
             >
-              <span className="font-display font-black text-gold block" style={{ fontSize: 48 }}>
+              <span className="font-display font-black text-gold block text-4xl sm:text-5xl">
                 {r.num}
               </span>
               <span

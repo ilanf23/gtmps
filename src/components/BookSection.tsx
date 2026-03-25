@@ -140,7 +140,8 @@ const BookSection = () => {
         >
           PUBLICATION TIMELINE
         </p>
-        <div className="relative mx-auto scroll-reveal" style={{ maxWidth: 680, height: 60 }}>
+        {/* Timeline - horizontal on md+, vertical on mobile */}
+        <div className="hidden md:block relative mx-auto scroll-reveal" style={{ maxWidth: 680, height: 60 }}>
           <div
             className="absolute top-[28px] left-0 right-0"
             style={{ height: 2, background: "rgba(0,0,0,0.1)" }}
@@ -164,6 +165,27 @@ const BookSection = () => {
                 }}
               />
               <span className="font-mono mt-1" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>
+                {m.date}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="flex md:hidden flex-col gap-3 mt-2 scroll-reveal max-w-[280px] mx-auto">
+          {milestones.map((m) => (
+            <div key={m.label} className="flex items-center gap-3">
+              <span
+                className="rounded-full flex-shrink-0"
+                style={{
+                  width: 10,
+                  height: 10,
+                  background: m.filled ? "#B8933A" : "transparent",
+                  border: m.filled ? "none" : "1.5px solid rgba(0,0,0,0.3)",
+                }}
+              />
+              <span className="font-mono" style={{ fontSize: 10, color: "rgba(0,0,0,0.5)" }}>
+                {m.label}
+              </span>
+              <span className="font-mono ml-auto" style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>
                 {m.date}
               </span>
             </div>

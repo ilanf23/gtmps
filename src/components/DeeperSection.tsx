@@ -79,7 +79,7 @@ const DeeperSection = () => {
               Each article is a chapter preview. New articles publish weekly as research sessions complete.
             </p>
           </div>
-          <div className="flex gap-0 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 w-full md:w-auto">
             {subscribed ? (
               <span className="font-serif italic text-sage" style={{ fontSize: 16 }}>
                 Subscribed. Watch your inbox.
@@ -91,7 +91,7 @@ const DeeperSection = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@firm.com"
-                  className="font-sans flex-1 md:w-56 outline-none rounded-l-full"
+                  className="font-sans flex-1 md:w-56 outline-none rounded-full sm:rounded-l-full sm:rounded-r-none"
                   style={{
                     background: "rgba(255,255,255,0.06)",
                     border: "1px solid rgba(255,255,255,0.18)",
@@ -104,7 +104,7 @@ const DeeperSection = () => {
                 />
                 <button
                   onClick={() => email && setSubscribed(true)}
-                  className="font-sans font-semibold rounded-r-full hover:bg-[#C9A845] transition-colors duration-200"
+                  className="font-sans font-semibold rounded-full sm:rounded-r-full sm:rounded-l-none hover:bg-[#C9A845] transition-colors duration-200"
                   style={{
                     background: "#B8933A",
                     color: "#0D1117",
