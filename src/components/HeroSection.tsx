@@ -181,90 +181,76 @@ const HeroSection = () => {
 };
 
 const BookDisplay = () => (
-  <div
-    className="relative mx-auto"
-    style={{ maxWidth: 380, height: 360, animation: "bookFloat 6s ease-in-out infinite" }}
-  >
-    {/* Glow behind book */}
+  <div className="relative mx-auto flex flex-col items-center" style={{ maxWidth: 420 }}>
+    {/* Gold glow */}
     <div
-      className="absolute"
+      className="absolute rounded-full pointer-events-none"
       style={{
-        width: 200,
-        height: 200,
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(184,147,58,0.15) 0%, transparent 70%)",
-        left: "50%",
+        width: 360,
+        height: 360,
+        background: "radial-gradient(circle, rgba(184,147,58,0.14) 0%, rgba(184,147,58,0) 70%)",
         top: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    />
-
-    {/* Front cover */}
-    <img
-      src={bookCover}
-      alt="GTM for Professional Services"
-      className="absolute left-4 top-0"
-      style={{
-        width: 180,
-        aspectRatio: "2/3",
-        transform: "rotate(-4deg)",
-        boxShadow: "0 32px 64px rgba(0,0,0,0.6)",
-        zIndex: 2,
-        objectFit: "cover",
-        borderRadius: 4,
-      }}
-    />
-
-    {/* Spine */}
-    <div
-      className="absolute flex items-center justify-center"
-      style={{
-        width: 24,
-        height: 270,
-        background: "#B8933A",
         left: "50%",
-        top: 10,
-        transform: "translateX(-50%)",
-        zIndex: 1,
-        borderRadius: 2,
+        transform: "translate(-50%, -55%)",
+        animation: "glowPulse 4s ease-in-out infinite",
       }}
-    >
-      <span
-        className="font-mono text-ink"
-        style={{
-          writingMode: "vertical-rl",
-          transform: "rotate(180deg)",
-          fontSize: 7,
-          letterSpacing: "0.1em",
-        }}
-      >
-        GTM FOR PROFESSIONAL SERVICES · FRIDMAN · ASHBAUGH
-      </span>
+    />
+
+    {/* Flanking gold rules */}
+    <div className="absolute top-1/2 left-0 right-0 flex items-center justify-center pointer-events-none" style={{ transform: "translateY(-20px)" }}>
+      <div style={{ width: 50, height: 1, background: "linear-gradient(to right, transparent, rgba(184,147,58,0.35))" }} />
+      <div style={{ width: 260 }} />
+      <div style={{ width: 50, height: 1, background: "linear-gradient(to left, transparent, rgba(184,147,58,0.35))" }} />
     </div>
 
-    {/* Back cover */}
-    <img
-      src={bookCover}
-      alt="GTM for Professional Services"
-      className="absolute right-4 top-6"
-      style={{
-        width: 180,
-        aspectRatio: "2/3",
-        transform: "rotate(4deg)",
-        boxShadow: "0 32px 64px rgba(0,0,0,0.45)",
-        zIndex: 0,
-        objectFit: "cover",
-        borderRadius: 4,
-      }}
-    />
+    {/* Hero book */}
+    <div style={{ perspective: 1200 }}>
+      <img
+        src={bookCover}
+        alt="GTM for Professional Services"
+        className="book-hero-reveal"
+        style={{
+          width: 220,
+          maxWidth: "55vw",
+          aspectRatio: "2/3",
+          objectFit: "cover",
+          borderRadius: 6,
+          transform: "rotateY(-6deg)",
+          boxShadow:
+            "0 8px 24px rgba(0,0,0,0.3), 0 40px 80px rgba(0,0,0,0.25), -6px 0 20px rgba(0,0,0,0.15)",
+        }}
+      />
+    </div>
 
-    {/* Below books label */}
+    {/* Reflection */}
     <div
-      className="absolute bottom-0 left-0 right-0 text-center font-mono"
-      style={{ fontSize: 9, color: "rgba(184,147,58,0.5)" }}
+      className="pointer-events-none overflow-hidden mx-auto"
+      style={{ width: 220, maxWidth: "55vw", height: 50, marginTop: -2 }}
+    >
+      <img
+        src={bookCover}
+        alt=""
+        aria-hidden="true"
+        style={{
+          width: "100%",
+          aspectRatio: "2/3",
+          objectFit: "cover",
+          borderRadius: 6,
+          transform: "scaleY(-1) rotateY(-6deg)",
+          opacity: 0.1,
+          maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 80%)",
+          WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 80%)",
+        }}
+      />
+    </div>
+
+    {/* Edition label */}
+    <span
+      className="font-mono mt-3"
+      style={{ fontSize: 9, color: "rgba(184,147,58,0.5)", letterSpacing: "0.18em", textTransform: "uppercase" }}
     >
       Q4 2026 · Mabbly Press · First Edition
-    </div>
+    </span>
   </div>
 );
 
