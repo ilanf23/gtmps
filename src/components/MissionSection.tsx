@@ -29,7 +29,7 @@ const MissionSection = () => {
             className="font-sans text-slate mt-6"
             style={{ fontSize: 15, lineHeight: 1.8 }}
           >
-            Every GTM framework built in the last 40 years was designed for product companies launching to strangers. Professional services firms have been borrowing those playbooks and wondering why they do not work. The Dead Zone — the 96% of every CRM that is dormant, earned, and going to waste — exists because no GTM system was built for how PS firms actually win. Through reputation. Relationships. The right message at the right moment.
+            Every GTM framework built in the last 40 years was designed for product companies launching to strangers. Professional services firms have been borrowing those playbooks and wondering why they do not work. The Dead Zone, the 96% of every CRM that is dormant, earned, and going to waste, exists because no GTM system was built for how PS firms actually win. Through reputation. Relationships. The right message at the right moment.
           </p>
           <p
             className="font-sans text-slate mt-4"
