@@ -1,16 +1,16 @@
 
 
-## Wire Apply Form to mailto:adam@mabbly.com
+## Fix Apply Button Hover State
 
-### Change in `src/components/ApplySection.tsx`
+**Problem**: The button's `background` is set via inline `style`, which has higher CSS specificity than Tailwind's `hover:bg-[#C9A845]` class. On hover, the inline style wins, and the button appears white/broken.
 
-Update the submit button's `onClick` handler to:
+**Fix in `src/components/ApplySection.tsx`** (line 172-177):
 
-1. Build a `mailto:` URL with `adam@mabbly.com` as the recipient
-2. Set the subject to "Research Session Application" (or similar)
-3. Format all form fields into the email body as labeled lines (Full Name, Firm Name, Role, etc.)
-4. Open via `window.location.href = mailtoUrl`
-5. Then set `submitted = true` to show the confirmation message
+Move the background color from inline `style` to Tailwind classes so hover works properly:
+- Remove `background: "#B8933A"` from the `style` prop
+- Add `bg-[#B8933A]` to the className
+- Keep `hover:bg-[#C9A845]` in className (already there)
+- Keep `color: "#0D1117"` in style (or move to className too)
 
-No backend, no new files. Single file edit.
+Single line change, one file.
 
