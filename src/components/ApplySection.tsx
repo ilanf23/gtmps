@@ -169,10 +169,8 @@ const ApplySection = () => {
                 window.location.href = `mailto:adam@mabbly.com?subject=${encodeURIComponent("Research Session Application")}&body=${encodeURIComponent(body)}`;
                 setSubmitted(true);
               }}
-              className="w-full font-sans font-bold cursor-pointer border-none rounded-full transition-all duration-200 hover:scale-[1.01] hover:bg-[#C9A845] mt-2"
+              className="w-full font-sans font-bold cursor-pointer border-none rounded-full transition-all duration-200 hover:scale-[1.01] bg-[#B8933A] hover:bg-[#C9A845] text-[#0D1117] mt-2"
               style={{
-                background: "#B8933A",
-                color: "#0D1117",
                 fontSize: 16,
                 padding: 18,
               }}
