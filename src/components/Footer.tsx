@@ -37,7 +37,7 @@ const Footer = () => {
             {[
               { label: "mabbly.com", href: "https://mabbly.com" },
               { label: "mabbly.ai", href: "https://mabbly.ai" },
-              { label: "Podcast →", href: "#" },
+              { label: "Podcast →", href: "https://www.youtube.com/@SignalActivatedGrowth" },
             ].map((link) => (
               <a
                 key={link.label}
