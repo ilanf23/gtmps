@@ -19,7 +19,7 @@ const MissionSection = () => {
           className="font-display font-black text-text-dark mt-5 scroll-reveal"
           style={{ fontSize: "clamp(36px, 4.5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", maxWidth: 780 }}
         >
-          Professional services firms deserve marketing as sophisticated as the work they sell. Nobody built them a system. Until now.
+          Professional services firms deserve marketing as sophisticated as the work they sell. Nobody built them a growth engine. Until now.
         </h2>
 
         {/* Body */}
