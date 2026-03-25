@@ -58,7 +58,7 @@ const StickyNav = () => {
           animation: "goldPulse 10s infinite",
         }}
       >
-        APPLY NOW &mdash; 46 SPOTS LEFT
+        APPLY NOW / 46 SPOTS LEFT
       </a>
     </nav>
   );
