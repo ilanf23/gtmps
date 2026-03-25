@@ -162,26 +162,19 @@ const HeroSection = () => {
 const BookDisplay = () => (
   <div className="relative mx-auto" style={{ maxWidth: 320, height: 300 }}>
     {/* Front cover */}
-    <div
-      className="absolute left-0 top-0 flex items-center justify-center font-mono text-gold"
-      style={{
-        width: 160,
-        aspectRatio: "2/3",
-        background: "#1A1F2E",
-        border: "2px dashed rgba(184,147,58,0.4)",
-        transform: "rotate(-4deg)",
-        boxShadow: "0 28px 56px rgba(0,0,0,0.55)",
-        fontSize: 9,
-        zIndex: 2,
-      }}
-    >
-      <div className="text-center">
-        <span>UPLOAD FRONT COVER</span>
-        <span className="block mt-2" style={{ fontSize: 7, color: "rgba(184,147,58,0.6)" }}>
-          Click Lovable image tool to upload cover photo.
-        </span>
-      </div>
-    </div>
+      <img
+        src={bookCover}
+        alt="GTM for Professional Services"
+        className="absolute left-0 top-0"
+        style={{
+          width: 160,
+          aspectRatio: "2/3",
+          transform: "rotate(-4deg)",
+          boxShadow: "0 28px 56px rgba(0,0,0,0.55)",
+          zIndex: 2,
+          objectFit: "cover",
+        }}
+      />
 
     {/* Spine */}
     <div
