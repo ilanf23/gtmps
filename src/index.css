@@ -92,13 +92,18 @@
   }
 }
 
-/* Scroll animations */
+/* Scroll animations — fail-safe: content visible by default.
+   Only hidden when JS has confirmed observers are attached. */
 .scroll-reveal {
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
-.scroll-reveal.visible {
+.reveal-ready .scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.reveal-ready .scroll-reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
