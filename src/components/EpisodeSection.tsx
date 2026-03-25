@@ -1,20 +1,20 @@
 const EpisodeSection = () => {
   return (
     <section id="episode" className="px-6 py-16 md:px-20 md:py-24 bg-soft-navy">
-      <div className="max-w-[1080px] mx-auto stagger-children">
-        <span className="font-mono uppercase tracking-[0.2em] text-gold scroll-reveal" style={{ fontSize: 10 }}>
+      <div className="max-w-[1080px] mx-auto stagger-children text-center">
+        <span className="font-mono uppercase tracking-[0.2em] text-gold" style={{ fontSize: 10 }}>
           The Conversation That Started It All
         </span>
 
         <h2
-          className="font-display font-black text-white mt-5 scroll-reveal"
+          className="font-display font-black text-white mt-5"
           style={{ fontSize: "clamp(32px, 4vw, 52px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}
         >
           The Episode That Named the Dead Zone
         </h2>
 
         <p
-          className="font-sans mt-5 scroll-reveal"
+          className="font-sans mt-5 mx-auto"
           style={{ fontSize: 16, lineHeight: 1.75, maxWidth: 560, color: "rgba(255,255,255,0.7)" }}
         >
           This Signal Activated Growth episode is where the Dead Zone concept first took shape in public. The conversation between Adam and Richard where the vocabulary of PS GTM was born. Managing partners who listened said: that is exactly what we have been living with and nobody has named it until now.
