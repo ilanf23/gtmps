@@ -1,3 +1,5 @@
+import bookCover from "@/assets/book-cover.png";
+
 const BookSection = () => {
   const chapters = [
     {
@@ -49,23 +51,21 @@ const BookSection = () => {
 
         {/* Book display */}
         <div className="relative mx-auto mt-10 scroll-reveal" style={{ maxWidth: 520, height: 280 }}>
-          <div
-            className="absolute flex items-center justify-center font-mono text-gold"
+          <img
+            src={bookCover}
+            alt="GTM for Professional Services"
+            className="absolute"
             style={{
               width: 170,
               aspectRatio: "2/3",
-              background: "#1A1F2E",
-              border: "2px dashed rgba(184,147,58,0.4)",
               transform: "rotate(-3deg)",
               boxShadow: "0 24px 48px rgba(0,0,0,0.6)",
-              fontSize: 9,
               left: "10%",
               top: 0,
               zIndex: 2,
+              objectFit: "cover",
             }}
-          >
-            FRONT COVER
-          </div>
+          />
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -85,23 +85,21 @@ const BookSection = () => {
               GTM FOR PROFESSIONAL SERVICES · FRIDMAN · ASHBAUGH
             </span>
           </div>
-          <div
-            className="absolute flex items-center justify-center font-mono text-gold"
+          <img
+            src={bookCover}
+            alt="GTM for Professional Services - Back"
+            className="absolute"
             style={{
               width: 170,
               aspectRatio: "2/3",
-              background: "#1A1F2E",
-              border: "2px dashed rgba(184,147,58,0.4)",
               transform: "rotate(3deg)",
               boxShadow: "0 24px 48px rgba(0,0,0,0.4)",
-              fontSize: 9,
               right: "10%",
               top: 10,
               zIndex: 0,
+              objectFit: "cover",
             }}
-          >
-            BACK COVER
-          </div>
+          />
         </div>
 
         {/* Pull quote */}
