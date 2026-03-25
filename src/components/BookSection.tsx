@@ -54,56 +54,83 @@ const BookSection = () => {
         </p>
 
         {/* Book display */}
-        <div className="relative mx-auto mt-8 max-w-[320px] sm:max-w-[520px] h-[220px] sm:h-[300px]">
-          <img
-            src={bookCover}
-            alt="GTM for Professional Services"
-            className="absolute w-[130px] sm:w-[180px]"
+        <div className="relative mx-auto mt-12 mb-4 flex flex-col items-center">
+          {/* Gold glow */}
+          <div
+            className="absolute rounded-full"
             style={{
-              aspectRatio: "2/3",
-              transform: "rotate(-3deg)",
-              boxShadow: "0 28px 56px rgba(0,0,0,0.2)",
-              left: "10%",
-              top: 0,
-              zIndex: 2,
-              objectFit: "cover",
-              borderRadius: 4,
+              width: 420,
+              height: 420,
+              background: "radial-gradient(circle, rgba(184,147,58,0.14) 0%, rgba(184,147,58,0) 70%)",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -55%)",
+              animation: "glowPulse 4s ease-in-out infinite",
+              pointerEvents: "none",
             }}
           />
+
+          {/* Flanking gold rules */}
+          <div className="absolute top-1/2 left-0 right-0 flex items-center justify-center pointer-events-none" style={{ transform: "translateY(-20px)" }}>
+            <div style={{ width: 60, height: 1, background: "linear-gradient(to right, transparent, rgba(184,147,58,0.4))" }} />
+            <div style={{ width: "300px" }} />
+            <div style={{ width: 60, height: 1, background: "linear-gradient(to left, transparent, rgba(184,147,58,0.4))" }} />
+          </div>
+
+          {/* Hero book */}
+          <div className="book-reveal-container" style={{ perspective: 1200 }}>
+            <img
+              src={bookCover}
+              alt="GTM for Professional Services"
+              className="book-hero-reveal"
+              style={{
+                width: 220,
+                maxWidth: "60vw",
+                aspectRatio: "2/3",
+                objectFit: "cover",
+                borderRadius: 6,
+                transform: "rotateY(-6deg)",
+                boxShadow:
+                  "0 8px 24px rgba(0,0,0,0.25), 0 40px 80px rgba(0,0,0,0.18), -6px 0 20px rgba(0,0,0,0.12)",
+                animation: "bookFloat 5s ease-in-out infinite",
+              }}
+            />
+          </div>
+
+          {/* Reflection */}
           <div
-            className="absolute flex items-center justify-center h-[200px] sm:h-[270px]"
+            className="pointer-events-none overflow-hidden mx-auto"
             style={{
-              width: 26,
-              background: "#B8933A",
-              left: "50%",
-              top: 5,
-              transform: "translateX(-50%)",
-              zIndex: 1,
-              borderRadius: 2,
+              width: 220,
+              maxWidth: "60vw",
+              height: 60,
+              marginTop: -2,
             }}
           >
-            <span
-              className="font-mono text-ink"
-              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontSize: 7, letterSpacing: "0.1em" }}
-            >
-              GTM FOR PROFESSIONAL SERVICES · FRIDMAN · ASHBAUGH
-            </span>
+            <img
+              src={bookCover}
+              alt=""
+              aria-hidden="true"
+              style={{
+                width: "100%",
+                aspectRatio: "2/3",
+                objectFit: "cover",
+                borderRadius: 6,
+                transform: "scaleY(-1) rotateY(-6deg)",
+                opacity: 0.12,
+                maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 80%)",
+                WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 80%)",
+              }}
+            />
           </div>
-          <img
-            src={bookCover}
-            alt="GTM for Professional Services"
-            className="absolute w-[130px] sm:w-[180px]"
-            style={{
-              aspectRatio: "2/3",
-              transform: "rotate(3deg)",
-              boxShadow: "0 28px 56px rgba(0,0,0,0.15)",
-              right: "10%",
-              top: 10,
-              zIndex: 0,
-              objectFit: "cover",
-              borderRadius: 4,
-            }}
-          />
+
+          {/* Edition label */}
+          <span
+            className="font-mono mt-4"
+            style={{ fontSize: 9, color: "rgba(184,147,58,0.5)", letterSpacing: "0.18em", textTransform: "uppercase" }}
+          >
+            First Edition · Q4 2026
+          </span>
         </div>
 
         {/* Pull quote */}
