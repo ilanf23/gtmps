@@ -1,5 +1,6 @@
 import adamPhoto from "@/assets/adam-fridman.png";
 import richardPhoto from "@/assets/richard-ashbaugh.png";
+import { Linkedin, Youtube } from "lucide-react";
 
 const AuthorsSection = () => {
   return (
