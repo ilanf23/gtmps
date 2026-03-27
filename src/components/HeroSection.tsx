@@ -249,10 +249,12 @@ const HeroSection = () => {
           background: "rgba(184,147,58,0.06)",
           borderTop: "2px solid rgba(184,147,58,0.3)",
           borderBottom: "2px solid rgba(184,147,58,0.3)",
-          padding: "36px 48px",
+          padding: "24px 20px",
           maxWidth: 800,
           marginBottom: 0,
         }}
+        // Desktop padding override via className
+        className="relative z-10 text-center mx-6 md:mx-auto md:!px-12 md:!py-9"
       >
         <span
           className="font-mono uppercase block"
