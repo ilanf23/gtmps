@@ -376,7 +376,9 @@ const BookSpread = ({
           {/* Right page (chapter page area) */}
           <div className="relative" style={{
             height: "100%",
-            width: h * 0.62,
+            width: "calc(50% - 7px)",
+            flexShrink: 0,
+            perspective: 1400,
             transformStyle: "preserve-3d",
           }}>
             {/* Revealed interior page (behind the turning page) */}
