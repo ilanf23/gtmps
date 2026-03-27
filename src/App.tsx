@@ -25,5 +25,5 @@ const App = () => (
 );
 
 export default App;
-/* rebuild trigger */
+/* publish refresh */
 
