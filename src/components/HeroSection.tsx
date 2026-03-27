@@ -376,7 +376,7 @@ const BookSpread = ({
           {/* Right page (chapter page area) */}
           <div className="relative" style={{
             height: "100%",
-            width: "calc(50% - 7px)",
+            width: "calc(50% - 5px)",
             flexShrink: 0,
             perspective: 1400,
             transformStyle: "preserve-3d",
