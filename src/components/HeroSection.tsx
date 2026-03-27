@@ -119,7 +119,7 @@ const HeroSection = () => {
 
       {/* Two-column grid */}
       <div
-        className="relative mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center px-5 py-8 md:px-10 md:py-12 lg:px-20 lg:py-16 lg:min-h-screen"
+        className="relative mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-center px-5 py-8 md:px-10 md:py-12 lg:px-20 lg:py-16 lg:min-h-screen"
         style={{ maxWidth: 1400 }}
       >
         {/* Left column */}
@@ -293,7 +293,7 @@ const BookMockup = ({
   return (
     <div
       ref={bookRef}
-      className="relative flex flex-col items-center w-full mx-auto"
+      className="relative flex flex-col items-center w-full"
     >
       {/* Book object */}
       <div
@@ -313,7 +313,7 @@ const BookMockup = ({
             flexDirection: "row",
             width: "100%",
             aspectRatio: "2.15 / 1",
-            maxHeight: 560,
+            maxHeight: 700,
           }}
         >
           {/* Cover page (left) */}
