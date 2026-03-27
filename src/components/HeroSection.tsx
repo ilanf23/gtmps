@@ -303,7 +303,7 @@ const BookSpread = ({
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center" ref={bookRef}>
+    <div className="relative flex flex-col items-center" ref={bookRef} style={{ maxWidth: 580, width: "100%" }}>
       {/* Unified book object */}
       <div style={{ perspective: 1400 }}>
         <div
