@@ -1,11 +1,95 @@
+import { useState, useEffect, useRef, useCallback } from "react";
 import bookCover from "@/assets/book-cover.png";
 
+/* ── Stat counter hook ── */
+function useCountUp(
+  target: number,
+  duration: number,
+  decimal: boolean,
+  delay: number,
+  trigger: boolean
+) {
+  const [value, setValue] = useState(0);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!trigger || started.current) return;
+    started.current = true;
+
+    const timeout = setTimeout(() => {
+      const start = performance.now();
+      const step = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // cubic ease-out deceleration
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setValue(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [trigger, target, duration, delay]);
+
+  return decimal ? value.toFixed(1) : Math.round(value).toString();
+}
+
 const HeroSection = () => {
+  const heroRef = useRef<HTMLElement>(null);
+  const bookRef = useRef<HTMLDivElement>(null);
+  const [lightPos, setLightPos] = useState({ x: 50, y: 50 });
+
+  // Layer 2: Ambient light follows cursor
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (!bookRef.current) return;
+    const rect = bookRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setLightPos({ x, y });
+  }, []);
+
+  // Layer 3: Session counter one-shot pulse
+  const counterRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = counterRef.current;
+    if (!el) return;
+    el.style.animation = "counterPulse 700ms ease-in-out";
+    const handler = () => { el.style.animation = ""; };
+    el.addEventListener("animationend", handler);
+    return () => el.removeEventListener("animationend", handler);
+  }, []);
+
+  // Layer 5: Stat counter scroll trigger
+  const statRef = useRef<HTMLDivElement>(null);
+  const [statsVisible, setStatsVisible] = useState(false);
+  useEffect(() => {
+    const el = statRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const stat1 = useCountUp(96, 1400, false, 0, statsVisible);
+  const stat2 = useCountUp(70, 1400, false, 120, statsVisible);
+  const stat3 = useCountUp(1.3, 1400, true, 240, statsVisible);
+
   return (
     <section
+      ref={heroRef}
       id="hero"
       className="relative min-h-screen overflow-hidden"
       style={{ background: "#0D1117" }}
+      onMouseMove={handleMouseMove}
     >
       {/* Background layers */}
       <div
@@ -40,7 +124,7 @@ const HeroSection = () => {
       <div className="relative flex flex-col lg:flex-row items-center px-6 pt-[100px] pb-[60px] lg:px-20 lg:pt-[120px] lg:pb-20 gap-10 lg:gap-8 max-w-[1400px] mx-auto min-h-screen overflow-hidden">
         {/* Book spread on mobile first */}
         <div className="block lg:hidden w-full">
-          <BookSpread />
+          <BookSpread bookRef={bookRef} lightPos={lightPos} />
         </div>
 
         {/* Left column — text only */}
@@ -84,9 +168,13 @@ const HeroSection = () => {
           <div className="flex items-center gap-2.5 mt-8">
             <span
               className="inline-block rounded-full bg-gold"
-              style={{ width: 8, height: 8, animation: "dotPulse 2s infinite" }}
+              style={{ width: 8, height: 8, animation: "dotFade 2.4s ease-in-out infinite" }}
             />
-            <span className="font-mono uppercase tracking-[0.14em] text-gold" style={{ fontSize: 11 }}>
+            <span
+              ref={counterRef}
+              className="font-mono uppercase tracking-[0.14em] text-gold"
+              style={{ fontSize: 11, willChange: "transform" }}
+            >
               46 of 50 sessions remaining
             </span>
           </div>
@@ -120,14 +208,14 @@ const HeroSection = () => {
           </div>
 
           {/* Stat strip */}
-          <div className="flex gap-0 mt-14">
+          <div ref={statRef} className="flex gap-0 mt-14">
             {[
-              { num: "96%", label: "of PS firm CRM contacts are dormant" },
-              { num: "70%", label: "of revenue from existing relationships" },
-              { num: "1.3%", label: "average reply rate, generic outreach" },
+              { num: stat1, label: "of PS firm CRM contacts are dormant" },
+              { num: stat2, label: "of revenue from existing relationships" },
+              { num: stat3, label: "average reply rate, generic outreach" },
             ].map((stat, i) => (
               <div
-                key={stat.num}
+                key={i}
                 className="flex-1"
                 style={{
                   paddingLeft: i > 0 ? 24 : 0,
@@ -139,7 +227,7 @@ const HeroSection = () => {
                   className="font-display font-black text-gold block"
                   style={{ fontSize: "clamp(28px, 3vw, 42px)", lineHeight: 1 }}
                 >
-                  {stat.num}
+                  {stat.num}%
                 </span>
                 <span
                   className="font-sans block mt-2"
@@ -154,7 +242,7 @@ const HeroSection = () => {
 
         {/* Right column — book spread (desktop) */}
         <div className="hidden lg:flex w-[55%] items-center justify-center relative">
-          <BookSpread large />
+          <BookSpread large bookRef={bookRef} lightPos={lightPos} />
         </div>
       </div>
 
@@ -192,12 +280,30 @@ const HeroSection = () => {
 };
 
 /* ── Book Spread: cover + chapter page side by side ── */
-const BookSpread = ({ large }: { large?: boolean }) => {
+const BookSpread = ({
+  large,
+  bookRef,
+  lightPos,
+}: {
+  large?: boolean;
+  bookRef: React.RefObject<HTMLDivElement>;
+  lightPos: { x: number; y: number };
+}) => {
   const h = large ? 380 : 280;
   const glowSize = large ? 500 : 350;
 
+  // Layer 1: page turn hover
+  const [pageHover, setPageHover] = useState(false);
+
+  // Layer 4: book entrance
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const t = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col items-center" ref={bookRef}>
       {/* Ambient glow */}
       <div
         className="absolute rounded-full pointer-events-none"
@@ -208,141 +314,210 @@ const BookSpread = ({ large }: { large?: boolean }) => {
         }}
       />
 
-      {/* The spread — both sides share the same fixed height */}
+      {/* The spread — perspective for page turn */}
       <div
         className="relative flex flex-row items-stretch"
-        style={{ height: h, gap: 3 }}
+        style={{ height: h, gap: 3, perspective: 1200 }}
       >
-        {/* Book cover */}
-        <img
-          src={bookCover}
-          alt="GTM for Professional Services"
-          style={{
-            height: "100%",
-            width: "auto",
-            objectFit: "cover",
-            borderRadius: "6px 2px 2px 6px",
-            boxShadow: large
-              ? "-6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
-              : "-4px 4px 16px rgba(0,0,0,0.35)",
-          }}
-        />
-
-        {/* Chapter page — same height as cover */}
-        <div
-          style={{
-            height: "100%",
-            width: h * 0.62,
-            background: "#f5f0e8",
-            padding: large ? "28px 24px 20px" : "20px 16px 14px",
-            borderRadius: "2px 6px 6px 2px",
-            boxShadow: large
-              ? "6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
-              : "4px 4px 16px rgba(0,0,0,0.35)",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column" as const,
-          }}
-        >
-          {/* Chapter eyebrow */}
-          <div
-            className="flex items-center gap-3"
+        {/* Book cover with entrance animation */}
+        <div className="relative" style={{
+          height: "100%",
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? "translateY(0)" : "translateY(36px)",
+          transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1), transform 900ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}>
+          <img
+            src={bookCover}
+            alt="GTM for Professional Services"
             style={{
-              fontFamily: "'EB Garamond', Georgia, serif",
-              fontSize: large ? 9 : 7.5,
-              letterSpacing: "0.22em",
-              textTransform: "uppercase" as const,
-              color: "#9a8a6a",
-              marginBottom: large ? 14 : 10,
+              height: "100%",
+              width: "auto",
+              objectFit: "cover",
+              borderRadius: "6px 2px 2px 6px",
+              boxShadow: large
+                ? "-6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
+                : "-4px 4px 16px rgba(0,0,0,0.35)",
             }}
-          >
-            Chapter One
-            <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
-          </div>
+          />
+          {/* Layer 2: Ambient light overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              borderRadius: "6px 2px 2px 6px",
+              mixBlendMode: "overlay",
+              opacity: 0.18,
+              zIndex: 2,
+              background: `radial-gradient(circle at ${lightPos.x}% ${lightPos.y}%, rgba(255,210,120,0.6) 0%, transparent 55%)`,
+            }}
+          />
+        </div>
 
-          {/* Subtitle */}
+        {/* Chapter page area — with hidden page underneath */}
+        <div className="relative" style={{
+          height: "100%",
+          width: h * 0.62,
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? "translateY(0)" : "translateY(36px)",
+          transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) 90ms, transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 90ms",
+          transformStyle: "preserve-3d",
+        }}>
+          {/* Revealed interior page (behind the turning page) */}
           <div
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: large ? 10 : 8,
-              fontStyle: "italic",
-              color: "#7a6a4a",
-              letterSpacing: "0.04em",
-              marginBottom: 3,
-            }}
-          >
-            The founding problem
-          </div>
-
-          {/* Title */}
-          <h3
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: large ? 17 : 13,
-              fontWeight: 700,
-              lineHeight: 1.15,
-              color: "#1e1a10",
-              margin: large ? "0 0 12px" : "0 0 8px",
-            }}
-          >
-            The Wrong Map
-          </h3>
-
-          {/* Body */}
-          <div
-            style={{
-              fontFamily: "'EB Garamond', Georgia, serif",
-              fontSize: large ? 10.5 : 8.5,
-              lineHeight: 1.75,
-              color: "#3a3020",
-              textAlign: "justify" as const,
-              flex: 1,
-              overflow: "hidden",
-            }}
-          >
-            <p style={{ margin: "0 0 6px" }}>
-              Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
-            </p>
-            <p style={{ margin: 0 }}>
-              The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
-            </p>
-          </div>
-
-          {/* Pull quote */}
-          <blockquote
-            style={{
-              borderTop: "1.5px solid #1e1a10",
-              borderBottom: "1.5px solid #1e1a10",
-              padding: large ? "10px 0 8px" : "6px 0 4px",
-              marginTop: large ? 10 : 6,
+              position: "absolute",
+              inset: 0,
+              background: "#ede5d5",
+              borderRadius: "2px 6px 6px 2px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: large ? 28 : 20,
+              boxShadow: large
+                ? "6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
+                : "4px 4px 16px rgba(0,0,0,0.35)",
             }}
           >
             <p
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: large ? 11.5 : 9,
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: "italic",
-                lineHeight: 1.4,
-                color: "#1e1a10",
-                margin: 0,
+                fontSize: large ? 16 : 13,
+                lineHeight: 1.5,
+                color: "rgba(184,147,58,0.5)",
+                textAlign: "center",
+                maxWidth: "90%",
               }}
             >
-              "You were not bad at GTM. You were using the wrong map."
+              "The market you need to win is already in your CRM."
             </p>
-          </blockquote>
+          </div>
 
-          {/* Page number */}
+          {/* Main chapter page (turns on hover) */}
           <div
+            onMouseEnter={() => setPageHover(true)}
+            onMouseLeave={() => setPageHover(false)}
             style={{
-              textAlign: "center" as const,
-              fontFamily: "'EB Garamond', serif",
-              fontSize: large ? 9 : 7,
-              color: "#b0a080",
-              letterSpacing: "0.1em",
-              marginTop: 6,
+              position: "relative",
+              zIndex: 1,
+              height: "100%",
+              width: "100%",
+              background: "#f5f0e8",
+              padding: large ? "28px 24px 20px" : "20px 16px 14px",
+              borderRadius: "2px 6px 6px 2px",
+              boxShadow: large
+                ? "6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
+                : "4px 4px 16px rgba(0,0,0,0.35)",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column" as const,
+              transformOrigin: "left center",
+              transform: pageHover ? "rotateY(-25deg)" : "rotateY(0deg)",
+              transition: pageHover
+                ? "transform 400ms ease-in-out"
+                : "transform 350ms ease-in-out",
+              backfaceVisibility: "hidden" as const,
             }}
           >
-            12
+            {/* Chapter eyebrow */}
+            <div
+              className="flex items-center gap-3"
+              style={{
+                fontFamily: "'EB Garamond', Georgia, serif",
+                fontSize: large ? 9 : 7.5,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase" as const,
+                color: "#9a8a6a",
+                marginBottom: large ? 14 : 10,
+              }}
+            >
+              Chapter One
+              <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
+            </div>
+
+            {/* Subtitle */}
+            <div
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: large ? 10 : 8,
+                fontStyle: "italic",
+                color: "#7a6a4a",
+                letterSpacing: "0.04em",
+                marginBottom: 3,
+              }}
+            >
+              The founding problem
+            </div>
+
+            {/* Title */}
+            <h3
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: large ? 17 : 13,
+                fontWeight: 700,
+                lineHeight: 1.15,
+                color: "#1e1a10",
+                margin: large ? "0 0 12px" : "0 0 8px",
+              }}
+            >
+              The Wrong Map
+            </h3>
+
+            {/* Body */}
+            <div
+              style={{
+                fontFamily: "'EB Garamond', Georgia, serif",
+                fontSize: large ? 10.5 : 8.5,
+                lineHeight: 1.75,
+                color: "#3a3020",
+                textAlign: "justify" as const,
+                flex: 1,
+                overflow: "hidden",
+              }}
+            >
+              <p style={{ margin: "0 0 6px" }}>
+                Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
+              </p>
+              <p style={{ margin: 0 }}>
+                The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
+              </p>
+            </div>
+
+            {/* Pull quote */}
+            <blockquote
+              style={{
+                borderTop: "1.5px solid #1e1a10",
+                borderBottom: "1.5px solid #1e1a10",
+                padding: large ? "10px 0 8px" : "6px 0 4px",
+                marginTop: large ? 10 : 6,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: large ? 11.5 : 9,
+                  fontStyle: "italic",
+                  lineHeight: 1.4,
+                  color: "#1e1a10",
+                  margin: 0,
+                }}
+              >
+                "You were not bad at GTM. You were using the wrong map."
+              </p>
+            </blockquote>
+
+            {/* Page number */}
+            <div
+              style={{
+                textAlign: "center" as const,
+                fontFamily: "'EB Garamond', serif",
+                fontSize: large ? 9 : 7,
+                color: "#b0a080",
+                letterSpacing: "0.1em",
+                marginTop: 6,
+              }}
+            >
+              12
+            </div>
           </div>
         </div>
       </div>
