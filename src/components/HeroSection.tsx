@@ -313,7 +313,7 @@ const BookMockup = ({
             flexDirection: "row",
             width: "100%",
             aspectRatio: "2.15 / 1",
-            maxHeight: 560,
+            maxHeight: 700,
           }}
         >
           {/* Cover page (left) */}
