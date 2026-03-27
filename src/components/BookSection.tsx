@@ -57,7 +57,11 @@ const BookSection = () => {
         </p>
 
         {/* Book display */}
-        <div className="relative mx-auto mt-12 mb-4 flex flex-col items-center">
+        <div
+          className="relative mx-auto mt-12 mb-4 flex flex-col items-center"
+          onMouseEnter={() => setShowFramework(true)}
+          onMouseLeave={() => setShowFramework(false)}
+        >
           {/* Gold glow */}
           <div
             className="absolute rounded-full"
@@ -135,29 +139,23 @@ const BookSection = () => {
             First Edition · Q4 2026
           </span>
 
-          {/* See Our Framework trigger + overlay wrapper */}
-          <div
-            className="relative"
-            onMouseEnter={() => setShowFramework(true)}
-            onMouseLeave={() => setShowFramework(false)}
+          {/* See Our Framework trigger */}
+          <button
+            className="font-sans mt-4 cursor-pointer transition-colors duration-200"
+            style={{
+              fontSize: 13,
+              color: "var(--gold)",
+              background: "none",
+              border: "none",
+              letterSpacing: "0.04em",
+            }}
+            onClick={() => setShowFramework((v) => !v)}
           >
-            <button
-              className="font-sans mt-4 cursor-pointer transition-colors duration-200"
-              style={{
-                fontSize: 13,
-                color: "var(--gold)",
-                background: "none",
-                border: "none",
-                letterSpacing: "0.04em",
-              }}
-              onClick={() => setShowFramework((v) => !v)}
-            >
-              See Our Framework →
-            </button>
+            See Our Framework →
+          </button>
 
-            {/* Framework overlay */}
-            <FrameworkOverlay visible={showFramework} />
-          </div>
+          {/* Framework overlay */}
+          <FrameworkOverlay visible={showFramework} />
         </div>
 
         {/* Pull quote */}
