@@ -212,7 +212,7 @@ const BookSpread = ({ large }: { large?: boolean }) => {
 
       {/* The spread */}
       <div
-        className="relative flex flex-row items-stretch gap-1"
+        className="relative flex flex-row items-stretch gap-px"
         style={{ perspective: 1200 }}
       >
         {/* Book cover */}
