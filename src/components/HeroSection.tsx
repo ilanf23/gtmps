@@ -136,7 +136,7 @@ const HeroSection = () => {
           <h1
             className="font-display font-black text-white mt-7"
             style={{
-              fontSize: "clamp(44px, 5.5vw, 76px)",
+              fontSize: "clamp(32px, 5.5vw, 76px)",
               lineHeight: 0.95,
               letterSpacing: "-0.035em",
             }}
