@@ -183,19 +183,20 @@ const HeroSection = () => {
                 fontSize: 15,
                 background: "linear-gradient(135deg, #C9A44A, #B8933A, #A07E2E)",
                 color: "#0D1117",
-                padding: "17px 44px",
+                padding: "14px 28px",
               }}
+              className="font-sans font-semibold text-center rounded-full transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(184,147,58,0.3)] sm:!py-[17px] sm:!px-[44px]"
             >
               Apply for a Research Session
             </a>
             <a
               href="#book"
-              className="font-sans font-medium text-center rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+              className="font-sans font-medium text-center rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/30 sm:!py-[17px] sm:!px-[44px]"
               style={{
                 fontSize: 15,
                 border: "1px solid rgba(255,255,255,0.15)",
                 color: "rgba(255,255,255,0.6)",
-                padding: "17px 44px",
+                padding: "14px 28px",
               }}
             >
               Learn About the Book
