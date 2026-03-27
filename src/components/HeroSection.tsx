@@ -293,7 +293,7 @@ const BookMockup = ({
   return (
     <div
       ref={bookRef}
-      className="relative flex flex-col items-center w-full max-w-[200px] sm:max-w-[260px] lg:max-w-[580px] mx-auto"
+      className="relative flex flex-col items-center w-full max-w-[160px] sm:max-w-[220px] lg:max-w-[580px] mx-auto"
     >
       {/* Book object */}
       <div
@@ -307,14 +307,21 @@ const BookMockup = ({
           perspective: 1200,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            aspectRatio: "2.15 / 1",
+            maxHeight: 480,
+          }}
+        >
           {/* Cover page (left) */}
           <div
             style={{
               width: "50%",
+              height: "100%",
               background: "#F5EDD8",
-              minHeight: undefined,
-              maxHeight: 480,
               borderRadius: "2px 0 0 2px",
               boxShadow: "inset -12px 0 24px rgba(0,0,0,0.12)",
               overflow: "hidden",
@@ -349,7 +356,7 @@ const BookMockup = ({
             style={{
               width: 10,
               flexShrink: 0,
-              alignSelf: "stretch",
+              height: "100%",
               background: "#1A0A00",
             }}
           />
@@ -358,9 +365,8 @@ const BookMockup = ({
           <div
             style={{
               width: "50%",
+              height: "100%",
               position: "relative",
-              minHeight: undefined,
-              maxHeight: 480,
               transformStyle: "preserve-3d",
             }}
           >
@@ -387,22 +393,20 @@ const BookMockup = ({
                   textAlign: "center",
                   maxWidth: "90%",
                 }}
-              >
-                "The market you need to win is already in your CRM."
-              </p>
+              />
             </div>
 
             {/* Main chapter page (turns on hover) */}
             <div
               onMouseEnter={() => setPageHover(true)}
               onMouseLeave={() => setPageHover(false)}
+              className="book-page-content"
               style={{
                 position: "relative",
                 zIndex: 1,
                 height: "100%",
                 width: "100%",
                 background: "#FDFAF4",
-                padding: "32px 28px",
                 borderRadius: "0 2px 2px 0",
                 boxShadow: "inset 12px 0 20px rgba(0,0,0,0.06)",
                 overflow: "hidden",
@@ -414,105 +418,107 @@ const BookMockup = ({
                 backfaceVisibility: "hidden",
               }}
             >
-              {/* Chapter eyebrow */}
-              <div
-                className="flex items-center gap-3"
-                style={{
-                  fontFamily: "'EB Garamond', Georgia, serif",
-                  fontSize: 9,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  color: "#9a8a6a",
-                  marginBottom: 14,
-                }}
-              >
-                Chapter One
-                <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
-              </div>
-
-              {/* Subtitle */}
-              <div
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 10,
-                  fontStyle: "italic",
-                  color: "#7a6a4a",
-                  letterSpacing: "0.04em",
-                  marginBottom: 3,
-                }}
-              >
-                The founding problem
-              </div>
-
-              {/* Title */}
-              <h3
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 17,
-                  fontWeight: 700,
-                  lineHeight: 1.15,
-                  color: "#1e1a10",
-                  margin: "0 0 12px",
-                }}
-              >
-                The Wrong Map
-              </h3>
-
-              {/* Body */}
-              <div
-                style={{
-                  fontFamily: "'EB Garamond', Georgia, serif",
-                  fontSize: 10.5,
-                  lineHeight: 1.75,
-                  color: "#3a3020",
-                  textAlign: "justify",
-                  flex: 1,
-                  overflow: "hidden",
-                }}
-              >
-                <p style={{ margin: "0 0 6px" }}>
-                  Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
-                </p>
-                <p style={{ margin: 0 }}>
-                  The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
-                </p>
-              </div>
-
-              {/* Pull quote */}
-              <blockquote
-                style={{
-                  borderTop: "1.5px solid #1e1a10",
-                  borderBottom: "1.5px solid #1e1a10",
-                  padding: "10px 0 8px",
-                  marginTop: 10,
-                }}
-              >
-                <p
+              <div style={{ padding: "clamp(8px, 3vw, 32px) clamp(8px, 2.5vw, 28px)", display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+                {/* Chapter eyebrow */}
+                <div
+                  className="flex items-center gap-1 lg:gap-3"
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
-                    fontSize: 11.5,
-                    fontStyle: "italic",
-                    lineHeight: 1.4,
-                    color: "#1e1a10",
-                    margin: 0,
+                    fontFamily: "'EB Garamond', Georgia, serif",
+                    fontSize: "clamp(5px, 1vw, 9px)",
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "#9a8a6a",
+                    marginBottom: "clamp(4px, 1vw, 14px)",
                   }}
                 >
-                  "You were not bad at GTM. You were using the wrong map."
-                </p>
-              </blockquote>
+                  Chapter One
+                  <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
+                </div>
 
-              {/* Page number */}
-              <div
-                style={{
-                  textAlign: "center",
-                  fontFamily: "'EB Garamond', serif",
-                  fontSize: 9,
-                  color: "#b0a080",
-                  letterSpacing: "0.1em",
-                  marginTop: 6,
-                }}
-              >
-                12
+                {/* Subtitle */}
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "clamp(5px, 1vw, 10px)",
+                    fontStyle: "italic",
+                    color: "#7a6a4a",
+                    letterSpacing: "0.04em",
+                    marginBottom: "clamp(1px, 0.3vw, 3px)",
+                  }}
+                >
+                  The founding problem
+                </div>
+
+                {/* Title */}
+                <h3
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "clamp(8px, 1.5vw, 17px)",
+                    fontWeight: 700,
+                    lineHeight: 1.15,
+                    color: "#1e1a10",
+                    margin: "0 0 clamp(4px, 1vw, 12px)",
+                  }}
+                >
+                  The Wrong Map
+                </h3>
+
+                {/* Body */}
+                <div
+                  style={{
+                    fontFamily: "'EB Garamond', Georgia, serif",
+                    fontSize: "clamp(5px, 1vw, 10.5px)",
+                    lineHeight: 1.75,
+                    color: "#3a3020",
+                    textAlign: "justify",
+                    flex: 1,
+                    overflow: "hidden",
+                  }}
+                >
+                  <p style={{ margin: "0 0 clamp(2px, 0.5vw, 6px)" }}>
+                    Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
+                  </p>
+                </div>
+
+                {/* Pull quote */}
+                <blockquote
+                  style={{
+                    borderTop: "1.5px solid #1e1a10",
+                    borderBottom: "1.5px solid #1e1a10",
+                    padding: "clamp(3px, 0.8vw, 10px) 0 clamp(2px, 0.6vw, 8px)",
+                    marginTop: "clamp(3px, 0.8vw, 10px)",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontSize: "clamp(5.5px, 1.1vw, 11.5px)",
+                      fontStyle: "italic",
+                      lineHeight: 1.4,
+                      color: "#1e1a10",
+                      margin: 0,
+                    }}
+                  >
+                    "You were not bad at GTM. You were using the wrong map."
+                  </p>
+                </blockquote>
+
+                {/* Page number */}
+                <div
+                  style={{
+                    textAlign: "center",
+                    fontFamily: "'EB Garamond', serif",
+                    fontSize: "clamp(5px, 0.8vw, 9px)",
+                    color: "#b0a080",
+                    letterSpacing: "0.1em",
+                    marginTop: "clamp(2px, 0.5vw, 6px)",
+                  }}
+                >
+                  12
+                </div>
               </div>
             </div>
           </div>
