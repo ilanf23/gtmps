@@ -119,16 +119,8 @@ const HeroSection = () => {
 
       {/* Two-column grid */}
       <div
-        className="relative mx-auto"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 48,
-          alignItems: "center",
-          padding: "64px 80px",
-          minHeight: "100vh",
-          maxWidth: 1400,
-        }}
+        className="relative mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center px-5 py-8 md:px-10 md:py-12 lg:px-20 lg:py-16 lg:min-h-screen"
+        style={{ maxWidth: 1400 }}
       >
         {/* Left column */}
         <div className="relative z-10">
