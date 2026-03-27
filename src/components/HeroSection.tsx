@@ -190,12 +190,12 @@ const HeroSection = () => {
             </a>
             <a
               href="#book"
-              className="font-sans font-medium text-center rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/30 sm:!py-[17px] sm:!px-[44px]"
+              className="font-sans font-medium text-center rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/30"
               style={{
                 fontSize: 15,
                 border: "1px solid rgba(255,255,255,0.15)",
                 color: "rgba(255,255,255,0.6)",
-                padding: "14px 28px",
+                padding: "17px 44px",
               }}
             >
               Learn About the Book
