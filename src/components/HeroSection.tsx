@@ -21,7 +21,6 @@ function useCountUp(
       const step = (now: number) => {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        // cubic ease-out deceleration
         const eased = 1 - Math.pow(1 - progress, 3);
         setValue(eased * target);
         if (progress < 1) requestAnimationFrame(step);
@@ -40,7 +39,6 @@ const HeroSection = () => {
   const bookRef = useRef<HTMLDivElement>(null);
   const [lightPos, setLightPos] = useState({ x: 50, y: 50 });
 
-  // Layer 2: Ambient light follows cursor
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (!bookRef.current) return;
     const rect = bookRef.current.getBoundingClientRect();
@@ -49,7 +47,6 @@ const HeroSection = () => {
     setLightPos({ x, y });
   }, []);
 
-  // Layer 3: Session counter one-shot pulse
   const counterRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const el = counterRef.current;
@@ -60,7 +57,6 @@ const HeroSection = () => {
     return () => el.removeEventListener("animationend", handler);
   }, []);
 
-  // Layer 5: Stat counter scroll trigger
   const statRef = useRef<HTMLDivElement>(null);
   const [statsVisible, setStatsVisible] = useState(false);
   useEffect(() => {
@@ -121,14 +117,21 @@ const HeroSection = () => {
         style={{ opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }}
       />
 
-      <div className="relative flex flex-col lg:flex-row items-center px-6 pt-[100px] pb-[60px] lg:px-20 lg:pt-[120px] lg:pb-20 gap-10 lg:gap-8 max-w-[1400px] mx-auto min-h-screen overflow-hidden">
-        {/* Book spread on mobile first */}
-        <div className="block lg:hidden w-full">
-          <BookSpread bookRef={bookRef} lightPos={lightPos} />
-        </div>
-
-        {/* Left column — text only */}
-        <div className="w-full lg:flex-1 lg:min-w-0 relative z-10">
+      {/* Two-column grid */}
+      <div
+        className="relative mx-auto"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 48,
+          alignItems: "center",
+          padding: "64px 80px",
+          minHeight: "100vh",
+          maxWidth: 1400,
+        }}
+      >
+        {/* Left column */}
+        <div className="relative z-10">
           {/* Eyebrow */}
           <div className="flex items-center gap-3">
             <div className="h-px bg-gold" style={{ width: 40 }} />
@@ -240,9 +243,9 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* Right column — book spread (desktop) */}
-        <div className="hidden lg:flex lg:w-[560px] lg:max-w-[560px] lg:flex-shrink-0 items-center justify-center relative overflow-hidden">
-          <BookSpread large bookRef={bookRef} lightPos={lightPos} />
+        {/* Right column — book */}
+        <div className="flex items-center justify-center">
+          <BookMockup bookRef={bookRef} lightPos={lightPos} />
         </div>
       </div>
 
@@ -279,87 +282,72 @@ const HeroSection = () => {
   );
 };
 
-/* ── Book Spread: cover + chapter page side by side ── */
-const BookSpread = ({
-  large,
+/* ── Book Mockup ── */
+const BookMockup = ({
   bookRef,
   lightPos,
 }: {
-  large?: boolean;
   bookRef: React.RefObject<HTMLDivElement>;
   lightPos: { x: number; y: number };
 }) => {
-  const h = large ? 380 : 280;
-  const glowSize = large ? 500 : 350;
-
-  // Layer 1: page turn hover
   const [pageHover, setPageHover] = useState(false);
-
-  // Layer 4: book entrance
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     const t = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(t);
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center" ref={bookRef} style={{ maxWidth: 580, width: "100%" }}>
-      {/* Unified book object */}
-      <div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "stretch",
-            height: large ? undefined : 280,
-            maxHeight: large ? 480 : 280,
-            aspectRatio: large ? "2.2 / 1" : undefined,
-            transform: "rotate(-1deg)",
-            boxShadow: "0px 32px 80px rgba(0,0,0,0.55), 0px 8px 24px rgba(0,0,0,0.35)",
-            position: "relative",
-            opacity: mounted ? 1 : 0,
-            transformOrigin: "center center",
-            transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)",
-          }}
-        >
-          {/* Left page (cover) */}
-          <div className="relative" style={{ height: "100%", width: "calc(50% - 5px)", flexShrink: 0, overflow: "hidden", background: "#F5EDD8" }}>
+    <div
+      ref={bookRef}
+      className="relative flex flex-col items-center"
+      style={{ width: "100%", maxWidth: 540, margin: "0 auto" }}
+    >
+      {/* Book object */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          transform: "rotate(-1deg)",
+          boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 12px 24px rgba(0,0,0,0.3)",
+          opacity: mounted ? 1 : 0,
+          transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)",
+          perspective: 1200,
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {/* Cover page (left) */}
+          <div
+            style={{
+              width: "50%",
+              background: "#F5EDD8",
+              minHeight: 420,
+              maxHeight: 480,
+              borderRadius: "2px 0 0 2px",
+              boxShadow: "inset -12px 0 24px rgba(0,0,0,0.12)",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
             <img
               src={bookCover}
               alt="GTM for Professional Services"
               style={{
-                height: "100%",
                 width: "100%",
+                height: "100%",
                 objectFit: "cover",
-                borderRadius: "6px 0 0 6px",
                 display: "block",
+                borderRadius: "2px 0 0 2px",
               }}
             />
-            {/* Inset shadow on right edge (spine side) */}
+            {/* Ambient light overlay */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                borderRadius: "6px 0 0 6px",
-                boxShadow: "inset -20px 0 40px rgba(0,0,0,0.25)",
-              }}
-            />
-            {/* Left edge thickness strip */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: 0, left: 0, bottom: 0, width: 4,
-                background: "linear-gradient(to left, #0D0600, transparent)",
-                borderRadius: "6px 0 0 6px",
-              }}
-            />
-            {/* Layer 2: Ambient light overlay */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                borderRadius: "6px 0 0 6px",
+                borderRadius: "2px 0 0 2px",
                 mixBlendMode: "overlay",
                 opacity: 0.18,
-                zIndex: 2,
                 background: `radial-gradient(circle at ${lightPos.x}% ${lightPos.y}%, rgba(255,210,120,0.6) 0%, transparent 55%)`,
               }}
             />
@@ -369,38 +357,40 @@ const BookSpread = ({
           <div
             style={{
               width: 10,
-              height: "100%",
-              background: "#2A1200",
               flexShrink: 0,
+              alignSelf: "stretch",
+              background: "#1A0A00",
             }}
           />
 
-          {/* Right page (chapter page area) */}
-          <div className="relative" style={{
-            height: "100%",
-            width: "calc(50% - 5px)",
-            flexShrink: 0,
-            perspective: 1400,
-            transformStyle: "preserve-3d",
-          }}>
-            {/* Revealed interior page (behind the turning page) */}
+          {/* Chapter page (right) */}
+          <div
+            style={{
+              width: "50%",
+              position: "relative",
+              minHeight: 420,
+              maxHeight: 480,
+              transformStyle: "preserve-3d",
+            }}
+          >
+            {/* Revealed interior page (behind turning page) */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
                 background: "#ede5d5",
-                borderRadius: "0 6px 6px 0",
+                borderRadius: "0 2px 2px 0",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: large ? 28 : 20,
+                padding: 28,
               }}
             >
               <p
                 style={{
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
                   fontStyle: "italic",
-                  fontSize: large ? 16 : 13,
+                  fontSize: 16,
                   lineHeight: 1.5,
                   color: "rgba(184,147,58,0.5)",
                   textAlign: "center",
@@ -420,19 +410,17 @@ const BookSpread = ({
                 zIndex: 1,
                 height: "100%",
                 width: "100%",
-                background: "#f5f0e8",
-                padding: large ? "28px 24px 20px" : "20px 16px 14px",
-                borderRadius: "0 6px 6px 0",
-                boxShadow: "inset 20px 0 40px rgba(0,0,0,0.15)",
+                background: "#FDFAF4",
+                padding: "32px 28px",
+                borderRadius: "0 2px 2px 0",
+                boxShadow: "inset 12px 0 20px rgba(0,0,0,0.06)",
                 overflow: "hidden",
                 display: "flex",
-                flexDirection: "column" as const,
+                flexDirection: "column",
                 transformOrigin: "left center",
-                transform: pageHover ? "rotateY(-25deg)" : "rotateY(0deg)",
-                transition: pageHover
-                  ? "transform 400ms ease-in-out"
-                  : "transform 350ms ease-in-out",
-                backfaceVisibility: "hidden" as const,
+                transform: pageHover ? "rotateY(-20deg)" : "rotateY(0deg)",
+                transition: "transform 400ms ease-in-out",
+                backfaceVisibility: "hidden",
               }}
             >
               {/* Chapter eyebrow */}
@@ -440,11 +428,11 @@ const BookSpread = ({
                 className="flex items-center gap-3"
                 style={{
                   fontFamily: "'EB Garamond', Georgia, serif",
-                  fontSize: large ? 9 : 7.5,
+                  fontSize: 9,
                   letterSpacing: "0.22em",
-                  textTransform: "uppercase" as const,
+                  textTransform: "uppercase",
                   color: "#9a8a6a",
-                  marginBottom: large ? 14 : 10,
+                  marginBottom: 14,
                 }}
               >
                 Chapter One
@@ -455,7 +443,7 @@ const BookSpread = ({
               <div
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: large ? 10 : 8,
+                  fontSize: 10,
                   fontStyle: "italic",
                   color: "#7a6a4a",
                   letterSpacing: "0.04em",
@@ -469,11 +457,11 @@ const BookSpread = ({
               <h3
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: large ? 17 : 13,
+                  fontSize: 17,
                   fontWeight: 700,
                   lineHeight: 1.15,
                   color: "#1e1a10",
-                  margin: large ? "0 0 12px" : "0 0 8px",
+                  margin: "0 0 12px",
                 }}
               >
                 The Wrong Map
@@ -483,10 +471,10 @@ const BookSpread = ({
               <div
                 style={{
                   fontFamily: "'EB Garamond', Georgia, serif",
-                  fontSize: large ? 10.5 : 8.5,
+                  fontSize: 10.5,
                   lineHeight: 1.75,
                   color: "#3a3020",
-                  textAlign: "justify" as const,
+                  textAlign: "justify",
                   flex: 1,
                   overflow: "hidden",
                 }}
@@ -504,14 +492,14 @@ const BookSpread = ({
                 style={{
                   borderTop: "1.5px solid #1e1a10",
                   borderBottom: "1.5px solid #1e1a10",
-                  padding: large ? "10px 0 8px" : "6px 0 4px",
-                  marginTop: large ? 10 : 6,
+                  padding: "10px 0 8px",
+                  marginTop: 10,
                 }}
               >
                 <p
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
-                    fontSize: large ? 11.5 : 9,
+                    fontSize: 11.5,
                     fontStyle: "italic",
                     lineHeight: 1.4,
                     color: "#1e1a10",
@@ -525,9 +513,9 @@ const BookSpread = ({
               {/* Page number */}
               <div
                 style={{
-                  textAlign: "center" as const,
+                  textAlign: "center",
                   fontFamily: "'EB Garamond', serif",
-                  fontSize: large ? 9 : 7,
+                  fontSize: 9,
                   color: "#b0a080",
                   letterSpacing: "0.1em",
                   marginTop: 6,
@@ -537,27 +525,27 @@ const BookSpread = ({
               </div>
             </div>
           </div>
-
-          {/* Bottom edge strip */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: -6,
-              left: 0,
-              right: 0,
-              height: 6,
-              background: "#1A0A00",
-              borderRadius: "0 0 4px 4px",
-            }}
-          />
         </div>
+
+        {/* Bottom edge strip */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: -6,
+            left: 0,
+            right: 0,
+            height: 6,
+            background: "#1A0A00",
+            borderRadius: "0 0 4px 4px",
+          }}
+        />
       </div>
 
       {/* Edition label */}
       <span
         className="font-mono mt-5"
         style={{
-          fontSize: large ? 10 : 9,
+          fontSize: 10,
           color: "rgba(184,147,58,0.45)",
           letterSpacing: "0.18em",
           textTransform: "uppercase",
