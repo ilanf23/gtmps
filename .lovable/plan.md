@@ -1,30 +1,21 @@
 
 
-## Add Interior Page Back to the 3D Book
+## Fix: Make the Interior Page Visible
 
-The current book only shows the front cover. The previous version had a second page (interior/chapter page) visible as part of the open spread. It needs to come back, positioned behind the front cover in the 3D space.
+The interior page exists in the code but is invisible because:
+1. It's positioned at `left: 0` with only `translateX(16px)` — the cover completely overlaps it
+2. `translateZ(-16px)` pushes it behind the cover, but at the current shallow rotation angle (~18deg), only ~5px of horizontal offset is created — not enough to see past the 290px-wide cover
 
-### Changes in `src/components/HeroSection.tsx`
+### Fix in `src/components/HeroSection.tsx`
 
-**Add an interior page div after the front cover (after line 542), inside the book wrapper.**
+**Change the interior page positioning** (around line 552):
+- Move it further right: `translateX(40px)` instead of `16px` so more of the right edge is visible past the cover
+- Alternatively, set `left: 20px` in addition to the translateX so the page clearly extends beyond the cover's right edge
+- Give it a slightly larger z-offset: `translateZ(-20px)` for better depth separation
+- Add a `zIndex: -1` to ensure proper layering if preserve-3d isn't handling it
 
-The interior page will be:
-- Same dimensions as the cover (290×404)
-- Positioned with `translateZ(-16px) translateX(16px)` so it peeks out from behind the right edge of the front cover, visible as a sliver suggesting the book is slightly open
-- Background `#f5f0e2` (warmer cream, distinct from the cover)
-- Contains the Chapter One content from the original spec:
-  - "CHAPTER ONE" header with gold line
-  - "The founding problem" subtitle in italic
-  - "The Wrong Map" title in Playfair Display bold
-  - Two body paragraphs in 11px, justified
-  - Pullquote block with top/bottom borders: "You were not bad at GTM. You were using the wrong map."
-  - Page number "12" centered at bottom
-- Padding 32px 28px
-- Subtle inset shadow on the left edge to simulate gutter shadow
+**Also check the parent container** has `position: relative` and `transformStyle: preserve-3d` so the Z-axis translations actually work. If the parent doesn't preserve 3D, the `translateZ` does nothing and both elements render flat on top of each other.
 
-This keeps the 3D closed-book silhouette while showing the interior page peeking out behind it, giving the impression of a slightly fanned book.
-
-### Scope
-- Single file: `src/components/HeroSection.tsx`
-- No left column, color, or typography changes
+### Expected result
+The chapter page will visibly fan out from behind the right edge of the cover, showing enough content to read "Chapter One" and "The Wrong Map" headers.
 
