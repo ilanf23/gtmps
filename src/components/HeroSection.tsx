@@ -37,14 +37,14 @@ const HeroSection = () => {
         style={{ opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }}
       />
 
-      <div className="relative flex flex-col lg:flex-row items-center px-6 pt-[100px] pb-[60px] lg:px-20 lg:pt-[120px] lg:pb-20 gap-10 lg:gap-8 max-w-[1400px] mx-auto min-h-screen">
+      <div className="relative flex flex-col lg:flex-row items-center px-6 pt-[100px] pb-[60px] lg:px-20 lg:pt-[120px] lg:pb-20 gap-10 lg:gap-8 max-w-[1400px] mx-auto min-h-screen overflow-hidden">
         {/* Book spread on mobile first */}
         <div className="block lg:hidden w-full">
           <BookSpread />
         </div>
 
         {/* Left column — text only */}
-        <div className="w-full lg:w-[42%] relative z-10">
+        <div className="w-full lg:w-[45%] relative z-10">
           {/* Eyebrow */}
           <div className="flex items-center gap-3">
             <div className="h-px bg-gold" style={{ width: 40 }} />
@@ -57,7 +57,7 @@ const HeroSection = () => {
           <h1
             className="font-display font-black text-white mt-7"
             style={{
-              fontSize: "clamp(48px, 6vw, 84px)",
+              fontSize: "clamp(44px, 5.5vw, 76px)",
               lineHeight: 0.95,
               letterSpacing: "-0.035em",
             }}
@@ -153,7 +153,7 @@ const HeroSection = () => {
         </div>
 
         {/* Right column — book spread (desktop) */}
-        <div className="hidden lg:flex w-[58%] items-center justify-center relative">
+        <div className="hidden lg:flex w-[55%] items-center justify-center relative">
           <BookSpread large />
         </div>
       </div>
@@ -193,8 +193,8 @@ const HeroSection = () => {
 
 /* ── Book Spread: cover + chapter page side by side ── */
 const BookSpread = ({ large }: { large?: boolean }) => {
-  const bookW = large ? 260 : 180;
-  const pageW = large ? 280 : 200;
+  const bookW = large ? 220 : 180;
+  const pageW = large ? 240 : 200;
   const glowSize = large ? 600 : 400;
 
   return (
@@ -212,7 +212,7 @@ const BookSpread = ({ large }: { large?: boolean }) => {
 
       {/* The spread */}
       <div
-        className="relative flex flex-row items-stretch gap-1"
+        className="relative flex flex-row items-stretch gap-px"
         style={{ perspective: 1200 }}
       >
         {/* Book cover */}
@@ -223,7 +223,7 @@ const BookSpread = ({ large }: { large?: boolean }) => {
             className="book-hero-reveal"
             style={{
               width: bookW,
-              maxWidth: large ? "30vw" : "45vw",
+              maxWidth: large ? "24vw" : "45vw",
               height: "auto",
               aspectRatio: "2/3",
               objectFit: "cover",
@@ -239,7 +239,7 @@ const BookSpread = ({ large }: { large?: boolean }) => {
         <div
           style={{
             width: pageW,
-            maxWidth: large ? "32vw" : "50vw",
+            maxWidth: large ? "26vw" : "50vw",
             aspectRatio: "2/3",
             background: "#f5f0e2",
             padding: large ? "32px 28px 40px" : "24px 20px 32px",
