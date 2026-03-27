@@ -304,221 +304,249 @@ const BookSpread = ({
 
   return (
     <div className="relative flex flex-col items-center" ref={bookRef}>
-      {/* Ambient glow */}
-      <div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: glowSize, height: glowSize,
-          background: "radial-gradient(circle, rgba(184,147,58,0.12) 0%, rgba(184,147,58,0.03) 40%, transparent 70%)",
-          top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-        }}
-      />
-
-      {/* The spread — perspective for page turn */}
-      <div
-        className="relative flex flex-row items-stretch"
-        style={{ height: h, gap: 3, perspective: 1200 }}
-      >
-        {/* Book cover with entrance animation */}
-        <div className="relative" style={{
-          height: "100%",
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(36px)",
-          transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1), transform 900ms cubic-bezier(0.22, 1, 0.36, 1)",
-        }}>
-          <img
-            src={bookCover}
-            alt="GTM for Professional Services"
-            style={{
-              height: "100%",
-              width: "auto",
-              objectFit: "cover",
-              borderRadius: "6px 2px 2px 6px",
-              boxShadow: large
-                ? "-6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
-                : "-4px 4px 16px rgba(0,0,0,0.35)",
-            }}
-          />
-          {/* Layer 2: Ambient light overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              borderRadius: "6px 2px 2px 6px",
-              mixBlendMode: "overlay",
-              opacity: 0.18,
-              zIndex: 2,
-              background: `radial-gradient(circle at ${lightPos.x}% ${lightPos.y}%, rgba(255,210,120,0.6) 0%, transparent 55%)`,
-            }}
-          />
-        </div>
-
-        {/* Chapter page area — with hidden page underneath */}
-        <div className="relative" style={{
-          height: "100%",
-          width: h * 0.62,
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(36px)",
-          transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) 90ms, transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 90ms",
-          transformStyle: "preserve-3d",
-        }}>
-          {/* Revealed interior page (behind the turning page) */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "#ede5d5",
-              borderRadius: "2px 6px 6px 2px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: large ? 28 : 20,
-              boxShadow: large
-                ? "6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
-                : "4px 4px 16px rgba(0,0,0,0.35)",
-            }}
-          >
-            <p
+      {/* Unified book object */}
+      <div style={{ perspective: 1400 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "stretch",
+            height: h,
+            transform: "rotate(-1.5deg) rotateX(3deg)",
+            transformStyle: "preserve-3d",
+            boxShadow: "0px 32px 80px rgba(0,0,0,0.55), 0px 8px 24px rgba(0,0,0,0.35)",
+            position: "relative",
+            opacity: mounted ? 1 : 0,
+            transformOrigin: "center center",
+            transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          {/* Left page (cover) */}
+          <div className="relative" style={{ height: "100%" }}>
+            <img
+              src={bookCover}
+              alt="GTM for Professional Services"
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: "italic",
-                fontSize: large ? 16 : 13,
-                lineHeight: 1.5,
-                color: "rgba(184,147,58,0.5)",
-                textAlign: "center",
-                maxWidth: "90%",
+                height: "100%",
+                width: "auto",
+                objectFit: "cover",
+                borderRadius: "6px 0 0 6px",
+                display: "block",
               }}
-            >
-              "The market you need to win is already in your CRM."
-            </p>
+            />
+            {/* Inset shadow on right edge (spine side) */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                borderRadius: "6px 0 0 6px",
+                boxShadow: "inset -20px 0 40px rgba(0,0,0,0.25)",
+              }}
+            />
+            {/* Left edge thickness strip */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: 0, left: 0, bottom: 0, width: 4,
+                background: "linear-gradient(to left, #0D0600, transparent)",
+                borderRadius: "6px 0 0 6px",
+              }}
+            />
+            {/* Layer 2: Ambient light overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                borderRadius: "6px 0 0 6px",
+                mixBlendMode: "overlay",
+                opacity: 0.18,
+                zIndex: 2,
+                background: `radial-gradient(circle at ${lightPos.x}% ${lightPos.y}%, rgba(255,210,120,0.6) 0%, transparent 55%)`,
+              }}
+            />
           </div>
 
-          {/* Main chapter page (turns on hover) */}
+          {/* Spine */}
           <div
-            onMouseEnter={() => setPageHover(true)}
-            onMouseLeave={() => setPageHover(false)}
             style={{
-              position: "relative",
-              zIndex: 1,
+              width: 14,
               height: "100%",
-              width: "100%",
-              background: "#f5f0e8",
-              padding: large ? "28px 24px 20px" : "20px 16px 14px",
-              borderRadius: "2px 6px 6px 2px",
-              boxShadow: large
-                ? "6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
-                : "4px 4px 16px rgba(0,0,0,0.35)",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column" as const,
-              transformOrigin: "left center",
-              transform: pageHover ? "rotateY(-25deg)" : "rotateY(0deg)",
-              transition: pageHover
-                ? "transform 400ms ease-in-out"
-                : "transform 350ms ease-in-out",
-              backfaceVisibility: "hidden" as const,
+              background: "linear-gradient(to right, #1A0A00 0%, #3D1E08 40%, #1A0A00 100%)",
+              flexShrink: 0,
             }}
-          >
-            {/* Chapter eyebrow */}
-            <div
-              className="flex items-center gap-3"
-              style={{
-                fontFamily: "'EB Garamond', Georgia, serif",
-                fontSize: large ? 9 : 7.5,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase" as const,
-                color: "#9a8a6a",
-                marginBottom: large ? 14 : 10,
-              }}
-            >
-              Chapter One
-              <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
-            </div>
+          />
 
-            {/* Subtitle */}
+          {/* Right page (chapter page area) */}
+          <div className="relative" style={{
+            height: "100%",
+            width: h * 0.62,
+            transformStyle: "preserve-3d",
+          }}>
+            {/* Revealed interior page (behind the turning page) */}
             <div
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: large ? 10 : 8,
-                fontStyle: "italic",
-                color: "#7a6a4a",
-                letterSpacing: "0.04em",
-                marginBottom: 3,
-              }}
-            >
-              The founding problem
-            </div>
-
-            {/* Title */}
-            <h3
-              style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: large ? 17 : 13,
-                fontWeight: 700,
-                lineHeight: 1.15,
-                color: "#1e1a10",
-                margin: large ? "0 0 12px" : "0 0 8px",
-              }}
-            >
-              The Wrong Map
-            </h3>
-
-            {/* Body */}
-            <div
-              style={{
-                fontFamily: "'EB Garamond', Georgia, serif",
-                fontSize: large ? 10.5 : 8.5,
-                lineHeight: 1.75,
-                color: "#3a3020",
-                textAlign: "justify" as const,
-                flex: 1,
-                overflow: "hidden",
-              }}
-            >
-              <p style={{ margin: "0 0 6px" }}>
-                Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
-              </p>
-              <p style={{ margin: 0 }}>
-                The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
-              </p>
-            </div>
-
-            {/* Pull quote */}
-            <blockquote
-              style={{
-                borderTop: "1.5px solid #1e1a10",
-                borderBottom: "1.5px solid #1e1a10",
-                padding: large ? "10px 0 8px" : "6px 0 4px",
-                marginTop: large ? 10 : 6,
+                position: "absolute",
+                inset: 0,
+                background: "#ede5d5",
+                borderRadius: "0 6px 6px 0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: large ? 28 : 20,
               }}
             >
               <p
                 style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: large ? 11.5 : 9,
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
                   fontStyle: "italic",
-                  lineHeight: 1.4,
-                  color: "#1e1a10",
-                  margin: 0,
+                  fontSize: large ? 16 : 13,
+                  lineHeight: 1.5,
+                  color: "rgba(184,147,58,0.5)",
+                  textAlign: "center",
+                  maxWidth: "90%",
                 }}
               >
-                "You were not bad at GTM. You were using the wrong map."
+                "The market you need to win is already in your CRM."
               </p>
-            </blockquote>
+            </div>
 
-            {/* Page number */}
+            {/* Main chapter page (turns on hover) */}
             <div
+              onMouseEnter={() => setPageHover(true)}
+              onMouseLeave={() => setPageHover(false)}
               style={{
-                textAlign: "center" as const,
-                fontFamily: "'EB Garamond', serif",
-                fontSize: large ? 9 : 7,
-                color: "#b0a080",
-                letterSpacing: "0.1em",
-                marginTop: 6,
+                position: "relative",
+                zIndex: 1,
+                height: "100%",
+                width: "100%",
+                background: "#f5f0e8",
+                padding: large ? "28px 24px 20px" : "20px 16px 14px",
+                borderRadius: "0 6px 6px 0",
+                boxShadow: "inset 20px 0 40px rgba(0,0,0,0.15)",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column" as const,
+                transformOrigin: "left center",
+                transform: pageHover ? "rotateY(-25deg)" : "rotateY(0deg)",
+                transition: pageHover
+                  ? "transform 400ms ease-in-out"
+                  : "transform 350ms ease-in-out",
+                backfaceVisibility: "hidden" as const,
               }}
             >
-              12
+              {/* Chapter eyebrow */}
+              <div
+                className="flex items-center gap-3"
+                style={{
+                  fontFamily: "'EB Garamond', Georgia, serif",
+                  fontSize: large ? 9 : 7.5,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase" as const,
+                  color: "#9a8a6a",
+                  marginBottom: large ? 14 : 10,
+                }}
+              >
+                Chapter One
+                <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
+              </div>
+
+              {/* Subtitle */}
+              <div
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: large ? 10 : 8,
+                  fontStyle: "italic",
+                  color: "#7a6a4a",
+                  letterSpacing: "0.04em",
+                  marginBottom: 3,
+                }}
+              >
+                The founding problem
+              </div>
+
+              {/* Title */}
+              <h3
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontSize: large ? 17 : 13,
+                  fontWeight: 700,
+                  lineHeight: 1.15,
+                  color: "#1e1a10",
+                  margin: large ? "0 0 12px" : "0 0 8px",
+                }}
+              >
+                The Wrong Map
+              </h3>
+
+              {/* Body */}
+              <div
+                style={{
+                  fontFamily: "'EB Garamond', Georgia, serif",
+                  fontSize: large ? 10.5 : 8.5,
+                  lineHeight: 1.75,
+                  color: "#3a3020",
+                  textAlign: "justify" as const,
+                  flex: 1,
+                  overflow: "hidden",
+                }}
+              >
+                <p style={{ margin: "0 0 6px" }}>
+                  Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
+                </p>
+                <p style={{ margin: 0 }}>
+                  The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
+                </p>
+              </div>
+
+              {/* Pull quote */}
+              <blockquote
+                style={{
+                  borderTop: "1.5px solid #1e1a10",
+                  borderBottom: "1.5px solid #1e1a10",
+                  padding: large ? "10px 0 8px" : "6px 0 4px",
+                  marginTop: large ? 10 : 6,
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: large ? 11.5 : 9,
+                    fontStyle: "italic",
+                    lineHeight: 1.4,
+                    color: "#1e1a10",
+                    margin: 0,
+                  }}
+                >
+                  "You were not bad at GTM. You were using the wrong map."
+                </p>
+              </blockquote>
+
+              {/* Page number */}
+              <div
+                style={{
+                  textAlign: "center" as const,
+                  fontFamily: "'EB Garamond', serif",
+                  fontSize: large ? 9 : 7,
+                  color: "#b0a080",
+                  letterSpacing: "0.1em",
+                  marginTop: 6,
+                }}
+              >
+                12
+              </div>
             </div>
           </div>
+
+          {/* Bottom edge strip */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: -6,
+              left: 0,
+              right: 0,
+              height: 6,
+              background: "#1A0A00",
+              borderRadius: "0 0 4px 4px",
+            }}
+          />
         </div>
       </div>
 
