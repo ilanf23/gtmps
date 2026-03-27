@@ -193,9 +193,8 @@ const HeroSection = () => {
 
 /* ── Book Spread: cover + chapter page side by side ── */
 const BookSpread = ({ large }: { large?: boolean }) => {
-  const bookW = large ? 220 : 180;
-  const pageW = large ? 240 : 200;
-  const glowSize = large ? 600 : 400;
+  const h = large ? 380 : 280;
+  const glowSize = large ? 500 : 350;
 
   return (
     <div className="relative flex flex-col items-center">
@@ -204,51 +203,42 @@ const BookSpread = ({ large }: { large?: boolean }) => {
         className="absolute rounded-full pointer-events-none"
         style={{
           width: glowSize, height: glowSize,
-          background: "radial-gradient(circle, rgba(184,147,58,0.14) 0%, rgba(184,147,58,0.04) 40%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(184,147,58,0.12) 0%, rgba(184,147,58,0.03) 40%, transparent 70%)",
           top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          animation: "glowPulse 5s ease-in-out infinite",
         }}
       />
 
-      {/* The spread */}
+      {/* The spread — both sides share the same fixed height */}
       <div
-        className="relative flex flex-row items-stretch gap-px"
-        style={{ perspective: 1200 }}
+        className="relative flex flex-row items-stretch"
+        style={{ height: h, gap: 3 }}
       >
         {/* Book cover */}
-        <div style={{ transform: "rotateY(5deg)", transformOrigin: "right center" }}>
-          <img
-            src={bookCover}
-            alt="GTM for Professional Services"
-            className="book-hero-reveal"
-            style={{
-              width: bookW,
-              maxWidth: large ? "24vw" : "45vw",
-              height: "auto",
-              aspectRatio: "2/3",
-              objectFit: "cover",
-              borderRadius: "6px 2px 2px 6px",
-              boxShadow: large
-                ? "-8px 8px 30px rgba(0,0,0,0.4), 0 40px 80px rgba(0,0,0,0.3)"
-                : "-4px 6px 20px rgba(0,0,0,0.35)",
-            }}
-          />
-        </div>
+        <img
+          src={bookCover}
+          alt="GTM for Professional Services"
+          style={{
+            height: "100%",
+            width: "auto",
+            objectFit: "cover",
+            borderRadius: "6px 2px 2px 6px",
+            boxShadow: large
+              ? "-6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
+              : "-4px 4px 16px rgba(0,0,0,0.35)",
+          }}
+        />
 
-        {/* Chapter page */}
+        {/* Chapter page — same height as cover */}
         <div
           style={{
-            width: pageW,
-            maxWidth: large ? "26vw" : "50vw",
-            aspectRatio: "2/3",
-            background: "#f5f0e2",
-            padding: large ? "32px 28px 40px" : "24px 20px 32px",
+            height: "100%",
+            width: h * 0.62,
+            background: "#f5f0e8",
+            padding: large ? "28px 24px 20px" : "20px 16px 14px",
             borderRadius: "2px 6px 6px 2px",
-            transform: "rotateY(-4deg)",
-            transformOrigin: "left center",
             boxShadow: large
-              ? "8px 8px 30px rgba(0,0,0,0.4), 0 40px 80px rgba(0,0,0,0.3)"
-              : "4px 6px 20px rgba(0,0,0,0.35)",
+              ? "6px 6px 24px rgba(0,0,0,0.4), 0 30px 60px rgba(0,0,0,0.25)"
+              : "4px 4px 16px rgba(0,0,0,0.35)",
             overflow: "hidden",
             display: "flex",
             flexDirection: "column" as const,
@@ -259,11 +249,11 @@ const BookSpread = ({ large }: { large?: boolean }) => {
             className="flex items-center gap-3"
             style={{
               fontFamily: "'EB Garamond', Georgia, serif",
-              fontSize: large ? 9.5 : 8,
+              fontSize: large ? 9 : 7.5,
               letterSpacing: "0.22em",
               textTransform: "uppercase" as const,
               color: "#9a8a6a",
-              marginBottom: large ? 20 : 14,
+              marginBottom: large ? 14 : 10,
             }}
           >
             Chapter One
@@ -274,11 +264,11 @@ const BookSpread = ({ large }: { large?: boolean }) => {
           <div
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: large ? 11 : 9,
+              fontSize: large ? 10 : 8,
               fontStyle: "italic",
               color: "#7a6a4a",
               letterSpacing: "0.04em",
-              marginBottom: 4,
+              marginBottom: 3,
             }}
           >
             The founding problem
@@ -288,11 +278,11 @@ const BookSpread = ({ large }: { large?: boolean }) => {
           <h3
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: large ? 20 : 16,
+              fontSize: large ? 17 : 13,
               fontWeight: 700,
               lineHeight: 1.15,
               color: "#1e1a10",
-              margin: large ? "0 0 16px" : "0 0 10px",
+              margin: large ? "0 0 12px" : "0 0 8px",
             }}
           >
             The Wrong Map
@@ -302,22 +292,19 @@ const BookSpread = ({ large }: { large?: boolean }) => {
           <div
             style={{
               fontFamily: "'EB Garamond', Georgia, serif",
-              fontSize: large ? 11.5 : 9.5,
-              lineHeight: 1.8,
+              fontSize: large ? 10.5 : 8.5,
+              lineHeight: 1.75,
               color: "#3a3020",
               textAlign: "justify" as const,
               flex: 1,
               overflow: "hidden",
             }}
           >
-            <p style={{ margin: "0 0 8px" }}>
+            <p style={{ margin: "0 0 6px" }}>
               Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
             </p>
-            <p style={{ margin: "0 0 8px" }}>
-              The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
-            </p>
             <p style={{ margin: 0 }}>
-              Professional services firms borrowed these playbooks and spent years wondering why they produced so little. The answer was never execution.
+              The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
             </p>
           </div>
 
@@ -326,16 +313,16 @@ const BookSpread = ({ large }: { large?: boolean }) => {
             style={{
               borderTop: "1.5px solid #1e1a10",
               borderBottom: "1.5px solid #1e1a10",
-              padding: large ? "12px 0 10px" : "8px 0 6px",
-              marginTop: large ? 12 : 8,
+              padding: large ? "10px 0 8px" : "6px 0 4px",
+              marginTop: large ? 10 : 6,
             }}
           >
             <p
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: large ? 13 : 10.5,
+                fontSize: large ? 11.5 : 9,
                 fontStyle: "italic",
-                lineHeight: 1.45,
+                lineHeight: 1.4,
                 color: "#1e1a10",
                 margin: 0,
               }}
@@ -349,10 +336,10 @@ const BookSpread = ({ large }: { large?: boolean }) => {
             style={{
               textAlign: "center" as const,
               fontFamily: "'EB Garamond', serif",
-              fontSize: large ? 10 : 8,
+              fontSize: large ? 9 : 7,
               color: "#b0a080",
               letterSpacing: "0.1em",
-              marginTop: 8,
+              marginTop: 6,
             }}
           >
             12
