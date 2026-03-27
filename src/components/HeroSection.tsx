@@ -128,7 +128,7 @@ const HeroSection = () => {
         </div>
 
         {/* Left column — text only */}
-        <div className="w-full lg:w-[45%] relative z-10">
+        <div className="w-full lg:flex-1 lg:min-w-0 relative z-10">
           {/* Eyebrow */}
           <div className="flex items-center gap-3">
             <div className="h-px bg-gold" style={{ width: 40 }} />
@@ -241,7 +241,7 @@ const HeroSection = () => {
         </div>
 
         {/* Right column — book spread (desktop) */}
-        <div className="hidden lg:flex w-[55%] items-center justify-center relative overflow-hidden max-w-full">
+        <div className="hidden lg:flex lg:w-[560px] lg:max-w-[560px] lg:flex-shrink-0 items-center justify-center relative overflow-hidden">
           <BookSpread large bookRef={bookRef} lightPos={lightPos} />
         </div>
       </div>
@@ -311,7 +311,9 @@ const BookSpread = ({
             display: "flex",
             flexDirection: "row",
             alignItems: "stretch",
-            height: h,
+            height: large ? undefined : 280,
+            maxHeight: large ? 480 : 280,
+            aspectRatio: large ? "2.2 / 1" : undefined,
             transform: "rotate(-1deg)",
             boxShadow: "0px 32px 80px rgba(0,0,0,0.55), 0px 8px 24px rgba(0,0,0,0.35)",
             position: "relative",
@@ -321,7 +323,7 @@ const BookSpread = ({
           }}
         >
           {/* Left page (cover) */}
-          <div className="relative" style={{ height: "100%", width: "calc(50% - 7px)", flexShrink: 0, overflow: "hidden" }}>
+          <div className="relative" style={{ height: "100%", width: "calc(50% - 5px)", flexShrink: 0, overflow: "hidden", background: "#F5EDD8" }}>
             <img
               src={bookCover}
               alt="GTM for Professional Services"
@@ -366,9 +368,9 @@ const BookSpread = ({
           {/* Spine */}
           <div
             style={{
-              width: 14,
+              width: 10,
               height: "100%",
-              background: "linear-gradient(to right, #1A0A00 0%, #3D1E08 40%, #1A0A00 100%)",
+              background: "#2A1200",
               flexShrink: 0,
             }}
           />
@@ -376,7 +378,7 @@ const BookSpread = ({
           {/* Right page (chapter page area) */}
           <div className="relative" style={{
             height: "100%",
-            width: "calc(50% - 7px)",
+            width: "calc(50% - 5px)",
             flexShrink: 0,
             perspective: 1400,
             transformStyle: "preserve-3d",
