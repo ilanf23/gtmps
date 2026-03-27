@@ -1,21 +1,23 @@
 
 
-## Fix: Make the Interior Page Visible
+## Fix: Make Interior Page Half-Visible Behind Cover
 
-The interior page exists in the code but is invisible because:
-1. It's positioned at `left: 0` with only `translateX(16px)` — the cover completely overlaps it
-2. `translateZ(-16px)` pushes it behind the cover, but at the current shallow rotation angle (~18deg), only ~5px of horizontal offset is created — not enough to see past the 290px-wide cover
+The interior page is invisible because it sits at `left: 20` with `translateX(40px)` and `zIndex: -1`, which means it's almost entirely behind the 290px-wide front cover. At the current rotation angle, the 3D offset isn't enough to reveal it.
+
+### Root cause
+The `translateZ(-20px)` combined with `rotateY(-18deg)` only creates about 6px of apparent horizontal shift. Combined with `left: 20` and `translateX(40px)`, the page is still fully occluded by the 290px cover.
 
 ### Fix in `src/components/HeroSection.tsx`
 
-**Change the interior page positioning** (around line 552):
-- Move it further right: `translateX(40px)` instead of `16px` so more of the right edge is visible past the cover
-- Alternatively, set `left: 20px` in addition to the translateX so the page clearly extends beyond the cover's right edge
-- Give it a slightly larger z-offset: `translateZ(-20px)` for better depth separation
-- Add a `zIndex: -1` to ensure proper layering if preserve-3d isn't handling it
+**Move the interior page far enough right that half of it (roughly 145px) is visible past the cover's right edge:**
 
-**Also check the parent container** has `position: relative` and `transformStyle: preserve-3d` so the Z-axis translations actually work. If the parent doesn't preserve 3D, the `translateZ` does nothing and both elements render flat on top of each other.
+1. Change interior page positioning from `left: 20, translateX(40px)` to `left: 160px, translateZ(-20px)` — this pushes the page 160px to the right of the cover's left edge, so about 160px of its 290px width extends past the cover
+2. Remove `zIndex: -1` — instead rely on `translateZ(-20px)` for proper 3D stacking (zIndex fights with preserve-3d)
+3. Ensure the book wrapper container doesn't clip — verify no `overflow: hidden` on the preserve-3d wrapper
 
-### Expected result
-The chapter page will visibly fan out from behind the right edge of the cover, showing enough content to read "Chapter One" and "The Wrong Map" headers.
+This will show the right half of the interior page fanning out behind the cover, making the chapter heading, body text, and pullquote clearly readable.
+
+### Scope
+- Single file: `src/components/HeroSection.tsx`
+- Only the interior page div positioning changes (lines ~545–560)
 
