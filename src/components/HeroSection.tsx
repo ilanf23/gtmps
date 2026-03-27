@@ -359,7 +359,7 @@ const BookMockup = ({
             style={{
               width: "50%",
               position: "relative",
-              minHeight: 420,
+              minHeight: 280,
               maxHeight: 480,
               transformStyle: "preserve-3d",
             }}
