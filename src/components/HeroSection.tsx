@@ -293,8 +293,7 @@ const BookMockup = ({
   return (
     <div
       ref={bookRef}
-      className="relative flex flex-col items-center"
-      style={{ width: "100%", maxWidth: 540, margin: "0 auto" }}
+      className="relative flex flex-col items-center w-full max-w-[360px] lg:max-w-[540px] mx-auto"
     >
       {/* Book object */}
       <div
