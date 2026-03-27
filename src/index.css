@@ -129,6 +129,18 @@
   50% { transform: scale(1.4); opacity: 0.6; }
 }
 
+/* Layer 3: dot fade */
+@keyframes dotFade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Layer 3: counter one-shot pulse */
+@keyframes counterPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
 /* Book float animation */
 @keyframes bookFloat {
   0%, 100% { transform: rotateY(-6deg) translateY(0px); }
