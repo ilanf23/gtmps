@@ -1,26 +1,33 @@
 
 
-## Add "See Our Framework" Hover Reveal to Book Section
+## Replace Hero Subhead with Premium Book Page Preview
 
-**What**: Add a "See Our Framework" button/link below the book in the BookSection. On hover (desktop) or tap (mobile), it reveals an overlay/popover showing the RROS framework diagram from the uploaded HTML — the 5-stage process (Discover → Prove → Design → Activate → Compound), the 5 orbits, and the formula bar.
+**What changes**: Remove the paragraph of text below the headline in HeroSection. Replace it with a styled "book page" component that shows Chapter One content from the uploaded HTML, creating a two-piece visual: the book cover on the right + an open page preview integrated into the left column.
 
-### Changes
+### Changes in `src/components/HeroSection.tsx`
 
-**`src/components/BookSection.tsx`** (single file)
+1. **Remove** the subhead paragraph (lines 105-116) — the block starting with "GTM has one universally accepted definition..."
 
-1. Add React `useState` for hover/active state
-2. Below the "First Edition · Q4 2026" label, add a styled "See Our Framework →" text link with `onMouseEnter`/`onMouseLeave` (and `onClick` toggle for mobile)
-3. When active, render a framework card that appears with a smooth scale/opacity transition, positioned overlaying or replacing the book area. The card contains:
-   - **Header**: "THE RROS PROCESS™" eyebrow + "The Relationship Revenue OS" title + subtitle line
-   - **5 Stages row**: Dark espresso-colored cards (Discover, Prove, Design, Activate, Compound) with stage numbers, names, tags, and notes — matching the uploaded HTML's color scheme (dark bg, cream/gold text, coral accents)
-   - **5 Orbits row**: Pill-shaped items (Core/Proof, Active/Current, Dead Zone/Dormant in coral, Adjacent/Warm, Gravity/New) with gold borders
-   - **Formula bar**: Dark strip with "SIGNAL + PROOF + CONTEXT = RESPONSE, NOT PITCH"
-4. Style uses the existing CSS variables (`--gold`, `--cream`, etc.) and keeps the cream section's aesthetic. The framework panel uses dark (`#1A0A00` / `#281200`) backgrounds for the stages to create contrast, matching the uploaded design.
-5. Transition: `opacity` + `scale` with 300ms ease for smooth reveal.
+2. **Replace with a book page component** styled to look like a premium printed page:
+   - Cream/parchment background (`#f5f0e2`) with subtle box shadow to look like paper
+   - "Chapter One" eyebrow with gold rule
+   - Italic headline "The founding problem"
+   - Title "The Wrong Map" in serif
+   - 2-3 body paragraphs from the uploaded HTML (the core content about the wrong GTM assumption)
+   - Pull quote at the bottom: "You were not bad at GTM. You were using the wrong map."
+   - Page number "12" at bottom center
+   - Slightly rotated (~1-2deg) for a premium, editorial feel
+   - Max width ~400px, compact so it fits the left column without overwhelming the headline
 
-### Technical notes
-- All content is hardcoded (matches the uploaded HTML exactly)
-- No new files or dependencies needed
-- Framework card is absolutely positioned over the book display area
-- Uses Tailwind + minimal inline styles consistent with existing patterns
+3. **Keep everything else**: eyebrow, headline, urgency strip, CTA buttons, stat strip all remain unchanged.
+
+### Design details
+- Use serif fonts (Playfair Display / EB Garamond via Google Fonts import or fallback to Georgia)
+- The page sits between the headline and the urgency strip
+- On mobile, the page appears between the book cover and the CTAs
+- Subtle gold accents on the chapter rule and pull quote borders to tie into the site's gold palette
+- The combination of the 3D book cover (right) and this open page (left) creates a "cover + interior" pairing
+
+### Files
+- `src/components/HeroSection.tsx` — single file edit
 
