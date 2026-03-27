@@ -540,6 +540,143 @@ const HeroSection = () => {
                   }}
                 />
               </div>
+
+              {/* ── INTERIOR PAGE (peeking out behind cover) ── */}
+              <div
+                style={{
+                  position: "absolute",
+                  width: 290,
+                  height: 404,
+                  background: "#f5f0e2",
+                  borderRadius: "3px 5px 5px 3px",
+                  transform: "translateZ(-16px) translateX(16px)",
+                  top: 0,
+                  left: 0,
+                  padding: "32px 28px",
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+                  boxShadow: "inset 6px 0 12px rgba(0,0,0,0.08), inset 1px 0 3px rgba(0,0,0,0.04)",
+                }}
+              >
+                {/* Paper texture */}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    opacity: 0.03,
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 5h1v1H1V5zm2-2h1v1H3V3zm2-2h1v1H5V1zM0 2h1v1H0V2zm2 2h1v1H2V4zm2-2h1v1H4V2z' fill='%23000' fill-opacity='1'/%3E%3C/svg%3E\")",
+                    pointerEvents: "none",
+                  }}
+                />
+
+                {/* Chapter header */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 16 }}>
+                  <span
+                    style={{
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: 8,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase",
+                      color: "#8a7a5a",
+                    }}
+                  >
+                    Chapter One
+                  </span>
+                  <div style={{ width: 32, height: 1, background: "#b8972e", margin: "8px 0" }} />
+                  <span
+                    style={{
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: 10,
+                      fontStyle: "italic",
+                      color: "#6b6060",
+                    }}
+                  >
+                    The founding problem
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontWeight: 700,
+                    fontSize: 22,
+                    color: "#1e1a10",
+                    textAlign: "center",
+                    margin: "0 0 16px 0",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  The Wrong Map
+                </h3>
+
+                {/* Body text */}
+                <p
+                  style={{
+                    fontFamily: "'EB Garamond', Georgia, serif",
+                    fontSize: 11,
+                    lineHeight: 1.7,
+                    color: "#3a3530",
+                    textAlign: "justify",
+                    margin: "0 0 10px 0",
+                  }}
+                >
+                  Most professional services firms were built on reputation, referrals, and relationships that
+                  formed organically over decades of practice.
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'EB Garamond', Georgia, serif",
+                    fontSize: 11,
+                    lineHeight: 1.7,
+                    color: "#3a3530",
+                    textAlign: "justify",
+                    margin: "0 0 16px 0",
+                  }}
+                >
+                  When growth slowed, these firms reached for the same playbook that works for SaaS and
+                  consumer brands. They bought ads, hired SDRs, and invested in marketing automation.
+                </p>
+
+                {/* Pullquote */}
+                <div
+                  style={{
+                    borderTop: "1px solid #c8b88a60",
+                    borderBottom: "1px solid #c8b88a60",
+                    padding: "12px 8px",
+                    margin: "0 0 16px 0",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontStyle: "italic",
+                      fontSize: 12,
+                      lineHeight: 1.6,
+                      color: "#9a7a28",
+                      textAlign: "center",
+                      margin: 0,
+                    }}
+                  >
+                    "You were not bad at GTM. You were using the wrong map."
+                  </p>
+                </div>
+
+                {/* Page number */}
+                <span
+                  style={{
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: 9,
+                    color: "#8a7a5a",
+                    textAlign: "center",
+                    marginTop: "auto",
+                  }}
+                >
+                  12
+                </span>
+              </div>
             </div>
           </div>
 
