@@ -44,7 +44,7 @@ const HeroSection = () => {
         </div>
 
         {/* Left column — text only */}
-        <div className="w-full lg:w-[42%] relative z-10">
+        <div className="w-full lg:w-[45%] relative z-10">
           {/* Eyebrow */}
           <div className="flex items-center gap-3">
             <div className="h-px bg-gold" style={{ width: 40 }} />
