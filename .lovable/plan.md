@@ -1,49 +1,51 @@
 
 
-## Rebuild Hero Section: Desktop-Only, Pixel-Perfect Spec
+## Make the Book Mockup Look Like a Real Book
 
-Complete rewrite of `src/components/HeroSection.tsx` to match the detailed spec. Two additional changes needed for fonts and the definition callout removal.
+The current implementation renders two flat divs side by side with a thin spine line. It looks like two cards, not a book. The fix is to add **physical depth and realistic book details** using CSS 3D techniques.
 
-### Files to change
+### Key problems with current approach
+- No visible book thickness (spine is just a 2px line)
+- No page edges visible from the side
+- Cover has no depth or material difference from interior page
+- Flat lighting, no gradient shading that suggests a curved surface
 
-**1. `index.html` — Add Google Fonts**
-- Add `Barlow+Condensed:wght@800` and `Libre+Baskerville:ital,wght@0,400;0,700;1,400` to the existing Google Fonts link
+### What changes in `src/components/HeroSection.tsx`
 
-**2. `src/components/HeroSection.tsx` — Full rewrite**
+**1. Add a real 3D spine with depth**
+- The spine becomes a 30px-wide div with `transform: rotateY(90deg)` positioned between cover and interior page using `preserve-3d`
+- Background: dark leather/cloth gradient (#3a3020 to #2a2018) to simulate binding material
+- This gives the book actual Z-depth
 
-The component will be rebuilt from scratch with these major structural changes:
+**2. Add visible page edges (fore-edge)**
+- A thin strip (6-8px) on the right side of the right page, slightly recessed, showing stacked page lines
+- Use a repeating linear gradient of alternating #e8e0d0 and #d8d0c0 at 1px intervals to simulate cut paper edges
+- Transform with `rotateY(90deg)` on the right edge
 
-- **Background**: `#0e0d0b` with SVG noise texture overlay at 3% opacity (reuse existing pattern)
-- **Layout**: Single two-column CSS grid, equal `1fr 1fr` columns, 120px horizontal padding, 80px vertical padding, 80px gap, vertically centered, min-height 100vh
-- **No mobile breakpoints** — everything targets 1280px+ only
-- **Remove the definition callout block** at the bottom (it moves into the right page pullquote per spec)
-- **Keep the `useCountUp` hook** and intersection observer for animated stats
+**3. Make the cover feel like a hard cover**
+- Add a 3-4px border/frame effect on the left page to simulate the cover board being slightly larger than the text block
+- Darken the cover background slightly compared to interior (#ebe5d4 vs #f5f0e2) or add a subtle linen texture
+- Add a very subtle emboss effect on the cover title text using text-shadow
 
-**Left column contents (top-aligned, flex column, gap 32px):**
-- Gold kicker: 28px gold line + "BOOK RESEARCH · LIMITED TO 50 SESSIONS" in Libre Baskerville 10px
-- Headline: "The First GTM Book for Professional Services." in Barlow Condensed 800 weight, 76px, gold period
-- Sessions badge: gold dot + "46 OF 50 SESSIONS REMAINING" in 10px #6b6560
-- Two pill CTA buttons (primary gold #b8972e, secondary transparent with white border)
-- Three stats with Playfair Display 52px numbers in #b8972e, separated by 1px #2a2720 vertical lines
+**4. Improve the spine shadow between pages**
+- Replace the flat 2px div with a radial gradient shadow that darkens toward the center gutter
+- Add `inset` box-shadows on both pages that are stronger near the spine: `inset -8px 0 16px rgba(0,0,0,0.12)` on the left page, `inset 8px 0 16px rgba(0,0,0,0.08)` on the right
 
-**Right column — book mockup (complete rebuild, no cover image):**
-- Two side-by-side page divs, each 280×392px, with 2px spine shadow between them
-- Entire pair wrapped in a 3D transform: `perspective(1200px) rotateY(-6deg) rotateX(3deg)`
-- Drop shadow: `0 40px 80px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.4)`
-- **Left page (cover)**: Built entirely in CSS/HTML — periodic table tile (100×100px, gold bg, "50"/"Gt"/"growth"), concentric SVG circles, title text, subtitle, author names, horizontal rule
-- **Right page (interior)**: Chapter One header with gold line, "The founding problem" subtitle, "The Wrong Map" title, two body paragraphs, pullquote block with borders, page number "12"
-- Keep the page-turn hover effect on the right page
-- Edition label below: "Q4 2026 · MABBLY PRESS · FIRST EDITION"
+**5. Add page stack effect beneath**
+- 2-3 thin offset divs (1px each) behind the book pair, shifted 2px down and 1px right each, in slightly different cream tones
+- This creates the illusion of multiple pages beneath the visible spread
 
-**Key differences from current implementation:**
-- No `bookCover` image import — the cover is rendered purely in HTML/CSS
-- No responsive/mobile code — everything is fixed desktop sizing
-- Spec-exact colors (#b8972e instead of #B8933A, #0e0d0b instead of #0D1117, #f5f0e2 pages)
-- Spec-exact typography (Barlow Condensed for headline, Libre Baskerville for kicker/cover, Playfair Display for stats/titles, EB Garamond for body)
-- Stats use Playfair Display at 52px instead of Inter Tight
-- Definition callout block removed from bottom of section (content integrated into right page pullquote)
+**6. Enhance the 3D transform and shadow**
+- Keep `perspective(1200px) rotateY(-6deg) rotateX(3deg)` 
+- Add a soft ambient glow beneath: a blurred ellipse shadow on a pseudo-element below the book
+
+### Technical approach
+- All changes are pure inline CSS, no external libraries
+- Use `transformStyle: preserve-3d` on the book container to enable true 3D child positioning
+- Page stack divs are absolutely positioned behind the main pages
+- The spine depth div uses `translateZ()` to sit between the two pages in 3D space
 
 ### Scope
-- `index.html` — font link addition
-- `src/components/HeroSection.tsx` — full rewrite
+- Single file: `src/components/HeroSection.tsx`
+- No content, color palette, typography, or left-column changes
 
