@@ -1,26 +1,40 @@
 
 
-## Fix Hero Layout, Cover, Spine, and Book Height
+## Make Hero Section Responsive
+
+The hero grid uses a fixed `gridTemplateColumns: "1fr 1fr"` and `padding: "64px 80px"` at all sizes, which breaks on tablet and mobile. The book has fixed `minHeight: 420px` that won't fit small screens. The stats strip and definition callout also need scaling.
 
 ### Changes in `src/components/HeroSection.tsx`
 
-**1. Restore two-column layout (line 124, 131, 244)**
-- Left column: change `lg:w-[45%]` to `lg:flex-1 lg:min-w-0` so it takes remaining space
-- Right column: change `w-[55%]` to `lg:w-[560px] lg:max-w-[560px] lg:flex-shrink-0` so it's capped at 560px and never overflows
+**1. Grid layout — stack on mobile, two columns on desktop**
+- Replace the inline `gridTemplateColumns: "1fr 1fr"` with responsive approach:
+  - Use className instead of inline style for the grid
+  - Mobile (default): single column, `padding: 32px 20px`, `gap: 32px`, `minHeight: auto`
+  - Tablet (md, 768px+): single column still, `padding: 48px 40px`
+  - Desktop (lg, 1024px+): `grid-cols-2`, `padding: 64px 80px`, `min-h-screen`, `gap-12`
+- On mobile, the left column (text) comes first, book below it
 
-**2. Remove inner white card on cover (lines 324-364)**
-- The left page currently renders an `<img>` with `objectFit: cover`. The cover image itself has a cream background baked in, so this should already work. The issue the user sees is likely the `<img>` not fully covering due to aspect ratio. Change the left page container background to `#F5EDD8` so any gap shows cream, not white/gray.
+**2. Book mockup scaling**
+- Change `maxWidth: 540` to `maxWidth: 400` on mobile, `540` on desktop (use a responsive class or clamp)
+- Change `minHeight: 420` / `maxHeight: 480` on both pages to scale down on mobile: `minHeight: 280`, `maxHeight: 320` below lg
+- Reduce book padding on mobile (chapter page padding from `32px 28px` to `20px 16px`)
+- Scale down chapter page font sizes slightly on mobile
 
-**3. Thin the spine (lines 367-374)**
-- Change width from `14` to `10`
-- Change background from gradient to solid `#2A1200`
-- Update left/right page widths from `calc(50% - 7px)` to `calc(50% - 5px)` to account for 10px spine
+**3. Stats strip**
+- Currently `flex` with `gap-0`. On mobile, wrap or stack: use `flex-wrap` and give each stat `min-width` so they wrap to 2+1 or stack vertically on very small screens
+- Reduce stat number clamp lower bound
 
-**4. Constrain book max-height (line 309-321)**
-- Remove the fixed `height: h` (380/280) from the inner book div
-- Add `maxHeight: 480` to the inner book div for large, keep `280` for mobile
-- Add `aspectRatio: "2.2 / 1"` so the book maintains a natural open-book ratio within the height constraint
+**4. CTA buttons**
+- Already has `flex-col sm:flex-row` — good. Reduce padding on mobile from `17px 44px` to `14px 28px`
 
-### Files
-- `src/components/HeroSection.tsx` — single file
+**5. Definition callout**
+- Already has `mx-6 md:mx-auto` — good. Reduce padding on mobile from `36px 48px` to `24px 20px`
+
+**6. Headline**
+- Already uses `clamp(44px, 5.5vw, 76px)` — lower the minimum to `32px` for small screens
+
+### Approach
+- Convert the grid container from pure inline styles to a mix of Tailwind classes (for responsive breakpoints) and inline styles (for non-responsive values like maxWidth)
+- Keep all existing desktop appearance identical
+- Single file change: `src/components/HeroSection.tsx`
 
