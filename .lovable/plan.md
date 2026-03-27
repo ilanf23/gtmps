@@ -1,40 +1,18 @@
 
 
-## Make Hero Section Responsive
+## Fix Book Sizing: Bigger on Desktop, Smaller on Mobile
 
-The hero grid uses a fixed `gridTemplateColumns: "1fr 1fr"` and `padding: "64px 80px"` at all sizes, which breaks on tablet and mobile. The book has fixed `minHeight: 420px` that won't fit small screens. The stats strip and definition callout also need scaling.
+The book wrapper at line 296 currently uses `max-w-[360px] lg:max-w-[540px]`. At 1415px viewport with a 1fr/1fr grid, 540px is undersized for the right column. On mobile, 360px is too large relative to the screen.
 
 ### Changes in `src/components/HeroSection.tsx`
 
-**1. Grid layout — stack on mobile, two columns on desktop**
-- Replace the inline `gridTemplateColumns: "1fr 1fr"` with responsive approach:
-  - Use className instead of inline style for the grid
-  - Mobile (default): single column, `padding: 32px 20px`, `gap: 32px`, `minHeight: auto`
-  - Tablet (md, 768px+): single column still, `padding: 48px 40px`
-  - Desktop (lg, 1024px+): `grid-cols-2`, `padding: 64px 80px`, `min-h-screen`, `gap-12`
-- On mobile, the left column (text) comes first, book below it
+**1. Book wrapper responsive max-width (line 296)**
+- Change `max-w-[360px] lg:max-w-[540px]` to `max-w-[280px] sm:max-w-[320px] lg:max-w-[580px]`
+- This makes the book smaller on mobile (280px), moderate on tablet (320px), and larger on desktop (580px)
 
-**2. Book mockup scaling**
-- Change `maxWidth: 540` to `maxWidth: 400` on mobile, `540` on desktop (use a responsive class or clamp)
-- Change `minHeight: 420` / `maxHeight: 480` on both pages to scale down on mobile: `minHeight: 280`, `maxHeight: 320` below lg
-- Reduce book padding on mobile (chapter page padding from `32px 28px` to `20px 16px`)
-- Scale down chapter page font sizes slightly on mobile
+**2. Book page min-height scaling (lines 316, 380)**
+- Change `minHeight: 280` to a responsive approach: use Tailwind classes or keep 280 but the wider max-width on desktop will naturally make the book taller via aspect ratio
+- Alternatively, reduce mobile minHeight to `220` and keep desktop at `280` (the maxHeight 480 already caps it)
 
-**3. Stats strip**
-- Currently `flex` with `gap-0`. On mobile, wrap or stack: use `flex-wrap` and give each stat `min-width` so they wrap to 2+1 or stack vertically on very small screens
-- Reduce stat number clamp lower bound
-
-**4. CTA buttons**
-- Already has `flex-col sm:flex-row` — good. Reduce padding on mobile from `17px 44px` to `14px 28px`
-
-**5. Definition callout**
-- Already has `mx-6 md:mx-auto` — good. Reduce padding on mobile from `36px 48px` to `24px 20px`
-
-**6. Headline**
-- Already uses `clamp(44px, 5.5vw, 76px)` — lower the minimum to `32px` for small screens
-
-### Approach
-- Convert the grid container from pure inline styles to a mix of Tailwind classes (for responsive breakpoints) and inline styles (for non-responsive values like maxWidth)
-- Keep all existing desktop appearance identical
-- Single file change: `src/components/HeroSection.tsx`
+### Single file: `src/components/HeroSection.tsx`
 
