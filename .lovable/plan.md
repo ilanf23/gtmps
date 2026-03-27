@@ -1,76 +1,62 @@
 
-Goal: get the site live again. Based on the current evidence, this is not an app-code bug.
+Goal: restore the live site on `discover.mabbly.com` and `relationship-revenue-os.lovable.app`.
 
-What I found
-- The app code is present and wired correctly:
-  - `src/pages/Index.tsx` renders the landing page sections
+What I verified
+- App code is valid and wired:
+  - `src/App.tsx` mounts routes correctly
+  - `src/pages/Index.tsx` renders the landing page
   - `src/components/DefinitionBanner.tsx` is valid
-  - `index.html` mounts `src/main.tsx` normally
-- Publish settings are already correct:
+  - `index.html` mounts `src/main.tsx`
+- Publish settings are correct:
   - published = true
   - visibility = public
-- Both live URLs currently return Lovable’s placeholder HTML instead of your app:
-  - `https://relationship-revenue-os.lovable.app`
-  - `https://discover.mabbly.com`
+- Both live URLs still return the placeholder, not the app:
+  - `relationship-revenue-os.lovable.app`
+  - `discover.mabbly.com`
 
-Exact problem
-- The published deployment is serving placeholder markup with `data-lovable-blank-page-placeholder="REMOVE_THIS"`.
-- That means the publishing layer is not attached to your built frontend, even though the project itself has valid code.
+Do I know what the issue is?
+- Yes. This is a publishing/deployment mapping issue, not a page/component bug.
+- The preview app is running.
+- The published URLs are serving placeholder content instead of the built frontend.
+- The console warnings about refs are non-blocking and do not explain the placeholder page.
 
-Plan to fix
-1. Re-publish from the editor
-   - Click Publish → Update again once more now that Cloud is enabled.
-   - This is the only app-side action worth retrying.
+Plan
+1. Stop chasing component code
+   - No more edits to `HeroSection`, `DefinitionBanner`, or routing for this issue.
+   - Those files are not the reason the live domain shows the placeholder.
 
-2. If it still shows the placeholder, treat it as a platform publish issue
-   - Because both the staging domain and custom domain return the same placeholder, the problem is upstream of your custom domain config.
-   - Reconnecting the domain alone will not fix the root issue.
+2. Force one clean frontend republish
+   - When implementation mode is available, make one tiny harmless frontend edit and publish again.
+   - This is only to trigger a fresh deployment record, not to fix app logic.
 
-3. Escalate with a precise support report
-   - Report that:
+3. If the placeholder still appears, treat it as platform-side
+   - Because both the default published domain and custom domain fail the same way, the custom domain is not the root cause.
+   - The publish layer is not attaching the build output to the live deployment.
+
+4. Escalate with exact evidence
+   - Report:
      - preview works
      - project is published and public
-     - both published URLs return placeholder HTML instead of the built app
-     - custom domain and default published domain fail the same way
-   - Include the two URLs and your screenshot.
-
-Support message to send
-```text
-My project preview works, but the published site is not serving the app.
-
-Project:
-- Published URL: https://relationship-revenue-os.lovable.app
-- Custom domain: https://discover.mabbly.com
-
-Current behavior:
-- Both URLs show the default “Your app will live here” placeholder
-- Publish status shows live/up to date
-- Visibility is public
-- The app code exists and renders in preview
-
-This appears to be a deployment mapping/sync issue because both the default published URL and custom domain return placeholder HTML instead of the built frontend. Please refresh or repair the published deployment mapping for this project.
-```
-
-Why I am not proposing code changes
-- The codebase already contains the landing page.
-- A frontend fix would only make sense if the published site were loading your bundle and failing at runtime.
-- It is not loading your bundle at all.
+     - both live URLs show the placeholder
+     - app files are present and valid
+   - Ask for the published deployment mapping to be refreshed or repaired.
 
 Technical detail
 ```text
-Current state:
+Working preview
+      +
+Valid frontend code
+      +
+Public published setting
+      =
+Live URLs should serve app
 
-Repo code: valid landing page
-        |
-        v
-Preview: works / editable
-        |
-        v
-Published URLs: placeholder HTML
-        |
-        v
-Root cause: publish/deployment mapping failure
+Actual result:
+Live URLs serve placeholder HTML
+
+Conclusion:
+Deployment mapping/sync failure outside app code
 ```
 
 Expected outcome
-- After platform-side repair, both `relationship-revenue-os.lovable.app` and `discover.mabbly.com` should serve the actual app without any further code changes.
+- After the publish mapping is repaired, both the `.lovable.app` URL and `discover.mabbly.com` should load the real app without further frontend changes.
