@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import bookCover from "@/assets/book-cover.png";
+import { useState, useEffect, useRef } from "react";
 
 /* ── Stat counter hook ── */
 function useCountUp(
@@ -35,30 +34,10 @@ function useCountUp(
 }
 
 const HeroSection = () => {
-  const heroRef = useRef<HTMLElement>(null);
-  const bookRef = useRef<HTMLDivElement>(null);
-  const [lightPos, setLightPos] = useState({ x: 50, y: 50 });
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (!bookRef.current) return;
-    const rect = bookRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setLightPos({ x, y });
-  }, []);
-
-  const counterRef = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const el = counterRef.current;
-    if (!el) return;
-    el.style.animation = "counterPulse 700ms ease-in-out";
-    const handler = () => { el.style.animation = ""; };
-    el.addEventListener("animationend", handler);
-    return () => el.removeEventListener("animationend", handler);
-  }, []);
-
   const statRef = useRef<HTMLDivElement>(null);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [pageHover, setPageHover] = useState(false);
+
   useEffect(() => {
     const el = statRef.current;
     if (!el) return;
@@ -81,129 +60,160 @@ const HeroSection = () => {
 
   return (
     <section
-      ref={heroRef}
       id="hero"
-      className="relative min-h-screen overflow-hidden"
-      style={{ background: "#0D1117" }}
-      onMouseMove={handleMouseMove}
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        background: "#0e0d0b",
+        overflow: "hidden",
+      }}
     >
-      {/* Background layers */}
+      {/* Noise texture */}
       <div
-        className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            "linear-gradient(135deg, transparent 40%, rgba(184,147,58,0.04) 50%, rgba(184,147,58,0.08) 60%, rgba(184,147,58,0.03) 70%, transparent 80%)",
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: 0.03,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
-      />
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: 900, height: 900, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(184,147,58,0.10) 0%, rgba(184,147,58,0.04) 30%, transparent 65%)",
-          right: "-15%", top: "-5%",
-          animation: "glowPulse 6s ease-in-out infinite",
-        }}
-      />
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: 400, height: 400, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(184,147,58,0.06) 0%, transparent 70%)",
-          right: "15%", top: "50%", transform: "translateY(-50%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }}
       />
 
       {/* Two-column grid */}
       <div
-        className="relative mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-center px-5 py-8 md:px-10 md:py-12 lg:px-20 lg:py-16 lg:min-h-screen"
-        style={{ maxWidth: 1400 }}
+        style={{
+          position: "relative",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 80,
+          alignItems: "center",
+          minHeight: "100vh",
+          padding: "80px 120px",
+          maxWidth: 1600,
+          margin: "0 auto",
+        }}
       >
-        {/* Left column */}
-        <div className="relative z-10">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-3">
-            <div className="h-px bg-gold" style={{ width: 40 }} />
-            <span className="font-mono uppercase tracking-[0.2em] text-gold" style={{ fontSize: 10 }}>
+        {/* ─── LEFT COLUMN ─── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 32, alignSelf: "center" }}>
+          {/* Kicker */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 28, height: 1, background: "#b8972e" }} />
+            <span
+              style={{
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: 10,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "#b8972e",
+              }}
+            >
               Book Research · Limited to 50 Sessions
             </span>
           </div>
 
           {/* Headline */}
           <h1
-            className="font-display font-black text-white mt-7"
             style={{
-              fontSize: "clamp(32px, 5.5vw, 76px)",
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontWeight: 800,
+              fontSize: 76,
               lineHeight: 0.95,
-              letterSpacing: "-0.035em",
+              color: "#ffffff",
+              letterSpacing: "-0.02em",
+              margin: 0,
             }}
           >
             The First GTM
             <br />
             Book for
             <br />
-            <span className="relative inline-block">
-              Professional
-              <span
-                className="absolute left-0 bottom-[0.04em] h-[3px] rounded-full"
-                style={{
-                  width: "100%",
-                  background: "linear-gradient(90deg, rgba(184,147,58,0.7), rgba(184,147,58,0.2))",
-                }}
-              />
-            </span>
+            Professional
             <br />
-            Services.
+            Services<span style={{ color: "#b8972e" }}>.</span>
           </h1>
 
-          {/* Urgency strip */}
-          <div className="flex items-center gap-2.5 mt-8">
+          {/* Sessions badge */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span
-              className="inline-block rounded-full bg-gold"
-              style={{ width: 8, height: 8, animation: "dotFade 2.4s ease-in-out infinite" }}
+              style={{
+                display: "inline-block",
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "#b8972e",
+              }}
             />
             <span
-              ref={counterRef}
-              className="font-mono uppercase tracking-[0.14em] text-gold"
-              style={{ fontSize: 11, willChange: "transform" }}
+              style={{
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "#6b6560",
+              }}
             >
               46 of 50 sessions remaining
             </span>
           </div>
 
-          {/* CTA row */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-8">
+          {/* CTA buttons */}
+          <div style={{ display: "flex", gap: 16 }}>
             <a
               href="#apply"
-              className="font-sans font-semibold text-center rounded-full transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(184,147,58,0.3)]"
               style={{
-                fontSize: 15,
-                background: "linear-gradient(135deg, #C9A44A, #B8933A, #A07E2E)",
-                color: "#0D1117",
-                padding: "17px 44px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 52,
+                minWidth: 220,
+                borderRadius: 9999,
+                background: "#b8972e",
+                color: "#1e1a10",
+                fontFamily: "'Instrument Sans', sans-serif",
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: "none",
+                transition: "background 200ms",
+                cursor: "pointer",
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#d4a832")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#b8972e")}
             >
               Apply for a Research Session
             </a>
             <a
               href="#book"
-              className="font-sans font-medium text-center rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/30"
               style={{
-                fontSize: 15,
-                border: "1px solid rgba(255,255,255,0.15)",
-                color: "rgba(255,255,255,0.6)",
-                padding: "17px 44px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 52,
+                minWidth: 180,
+                borderRadius: 9999,
+                background: "transparent",
+                border: "1.5px solid rgba(255,255,255,0.25)",
+                color: "#ffffff",
+                fontFamily: "'Instrument Sans', sans-serif",
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "border-color 200ms",
+                cursor: "pointer",
               }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)")
+              }
             >
               Learn About the Book
             </a>
           </div>
 
-          {/* Stat strip */}
-          <div ref={statRef} className="flex flex-wrap gap-y-6 gap-0 mt-10 lg:mt-14">
+          {/* Stats */}
+          <div ref={statRef} style={{ display: "flex", gap: 0, marginTop: 8 }}>
             {[
               { num: stat1, label: "of PS firm CRM contacts are dormant" },
               { num: stat2, label: "of revenue from existing relationships" },
@@ -211,22 +221,34 @@ const HeroSection = () => {
             ].map((stat, i) => (
               <div
                 key={i}
-                className="flex-1"
                 style={{
+                  flex: 1,
                   paddingLeft: i > 0 ? 24 : 0,
                   paddingRight: i < 2 ? 24 : 0,
-                  borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                  borderLeft: i > 0 ? "1px solid #2a2720" : "none",
                 }}
               >
                 <span
-                  className="font-display font-black text-gold block"
-                  style={{ fontSize: "clamp(24px, 3vw, 42px)", lineHeight: 1 }}
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontWeight: 700,
+                    fontSize: 52,
+                    lineHeight: 1,
+                    color: "#b8972e",
+                    display: "block",
+                  }}
                 >
                   {stat.num}%
                 </span>
                 <span
-                  className="font-sans block mt-2"
-                  style={{ fontSize: 11, color: "rgba(255,255,255,0.30)", lineHeight: 1.45, maxWidth: 140 }}
+                  style={{
+                    fontSize: 12,
+                    color: "#6b6560",
+                    lineHeight: 1.5,
+                    maxWidth: 120,
+                    display: "block",
+                    marginTop: 8,
+                  }}
                 >
                   {stat.label}
                 </span>
@@ -235,229 +257,255 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* Right column — book */}
-        <div className="hidden lg:flex items-center justify-center">
-          <BookMockup bookRef={bookRef} lightPos={lightPos} />
-        </div>
-      </div>
-
-      {/* Definition callout block */}
-      <div
-        className="relative z-10 text-center mx-6 md:mx-auto"
-        style={{
-          background: "rgba(184,147,58,0.06)",
-          borderTop: "2px solid rgba(184,147,58,0.3)",
-          borderBottom: "2px solid rgba(184,147,58,0.3)",
-          padding: "24px 20px",
-          maxWidth: 800,
-          marginBottom: 0,
-        }}
-      >
-        <span
-          className="font-mono uppercase block"
-          style={{ fontSize: 9, color: "rgba(184,147,58,0.7)", letterSpacing: "0.2em", marginBottom: 14 }}
-        >
-          THE DEFINITION THAT CHANGES EVERYTHING
-        </span>
-        <p
-          className="font-serif italic"
-          style={{
-            fontSize: "clamp(20px, 2.5vw, 28px)",
-            color: "rgba(255,255,255,0.80)",
-            lineHeight: 1.35,
-          }}
-        >
-          "GTM for professional services is not a plan for entering a new market. It is a system for activating the one you already own."
-        </p>
-      </div>
-    </section>
-  );
-};
-
-/* ── Book Mockup ── */
-const BookMockup = ({
-  bookRef,
-  lightPos,
-}: {
-  bookRef: React.RefObject<HTMLDivElement>;
-  lightPos: { x: number; y: number };
-}) => {
-  const [pageHover, setPageHover] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const t = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(t);
-  }, []);
-
-  return (
-    <div
-      ref={bookRef}
-      className="relative flex flex-col items-center w-full"
-    >
-      {/* Book object */}
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          transform: "rotate(-1deg)",
-          boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 12px 24px rgba(0,0,0,0.3)",
-          opacity: mounted ? 1 : 0,
-          transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)",
-          perspective: 1200,
-        }}
-      >
+        {/* ─── RIGHT COLUMN ─── */}
         <div
           style={{
             display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            aspectRatio: "2.15 / 1",
-            maxHeight: 700,
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {/* Cover page (left) */}
+          {/* Book pair with 3D transform */}
           <div
             style={{
-              width: "50%",
-              height: "100%",
-              background: "#F5EDD8",
-              borderRadius: "2px 0 0 2px",
-              boxShadow: "inset -12px 0 24px rgba(0,0,0,0.12)",
-              overflow: "hidden",
-              position: "relative",
+              perspective: 1200,
             }}
           >
-            <img
-              src={bookCover}
-              alt="GTM for Professional Services"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-                borderRadius: "2px 0 0 2px",
-              }}
-            />
-            {/* Ambient light overlay */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                borderRadius: "2px 0 0 2px",
-                mixBlendMode: "overlay",
-                opacity: 0.18,
-                background: `radial-gradient(circle at ${lightPos.x}% ${lightPos.y}%, rgba(255,210,120,0.6) 0%, transparent 55%)`,
-              }}
-            />
-          </div>
-
-          {/* Spine */}
-          <div
-            style={{
-              width: 10,
-              flexShrink: 0,
-              height: "100%",
-              background: "#1A0A00",
-            }}
-          />
-
-          {/* Chapter page (right) */}
-          <div
-            style={{
-              width: "50%",
-              height: "100%",
-              position: "relative",
-              transformStyle: "preserve-3d",
-            }}
-          >
-            {/* Revealed interior page (behind turning page) */}
             <div
               style={{
-                position: "absolute",
-                inset: 0,
-                background: "#ede5d5",
-                borderRadius: "0 2px 2px 0",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 28,
+                transform: "rotateY(-6deg) rotateX(3deg)",
+                boxShadow:
+                  "0 40px 80px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.4)",
+                transformStyle: "preserve-3d",
               }}
             >
-              <p
+              {/* ── Left page (cover) ── */}
+              <div
                 style={{
-                  fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  fontStyle: "italic",
-                  fontSize: 16,
-                  lineHeight: 1.5,
-                  color: "rgba(184,147,58,0.5)",
-                  textAlign: "center",
-                  maxWidth: "90%",
+                  width: 280,
+                  height: 392,
+                  background: "#f5f0e2",
+                  borderRadius: "2px 0 0 2px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                  boxShadow: "inset -4px 0 12px rgba(0,0,0,0.08)",
                 }}
-              />
-            </div>
+              >
+                {/* Periodic table tile with concentric circles */}
+                <div style={{ position: "relative", marginBottom: 28 }}>
+                  {/* Concentric circles */}
+                  <svg
+                    width="240"
+                    height="240"
+                    viewBox="0 0 240 240"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <circle cx="120" cy="120" r="68" fill="none" stroke="#c8a84020" strokeWidth="0.5" />
+                    <circle cx="120" cy="120" r="90" fill="none" stroke="#c8a84020" strokeWidth="0.5" />
+                    <circle cx="120" cy="120" r="112" fill="none" stroke="#c8a84020" strokeWidth="0.5" />
+                  </svg>
+                  {/* Tile */}
+                  <div
+                    style={{
+                      width: 100,
+                      height: 100,
+                      background: "#9a7a28",
+                      borderRadius: 6,
+                      position: "relative",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: 6,
+                        left: 8,
+                        fontSize: 11,
+                        color: "#ffffff",
+                        fontFamily: "'Instrument Sans', sans-serif",
+                      }}
+                    >
+                      50
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'Playfair Display', Georgia, serif",
+                        fontStyle: "italic",
+                        fontWeight: 700,
+                        fontSize: 52,
+                        color: "#ffffff",
+                        lineHeight: 1,
+                        marginTop: 4,
+                      }}
+                    >
+                      Gt
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: "#ffffff",
+                        fontFamily: "'Instrument Sans', sans-serif",
+                        marginTop: 2,
+                      }}
+                    >
+                      growth
+                    </span>
+                  </div>
+                </div>
 
-            {/* Main chapter page (turns on hover) */}
-            <div
-              onMouseEnter={() => setPageHover(true)}
-              onMouseLeave={() => setPageHover(false)}
-              className="book-page-content"
-              style={{
-                position: "relative",
-                zIndex: 1,
-                height: "100%",
-                width: "100%",
-                background: "#FDFAF4",
-                borderRadius: "0 2px 2px 0",
-                boxShadow: "inset 12px 0 20px rgba(0,0,0,0.06)",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                transformOrigin: "left center",
-                transform: pageHover ? "rotateY(-20deg)" : "rotateY(0deg)",
-                transition: "transform 400ms ease-in-out",
-                backfaceVisibility: "hidden",
-              }}
-            >
-              <div style={{ padding: "clamp(8px, 3vw, 32px) clamp(8px, 2.5vw, 28px)", display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-                {/* Chapter eyebrow */}
-                <div
-                  className="flex items-center gap-1 lg:gap-3"
+                {/* Title */}
+                <span
                   style={{
-                    fontFamily: "'EB Garamond', Georgia, serif",
-                    fontSize: "clamp(5px, 1vw, 9px)",
-                    letterSpacing: "0.22em",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontSize: 11,
+                    letterSpacing: "0.14em",
                     textTransform: "uppercase",
-                    color: "#9a8a6a",
-                    marginBottom: "clamp(4px, 1vw, 14px)",
+                    color: "#1e1a10",
+                    textAlign: "center",
                   }}
                 >
-                  Chapter One
-                  <span className="flex-1 block" style={{ height: 0.5, background: "#c8b88a" }} />
+                  GTM for Professional Services
+                </span>
+
+                {/* Subtitle */}
+                <span
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: 13,
+                    fontStyle: "italic",
+                    color: "#9a7a28",
+                    marginTop: 24,
+                    textAlign: "center",
+                  }}
+                >
+                  The Relationship Revenue OS
+                </span>
+
+                {/* Rule */}
+                <div
+                  style={{
+                    width: "60%",
+                    height: 0.5,
+                    background: "#c8b88a40",
+                    marginTop: 24,
+                  }}
+                />
+
+                {/* Authors */}
+                <span
+                  style={{
+                    fontSize: 9,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "#6b6060",
+                    marginTop: 12,
+                    textAlign: "center",
+                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                  }}
+                >
+                  Adam Fridman · Richard Ashbaugh
+                </span>
+              </div>
+
+              {/* Spine */}
+              <div
+                style={{
+                  width: 2,
+                  background: "linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.3), rgba(0,0,0,0.15))",
+                  flexShrink: 0,
+                }}
+              />
+
+              {/* ── Right page (interior) ── */}
+              <div
+                style={{
+                  width: 280,
+                  height: 392,
+                  background: "#f5f0e2",
+                  borderRadius: "0 2px 2px 0",
+                  padding: "32px 28px",
+                  display: "flex",
+                  flexDirection: "column",
+                  boxShadow: "inset 4px 0 12px rgba(0,0,0,0.06)",
+                  transformOrigin: "left center",
+                  transform: pageHover ? "rotateY(-18deg)" : "rotateY(0deg)",
+                  transition: "transform 400ms ease-in-out",
+                  backfaceVisibility: "hidden",
+                  position: "relative",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => setPageHover(true)}
+                onMouseLeave={() => setPageHover(false)}
+              >
+                {/* Chapter eyebrow */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 10,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "'Libre Baskerville', Georgia, serif",
+                      fontSize: 9,
+                      letterSpacing: "0.22em",
+                      textTransform: "uppercase",
+                      color: "#9a8a6a",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Chapter One
+                  </span>
+                  <span
+                    style={{
+                      flex: 1,
+                      height: 0.5,
+                      background: "#c8b88a",
+                      display: "block",
+                    }}
+                  />
                 </div>
 
                 {/* Subtitle */}
-                <div
+                <span
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
-                    fontSize: "clamp(5px, 1vw, 10px)",
+                    fontSize: 12,
                     fontStyle: "italic",
-                    color: "#7a6a4a",
-                    letterSpacing: "0.04em",
-                    marginBottom: "clamp(1px, 0.3vw, 3px)",
+                    color: "#9a8a6a",
+                    marginBottom: 4,
                   }}
                 >
                   The founding problem
-                </div>
+                </span>
 
                 {/* Title */}
                 <h3
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
-                    fontSize: "clamp(8px, 1.5vw, 17px)",
+                    fontSize: 22,
                     fontWeight: 700,
-                    lineHeight: 1.15,
                     color: "#1e1a10",
-                    margin: "0 0 clamp(4px, 1vw, 12px)",
+                    lineHeight: 1.15,
+                    margin: "0 0 16px",
                   }}
                 >
                   The Wrong Map
@@ -467,54 +515,67 @@ const BookMockup = ({
                 <div
                   style={{
                     fontFamily: "'EB Garamond', Georgia, serif",
-                    fontSize: "clamp(5px, 1vw, 10.5px)",
-                    lineHeight: 1.75,
+                    fontSize: 11,
+                    lineHeight: 1.8,
                     color: "#3a3020",
                     textAlign: "justify",
                     flex: 1,
-                    overflow: "hidden",
                   }}
                 >
-                  <p style={{ margin: "0 0 clamp(2px, 0.5vw, 6px)" }}>
-                    Every GTM framework built in the last forty years shares a single founding assumption. It was never stated explicitly because it never had to be.
+                  <p style={{ margin: "0 0 8px" }}>
+                    Every GTM framework built in the last forty years shares one founding
+                    assumption. It was never stated because it never had to be.
                   </p>
                   <p style={{ margin: 0 }}>
-                    The assumption is this: your buyer does not know you yet. Your job is to find them, interrupt them, and earn their attention from zero.
+                    The assumption: your buyer has never heard of you. Your job is to find
+                    them from zero.
                   </p>
                 </div>
 
-                {/* Pull quote */}
-                <blockquote
+                {/* Pullquote */}
+                <div
                   style={{
-                    borderTop: "1.5px solid #1e1a10",
-                    borderBottom: "1.5px solid #1e1a10",
-                    padding: "clamp(3px, 0.8vw, 10px) 0 clamp(2px, 0.6vw, 8px)",
-                    marginTop: "clamp(3px, 0.8vw, 10px)",
+                    borderTop: "1px solid #1e1a10",
+                    borderBottom: "1px solid #1e1a10",
+                    padding: "14px 0",
+                    marginTop: 16,
                   }}
                 >
+                  <span
+                    style={{
+                      fontSize: 7.5,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: "#9a8a6a",
+                      display: "block",
+                      marginBottom: 6,
+                    }}
+                  >
+                    The definition that changes everything
+                  </span>
                   <p
                     style={{
                       fontFamily: "'Playfair Display', Georgia, serif",
-                      fontSize: "clamp(5.5px, 1.1vw, 11.5px)",
+                      fontSize: 13,
                       fontStyle: "italic",
-                      lineHeight: 1.4,
                       color: "#1e1a10",
+                      lineHeight: 1.5,
                       margin: 0,
                     }}
                   >
                     "You were not bad at GTM. You were using the wrong map."
                   </p>
-                </blockquote>
+                </div>
 
                 {/* Page number */}
                 <div
                   style={{
                     textAlign: "center",
                     fontFamily: "'EB Garamond', serif",
-                    fontSize: "clamp(5px, 0.8vw, 9px)",
+                    fontSize: 10,
                     color: "#b0a080",
                     letterSpacing: "0.1em",
-                    marginTop: "clamp(2px, 0.5vw, 6px)",
+                    marginTop: 8,
                   }}
                 >
                   12
@@ -522,35 +583,23 @@ const BookMockup = ({
               </div>
             </div>
           </div>
+
+          {/* Edition label */}
+          <span
+            style={{
+              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontSize: 9,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: "#4a4540",
+              marginTop: 24,
+            }}
+          >
+            Q4 2026 · Mabbly Press · First Edition
+          </span>
         </div>
-
-        {/* Bottom edge strip */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: -6,
-            left: 0,
-            right: 0,
-            height: 6,
-            background: "#1A0A00",
-            borderRadius: "0 0 4px 4px",
-          }}
-        />
       </div>
-
-      {/* Edition label */}
-      <span
-        className="font-mono mt-5"
-        style={{
-          fontSize: 10,
-          color: "rgba(184,147,58,0.45)",
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-        }}
-      >
-        Q4 2026 · Mabbly Press · First Edition
-      </span>
-    </div>
+    </section>
   );
 };
 
