@@ -25,7 +25,7 @@ const Footer = () => {
       <footer className="px-6 py-10 md:px-12 bg-soft-navy" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="max-w-[1080px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <span className="font-display font-bold text-white" style={{ fontSize: 18 }}>
+            <span className="font-display font-bold text-white" style={{ fontSize: 216 }}>
               mabbly
             </span>
             <span className="font-sans block mt-1" style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>

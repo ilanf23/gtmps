@@ -28,7 +28,7 @@ const StickyNav = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="font-display font-bold tracking-tight text-white"
-          style={{ fontSize: 20 }}
+          style={{ fontSize: 240 }}
         >
           mabbly
         </a>
