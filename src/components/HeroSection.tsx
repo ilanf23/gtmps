@@ -266,9 +266,9 @@ const HeroSection = () => {
             justifyContent: "center",
           }}
         >
-          {/* 3D Book Object */}
+          {/* 3D Open Book */}
           <div
-            style={{ perspective: 1400, position: "relative" }}
+            style={{ perspective: 1400, position: "relative", width: 510, height: 360 }}
             onMouseEnter={() => setPageHover(true)}
             onMouseLeave={() => setPageHover(false)}
           >
@@ -276,153 +276,44 @@ const HeroSection = () => {
             <div
               style={{
                 position: "absolute",
-                bottom: -40,
+                bottom: -35,
                 left: "50%",
                 transform: "translateX(-50%)",
-                width: "110%",
-                height: 80,
-                background: "radial-gradient(ellipse 70% 50% at center, rgba(0,0,0,0.55) 0%, transparent 70%)",
-                filter: "blur(25px)",
+                width: "115%",
+                height: 70,
+                background: "radial-gradient(ellipse 80% 45% at center, rgba(0,0,0,0.45) 0%, transparent 70%)",
+                filter: "blur(22px)",
                 pointerEvents: "none",
               }}
             />
 
-            {/* Book wrapper with 3/4 angle */}
+            {/* Book wrapper with open-book angle */}
             <div
               style={{
                 transformStyle: "preserve-3d",
                 transform: pageHover
-                  ? "rotateY(-22deg) rotateX(4deg) translateY(-4px)"
-                  : "rotateY(-18deg) rotateX(4deg)",
+                  ? "rotateY(-12deg) rotateX(8deg) rotateZ(-1deg) translateY(-4px)"
+                  : "rotateY(-8deg) rotateX(6deg) rotateZ(-1deg)",
                 transition: "transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                 position: "relative",
+                width: 510,
+                height: 360,
                 cursor: "pointer",
               }}
             >
-              {/* ── BACK COVER (visible sliver) ── */}
+              {/* ── LEFT PAGE (COVER) ── */}
               <div
                 style={{
                   position: "absolute",
-                  width: 290,
-                  height: 404,
-                  background: "linear-gradient(135deg, #c8bca6 0%, #b8ac96 100%)",
-                  borderRadius: "3px 4px 4px 3px",
-                  transform: "translateZ(-32px) translateX(2px)",
-                  boxShadow: "inset 0 0 20px rgba(0,0,0,0.15)",
-                  top: -2,
-                  left: -2,
-                }}
-              />
-
-              {/* ── BOTTOM PAGE EDGE ── */}
-              <div
-                style={{
-                  position: "absolute",
-                  width: 274,
-                  height: 30,
-                  bottom: 5,
-                  left: 22,
-                  transform: "rotateX(90deg) translateZ(0px)",
-                  transformOrigin: "bottom center",
-                  background: "repeating-linear-gradient(90deg, #ede7d7 0px, #ede7d7 1px, #e4ded0 1px, #e4ded0 2px)",
-                  borderRadius: "0 0 1px 1px",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-                }}
-              />
-
-              {/* ── TOP PAGE EDGE ── */}
-              <div
-                style={{
-                  position: "absolute",
-                  width: 274,
-                  height: 30,
-                  top: 5,
-                  left: 22,
-                  transform: "rotateX(-90deg) translateZ(0px)",
-                  transformOrigin: "top center",
-                  background: "repeating-linear-gradient(90deg, #f0eade 0px, #f0eade 1px, #e8e2d4 1px, #e8e2d4 2px)",
-                  borderRadius: "1px 1px 0 0",
-                  boxShadow: "0 -1px 4px rgba(0,0,0,0.08)",
-                }}
-              />
-
-              {/* ── FORE EDGE (right side page block) ── */}
-              <div
-                style={{
-                  position: "absolute",
-                  right: -28,
-                  top: 5,
-                  width: 30,
-                  height: 390,
-                  transform: "rotateY(90deg)",
-                  transformOrigin: "left center",
-                  background: "repeating-linear-gradient(180deg, #ede7d7 0px, #ede7d7 1px, #e6e0d0 1px, #e6e0d0 2px, #ebe5d5 2px, #ebe5d5 3px)",
-                  borderRadius: "0 2px 2px 0",
-                  boxShadow: "inset -2px 0 6px rgba(0,0,0,0.06), 2px 0 8px rgba(0,0,0,0.12)",
-                }}
-              />
-
-              {/* ── SPINE ── */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: -1,
-                  top: -4,
-                  width: 34,
-                  height: 408,
-                  transform: "rotateY(90deg) translateZ(-17px)",
-                  transformOrigin: "left center",
-                  background: "linear-gradient(90deg, #1e1810 0%, #3a3020 20%, #4a3c2a 50%, #3a3020 80%, #1e1810 100%)",
-                  borderRadius: "3px 0 0 3px",
-                  boxShadow: "inset 0 0 12px rgba(0,0,0,0.5)",
-                  zIndex: 5,
-                }}
-              >
-                {/* Spine ridges */}
-                {[50, 90, 310, 350].map((top) => (
-                  <div
-                    key={top}
-                    style={{
-                      position: "absolute",
-                      top,
-                      left: 4,
-                      right: 4,
-                      height: 1.5,
-                      background: "linear-gradient(90deg, transparent 0%, rgba(200,180,140,0.15) 30%, rgba(200,180,140,0.2) 50%, rgba(200,180,140,0.15) 70%, transparent 100%)",
-                      borderRadius: 1,
-                    }}
-                  />
-                ))}
-                {/* Spine title */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%) rotate(90deg)",
-                    whiteSpace: "nowrap",
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
-                    fontSize: 7,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(200,180,140,0.4)",
-                  }}
-                >
-                  GTM for Professional Services
-                </div>
-              </div>
-
-              {/* ── FRONT COVER ── */}
-              <div
-                style={{
-                  width: 290,
-                  height: 404,
+                  width: 250,
+                  height: 360,
+                  left: 0,
+                  top: 0,
                   background: "linear-gradient(145deg, #ede7d6 0%, #f2ecda 30%, #e8e2d0 70%, #ddd7c5 100%)",
-                  borderRadius: "3px 5px 5px 3px",
-                  position: "relative",
+                  borderRadius: "5px 0 0 5px",
                   transform: "translateZ(0px)",
                   boxShadow:
-                    "0 1px 0 rgba(255,255,255,0.1) inset, 0 -1px 0 rgba(0,0,0,0.05) inset, 4px 0 12px rgba(0,0,0,0.15), -2px 0 8px rgba(0,0,0,0.1)",
+                    "0 1px 0 rgba(255,255,255,0.1) inset, 0 -1px 0 rgba(0,0,0,0.05) inset, -4px 0 12px rgba(0,0,0,0.1)",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -446,25 +337,15 @@ const HeroSection = () => {
                 <div
                   style={{
                     position: "absolute",
-                    inset: 3,
+                    top: 3,
+                    bottom: 3,
+                    left: 3,
+                    right: 0,
                     border: "1px solid rgba(180,160,120,0.18)",
-                    borderRadius: 2,
+                    borderRight: "none",
+                    borderRadius: "2px 0 0 2px",
                     pointerEvents: "none",
                     boxShadow: "inset 0 0 8px rgba(180,160,120,0.06)",
-                  }}
-                />
-
-                {/* Hinge groove near spine */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 12,
-                    top: 6,
-                    bottom: 6,
-                    width: 2,
-                    background: "linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 100%)",
-                    borderRadius: 1,
-                    pointerEvents: "none",
                   }}
                 />
 
@@ -478,11 +359,24 @@ const HeroSection = () => {
                   }}
                 />
 
+                {/* Gutter shadow on right edge near binding */}
+                <div
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    width: 20,
+                    height: "100%",
+                    background: "linear-gradient(270deg, rgba(0,0,0,0.08) 0%, transparent 100%)",
+                    pointerEvents: "none",
+                  }}
+                />
+
                 {/* Periodic table tile with concentric circles */}
-                <div style={{ position: "relative", marginBottom: 28 }}>
+                <div style={{ position: "relative", marginBottom: 20 }}>
                   <svg
-                    width="240"
-                    height="240"
+                    width="200"
+                    height="200"
                     viewBox="0 0 240 240"
                     style={{
                       position: "absolute",
@@ -498,8 +392,8 @@ const HeroSection = () => {
                   </svg>
                   <div
                     style={{
-                      width: 100,
-                      height: 100,
+                      width: 85,
+                      height: 85,
                       background: "linear-gradient(145deg, #a88830, #8a6a20)",
                       borderRadius: 6,
                       position: "relative",
@@ -510,29 +404,29 @@ const HeroSection = () => {
                       boxShadow: "0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.15)",
                     }}
                   >
-                    <span style={{ position: "absolute", top: 6, left: 8, fontSize: 11, color: "#ffffff", fontFamily: "'Instrument Sans', sans-serif" }}>50</span>
-                    <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: 52, color: "#ffffff", lineHeight: 1, marginTop: 4, textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}>Gt</span>
-                    <span style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#ffffff", fontFamily: "'Instrument Sans', sans-serif", marginTop: 2 }}>growth</span>
+                    <span style={{ position: "absolute", top: 5, left: 7, fontSize: 10, color: "#ffffff", fontFamily: "'Instrument Sans', sans-serif" }}>50</span>
+                    <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: 44, color: "#ffffff", lineHeight: 1, marginTop: 4, textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}>Gt</span>
+                    <span style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#ffffff", fontFamily: "'Instrument Sans', sans-serif", marginTop: 2 }}>growth</span>
                   </div>
                 </div>
 
-                <span style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#1e1a10", textAlign: "center", textShadow: "0 0.5px 0 rgba(255,255,255,0.5)" }}>
+                <span style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#1e1a10", textAlign: "center", textShadow: "0 0.5px 0 rgba(255,255,255,0.5)" }}>
                   GTM for Professional Services
                 </span>
-                <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 13, fontStyle: "italic", color: "#9a7a28", marginTop: 24, textAlign: "center" }}>
+                <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 12, fontStyle: "italic", color: "#9a7a28", marginTop: 20, textAlign: "center" }}>
                   The Relationship Revenue OS
                 </span>
-                <div style={{ width: "60%", height: 0.5, background: "#c8b88a40", marginTop: 24 }} />
-                <span style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#6b6060", marginTop: 12, textAlign: "center", fontFamily: "'Libre Baskerville', Georgia, serif" }}>
+                <div style={{ width: "55%", height: 0.5, background: "#c8b88a40", marginTop: 20 }} />
+                <span style={{ fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: "#6b6060", marginTop: 10, textAlign: "center", fontFamily: "'Libre Baskerville', Georgia, serif" }}>
                   Adam Fridman · Richard Ashbaugh
                 </span>
 
-                {/* Cover edge specular highlight */}
+                {/* Outer edge specular highlight */}
                 <div
                   style={{
                     position: "absolute",
                     top: 0,
-                    right: 0,
+                    left: 0,
                     width: 2,
                     height: "100%",
                     background: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.08) 100%)",
@@ -541,22 +435,54 @@ const HeroSection = () => {
                 />
               </div>
 
-              {/* ── INTERIOR PAGE (peeking out behind cover) ── */}
+              {/* ── CENTER BINDING / SPINE CREASE ── */}
               <div
                 style={{
                   position: "absolute",
-                  width: 290,
-                  height: 404,
-                  background: "#f5f0e2",
-                  borderRadius: "3px 5px 5px 3px",
-                  transform: "translateZ(-20px)",
+                  left: 250,
                   top: 0,
-                  left: 160,
-                  padding: "32px 28px",
+                  width: 10,
+                  height: 360,
+                  background: "linear-gradient(90deg, #c8bca0 0%, #a89878 20%, #8a7a5a 50%, #a89878 80%, #c8bca0 100%)",
+                  zIndex: 10,
+                  boxShadow: "inset 0 0 6px rgba(0,0,0,0.3), 0 0 4px rgba(0,0,0,0.15)",
+                }}
+              >
+                {/* Stitching marks along the binding */}
+                {Array.from({ length: 8 }, (_, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      position: "absolute",
+                      top: 30 + i * 40,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: 2,
+                      height: 8,
+                      background: "rgba(60,50,30,0.25)",
+                      borderRadius: 1,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* ── RIGHT PAGE (CHAPTER ONE) ── */}
+              <div
+                style={{
+                  position: "absolute",
+                  width: 250,
+                  height: 360,
+                  left: 260,
+                  top: 0,
+                  background: "#f5f0e2",
+                  borderRadius: "0 5px 5px 0",
+                  transform: "translateZ(0px)",
+                  padding: "28px 22px",
                   display: "flex",
                   flexDirection: "column",
                   overflow: "hidden",
-                  boxShadow: "inset 6px 0 12px rgba(0,0,0,0.08), inset 1px 0 3px rgba(0,0,0,0.04)",
+                  boxShadow:
+                    "0 1px 0 rgba(255,255,255,0.1) inset, 0 -1px 0 rgba(0,0,0,0.05) inset, 4px 0 12px rgba(0,0,0,0.1)",
                 }}
               >
                 {/* Paper texture */}
@@ -571,8 +497,21 @@ const HeroSection = () => {
                   }}
                 />
 
+                {/* Gutter shadow on left edge near binding */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    width: 20,
+                    height: "100%",
+                    background: "linear-gradient(90deg, rgba(0,0,0,0.08) 0%, transparent 100%)",
+                    pointerEvents: "none",
+                  }}
+                />
+
                 {/* Chapter header */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 14 }}>
                   <span
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
@@ -588,7 +527,7 @@ const HeroSection = () => {
                   <span
                     style={{
                       fontFamily: "'Libre Baskerville', Georgia, serif",
-                      fontSize: 10,
+                      fontSize: 9,
                       fontStyle: "italic",
                       color: "#6b6060",
                     }}
@@ -602,10 +541,10 @@ const HeroSection = () => {
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     fontWeight: 700,
-                    fontSize: 22,
+                    fontSize: 19,
                     color: "#1e1a10",
                     textAlign: "center",
-                    margin: "0 0 16px 0",
+                    margin: "0 0 14px 0",
                     lineHeight: 1.2,
                   }}
                 >
@@ -617,10 +556,10 @@ const HeroSection = () => {
                   style={{
                     fontFamily: "'EB Garamond', Georgia, serif",
                     fontSize: 11,
-                    lineHeight: 1.7,
+                    lineHeight: 1.65,
                     color: "#3a3530",
                     textAlign: "justify",
-                    margin: "0 0 10px 0",
+                    margin: "0 0 8px 0",
                   }}
                 >
                   Most professional services firms were built on reputation, referrals, and relationships that
@@ -630,10 +569,10 @@ const HeroSection = () => {
                   style={{
                     fontFamily: "'EB Garamond', Georgia, serif",
                     fontSize: 11,
-                    lineHeight: 1.7,
+                    lineHeight: 1.65,
                     color: "#3a3530",
                     textAlign: "justify",
-                    margin: "0 0 16px 0",
+                    margin: "0 0 14px 0",
                   }}
                 >
                   When growth slowed, these firms reached for the same playbook that works for SaaS and
@@ -645,15 +584,15 @@ const HeroSection = () => {
                   style={{
                     borderTop: "1px solid #c8b88a60",
                     borderBottom: "1px solid #c8b88a60",
-                    padding: "12px 8px",
-                    margin: "0 0 16px 0",
+                    padding: "10px 6px",
+                    margin: "0 0 14px 0",
                   }}
                 >
                   <p
                     style={{
                       fontFamily: "'Playfair Display', Georgia, serif",
                       fontStyle: "italic",
-                      fontSize: 12,
+                      fontSize: 11,
                       lineHeight: 1.6,
                       color: "#9a7a28",
                       textAlign: "center",
