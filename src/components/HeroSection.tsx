@@ -212,7 +212,7 @@ const HeroSection = () => {
             <img
               src={bookOpen}
               alt="GTM for Professional Services — The Relationship Revenue OS book"
-              className="max-w-[280px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-none lg:w-[520px] rounded-md"
+              className="max-w-[210px] sm:max-w-[270px] md:max-w-[315px] lg:max-w-none lg:w-[390px] rounded-md"
               style={{
                 transform: pageHover
                   ? "rotateY(-6deg) rotateX(4deg) translateY(-4px)"
