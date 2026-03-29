@@ -71,7 +71,7 @@ const StickyNav = () => {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-white"
+          className="lg:hidden text-white"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
