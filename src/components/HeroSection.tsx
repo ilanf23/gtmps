@@ -94,7 +94,7 @@ const HeroSection = () => {
 
           {/* Headline */}
           <h1
-            className="text-[40px] sm:text-[56px] md:text-[60px] lg:text-[76px] leading-[0.95] font-[800] m-0"
+            className="text-[40px] sm:text-[56px] lg:text-[76px] leading-[0.95] font-[800] m-0"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               color: "#ffffff",
