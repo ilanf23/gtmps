@@ -1,32 +1,39 @@
 
 
-## Plan: Make site fully mobile responsive
+## Plan: Fix iPad and tablet responsive issues
 
-The primary issue is `HeroSection.tsx` — it uses hardcoded inline styles with a fixed two-column grid, `120px` padding, and `76px` font size that break at 390px. All other sections already use Tailwind responsive classes and are mostly fine.
+### Problem identified
+The Tailwind `md:` breakpoint fires at exactly 768px (iPad portrait). Several components apply desktop-width styles too early, causing layout breakage.
 
-### Changes needed
+### Critical issues
 
-**1. Rewrite HeroSection.tsx with responsive Tailwind classes**
+**1. HeroSection — broken at 768px**
+- `md:px-[120px]` applies 240px of horizontal padding on a 768px screen, leaving only ~528px for content
+- `md:w-[520px]` on the book image exceeds the available column width
+- `md:text-[76px]` headline is too large for the remaining space
+- **Fix**: Add `lg:` breakpoint (1024px) for the aggressive styles. Use gentler values at `md:`:
+  - Padding: `px-6 md:px-10 lg:px-[120px]`
+  - Grid gap: `gap-10 md:gap-12 lg:gap-20`
+  - Headline: `text-[40px] sm:text-[56px] md:text-[60px] lg:text-[76px]`
+  - Book image: `max-w-[280px] sm:max-w-[360px] md:w-[380px] lg:w-[520px]`
+  - Stats numbers: `text-[28px] sm:text-[36px] md:text-[40px] lg:text-[52px]`
 
-The hero section needs these mobile fixes:
-- **Grid**: Change from `gridTemplateColumns: "1fr 1fr"` to single column on mobile, two columns on `md+`
-- **Padding**: Reduce from `120px` horizontal to `24px` on mobile
-- **Headline font size**: Scale down from `76px` to ~`40px` on mobile using `clamp()` or responsive classes
-- **CTA buttons**: Stack vertically on mobile instead of side-by-side; reduce `minWidth`
-- **Stats row**: Reduce stat number font size from `52px` to ~`32px` on mobile
-- **Book image**: Show below the text content on mobile (single column stacking)
-- **Overall min-height**: Keep `100vh` but allow content to flow naturally
+**2. StickyNav — cramped pill nav at 768px**
+- Desktop nav (pill + CTA) shows at `md:` but the 5 nav links + CTA barely fit at 768px
+- **Fix**: Change nav visibility from `md:` to `lg:` so tablet gets the hamburger menu instead
 
-Convert inline styles to Tailwind classes where possible, or use CSS media queries within the inline style approach.
+**3. Other sections — minor padding tweaks**
+- Most sections use `md:px-20` which is fine at 768px
+- `MissionSection` callout box has `padding: "32px 36px"` inline — fine
+- `DeeperSection` email capture has `padding: "32px 40px"` inline — reduce on small tablets
+- No critical breaks in BookSection, AuthorsSection, ResultsSection, ApplySection, Footer
 
-**2. Minor tweaks to other sections (if needed)**
-- All other components already use `px-6 md:px-20`, `grid-cols-1 md:grid-cols-2`, `clamp()` font sizes — these are already responsive
-- No changes expected for DefinitionBanner, SocialProofBar, MissionSection, EpisodeSection, BookSection, AuthorsSection, DeeperSection, ResultsSection, ApplySection, Footer
+### Files to edit
+1. `src/components/HeroSection.tsx` — add `lg:` tier for large desktop styles
+2. `src/components/StickyNav.tsx` — change `md:` to `lg:` for desktop nav visibility
 
-### Technical approach
-- Replace the hero's inline `style` grid with Tailwind: `grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 px-6 md:px-[120px] py-20 md:py-20`
-- Use responsive text classes: `text-[40px] md:text-[76px]`
-- Stack CTA buttons: `flex flex-col sm:flex-row gap-4`
-- Reduce stat numbers: `text-[32px] md:text-[52px]`
-- Book image centered on mobile with `max-w-[280px] md:max-w-none md:w-[520px]`
+### Technical details
+- Tailwind breakpoints: `sm:` = 640px, `md:` = 768px, `lg:` = 1024px
+- iPad portrait = 768px, iPad landscape = 1024px
+- The fix introduces a proper 3-tier responsive: mobile → tablet (768–1023) → desktop (1024+)
 
