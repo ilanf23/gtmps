@@ -1,62 +1,27 @@
 
-Goal: restore the live site on `discover.mabbly.com` and `relationship-revenue-os.lovable.app`.
 
-What I verified
-- App code is valid and wired:
-  - `src/App.tsx` mounts routes correctly
-  - `src/pages/Index.tsx` renders the landing page
-  - `src/components/DefinitionBanner.tsx` is valid
-  - `index.html` mounts `src/main.tsx`
-- Publish settings are correct:
-  - published = true
-  - visibility = public
-- Both live URLs still return the placeholder, not the app:
-  - `relationship-revenue-os.lovable.app`
-  - `discover.mabbly.com`
+## Plan: Replace CSS book with uploaded images
 
-Do I know what the issue is?
-- Yes. This is a publishing/deployment mapping issue, not a page/component bug.
-- The preview app is running.
-- The published URLs are serving placeholder content instead of the built frontend.
-- The console warnings about refs are non-blocking and do not explain the placeholder page.
+The right column of HeroSection currently renders a complex CSS/HTML 3D book (~300 lines of markup). Replace it with the two uploaded images used as an actual image element.
 
-Plan
-1. Stop chasing component code
-   - No more edits to `HeroSection`, `DefinitionBanner`, or routing for this issue.
-   - Those files are not the reason the live domain shows the placeholder.
+### Steps
 
-2. Force one clean frontend republish
-   - When implementation mode is available, make one tiny harmless frontend edit and publish again.
-   - This is only to trigger a fresh deployment record, not to fix app logic.
+1. **Copy images to project**
+   - Copy `Screenshot_2026-03-29_at_9.45.44_AM.png` to `src/assets/book-open.png` (the open book spread)
+   - Copy `Screenshot_2026-03-29_at_9.45.59_AM.png` to `src/assets/book-cover.png` (the full cover)
 
-3. If the placeholder still appears, treat it as platform-side
-   - Because both the default published domain and custom domain fail the same way, the custom domain is not the root cause.
-   - The publish layer is not attaching the build output to the live deployment.
+2. **Simplify HeroSection right column**
+   - Remove the entire CSS 3D book markup (the `perspective` container with left page, spine, right page — roughly lines 260–610)
+   - Replace with a single `<img>` element importing `book-open.png`, styled with subtle shadow and hover tilt transform to maintain the premium feel
+   - Keep the edition label below the image
+   - Keep the `pageHover` state for a gentle CSS transform on hover
 
-4. Escalate with exact evidence
-   - Report:
-     - preview works
-     - project is published and public
-     - both live URLs show the placeholder
-     - app files are present and valid
-   - Ask for the published deployment mapping to be refreshed or repaired.
+3. **Responsive considerations**
+   - Set `max-width: 100%` on the image so it scales on smaller screens
+   - Adjust the grid gap and padding for mobile via a media query or container query approach
 
-Technical detail
-```text
-Working preview
-      +
-Valid frontend code
-      +
-Public published setting
-      =
-Live URLs should serve app
+### Technical details
+- Import images via ES6: `import bookOpen from "@/assets/book-open.png"`
+- The right column will go from ~350 lines of inline-styled divs to ~20 lines
+- The `pageHover` state and mouse handlers stay to provide a subtle 3D tilt effect on the image
 
-Actual result:
-Live URLs serve placeholder HTML
-
-Conclusion:
-Deployment mapping/sync failure outside app code
-```
-
-Expected outcome
-- After the publish mapping is repaired, both the `.lovable.app` URL and `discover.mabbly.com` should load the real app without further frontend changes.
