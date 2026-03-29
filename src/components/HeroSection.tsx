@@ -77,7 +77,7 @@ const HeroSection = () => {
       {/* Two-column grid */}
       <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center min-h-screen px-6 md:px-10 lg:px-[120px] py-20 max-w-[1600px] mx-auto">
         {/* ─── LEFT COLUMN ─── */}
-        <div className="flex flex-col gap-6 md:gap-8 self-center order-2 md:order-1">
+        <div className="flex flex-col gap-6 md:gap-8 self-center order-2 lg:order-1">
           {/* Kicker */}
           <div className="flex items-center gap-3">
             <div className="w-7 h-px" style={{ background: "#b8972e" }} />
