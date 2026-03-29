@@ -179,7 +179,7 @@ const HeroSection = () => {
                 }}
               >
                 <span
-                  className="text-[28px] sm:text-[36px] md:text-[52px] leading-none font-bold block"
+                  className="text-[28px] sm:text-[36px] md:text-[40px] lg:text-[52px] leading-none font-bold block"
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     color: "#b8972e",
