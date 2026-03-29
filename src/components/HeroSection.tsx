@@ -62,50 +62,29 @@ const HeroSection = () => {
   return (
     <section
       id="hero"
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        background: "#0e0d0b",
-        overflow: "hidden",
-      }}
+      className="relative min-h-screen overflow-hidden"
+      style={{ background: "#0e0d0b" }}
     >
       {/* Noise texture */}
       <div
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          opacity: 0.03,
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
       />
 
       {/* Two-column grid */}
-      <div
-        style={{
-          position: "relative",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 80,
-          alignItems: "center",
-          minHeight: "100vh",
-          padding: "80px 120px",
-          maxWidth: 1600,
-          margin: "0 auto",
-        }}
-      >
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center min-h-screen px-6 md:px-[120px] py-20 max-w-[1600px] mx-auto">
         {/* ─── LEFT COLUMN ─── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 32, alignSelf: "center" }}>
+        <div className="flex flex-col gap-6 md:gap-8 self-center order-2 md:order-1">
           {/* Kicker */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 28, height: 1, background: "#b8972e" }} />
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-px" style={{ background: "#b8972e" }} />
             <span
+              className="text-[10px] tracking-[0.22em] uppercase"
               style={{
                 fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: 10,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
                 color: "#b8972e",
               }}
             >
@@ -115,14 +94,11 @@ const HeroSection = () => {
 
           {/* Headline */}
           <h1
+            className="text-[40px] sm:text-[56px] md:text-[76px] leading-[0.95] font-[800] m-0"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
-              fontWeight: 800,
-              fontSize: 76,
-              lineHeight: 0.95,
               color: "#ffffff",
               letterSpacing: "-0.02em",
-              margin: 0,
             }}
           >
             The First GTM
@@ -135,22 +111,15 @@ const HeroSection = () => {
           </h1>
 
           {/* Sessions badge */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div className="flex items-center gap-2.5">
             <span
-              style={{
-                display: "inline-block",
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: "#b8972e",
-              }}
+              className="inline-block w-2 h-2 rounded-full"
+              style={{ background: "#b8972e" }}
             />
             <span
+              className="text-[10px] tracking-[0.18em] uppercase"
               style={{
                 fontFamily: "'Libre Baskerville', Georgia, serif",
-                fontSize: 10,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
                 color: "#6b6560",
               }}
             >
@@ -159,24 +128,14 @@ const HeroSection = () => {
           </div>
 
           {/* CTA buttons */}
-          <div style={{ display: "flex", gap: 16 }}>
+          <div className="flex flex-col sm:flex-row gap-4">
             <a
               href="#apply"
+              className="inline-flex items-center justify-center h-[52px] min-w-[200px] sm:min-w-[220px] rounded-full text-sm font-semibold no-underline cursor-pointer transition-colors duration-200"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 52,
-                minWidth: 220,
-                borderRadius: 9999,
                 background: "#b8972e",
                 color: "#1e1a10",
                 fontFamily: "'Instrument Sans', sans-serif",
-                fontSize: 14,
-                fontWeight: 600,
-                textDecoration: "none",
-                transition: "background 200ms",
-                cursor: "pointer",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#d4a832")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "#b8972e")}
@@ -185,22 +144,12 @@ const HeroSection = () => {
             </a>
             <a
               href="#book"
+              className="inline-flex items-center justify-center h-[52px] min-w-[180px] rounded-full text-sm font-medium no-underline cursor-pointer transition-colors duration-200"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 52,
-                minWidth: 180,
-                borderRadius: 9999,
                 background: "transparent",
                 border: "1.5px solid rgba(255,255,255,0.25)",
                 color: "#ffffff",
                 fontFamily: "'Instrument Sans', sans-serif",
-                fontSize: 14,
-                fontWeight: 500,
-                textDecoration: "none",
-                transition: "border-color 200ms",
-                cursor: "pointer",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)")
@@ -214,7 +163,7 @@ const HeroSection = () => {
           </div>
 
           {/* Stats */}
-          <div ref={statRef} style={{ display: "flex", gap: 0, marginTop: 8 }}>
+          <div ref={statRef} className="flex mt-2">
             {[
               { num: stat1, label: "of PS firm CRM contacts are dormant" },
               { num: stat2, label: "of revenue from existing relationships" },
@@ -222,33 +171,28 @@ const HeroSection = () => {
             ].map((stat, i) => (
               <div
                 key={i}
+                className="flex-1"
                 style={{
-                  flex: 1,
-                  paddingLeft: i > 0 ? 24 : 0,
-                  paddingRight: i < 2 ? 24 : 0,
+                  paddingLeft: i > 0 ? 16 : 0,
+                  paddingRight: i < 2 ? 16 : 0,
                   borderLeft: i > 0 ? "1px solid #2a2720" : "none",
                 }}
               >
                 <span
+                  className="text-[28px] sm:text-[36px] md:text-[52px] leading-none font-bold block"
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
-                    fontWeight: 700,
-                    fontSize: 52,
-                    lineHeight: 1,
                     color: "#b8972e",
-                    display: "block",
                   }}
                 >
                   {stat.num}%
                 </span>
                 <span
+                  className="text-[11px] md:text-xs block mt-2"
                   style={{
-                    fontSize: 12,
                     color: "#6b6560",
                     lineHeight: 1.5,
                     maxWidth: 120,
-                    display: "block",
-                    marginTop: 8,
                   }}
                 >
                   {stat.label}
@@ -259,29 +203,17 @@ const HeroSection = () => {
         </div>
 
         {/* ─── RIGHT COLUMN ─── */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <div className="flex flex-col items-center justify-center order-1 md:order-2">
           <div
             onMouseEnter={() => setPageHover(true)}
             onMouseLeave={() => setPageHover(false)}
-            style={{
-              perspective: 1200,
-              cursor: "pointer",
-            }}
+            style={{ perspective: 1200, cursor: "pointer" }}
           >
             <img
               src={bookOpen}
               alt="GTM for Professional Services — The Relationship Revenue OS book"
+              className="max-w-[280px] sm:max-w-[360px] md:max-w-none md:w-[520px] rounded-md"
               style={{
-                maxWidth: "100%",
-                width: 520,
-                borderRadius: 6,
                 transform: pageHover
                   ? "rotateY(-6deg) rotateX(4deg) translateY(-4px)"
                   : "rotateY(-3deg) rotateX(2deg)",
@@ -294,13 +226,10 @@ const HeroSection = () => {
           </div>
 
           <span
+            className="text-[9px] tracking-[0.2em] uppercase mt-8"
             style={{
               fontFamily: "'Libre Baskerville', Georgia, serif",
-              fontSize: 9,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
               color: "#4a4540",
-              marginTop: 32,
             }}
           >
             Q4 2026 · Mabbly Press · First Edition
