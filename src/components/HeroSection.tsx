@@ -75,7 +75,7 @@ const HeroSection = () => {
       />
 
       {/* Two-column grid */}
-      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center min-h-screen px-6 md:px-[120px] py-20 max-w-[1600px] mx-auto">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-20 items-center min-h-screen px-6 md:px-10 lg:px-[120px] py-20 max-w-[1600px] mx-auto">
         {/* ─── LEFT COLUMN ─── */}
         <div className="flex flex-col gap-6 md:gap-8 self-center order-2 md:order-1">
           {/* Kicker */}
@@ -94,7 +94,7 @@ const HeroSection = () => {
 
           {/* Headline */}
           <h1
-            className="text-[40px] sm:text-[56px] md:text-[76px] leading-[0.95] font-[800] m-0"
+            className="text-[40px] sm:text-[56px] md:text-[60px] lg:text-[76px] leading-[0.95] font-[800] m-0"
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               color: "#ffffff",
@@ -179,7 +179,7 @@ const HeroSection = () => {
                 }}
               >
                 <span
-                  className="text-[28px] sm:text-[36px] md:text-[52px] leading-none font-bold block"
+                  className="text-[28px] sm:text-[36px] md:text-[40px] lg:text-[52px] leading-none font-bold block"
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     color: "#b8972e",
@@ -212,7 +212,7 @@ const HeroSection = () => {
             <img
               src={bookOpen}
               alt="GTM for Professional Services — The Relationship Revenue OS book"
-              className="max-w-[280px] sm:max-w-[360px] md:max-w-none md:w-[520px] rounded-md"
+              className="max-w-[280px] sm:max-w-[360px] md:max-w-none md:w-[380px] lg:w-[520px] rounded-md"
               style={{
                 transform: pageHover
                   ? "rotateY(-6deg) rotateX(4deg) translateY(-4px)"

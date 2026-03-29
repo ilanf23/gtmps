@@ -35,7 +35,7 @@ const StickyNav = () => {
 
         {/* Center pill nav */}
         <div
-          className="hidden md:flex items-center gap-1 rounded-full"
+          className="hidden lg:flex items-center gap-1 rounded-full"
           style={{
             border: "1px solid rgba(255,255,255,0.1)",
             padding: "4px 6px",
@@ -60,7 +60,7 @@ const StickyNav = () => {
         {/* CTA */}
         <a
           href="#apply"
-          className="hidden md:inline-flex font-sans font-semibold rounded-full transition-all duration-200 text-white border border-white/25 hover:bg-white hover:text-ink"
+          className="hidden lg:inline-flex font-sans font-semibold rounded-full transition-all duration-200 text-white border border-white/25 hover:bg-white hover:text-ink"
           style={{
             fontSize: 13,
             padding: "8px 24px",
@@ -71,7 +71,7 @@ const StickyNav = () => {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-white"
+          className="lg:hidden text-white"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
