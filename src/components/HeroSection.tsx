@@ -203,7 +203,7 @@ const HeroSection = () => {
         </div>
 
         {/* ─── RIGHT COLUMN ─── */}
-        <div className="flex flex-col items-center justify-center order-1 md:order-2">
+        <div className="flex flex-col items-center justify-center order-1 lg:order-2">
           <div
             onMouseEnter={() => setPageHover(true)}
             onMouseLeave={() => setPageHover(false)}
