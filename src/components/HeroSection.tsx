@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import bookOpen from "@/assets/book-open.png";
 
 /* ── Stat counter hook ── */
 function useCountUp(
