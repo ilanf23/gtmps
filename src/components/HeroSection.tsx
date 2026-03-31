@@ -38,6 +38,12 @@ const HeroSection = () => {
   const statRef = useRef<HTMLDivElement>(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const [pageHover, setPageHover] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 100);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const el = statRef.current;
@@ -63,21 +69,82 @@ const HeroSection = () => {
     <section
       id="hero"
       className="relative min-h-screen overflow-hidden"
-      style={{ background: "#0e0d0b" }}
+      style={{ background: "#08070a" }}
     >
-      {/* Noise texture */}
+      {/* ── Cinematic lighting layers ── */}
+
+      {/* Top-down spotlight cone */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute pointer-events-none"
+        style={{
+          top: "-20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "140%",
+          height: "120%",
+          background:
+            "radial-gradient(ellipse 40% 55% at 65% 0%, rgba(184,147,58,0.08) 0%, rgba(184,147,58,0.02) 40%, transparent 70%)",
+        }}
+      />
+
+      {/* Warm glow behind book position */}
+      <div
+        className="absolute pointer-events-none hidden lg:block"
+        style={{
+          top: "15%",
+          right: "10%",
+          width: "600px",
+          height: "700px",
+          background:
+            "radial-gradient(ellipse at center, rgba(184,147,58,0.06) 0%, rgba(184,147,58,0.02) 35%, transparent 65%)",
+          filter: "blur(40px)",
+        }}
+      />
+
+      {/* Subtle side light from left */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "30%",
+          left: "-5%",
+          width: "400px",
+          height: "400px",
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+      />
+
+      {/* Film grain texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.035]"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
       />
 
-      {/* Two-column grid */}
-      <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center min-h-screen px-6 md:px-10 lg:px-[120px] py-20 max-w-[1600px] mx-auto">
+      {/* Vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(0,0,0,0.5) 100%)",
+        }}
+      />
+
+      {/* ── Two-column grid ── */}
+      <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-screen px-6 md:px-10 lg:px-[100px] py-20 max-w-[1600px] mx-auto">
+
         {/* ─── LEFT COLUMN ─── */}
-        <div className="flex flex-col gap-6 md:gap-8 self-center order-2 lg:order-1">
+        <div
+          className="flex flex-col gap-6 md:gap-8 self-center order-2 lg:order-1"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? "translateY(0)" : "translateY(30px)",
+            transition: "opacity 1s ease, transform 1s ease",
+          }}
+        >
           {/* Kicker */}
           <div className="flex items-center gap-3">
             <div className="w-7 h-px" style={{ background: "#b8972e" }} />
@@ -113,7 +180,7 @@ const HeroSection = () => {
           {/* Sessions badge */}
           <div className="flex items-center gap-2.5">
             <span
-              className="inline-block w-2 h-2 rounded-full"
+              className="inline-block w-2 h-2 rounded-full animate-pulse"
               style={{ background: "#b8972e" }}
             />
             <span
@@ -131,32 +198,41 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <a
               href="#apply"
-              className="inline-flex items-center justify-center h-[52px] min-w-[200px] sm:min-w-[220px] rounded-full text-sm font-semibold no-underline cursor-pointer transition-colors duration-200"
+              className="inline-flex items-center justify-center h-[52px] min-w-[200px] sm:min-w-[220px] rounded-full text-sm font-semibold no-underline cursor-pointer transition-all duration-300"
               style={{
-                background: "#b8972e",
+                background: "linear-gradient(135deg, #b8972e 0%, #d4a832 100%)",
                 color: "#1e1a10",
                 fontFamily: "'Instrument Sans', sans-serif",
+                boxShadow: "0 0 30px rgba(184,147,58,0.3), 0 4px 15px rgba(0,0,0,0.3)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#d4a832")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#b8972e")}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 50px rgba(184,147,58,0.5), 0 4px 20px rgba(0,0,0,0.4)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 30px rgba(184,147,58,0.3), 0 4px 15px rgba(0,0,0,0.3)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
             >
               Apply for a Research Session
             </a>
             <a
               href="#book"
-              className="inline-flex items-center justify-center h-[52px] min-w-[180px] rounded-full text-sm font-medium no-underline cursor-pointer transition-colors duration-200"
+              className="inline-flex items-center justify-center h-[52px] min-w-[180px] rounded-full text-sm font-medium no-underline cursor-pointer transition-all duration-300"
               style={{
                 background: "transparent",
-                border: "1.5px solid rgba(255,255,255,0.25)",
+                border: "1.5px solid rgba(255,255,255,0.15)",
                 color: "#ffffff",
                 fontFamily: "'Instrument Sans', sans-serif",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "rgba(184,147,58,0.5)";
+                e.currentTarget.style.boxShadow = "0 0 20px rgba(184,147,58,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
             >
               Learn About the Book
             </a>
@@ -175,7 +251,7 @@ const HeroSection = () => {
                 style={{
                   paddingLeft: i > 0 ? 16 : 0,
                   paddingRight: i < 2 ? 16 : 0,
-                  borderLeft: i > 0 ? "1px solid #2a2720" : "none",
+                  borderLeft: i > 0 ? "1px solid rgba(184,147,58,0.12)" : "none",
                 }}
               >
                 <span
@@ -183,6 +259,7 @@ const HeroSection = () => {
                   style={{
                     fontFamily: "'Playfair Display', Georgia, serif",
                     color: "#b8972e",
+                    textShadow: "0 0 40px rgba(184,147,58,0.2)",
                   }}
                 >
                   {stat.num}%
@@ -202,31 +279,121 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* ─── RIGHT COLUMN ─── */}
-        <div className="flex flex-col items-center justify-center order-1 lg:order-2">
-          <div
-            onMouseEnter={() => setPageHover(true)}
-            onMouseLeave={() => setPageHover(false)}
-            style={{ perspective: 1200, cursor: "pointer" }}
-          >
-            <img
-              src={bookOpen}
-              alt="GTM for Professional Services — The Relationship Revenue OS book"
-              className="max-w-[210px] sm:max-w-[270px] md:max-w-[315px] lg:max-w-none lg:w-[390px] rounded-md"
+        {/* ─── RIGHT COLUMN — Cinematic Book ─── */}
+        <div
+          className="flex flex-col items-center justify-center order-1 lg:order-2"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? "translateY(0)" : "translateY(40px)",
+            transition: "opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s",
+          }}
+        >
+          {/* Book spotlight glow */}
+          <div className="relative">
+            {/* Radial spotlight behind book */}
+            <div
+              className="absolute pointer-events-none"
               style={{
-                transform: pageHover
-                  ? "rotateY(-6deg) rotateX(4deg) translateY(-4px)"
-                  : "rotateY(-3deg) rotateX(2deg)",
-                transition: "transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                boxShadow: pageHover
-                  ? "0 30px 60px -15px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.2)"
-                  : "0 20px 40px -10px rgba(0,0,0,0.4), 0 6px 16px rgba(0,0,0,0.15)",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "180%",
+                height: "180%",
+                background:
+                  "radial-gradient(ellipse at center, rgba(184,147,58,0.1) 0%, rgba(184,147,58,0.04) 30%, transparent 60%)",
+                filter: "blur(20px)",
+                transition: "opacity 600ms ease",
+                opacity: pageHover ? 1 : 0.6,
+              }}
+            />
+
+            {/* Light rays (subtle lines) */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: "-40%",
+                left: "50%",
+                transform: "translateX(-50%) rotate(-2deg)",
+                width: "2px",
+                height: "120%",
+                background:
+                  "linear-gradient(to bottom, rgba(184,147,58,0.15), transparent 70%)",
+                filter: "blur(3px)",
+                opacity: pageHover ? 0.8 : 0.3,
+                transition: "opacity 600ms ease",
+              }}
+            />
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: "-40%",
+                left: "45%",
+                transform: "translateX(-50%) rotate(-8deg)",
+                width: "1px",
+                height: "100%",
+                background:
+                  "linear-gradient(to bottom, rgba(184,147,58,0.1), transparent 60%)",
+                filter: "blur(2px)",
+                opacity: pageHover ? 0.6 : 0.2,
+                transition: "opacity 600ms ease",
+              }}
+            />
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: "-40%",
+                left: "55%",
+                transform: "translateX(-50%) rotate(5deg)",
+                width: "1px",
+                height: "100%",
+                background:
+                  "linear-gradient(to bottom, rgba(184,147,58,0.1), transparent 60%)",
+                filter: "blur(2px)",
+                opacity: pageHover ? 0.6 : 0.2,
+                transition: "opacity 600ms ease",
+              }}
+            />
+
+            <div
+              onMouseEnter={() => setPageHover(true)}
+              onMouseLeave={() => setPageHover(false)}
+              style={{ perspective: 1200, cursor: "pointer" }}
+            >
+              <img
+                src={bookOpen}
+                alt="GTM for Professional Services — The Relationship Revenue OS book"
+                className="relative z-10 max-w-[160px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-none lg:w-[300px] rounded-md"
+                style={{
+                  transform: pageHover
+                    ? "rotateY(-6deg) rotateX(4deg) translateY(-8px) scale(1.03)"
+                    : "rotateY(-3deg) rotateX(2deg)",
+                  transition:
+                    "transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 600ms ease",
+                  boxShadow: pageHover
+                    ? "0 40px 80px -20px rgba(0,0,0,0.7), 0 0 60px rgba(184,147,58,0.15), 0 15px 30px rgba(0,0,0,0.3)"
+                    : "0 25px 50px -12px rgba(0,0,0,0.6), 0 0 30px rgba(184,147,58,0.05), 0 8px 20px rgba(0,0,0,0.2)",
+                }}
+              />
+            </div>
+
+            {/* Reflected light on surface below book */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                bottom: "-30px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "70%",
+                height: "30px",
+                background:
+                  "radial-gradient(ellipse at center, rgba(184,147,58,0.08) 0%, transparent 70%)",
+                filter: "blur(10px)",
               }}
             />
           </div>
 
           <span
-            className="text-[9px] tracking-[0.2em] uppercase mt-8"
+            className="text-[9px] tracking-[0.2em] uppercase mt-10"
             style={{
               fontFamily: "'Libre Baskerville', Georgia, serif",
               color: "#4a4540",
