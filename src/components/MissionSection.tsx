@@ -88,30 +88,35 @@ const MissionSection = () => {
   return (
     <section id="mission" className="px-6 py-20 md:px-20 md:py-28 bg-warm-white overflow-hidden">
       <div className="max-w-[1080px] mx-auto">
-        {/* Header */}
-        <div className="max-w-[780px]">
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-px bg-gold" />
-              <span className="font-mono uppercase tracking-[0.2em] text-gold" style={{ fontSize: 10 }}>
-                Why This Book Exists
-              </span>
-            </div>
+        {/* Header — cinematic statement */}
+        <div className="max-w-[960px]">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-px bg-gold" />
+            <span className="font-mono uppercase tracking-[0.25em] text-gold" style={{ fontSize: 10 }}>
+              Why This Book Exists
+            </span>
           </div>
 
           <h2
-            className="font-display font-black text-text-dark"
-            style={{ fontSize: "clamp(36px, 4.5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}
+            className="font-display font-[900] text-text-dark scroll-reveal"
+            style={{
+              fontSize: "clamp(40px, 6vw, 72px)",
+              lineHeight: 1.0,
+              letterSpacing: "-0.03em",
+            }}
           >
-            Professional services firms deserve marketing as sophisticated as the work they sell.
+            Professional services firms deserve marketing as sophisticated as the work they sell<span className="text-gold">.</span>
           </h2>
 
-          <p
-            className="font-serif italic text-gold mt-4"
-            style={{ fontSize: "clamp(20px, 2.5vw, 28px)" }}
-          >
-            Nobody built them a growth engine. Until now.
-          </p>
+          <div className="flex items-center gap-4 mt-8">
+            <div className="w-12 h-px" style={{ background: "linear-gradient(90deg, #B8933A, transparent)" }} />
+            <p
+              className="font-serif italic text-gold scroll-reveal"
+              style={{ fontSize: "clamp(22px, 2.8vw, 32px)", lineHeight: 1.3 }}
+            >
+              Nobody built them a growth engine. Until now.
+            </p>
+          </div>
         </div>
 
         {/* Story cards grid */}
