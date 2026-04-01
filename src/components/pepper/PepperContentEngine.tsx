@@ -95,7 +95,7 @@ export default function PepperContentEngine() {
           <span className="text-[11px] text-[#A09890] ml-1">· Draft outline</span>
           <span className="text-[11px] text-[#A09890] sm:ml-auto font-mono">~1,200 words</span>
         </div>
-        <div className="p-7 space-y-6">
+        <div className="p-4 sm:p-7 space-y-6">
           <h3
             className="text-[22px] font-bold text-[#2D2A26] leading-tight"
             style={{ fontFamily: "'Playfair Display', serif" }}
