@@ -101,12 +101,15 @@ export default function PepperIdentity() {
           </h3>
         </div>
         <div
-          className="overflow-x-auto rounded-xl"
+          className="overflow-x-auto rounded-xl relative"
           style={{
             border: "1px solid rgba(221,213,204,0.5)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+            WebkitOverflowScrolling: "touch",
           }}
         >
+          {/* Mobile scroll hint */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none md:hidden" style={{ background: "linear-gradient(90deg, transparent, rgba(251,248,244,0.9))" }} />
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr
