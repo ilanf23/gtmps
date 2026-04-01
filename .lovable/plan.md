@@ -1,36 +1,34 @@
 
 
-# Fix Link Preview (OG Meta) for Pepper Group Page
+# Fix Orbit Map Readability & Hover Interaction
 
-## Problem
-When sharing the `/pepper-group` URL, it shows the generic discover.mabbly.com preview (small, irrelevant screenshot) because the OG meta tags are hardcoded in `index.html` for the main page. Since this is a client-side SPA, social crawlers only see those static tags.
+## Problems
+1. Ring labels are 9px, 0.5 opacity — nearly invisible on the dark background
+2. Hover targets are thin circle strokes (1px) — extremely hard to hit with a cursor
+3. Tooltip appears only while hovering the thin stroke, disappearing instantly
 
 ## Solution
 
-### 1. Update `index.html` with route-aware defaults
-Since this is a SPA and crawlers don't execute JS, we need a different approach. The best option within Lovable's constraints:
+### Make labels always readable
+- Increase font size from 9 → 11px
+- Increase base opacity from 0.5 → 0.75 (hovered → 1)
+- Add a subtle text-shadow glow so labels pop against the dark background
 
-- **Create a dedicated OG image** for the Pepper Group page — a designed 1200×630 static image that looks premium (terracotta palette, "Pepper Group — Market Activation Profile" text, Mabbly branding)
-- **Add dynamic document head updates** in `PepperGroup.tsx` using a `useEffect` to update `<title>` and OG meta tags at runtime (helps when shared from in-app browsers that do execute JS)
+### Add invisible wide hover zones
+- For each ring, add a second transparent `<circle>` with `strokeWidth={24}` and `fill="none"` as the actual hover target
+- This gives each ring a ~24px wide invisible hit area while the visible stroke stays thin and elegant
 
-### 2. Generate OG image
-Create a clean 1200×630 image with:
-- Warm background (#FBF8F4 → #F3EDE6 gradient)
-- "Pepper Group" in Playfair Display
-- "Market Activation Profile" subtitle
-- Mabbly branding
-- Terracotta accent elements
+### Show all ring details permanently (not just on hover)
+- Always display the detail text for each ring along the right side as a legend/key
+- On hover, highlight the corresponding ring and its legend entry
 
-### 3. Add runtime meta tag updates in PepperGroup.tsx
-Use `useEffect` to dynamically set:
-- `og:title` → "Pepper Group — Market Activation Profile | Mabbly"
-- `og:description` → "Your Network Got Promoted Without You. A personalized market activation profile prepared for Tim Padgett & George Couris."
-- `og:image` → the new OG image URL
-- `twitter:card`, `twitter:image`, `twitter:title`, `twitter:description`
+### Alternative: click-to-lock tooltips
+- On click, lock the tooltip open so users can read it without holding hover
+- Click again or click another ring to switch
 
-### 4. Alternatively: add a separate HTML entry or edge function
-For crawlers that don't execute JS (Facebook, LinkedIn, Slack), the most reliable fix is a **backend function** that serves custom HTML with the right OG tags when it detects a bot user-agent on `/pepper-group`. This would be an edge function that intercepts the request and returns modified HTML.
+### Recommended approach
+Go with wide invisible hover zones + larger labels + persistent legend. This makes the map scannable without any interaction, while hover still adds emphasis.
 
-## Recommended Approach
-Combine both: runtime meta updates (step 3) for in-app browsers + an edge function for proper crawler support. This ensures the link preview looks premium everywhere.
+## Files Changed
+- `src/components/pepper/PepperOrbitMap.tsx` — add invisible hit-area circles, increase label size/opacity, add right-side legend with ring details
 
