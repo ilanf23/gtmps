@@ -225,8 +225,11 @@ export default function PepperContentEngine() {
 
       {/* CTA */}
       <section className="text-center space-y-5 py-4">
-        <button
-          className="relative overflow-hidden font-semibold px-12 py-5 rounded-xl text-lg transition-all duration-300 cursor-pointer"
+        <a
+          href="https://calendly.com/adam-fridman/30min"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative overflow-hidden font-semibold px-12 py-5 rounded-xl text-lg transition-all duration-300 cursor-pointer inline-block no-underline"
           style={{
             background: "linear-gradient(135deg, #C65D3E, #A84D32)",
             color: "white",
@@ -241,8 +244,8 @@ export default function PepperContentEngine() {
             e.currentTarget.style.transform = "translateY(0)";
           }}
         >
-          Schedule 15-Min MAP Review
-        </button>
+          Schedule 30-Min MAP Review
+        </a>
         <p className="text-[13px] text-[#A09890]">No pitch. Just: what's right, what's wrong, what's next.</p>
       </section>
 
