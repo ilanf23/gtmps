@@ -7,14 +7,20 @@ import PepperExpandable from "./PepperExpandable";
 
 export default function PepperOrbits() {
   return (
-    <div className="space-y-16">
+    <div className="space-y-20">
       {/* Spectrum */}
       <section className="space-y-6">
-        <span className="text-[12px] font-bold tracking-[0.25em] uppercase text-[#C65D3E]">THE SPECTRUM</span>
-        <h2 className="text-[clamp(28px,4vw,44px)] font-bold text-[#2D2A26] leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-          You're at 1.5 out of 4
+        <div className="flex items-center gap-3">
+          <span className="w-8 h-px" style={{ background: "linear-gradient(90deg, transparent, #C65D3E)" }} />
+          <span className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[#C65D3E]">The Spectrum</span>
+        </div>
+        <h2
+          className="text-[clamp(30px,4.5vw,48px)] font-bold text-[#2D2A26] leading-[1.05] tracking-[-0.02em]"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          You're at 1.5 out of 4<span style={{ color: "#C65D3E" }}>.</span>
         </h2>
-        <p className="text-[#6B6560] text-lg">
+        <p className="text-[#6B6560] text-lg max-w-[600px]">
           Not because the foundation is weak. Because the activation layer doesn't exist yet.
         </p>
         <PepperSpectrumBar />
@@ -22,35 +28,70 @@ export default function PepperOrbits() {
 
       {/* Have vs Gap */}
       <section className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white border border-[#DDD5CC] rounded-lg p-6">
-          <span className="text-[11px] font-bold tracking-wider uppercase text-[#4A6741] mb-3 block">What You Have</span>
-          <ul className="text-sm text-[#6B6560] space-y-2">
+        <div
+          className="rounded-xl p-7"
+          style={{
+            background: "rgba(74,103,65,0.03)",
+            border: "1px solid rgba(74,103,65,0.12)",
+            boxShadow: "0 4px 20px rgba(74,103,65,0.04)",
+          }}
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <span className="w-2 h-2 rounded-full bg-[#4A6741]" />
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#4A6741]">What You Have</span>
+          </div>
+          <ul className="text-[13px] text-[#6B6560] space-y-3">
             {["BtoB Top Agency", "Revenue Tower (proprietary IP)", "EOS since 2012", "95% client retention", "140+ GDUSA awards", "Booth MBA credential", "32 years of depth", "$200M BASF win"].map((item) => (
-              <li key={item} className="flex items-start gap-2"><span className="text-[#4A6741] mt-0.5">✓</span>{item}</li>
+              <li key={item} className="flex items-start gap-3">
+                <span className="w-4 h-4 rounded-full bg-[#4A6741]/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[#4A6741] text-[10px]">✓</span>
+                </span>
+                {item}
+              </li>
             ))}
           </ul>
         </div>
-        <div className="bg-white border border-[#DDD5CC] rounded-lg p-6">
-          <span className="text-[11px] font-bold tracking-wider uppercase text-[#8B3A3A] mb-3 block">The Gap</span>
-          <ul className="text-sm text-[#6B6560] space-y-2">
+        <div
+          className="rounded-xl p-7"
+          style={{
+            background: "rgba(139,58,58,0.02)",
+            border: "1px solid rgba(139,58,58,0.1)",
+            boxShadow: "0 4px 20px rgba(139,58,58,0.03)",
+          }}
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <span className="w-2 h-2 rounded-full bg-[#8B3A3A]" />
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#8B3A3A]">The Gap</span>
+          </div>
+          <ul className="text-[13px] text-[#6B6560] space-y-3">
             {["No loaded CRM", "No signal monitoring", "No reactivation content", "No cadence system", "No migration data"].map((item) => (
-              <li key={item} className="flex items-start gap-2"><span className="text-[#8B3A3A] mt-0.5">✗</span>{item}</li>
+              <li key={item} className="flex items-start gap-3">
+                <span className="w-4 h-4 rounded-full bg-[#8B3A3A]/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-[#8B3A3A] text-[10px]">✗</span>
+                </span>
+                {item}
+              </li>
             ))}
           </ul>
         </div>
       </section>
 
       {/* George's 4 Networks */}
-      <section className="space-y-6">
-        <h2 className="text-[clamp(24px,3.5vw,36px)] font-bold text-[#2D2A26] leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-          George's 4 Institutional Relationship Engines
-        </h2>
-        <h3 className="text-xl font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
-          The Real Dead Zone Is Bigger Than 400
-        </h3>
-        <p className="text-[#6B6560]">
-          Each of these networks represents hundreds of relationships George has earned. None are being systematically activated.
-        </p>
+      <section className="space-y-8">
+        <div className="space-y-3">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">Relationship Capital</span>
+          <h2
+            className="text-[clamp(26px,3.5vw,40px)] font-bold text-[#2D2A26] leading-[1.1] tracking-[-0.01em]"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            George's 4 Institutional
+            <br />
+            Relationship Engines
+          </h2>
+          <p className="text-[#6B6560] text-lg max-w-[640px]">
+            Each of these networks represents hundreds of relationships George has earned. None are being systematically activated.
+          </p>
+        </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { num: 500, role: "Past President", name: "AMA Chicago", insight: "Premier marketing network in Chicago" },
@@ -58,29 +99,65 @@ export default function PepperOrbits() {
             { num: 100, role: "Board Member", name: "CEO Roundtable Chicago", insight: "Peer CEO relationships" },
             { num: 200, role: "Team Mentor Since 2012", name: "Junto Institute", insight: "Founder and scaling-company network" },
           ].map((n) => (
-            <div key={n.name} className="bg-white border-t-4 border-t-[#C65D3E] border border-[#DDD5CC] rounded-lg p-5">
-              <div className="text-[36px] font-bold text-[#C65D3E]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <div
+              key={n.name}
+              className="rounded-xl p-6 relative overflow-hidden transition-all duration-300 group"
+              style={{
+                background: "white",
+                border: "1px solid rgba(221,213,204,0.5)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 12px 36px rgba(198,93,62,0.08)";
+                e.currentTarget.style.transform = "translateY(-3px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.02)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-1" style={{ background: "linear-gradient(90deg, #C65D3E, #C4A747)" }} />
+              <div
+                className="text-[38px] font-bold text-[#C65D3E] leading-none"
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  textShadow: "0 0 20px rgba(198,93,62,0.1)",
+                }}
+              >
                 <PepperAnimatedCounter end={n.num} suffix="+" />
               </div>
-              <div className="text-[10px] font-bold tracking-wider uppercase text-[#A09890] mt-1">{n.role}</div>
-              <div className="font-semibold text-[#2D2A26] mt-2">{n.name}</div>
-              <div className="text-sm text-[#6B6560] mt-1">{n.insight}</div>
+              <div className="text-[9px] font-bold tracking-[0.18em] uppercase text-[#A09890] mt-3">{n.role}</div>
+              <div className="font-semibold text-[#2D2A26] mt-2 text-[15px]" style={{ fontFamily: "'Playfair Display', serif" }}>{n.name}</div>
+              <div className="text-[12px] text-[#6B6560] mt-1">{n.insight}</div>
             </div>
           ))}
         </div>
-        <div className="bg-[#FBF8F4] border border-[#DDD5CC] rounded-lg p-4 text-center text-sm text-[#6B6560]">
-          <strong className="text-[#2D2A26]">1,100+ estimated relationships</strong> across George's networks alone, before counting Tim's 32 years
+        <div
+          className="rounded-xl p-5 text-center"
+          style={{
+            background: "linear-gradient(135deg, rgba(198,93,62,0.04), rgba(196,167,71,0.04))",
+            border: "1px solid rgba(198,93,62,0.1)",
+          }}
+        >
+          <span className="text-sm text-[#6B6560]">
+            <strong className="text-[#2D2A26]">1,100+ estimated relationships</strong> across George's networks alone, before counting Tim's 32 years
+          </span>
         </div>
       </section>
 
       {/* Dead Zone */}
-      <section className="space-y-6">
-        <h2 className="text-[clamp(24px,3.5vw,36px)] font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
-          <PepperAnimatedCounter end={400} suffix="+" /> relationships sitting in silence
-        </h2>
-        <p className="text-[#6B6560]">
-          And that's the conservative number. With George's networks, the real number is likely 1,500+.
-        </p>
+      <section className="space-y-8">
+        <div className="space-y-3">
+          <h2
+            className="text-[clamp(26px,3.5vw,40px)] font-bold text-[#2D2A26] tracking-[-0.01em]"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            <PepperAnimatedCounter end={400} suffix="+" /> relationships sitting in silence<span style={{ color: "#C65D3E" }}>.</span>
+          </h2>
+          <p className="text-[#6B6560] text-lg">
+            And that's the conservative number. With George's networks, the real number is likely 1,500+.
+          </p>
+        </div>
         <PepperDotMatrix />
       </section>
 
@@ -89,7 +166,15 @@ export default function PepperOrbits() {
 
       {/* Orbit Map */}
       <section className="space-y-6">
-        <h3 className="text-xl font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>Orbit Map</h3>
+        <div className="space-y-2">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">Visualization</span>
+          <h3
+            className="text-[clamp(22px,3vw,30px)] font-bold text-[#2D2A26]"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            Orbit Map
+          </h3>
+        </div>
         <PepperOrbitMap />
       </section>
 
@@ -101,9 +186,21 @@ export default function PepperOrbits() {
             { title: "PE Operating Partners", text: "Portfolio operators seeking marketing infrastructure for newly acquired B2B companies." },
             { title: "B2B Services Leaders", text: "Managing partners and BD leaders at professional services firms exploring systematic growth." },
           ].map((c) => (
-            <div key={c.title} className="bg-[#FBF8F4] rounded-lg p-5 border border-[#DDD5CC]">
-              <h4 className="font-semibold text-[#2D2A26] mb-2 text-sm">{c.title}</h4>
-              <p className="text-sm text-[#6B6560]">{c.text}</p>
+            <div
+              key={c.title}
+              className="rounded-xl p-6"
+              style={{
+                background: "rgba(251,248,244,0.7)",
+                border: "1px solid rgba(221,213,204,0.5)",
+              }}
+            >
+              <h4
+                className="font-semibold text-[#2D2A26] mb-2 text-[14px]"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                {c.title}
+              </h4>
+              <p className="text-[13px] text-[#6B6560] leading-relaxed">{c.text}</p>
             </div>
           ))}
         </div>
