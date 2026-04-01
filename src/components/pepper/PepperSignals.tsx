@@ -20,38 +20,48 @@ export default function PepperSignals() {
       </section>
 
       {/* Formula */}
-      <section className="flex flex-wrap items-stretch gap-4 justify-center">
-        {[
-          { label: "Signal", text: "Their company wins an award", color: "#C4A747" },
-          { label: "Proof", text: "Your Kensing case study matches", color: "#C65D3E" },
-          { label: "Context", text: "You worked together in 2019", color: "#4A6741" },
-        ].map((card, i) => (
-          <div key={i} className="flex items-center gap-4">
-            <div
-              className="rounded-xl p-6 w-56 relative overflow-hidden transition-all duration-300"
-              style={{
-                background: "white",
-                border: "1px solid rgba(221,213,204,0.5)",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
-              }}
-            >
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: card.color }} />
-              <div className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3" style={{ color: card.color }}>{card.label}</div>
-              <p className="text-[14px] text-[#2D2A26] leading-relaxed">{card.text}</p>
-            </div>
-            {i < 2 && <span className="text-2xl font-light" style={{ color: "#D5CEC5" }}>+</span>}
-          </div>
-        ))}
-        <div className="flex items-center gap-4">
+      <section className="space-y-6">
+        {/* 3-column grid for input cards */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-3 md:gap-4">
+          {[
+            { label: "Signal", text: "Their company wins an award", color: "#C4A747" },
+            { label: "Proof", text: "Your Kensing case study matches", color: "#C65D3E" },
+            { label: "Context", text: "You worked together in 2019", color: "#4A6741" },
+          ].map((card, i) => (
+            <>
+              <div
+                key={card.label}
+                className="rounded-xl p-6 relative overflow-hidden transition-all duration-300"
+                style={{
+                  background: "white",
+                  border: "1px solid rgba(221,213,204,0.5)",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+                }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: card.color }} />
+                <div className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3" style={{ color: card.color }}>{card.label}</div>
+                <p className="text-[14px] text-[#2D2A26] leading-relaxed">{card.text}</p>
+              </div>
+              {i < 2 && (
+                <span className="hidden md:flex items-center justify-center text-2xl font-light" style={{ color: "#D5CEC5" }}>+</span>
+              )}
+              {i < 2 && (
+                <span className="flex md:hidden items-center justify-center text-xl font-light py-1" style={{ color: "#D5CEC5" }}>+</span>
+              )}
+            </>
+          ))}
+        </div>
+
+        {/* Equals + Result */}
+        <div className="flex flex-col items-center gap-4">
           <span className="text-2xl font-light" style={{ color: "#D5CEC5" }}>=</span>
           <div
-            className="rounded-xl p-6 w-56 relative overflow-hidden"
+            className="rounded-xl p-6 w-full max-w-xs relative overflow-hidden"
             style={{
               background: "linear-gradient(135deg, #1A1A2E, #0D0D1A)",
               boxShadow: "0 8px 30px rgba(26,26,46,0.3)",
             }}
           >
-            {/* Inner glow */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{ background: "radial-gradient(ellipse at top, rgba(198,93,62,0.1) 0%, transparent 60%)" }}
