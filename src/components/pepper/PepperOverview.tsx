@@ -123,7 +123,7 @@ export default function PepperOverview() {
               key={i}
               className="text-center px-4 py-4"
               style={{
-                borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                borderRight: i < 3 && i !== 1 ? "1px solid rgba(255,255,255,0.06)" : i === 1 ? "none" : "none",
               }}
             >
               <div
@@ -289,20 +289,20 @@ export default function PepperOverview() {
             ].map((m, i) => (
               <div
                 key={i}
-                className="flex items-center gap-5 rounded-xl p-5"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5 rounded-xl p-4 sm:p-5"
                 style={{
                   background: "white",
                   border: "1px solid rgba(221,213,204,0.5)",
                 }}
               >
                 <span
-                  className="text-sm font-medium text-[#6B6560] w-48 shrink-0"
+                  className="text-sm font-medium text-[#6B6560] sm:w-48 shrink-0"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
                   {m.left}
                 </span>
                 <span
-                  className="text-lg"
+                  className="text-lg hidden sm:block"
                   style={{
                     color: "#C65D3E",
                     textShadow: "0 0 12px rgba(198,93,62,0.15)",
@@ -310,7 +310,7 @@ export default function PepperOverview() {
                 >
                   →
                 </span>
-                <span className="text-sm font-bold text-[#C65D3E] w-36 shrink-0 tracking-wide">{m.right}</span>
+                <span className="text-sm font-bold text-[#C65D3E] sm:w-36 shrink-0 tracking-wide">{m.right}</span>
                 <span className="text-[13px] text-[#6B6560]">{m.text}</span>
               </div>
             ))}

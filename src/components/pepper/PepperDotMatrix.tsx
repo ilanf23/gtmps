@@ -16,7 +16,7 @@ export default function PepperDotMatrix() {
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-10 gap-2.5 max-w-[360px]">
+      <div className="grid grid-cols-8 sm:grid-cols-10 gap-2 sm:gap-2.5 max-w-[280px] sm:max-w-[360px]">
         {Array.from({ length: 80 }).map((_, i) => {
           const isActive = i < 16;
           return (
@@ -24,7 +24,7 @@ export default function PepperDotMatrix() {
               <div
                 onMouseEnter={() => !isActive && setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
-                className="w-7 h-7 rounded-full cursor-pointer transition-all duration-300"
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full cursor-pointer transition-all duration-300"
                 style={{
                   background: isActive
                     ? "linear-gradient(135deg, #C65D3E, #D4714F)"

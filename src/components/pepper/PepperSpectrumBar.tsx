@@ -67,10 +67,10 @@ export default function PepperSpectrumBar() {
           />
         </div>
       </div>
-      <div className="flex justify-between text-[11px] tracking-wide" style={{ color: "#A09890" }}>
-        <span>0 — Relationship Dependent</span>
-        <span>2 — Transactional</span>
-        <span>4 — System-Driven</span>
+      <div className="flex justify-between text-[10px] sm:text-[11px] tracking-wide" style={{ color: "#A09890" }}>
+        <span className="text-left">0 — <span className="hidden sm:inline">Relationship </span>Dependent</span>
+        <span className="text-center">2 — <span className="hidden sm:inline">Trans</span>actional</span>
+        <span className="text-right">4 — System<span className="hidden sm:inline">-Driven</span></span>
       </div>
     </div>
   );

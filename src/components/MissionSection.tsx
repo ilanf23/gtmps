@@ -243,7 +243,7 @@ const MissionSection = () => {
           className="mt-14 rounded-2xl flex flex-col sm:flex-row items-start gap-6"
           style={{
             background: "linear-gradient(135deg, #F5F0E8 0%, #EDE7DB 100%)",
-            padding: "32px 36px",
+            padding: "clamp(20px, 4vw, 32px) clamp(16px, 4vw, 36px)",
             border: "1px solid rgba(184,147,58,0.15)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
           }}

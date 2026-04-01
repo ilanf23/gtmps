@@ -35,7 +35,7 @@ export default function PepperContentEngine() {
         }}
       >
         <div
-          className="px-7 py-4 flex items-center gap-3"
+          className="px-4 sm:px-7 py-4 flex flex-wrap items-center gap-2 sm:gap-3"
           style={{
             background: "linear-gradient(135deg, rgba(0,119,181,0.04), rgba(243,237,230,0.6))",
             borderBottom: "1px solid rgba(221,213,204,0.3)",
@@ -49,10 +49,10 @@ export default function PepperContentEngine() {
           </span>
           <span className="text-[13px] text-[#2D2A26] font-medium">George Couris</span>
           <span className="text-[11px] text-[#4A6741] ml-1">· Ready to publish</span>
-          <span className="text-[11px] text-[#A09890] ml-auto font-mono">~150 words</span>
+          <span className="text-[11px] text-[#A09890] sm:ml-auto font-mono">~150 words</span>
         </div>
-        <div className="p-7">
-          <div className="text-[#2D2A26] leading-[1.8] space-y-4 text-[15px]">
+        <div className="p-4 sm:p-7">
+          <div className="text-[#2D2A26] leading-[1.8] space-y-4 text-[14px] sm:text-[15px]">
             <p>After 22 years running a B2B marketing agency, I've noticed something most manufacturers get wrong about marketing.</p>
             <p>They hire vendors. They buy tools. They stack technologies on top of each other like Lego bricks with no blueprint.</p>
             <p>Then they wonder why the $200K they spent last year didn't move pipeline.</p>
@@ -79,7 +79,7 @@ export default function PepperContentEngine() {
         }}
       >
         <div
-          className="px-7 py-4 flex items-center gap-3"
+          className="px-4 sm:px-7 py-4 flex flex-wrap items-center gap-2 sm:gap-3"
           style={{
             background: "linear-gradient(135deg, rgba(198,93,62,0.04), rgba(243,237,230,0.6))",
             borderBottom: "1px solid rgba(221,213,204,0.3)",
@@ -93,9 +93,9 @@ export default function PepperContentEngine() {
           </span>
           <span className="text-[13px] text-[#2D2A26] font-medium">peppergroup.com</span>
           <span className="text-[11px] text-[#A09890] ml-1">· Draft outline</span>
-          <span className="text-[11px] text-[#A09890] ml-auto font-mono">~1,200 words</span>
+          <span className="text-[11px] text-[#A09890] sm:ml-auto font-mono">~1,200 words</span>
         </div>
-        <div className="p-7 space-y-6">
+        <div className="p-4 sm:p-7 space-y-6">
           <h3
             className="text-[22px] font-bold text-[#2D2A26] leading-tight"
             style={{ fontFamily: "'Playfair Display', serif" }}
@@ -127,7 +127,7 @@ export default function PepperContentEngine() {
 
       {/* Why This Matters */}
       <section
-        className="relative rounded-2xl p-9 overflow-hidden"
+        className="relative rounded-2xl p-6 sm:p-9 overflow-hidden"
         style={{
           background: "linear-gradient(135deg, #C65D3E, #A84D32)",
           boxShadow: "0 20px 60px rgba(198,93,62,0.25)",
