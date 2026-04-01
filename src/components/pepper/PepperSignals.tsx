@@ -100,9 +100,9 @@ export default function PepperSignals() {
             Former proposal contact promoted to VP Marketing at PE-backed manufacturer
           </p>
         </div>
-        <div className="p-7 space-y-5">
+        <div className="p-4 sm:p-7 space-y-5">
           <blockquote
-            className="text-[16px] text-[#3A3530] leading-[1.8] italic"
+            className="text-[14px] sm:text-[16px] text-[#3A3530] leading-[1.7] sm:leading-[1.8] italic"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             "Hey Sarah. We sent your team a proposal back in 2020 when you were at Schebler. I see you're now VP Marketing at Graystone Manufacturing and they just closed their Series B. Congratulations. We helped a PE-backed carveout called Kensing become the #1 manufacturer in its category in 3 years using our Revenue Tower methodology. Thought this might be relevant as you build out the marketing engine. Happy to share the case study if useful."

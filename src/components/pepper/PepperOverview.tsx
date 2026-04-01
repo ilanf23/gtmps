@@ -123,7 +123,7 @@ export default function PepperOverview() {
               key={i}
               className="text-center px-4 py-4"
               style={{
-                borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                borderRight: i < 3 && i !== 1 ? "1px solid rgba(255,255,255,0.06)" : i === 1 ? "none" : "none",
               }}
             >
               <div

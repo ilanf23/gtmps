@@ -83,7 +83,7 @@ export default function PepperGroup() {
       <PepperTopBar />
       <PepperTabBar activeTab={activeTab} onTabChange={handleTabChange} />
       <main
-        className="max-w-[1040px] mx-auto px-6 md:px-10 pt-36 pb-24 transition-all duration-400"
+        className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-10 pt-28 md:pt-36 pb-16 md:pb-24 transition-all duration-400"
         style={{
           opacity: fadeIn ? 1 : 0,
           transform: fadeIn ? "translateY(0)" : "translateY(16px)",

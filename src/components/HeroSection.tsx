@@ -269,7 +269,7 @@ const HeroSection = () => {
                   style={{
                     color: "#6b6560",
                     lineHeight: 1.5,
-                    maxWidth: 120,
+                    maxWidth: 140,
                   }}
                 >
                   {stat.label}

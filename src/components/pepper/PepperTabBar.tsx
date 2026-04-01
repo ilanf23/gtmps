@@ -25,15 +25,15 @@ export default function PepperTabBar({ activeTab, onTabChange }: Props) {
         borderBottom: "1px solid rgba(0,0,0,0.04)",
       }}
     >
-      <div className="max-w-[1200px] mx-auto px-6 md:px-10">
-        <div className="flex gap-0 overflow-x-auto scrollbar-hide" role="tablist">
+      <div className="max-w-[1200px] mx-auto px-2 sm:px-6 md:px-10">
+        <div className="flex gap-0 overflow-x-auto scrollbar-hide" role="tablist" style={{ WebkitOverflowScrolling: "touch", maskImage: "linear-gradient(90deg, transparent, black 8px, black calc(100% - 8px), transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, black 8px, black calc(100% - 8px), transparent)" }}>
           {TABS.map((tab, i) => (
             <button
               key={tab}
               role="tab"
               aria-selected={activeTab === i}
               onClick={() => onTabChange(i)}
-              className="relative whitespace-nowrap px-5 py-3.5 text-[12px] font-medium tracking-wide transition-all duration-300"
+              className="relative whitespace-nowrap px-3 sm:px-5 py-3 sm:py-3.5 text-[11px] sm:text-[12px] font-medium tracking-wide transition-all duration-300"
               style={{
                 color: activeTab === i ? "#C65D3E" : "#A09890",
                 fontFamily: "'Inter', sans-serif",

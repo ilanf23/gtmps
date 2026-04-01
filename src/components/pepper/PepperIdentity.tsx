@@ -110,7 +110,7 @@ export default function PepperIdentity() {
         >
           {/* Mobile scroll hint */}
           <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none md:hidden" style={{ background: "linear-gradient(90deg, transparent, rgba(251,248,244,0.9))" }} />
-          <table className="w-full text-sm border-collapse">
+          <table className="w-full text-sm border-collapse min-w-[600px]">
             <thead>
               <tr
                 style={{

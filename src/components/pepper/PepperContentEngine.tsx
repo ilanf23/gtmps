@@ -127,7 +127,7 @@ export default function PepperContentEngine() {
 
       {/* Why This Matters */}
       <section
-        className="relative rounded-2xl p-9 overflow-hidden"
+        className="relative rounded-2xl p-6 sm:p-9 overflow-hidden"
         style={{
           background: "linear-gradient(135deg, #C65D3E, #A84D32)",
           boxShadow: "0 20px 60px rgba(198,93,62,0.25)",
