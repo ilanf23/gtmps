@@ -20,7 +20,7 @@ export default function PepperGroup() {
       setActiveTab(i);
       setFadeIn(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 200);
+    }, 250);
   };
 
   useEffect(() => {
@@ -30,12 +30,42 @@ export default function PepperGroup() {
   const ActiveComponent = TABS[activeTab];
 
   return (
-    <div className="min-h-screen" style={{ background: "#FBF8F4", fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen relative" style={{ fontFamily: "'Inter', sans-serif" }}>
+      {/* Warm parchment base */}
+      <div className="fixed inset-0 -z-20" style={{ background: "#FBF8F4" }} />
+
+      {/* Atmospheric gradient overlays */}
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(198,93,62,0.04) 0%, transparent 60%)",
+        }}
+      />
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 60% 60% at 80% 100%, rgba(196,167,71,0.03) 0%, transparent 50%)",
+        }}
+      />
+
+      {/* Subtle paper grain texture */}
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none opacity-[0.018]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
+
       <PepperTopBar />
       <PepperTabBar activeTab={activeTab} onTabChange={handleTabChange} />
       <main
-        className="max-w-[1000px] mx-auto px-6 pt-32 pb-20 transition-all duration-300"
-        style={{ opacity: fadeIn ? 1 : 0, transform: fadeIn ? "translateY(0)" : "translateY(12px)" }}
+        className="max-w-[1040px] mx-auto px-6 md:px-10 pt-36 pb-24 transition-all duration-400"
+        style={{
+          opacity: fadeIn ? 1 : 0,
+          transform: fadeIn ? "translateY(0)" : "translateY(16px)",
+          transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        }}
       >
         <ActiveComponent />
       </main>
