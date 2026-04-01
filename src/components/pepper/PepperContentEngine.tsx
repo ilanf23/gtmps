@@ -79,7 +79,7 @@ export default function PepperContentEngine() {
         }}
       >
         <div
-          className="px-7 py-4 flex items-center gap-3"
+          className="px-4 sm:px-7 py-4 flex flex-wrap items-center gap-2 sm:gap-3"
           style={{
             background: "linear-gradient(135deg, rgba(198,93,62,0.04), rgba(243,237,230,0.6))",
             borderBottom: "1px solid rgba(221,213,204,0.3)",
@@ -93,7 +93,7 @@ export default function PepperContentEngine() {
           </span>
           <span className="text-[13px] text-[#2D2A26] font-medium">peppergroup.com</span>
           <span className="text-[11px] text-[#A09890] ml-1">· Draft outline</span>
-          <span className="text-[11px] text-[#A09890] ml-auto font-mono">~1,200 words</span>
+          <span className="text-[11px] text-[#A09890] sm:ml-auto font-mono">~1,200 words</span>
         </div>
         <div className="p-7 space-y-6">
           <h3
