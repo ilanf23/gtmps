@@ -24,7 +24,30 @@ export default function PepperGroup() {
   };
 
   useEffect(() => {
-    document.title = "Pepper Group — Market Activation Profile | Mabbly";
+    const title = "Pepper Group — Market Activation Profile | Mabbly";
+    const description = "A personalized market activation profile prepared for Tim Padgett & George Couris by Mabbly.";
+    const ogImage = `${window.location.origin}/og-pepper-group.jpg`;
+
+    document.title = title;
+
+    const setMeta = (property: string, content: string) => {
+      let el = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(property.startsWith("og:") ? "property" : "name", property);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMeta("og:title", title);
+    setMeta("og:description", description);
+    setMeta("og:image", ogImage);
+    setMeta("og:type", "website");
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", title);
+    setMeta("twitter:description", description);
+    setMeta("twitter:image", ogImage);
   }, []);
 
   const ActiveComponent = TABS[activeTab];
