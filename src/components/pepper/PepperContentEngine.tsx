@@ -51,8 +51,8 @@ export default function PepperContentEngine() {
           <span className="text-[11px] text-[#4A6741] ml-1">· Ready to publish</span>
           <span className="text-[11px] text-[#A09890] sm:ml-auto font-mono">~150 words</span>
         </div>
-        <div className="p-7">
-          <div className="text-[#2D2A26] leading-[1.8] space-y-4 text-[15px]">
+        <div className="p-4 sm:p-7">
+          <div className="text-[#2D2A26] leading-[1.8] space-y-4 text-[14px] sm:text-[15px]">
             <p>After 22 years running a B2B marketing agency, I've noticed something most manufacturers get wrong about marketing.</p>
             <p>They hire vendors. They buy tools. They stack technologies on top of each other like Lego bricks with no blueprint.</p>
             <p>Then they wonder why the $200K they spent last year didn't move pipeline.</p>
