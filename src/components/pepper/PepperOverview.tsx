@@ -49,7 +49,7 @@ export default function PepperOverview() {
           style={{
             background: "linear-gradient(135deg, rgba(251,248,244,0.8), rgba(243,237,230,0.6))",
             borderRadius: "16px",
-            padding: "32px 36px",
+            padding: "28px 28px 28px 32px",
             border: "1px solid rgba(198,93,62,0.08)",
             boxShadow: "0 8px 40px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
           }}
@@ -61,14 +61,14 @@ export default function PepperOverview() {
           >
             "
           </span>
-          <div className="flex gap-5">
+          <div className="flex gap-4">
             <div
-              className="w-1 shrink-0 rounded-full self-stretch"
-              style={{ background: "linear-gradient(180deg, #C65D3E, #C4A747)" }}
+              className="w-1 shrink-0 rounded-full"
+              style={{ background: "linear-gradient(180deg, #C65D3E, #C4A747)", minHeight: "100%" }}
             />
-            <div>
+            <div className="min-w-0">
               <blockquote
-                className="text-left text-[17px] italic leading-[1.7] text-[#4A4540]"
+                className="text-left text-[15px] sm:text-[17px] italic leading-[1.7] text-[#4A4540]"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 I happened to spend this weekend a few hours going through some of our dormant relationships.
