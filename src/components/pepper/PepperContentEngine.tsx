@@ -35,7 +35,7 @@ export default function PepperContentEngine() {
         }}
       >
         <div
-          className="px-7 py-4 flex items-center gap-3"
+          className="px-4 sm:px-7 py-4 flex flex-wrap items-center gap-2 sm:gap-3"
           style={{
             background: "linear-gradient(135deg, rgba(0,119,181,0.04), rgba(243,237,230,0.6))",
             borderBottom: "1px solid rgba(221,213,204,0.3)",
@@ -49,7 +49,7 @@ export default function PepperContentEngine() {
           </span>
           <span className="text-[13px] text-[#2D2A26] font-medium">George Couris</span>
           <span className="text-[11px] text-[#4A6741] ml-1">· Ready to publish</span>
-          <span className="text-[11px] text-[#A09890] ml-auto font-mono">~150 words</span>
+          <span className="text-[11px] text-[#A09890] sm:ml-auto font-mono">~150 words</span>
         </div>
         <div className="p-7">
           <div className="text-[#2D2A26] leading-[1.8] space-y-4 text-[15px]">
