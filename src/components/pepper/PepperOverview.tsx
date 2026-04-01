@@ -332,20 +332,20 @@ export default function PepperOverview() {
         >
           RROS Progress
         </h3>
-        <div className="flex items-center gap-3">
+        <div className="grid grid-cols-5 gap-2">
           {["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"].map((stage, i) => (
-            <div key={stage} className="flex-1">
+            <div key={stage}>
               <div
-                className="h-3 rounded-full transition-all duration-500"
+                className="h-2.5 rounded-full"
                 style={{
                   background:
                     i === 0
                       ? "linear-gradient(90deg, #C65D3E, #C4A747)"
-                      : "rgba(228,222,214,0.6)",
-                  boxShadow: i === 0 ? "0 0 12px rgba(198,93,62,0.2)" : "none",
+                      : "rgba(228,222,214,0.5)",
+                  boxShadow: i === 0 ? "0 0 10px rgba(198,93,62,0.2)" : "none",
                 }}
               />
-              <div className="text-[10px] mt-2 text-center tracking-wider" style={{ color: "#A09890" }}>
+              <div className="text-[10px] mt-2 text-center tracking-[0.08em]" style={{ color: "#A09890" }}>
                 {stage}
                 {i === 0 && <span className="block text-[#C65D3E] font-semibold mt-0.5">In Progress</span>}
                 {i === 1 && <span className="block text-[#A09890]">Next</span>}
