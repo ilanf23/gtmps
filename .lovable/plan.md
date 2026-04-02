@@ -1,12 +1,12 @@
 
 
-# Update Publication Date to Q2 2026
+# Remove Publication Timeline
 
-## Changes in `src/components/BookSection.tsx`
+## Change
+In `src/components/BookSection.tsx`:
 
-1. **Edition label** (~line 102): Change `First Edition · Q4 2026` → `First Edition · Q2 2026`
+1. **Remove the milestones array** (lines ~32-37) — no longer needed.
+2. **Remove the "PUBLICATION TIMELINE" heading** and both timeline renderings (horizontal for desktop, vertical for mobile) — everything after the edition label's closing `</span>` down through the mobile timeline `</div>`.
 
-2. **Milestones array** (~line 38): Update the "Published" milestone date from `Q4 2026` to `Q2 2026`. Also adjust the timeline to reflect the compressed schedule — shift "First Draft" to something earlier or keep as-is depending on preference. Simplest change: just update the Published date to `Q2 2026`.
-
-Two small text edits in one file.
+This removes roughly 50 lines of timeline code and the associated data. The edition label ("First Edition · Q2 2026") remains.
 
