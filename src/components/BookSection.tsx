@@ -135,7 +135,7 @@ const BookSection = () => {
             className="font-mono mt-4"
             style={{ fontSize: 9, color: "rgba(184,147,58,0.5)", letterSpacing: "0.18em", textTransform: "uppercase" }}
           >
-            First Edition · Q4 2026
+            First Edition · Q2 2026
           </span>
 
           {/* Framework trigger + overlay wrapper */}
