@@ -31,7 +31,7 @@ const BookSection = () => {
     { label: "Research Open", date: "March 2026", pct: 0, filled: true },
     { label: "Sessions Close", date: "Q2 2026", pct: 33, filled: true },
     { label: "First Draft", date: "Q3 2026", pct: 66, filled: false },
-    { label: "Published", date: "Q4 2026", pct: 100, filled: false },
+    { label: "Published", date: "Q2 2026", pct: 100, filled: false },
   ];
 
   return (
@@ -135,7 +135,7 @@ const BookSection = () => {
             className="font-mono mt-4"
             style={{ fontSize: 9, color: "rgba(184,147,58,0.5)", letterSpacing: "0.18em", textTransform: "uppercase" }}
           >
-            First Edition · Q4 2026
+            First Edition · Q2 2026
           </span>
 
           {/* Framework trigger + overlay wrapper */}
