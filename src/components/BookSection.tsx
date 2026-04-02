@@ -27,12 +27,6 @@ const BookSection = () => {
     },
   ];
 
-  const milestones = [
-    { label: "Research Open", date: "March 2026", pct: 0, filled: true },
-    { label: "Sessions Close", date: "Q2 2026", pct: 33, filled: true },
-    { label: "First Draft", date: "Q3 2026", pct: 66, filled: false },
-    { label: "Published", date: "Q2 2026", pct: 100, filled: false },
-  ];
 
   return (
     <section id="book" className="px-6 py-20 md:px-20 md:py-28 bg-cream">
@@ -188,64 +182,6 @@ const BookSection = () => {
           ))}
         </div>
 
-        {/* Timeline */}
-        <p
-          className="font-mono uppercase text-center mt-16 mb-4 scroll-reveal"
-          style={{ fontSize: 10, color: "rgba(0,0,0,0.35)", letterSpacing: "0.16em" }}
-        >
-          PUBLICATION TIMELINE
-        </p>
-        {/* Timeline - horizontal on md+, vertical on mobile */}
-        <div className="hidden md:block relative mx-auto scroll-reveal" style={{ maxWidth: 680, height: 60 }}>
-          <div
-            className="absolute top-[28px] left-0 right-0"
-            style={{ height: 2, background: "rgba(0,0,0,0.1)" }}
-          />
-          {milestones.map((m) => (
-            <div
-              key={m.label}
-              className="absolute flex flex-col items-center"
-              style={{ left: `${m.pct}%`, top: 0, transform: "translateX(-50%)" }}
-            >
-              <span className="font-mono text-center" style={{ fontSize: 9, color: "rgba(0,0,0,0.5)", marginBottom: 6 }}>
-                {m.label}
-              </span>
-              <span
-                className="rounded-full"
-                style={{
-                  width: 10,
-                  height: 10,
-                  background: m.filled ? "#B8933A" : "transparent",
-                  border: m.filled ? "none" : "1.5px solid rgba(0,0,0,0.3)",
-                }}
-              />
-              <span className="font-mono mt-1" style={{ fontSize: 9, color: "rgba(0,0,0,0.35)" }}>
-                {m.date}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="flex md:hidden flex-col gap-3 mt-2 scroll-reveal max-w-[280px] mx-auto">
-          {milestones.map((m) => (
-            <div key={m.label} className="flex items-center gap-3">
-              <span
-                className="rounded-full flex-shrink-0"
-                style={{
-                  width: 10,
-                  height: 10,
-                  background: m.filled ? "#B8933A" : "transparent",
-                  border: m.filled ? "none" : "1.5px solid rgba(0,0,0,0.3)",
-                }}
-              />
-              <span className="font-mono" style={{ fontSize: 10, color: "rgba(0,0,0,0.5)" }}>
-                {m.label}
-              </span>
-              <span className="font-mono ml-auto" style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>
-                {m.date}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
