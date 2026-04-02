@@ -91,7 +91,7 @@ const AuthorsSection = () => {
             </div>
             <div className="flex items-center gap-3 mt-5">
               <a href="https://linkedin.com/in/richardfashbaugh" target="_blank" rel="noopener noreferrer" className="text-text-body hover:text-gold transition-colors"><Linkedin size={18} /></a>
-              <a href="https://www.youtube.com/@SignalActivatedGrowth" target="_blank" rel="noopener noreferrer" className="text-text-body hover:text-gold transition-colors"><Youtube size={18} /></a>
+              <a href="https://www.youtube.com/@GTMforPS" target="_blank" rel="noopener noreferrer" className="text-text-body hover:text-gold transition-colors"><Youtube size={18} /></a>
             </div>
           </div>
         </div>
