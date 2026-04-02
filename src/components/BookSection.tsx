@@ -31,7 +31,7 @@ const BookSection = () => {
     { label: "Research Open", date: "March 2026", pct: 0, filled: true },
     { label: "Sessions Close", date: "Q2 2026", pct: 33, filled: true },
     { label: "First Draft", date: "Q3 2026", pct: 66, filled: false },
-    { label: "Published", date: "Q4 2026", pct: 100, filled: false },
+    { label: "Published", date: "Q2 2026", pct: 100, filled: false },
   ];
 
   return (
