@@ -1,9 +1,12 @@
 
 
-# Update Adam's YouTube Link
+# Update Publication Date to Q2 2026
 
-## Change
-In `src/components/AuthorsSection.tsx`, update Adam Fridman's YouTube link (around line 56) from `https://www.youtube.com/@SignalActivatedGrowth` to `https://www.youtube.com/@GTMforPS`.
+## Changes in `src/components/BookSection.tsx`
 
-Single line edit, no other files affected.
+1. **Edition label** (~line 102): Change `First Edition · Q4 2026` → `First Edition · Q2 2026`
+
+2. **Milestones array** (~line 38): Update the "Published" milestone date from `Q4 2026` to `Q2 2026`. Also adjust the timeline to reflect the compressed schedule — shift "First Draft" to something earlier or keep as-is depending on preference. Simplest change: just update the Published date to `Q2 2026`.
+
+Two small text edits in one file.
 
