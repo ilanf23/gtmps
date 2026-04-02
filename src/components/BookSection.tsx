@@ -27,12 +27,6 @@ const BookSection = () => {
     },
   ];
 
-  const milestones = [
-    { label: "Research Open", date: "March 2026", pct: 0, filled: true },
-    { label: "Sessions Close", date: "Q2 2026", pct: 33, filled: true },
-    { label: "First Draft", date: "Q3 2026", pct: 66, filled: false },
-    { label: "Published", date: "Q2 2026", pct: 100, filled: false },
-  ];
 
   return (
     <section id="book" className="px-6 py-20 md:px-20 md:py-28 bg-cream">
