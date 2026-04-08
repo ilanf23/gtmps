@@ -7,10 +7,8 @@ import SPROrbits from "@/components/spr/SPROrbits";
 import SPRSignals from "@/components/spr/SPRSignals";
 import SPRRoadmap from "@/components/spr/SPRRoadmap";
 import SPRContentEngine from "@/components/spr/SPRContentEngine";
-import SPRPilotLookback from "@/components/spr/SPRPilotLookback";
-import SPRPathForward from "@/components/spr/SPRPathForward";
 
-const TABS = [SPROverview, SPRIdentity, SPROrbits, SPRSignals, SPRRoadmap, SPRContentEngine, SPRPilotLookback, SPRPathForward];
+const TABS = [SPROverview, SPRIdentity, SPROrbits, SPRSignals, SPRRoadmap, SPRContentEngine];
 
 export default function SPRGroup() {
   const [activeTab, setActiveTab] = useState(0);

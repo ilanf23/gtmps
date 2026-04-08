@@ -5,8 +5,6 @@ const TABS = [
   "Signals",
   "Roadmap",
   "Content Engine",
-  "Pilot Lookback",
-  "Path Forward",
 ];
 
 interface Props {
