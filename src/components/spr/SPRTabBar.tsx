@@ -3,8 +3,6 @@ const TABS = [
   "The Math",
   "The Proof",
   "What If",
-  "Pilot Lookback",
-  "Path Forward",
 ];
 
 interface Props {
