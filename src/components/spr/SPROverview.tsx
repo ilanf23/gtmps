@@ -3,7 +3,7 @@ import PepperExpandable from "../pepper/PepperExpandable";
 
 export default function SPROverview() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* HERO */}
       <section className="relative text-center max-w-[860px] mx-auto space-y-10 pt-4">
         <div
@@ -32,7 +32,7 @@ export default function SPROverview() {
         >
           53 Years of Trust
           <br />
-          Zero Systems Activating It<span style={{ color: "#C65D3E" }}>.</span>
+          No System Compounding It<span style={{ color: "#C65D3E" }}>.</span>
         </h1>
 
         <div
@@ -69,6 +69,67 @@ export default function SPROverview() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* THREE LAWS */}
+      <section
+        className="relative rounded-2xl overflow-hidden p-8 sm:p-10"
+        style={{
+          background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 100%)",
+          boxShadow: "0 20px 60px rgba(26,26,46,0.3)",
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at top left, rgba(196,167,71,0.06) 0%, transparent 50%)" }}
+        />
+        <div className="relative space-y-6">
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-px" style={{ background: "linear-gradient(90deg, transparent, #C4A747)" }} />
+            <span className="text-[11px] font-semibold tracking-[0.28em] uppercase" style={{ color: "#C4A747" }}>
+              The Three Laws
+            </span>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              { num: "I", law: "Proof before pitch." },
+              { num: "II", law: "Relationships before revenue." },
+              { num: "III", law: "Signal before message." },
+            ].map((l) => (
+              <div key={l.num} className="flex gap-4 items-start">
+                <span
+                  className="text-[28px] font-bold leading-none shrink-0"
+                  style={{ fontFamily: "'Playfair Display', serif", color: "#C4A747", textShadow: "0 0 15px rgba(196,167,71,0.2)" }}
+                >
+                  {l.num}
+                </span>
+                <p className="text-[15px] text-white/80 leading-relaxed pt-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {l.law}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* LOCKED BOOK DEFINITION */}
+      <section
+        className="relative rounded-xl px-8 py-6"
+        style={{
+          background: "rgba(196,167,71,0.04)",
+          border: "1px solid rgba(196,167,71,0.15)",
+          borderLeft: "4px solid #C4A747",
+        }}
+      >
+        <p
+          className="text-[17px] sm:text-[19px] italic leading-[1.7] text-[#2D2A26]"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          GTM for professional services is not a plan for entering a new market. It is a system for activating the market you already own.
+        </p>
+        <footer className="mt-3 text-[11px] text-[#A09890] tracking-wide uppercase font-semibold">
+          The Relationship Revenue OS — Locked Definition
+        </footer>
       </section>
 
       {/* KEY NUMBERS */}
@@ -118,6 +179,42 @@ export default function SPROverview() {
               <div className="text-[12px] mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {s.label}
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* THE FIVE TRUTHS */}
+      <section className="space-y-6">
+        <div className="space-y-3">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">Foundation</span>
+          <h2
+            className="text-[clamp(26px,3.5vw,40px)] font-bold text-[#2D2A26] leading-tight tracking-[-0.01em]"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            The Five Truths
+          </h2>
+        </div>
+        <div className="space-y-4">
+          {[
+            { num: "I", text: "Your existing relationships are your most valuable growth asset." },
+            { num: "II", text: "Trust compounds — but only when a system sustains it." },
+            { num: "III", text: "The Dead Zone is not a loss. It is an unactivated portfolio." },
+            { num: "IV", text: "Proof must travel ahead of every conversation." },
+            { num: "V", text: "Growth in professional services is relationship-led, not marketing-led." },
+          ].map((t) => (
+            <div
+              key={t.num}
+              className="flex gap-5 items-start rounded-xl p-5"
+              style={{ borderLeft: "3px solid #1A1A2E", background: "rgba(26,26,46,0.02)" }}
+            >
+              <span
+                className="text-[22px] font-bold shrink-0 leading-none"
+                style={{ fontFamily: "'Playfair Display', serif", color: "#C4A747" }}
+              >
+                {t.num}
+              </span>
+              <p className="text-[15px] text-[#2D2A26] leading-relaxed">{t.text}</p>
             </div>
           ))}
         </div>
@@ -221,26 +318,34 @@ export default function SPROverview() {
 
       {/* RROS PROGRESS */}
       <section className="space-y-5">
-        <h3 className="text-lg font-semibold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
-          RROS Progress
-        </h3>
-        <div className="grid grid-cols-5 gap-2">
-          {["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"].map((stage, i) => (
-            <div key={stage}>
-              <div
-                className="h-2.5 rounded-full"
-                style={{
-                  background: i === 0 ? "linear-gradient(90deg, #C65D3E, #C4A747)" : "rgba(228,222,214,0.5)",
-                  boxShadow: i === 0 ? "0 0 10px rgba(198,93,62,0.2)" : "none",
-                }}
-              />
-              <div className="text-[10px] mt-2 text-center tracking-[0.08em]" style={{ color: "#A09890" }}>
-                {stage}
-                {i === 0 && <span className="block text-[#C65D3E] font-semibold mt-0.5">In Progress</span>}
-                {i === 1 && <span className="block text-[#A09890]">Next</span>}
+        <div className="space-y-2">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">System Progress</span>
+          <h3 className="text-[clamp(22px,3vw,32px)] font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            RROS Progress
+          </h3>
+        </div>
+        <div
+          className="rounded-2xl p-6 sm:p-8"
+          style={{ background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 100%)", boxShadow: "0 12px 40px rgba(26,26,46,0.2)" }}
+        >
+          <div className="grid grid-cols-5 gap-3">
+            {["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"].map((stage, i) => (
+              <div key={stage} className="text-center">
+                <div
+                  className="h-3 rounded-full mb-3"
+                  style={{
+                    background: i === 0 ? "linear-gradient(90deg, #C65D3E, #C4A747)" : "rgba(255,255,255,0.08)",
+                    boxShadow: i === 0 ? "0 0 16px rgba(198,93,62,0.4)" : "none",
+                  }}
+                />
+                <div className="text-[10px] sm:text-[11px] tracking-[0.12em] font-semibold" style={{ color: i === 0 ? "#C65D3E" : "rgba(255,255,255,0.3)" }}>
+                  {stage}
+                </div>
+                {i === 0 && <span className="block text-[10px] text-[#C4A747] font-semibold mt-1">In Progress</span>}
+                {i === 1 && <span className="block text-[10px] text-white/30 mt-1">Next</span>}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
     </div>

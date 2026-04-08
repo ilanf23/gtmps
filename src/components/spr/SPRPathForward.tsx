@@ -1,6 +1,6 @@
 export default function SPRPathForward() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Hero */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">
@@ -65,7 +65,7 @@ export default function SPRPathForward() {
             </div>
             <p className="text-[10px] text-[#A09890] mt-1">founding rate</p>
             <ul className="text-[12px] text-[#6B6560] space-y-2 mt-5">
-              {["10 senders", "2,500 total relationships (~250 per sender)", "Weekly signal scans", "Self service content review (Kristin continues internally)", "Brian manages enrichment", "Monthly Mabbly check in", "2 week onboarding per sender"].map((item) => (
+              {["10 senders", "2,500 total relationships (~250 per sender)", "Weekly signal scans", "Self service content review (Kristen continues internally)", "Brian manages enrichment", "Monthly Mabbly check in", "2 week onboarding per sender"].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-[#C65D3E] mt-0.5">&#8226;</span>{item}
                 </li>
@@ -100,7 +100,7 @@ export default function SPRPathForward() {
               ~$3,949<span className="text-[14px] text-[#A09890] font-normal">/mo</span>
             </div>
             <ul className="text-[12px] text-[#6B6560] space-y-2 mt-5">
-              {["10 senders", "5,000 total relationships (~500 per sender)", "Daily signal scans", "Mabbly manages content review (replaces Kristin's manual review at scale)", "Mabbly manages enrichment (replaces Brian's manual process)", "Dedicated CSM + weekly strategy call + QBR", "1 week accelerated onboarding", "2 thought leadership pieces/month in SPR voice"].map((item) => (
+              {["10 senders", "5,000 total relationships (~500 per sender)", "Daily signal scans", "Mabbly manages content review (replaces Kristen's manual review at scale)", "Mabbly manages enrichment (replaces Brian's manual process)", "Dedicated CSM + weekly strategy call + QBR", "1 week accelerated onboarding", "2 thought leadership pieces/month in SPR voice"].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="text-[#C65D3E] mt-0.5">&#8226;</span>{item}
                 </li>
@@ -109,7 +109,7 @@ export default function SPRPathForward() {
             {/* Kristin callout */}
             <div className="rounded-lg p-4 mt-5" style={{ background: "rgba(196,167,71,0.04)", border: "1px solid rgba(196,167,71,0.12)" }}>
               <p className="text-[11px] text-[#6B6560] italic leading-relaxed">
-                During the pilot, Kristin said the signal is the personalization piece. She is right. But reviewing every sequence for 10 senders is not sustainable for one person. This option frees Kristin to focus on creative strategy while Mabbly handles volume review.
+                During the pilot, Kristen said the signal is the personalization piece. She is right. But reviewing every sequence for 10 senders is not sustainable for one person. This option frees Kristen to focus on creative strategy while Mabbly handles volume review.
               </p>
             </div>
             <p className="text-[12px] text-[#2D2A26] mt-4 font-medium italic">

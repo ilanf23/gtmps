@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 const RINGS = [
-  { label: "Core Proof", detail: "Active clients, Accenture win", r: 45, color: "#4A6741" },
-  { label: "Active", detail: "Kyle's 150 contacts (pilot cohort)", r: 85, color: "#C4A747" },
-  { label: "Dead Zone", detail: "8,000 to 10,000 dormant contacts", r: 135, color: "#C65D3E", pulse: true },
-  { label: "Anderson", detail: "Anderson's 10 firms' networks", r: 185, color: "#C4A747" },
-  { label: "New Gravity", detail: "Net new from signal detected moves", r: 235, color: "#A09890", dashed: true },
+  { label: "⊙ 01 Core Proof", detail: "Active clients, Accenture win", r: 45, color: "#4A6741" },
+  { label: "⊙ 02 Active", detail: "Kyle's 150 contacts (pilot cohort)", r: 85, color: "#C4A747" },
+  { label: "⊙ 03 Dead Zone", detail: "8,000 to 10,000 dormant contacts", r: 135, color: "#C65D3E", pulse: true },
+  { label: "⊙ 04 Warm Adjacency", detail: "Anderson's 10 firms feed this ring", r: 185, color: "#C4A747" },
+  { label: "⊙ 05 New Gravity", detail: "Net new from signal detected moves", r: 235, color: "#A09890", dashed: true },
 ];
 
 export default function SPROrbitMap() {

@@ -1,6 +1,8 @@
+import { Check, Minus, X } from "lucide-react";
+
 export default function SPRContentEngine() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Header */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">
@@ -123,6 +125,54 @@ export default function SPRContentEngine() {
                 {i + 1}
               </span>
               <p className="text-[14px] text-[#2D2A26] leading-relaxed self-center">{q}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* MAP Completion Grid */}
+      <section className="space-y-6">
+        <div className="space-y-3">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">Progress</span>
+          <h2 className="text-[clamp(26px,3.5vw,36px)] font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            MAP Completion Grid
+          </h2>
+          <p className="text-[#6B6560] text-sm">12 fields. Where you stand today.</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {[
+            { field: "Discovery Insights", status: "complete" },
+            { field: "Company Profile", status: "complete" },
+            { field: "Positioning", status: "complete" },
+            { field: "Competitive Landscape", status: "complete" },
+            { field: "Spectrum Score", status: "complete" },
+            { field: "Network Assets", status: "complete" },
+            { field: "Dead Zone Calc", status: "complete" },
+            { field: "Orbit Map", status: "complete" },
+            { field: "Signal Formula", status: "complete" },
+            { field: "ICP Lock", status: "partial" },
+            { field: "Beachhead Segment", status: "incomplete" },
+            { field: "Content Engine", status: "partial" },
+          ].map((item) => (
+            <div
+              key={item.field}
+              className="rounded-xl p-4 flex items-center gap-3"
+              style={{
+                background: item.status === "complete" ? "rgba(74,103,65,0.03)" : item.status === "partial" ? "rgba(196,167,71,0.03)" : "rgba(139,58,58,0.02)",
+                border: `1px solid ${item.status === "complete" ? "rgba(74,103,65,0.12)" : item.status === "partial" ? "rgba(196,167,71,0.12)" : "rgba(139,58,58,0.1)"}`,
+              }}
+            >
+              {item.status === "complete" && <Check className="w-4 h-4 text-[#4A6741] shrink-0" />}
+              {item.status === "partial" && <Minus className="w-4 h-4 text-[#C4A747] shrink-0" />}
+              {item.status === "incomplete" && <X className="w-4 h-4 text-[#8B3A3A] shrink-0" />}
+              <div>
+                <p className="text-[13px] text-[#2D2A26] font-medium">{item.field}</p>
+                <p className="text-[10px] uppercase tracking-wide font-bold mt-0.5" style={{
+                  color: item.status === "complete" ? "#4A6741" : item.status === "partial" ? "#C4A747" : "#8B3A3A"
+                }}>
+                  {item.status}
+                </p>
+              </div>
             </div>
           ))}
         </div>

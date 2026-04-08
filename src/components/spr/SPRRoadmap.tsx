@@ -1,6 +1,6 @@
 export default function SPRRoadmap() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Header */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">
@@ -59,12 +59,13 @@ export default function SPRRoadmap() {
         <h3 className="text-[clamp(22px,3vw,30px)] font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
           Quarterly Roadmap
         </h3>
+        <p className="text-[12px] text-[#A09890] italic -mt-3">These are layers, not phases. Each quarter adds capability without removing what came before.</p>
         <div className="space-y-4">
           {[
             {
               q: "Q2 2026",
               stage: "PROVE",
-              items: ["Expand Kyle to 500 contacts", "Add Tom Ryan as 2nd sender", "Scale Kristin's review workflow", "First Anderson briefing"],
+              items: ["Expand Kyle to 500 contacts", "Add Tom Ryan as 2nd sender", "Scale Kristen's review workflow", "First Anderson briefing"],
               highlight: true,
             },
             {

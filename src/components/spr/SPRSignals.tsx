@@ -2,7 +2,7 @@ import PepperExpandable from "../pepper/PepperExpandable";
 
 export default function SPRSignals() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Header */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">
@@ -75,8 +75,20 @@ export default function SPRSignals() {
           boxShadow: "0 12px 40px rgba(0,0,0,0.05)",
         }}
       >
+        {/* Gmail-like chrome */}
         <div
-          className="px-7 py-5 relative overflow-hidden"
+          className="px-4 sm:px-7 py-3 flex items-center gap-3"
+          style={{ background: "#F2F2F2", borderBottom: "1px solid rgba(221,213,204,0.5)" }}
+        >
+          <div className="flex gap-1.5">
+            <span className="w-3 h-3 rounded-full" style={{ background: "#FF5F57" }} />
+            <span className="w-3 h-3 rounded-full" style={{ background: "#FEBC2E" }} />
+            <span className="w-3 h-3 rounded-full" style={{ background: "#28C840" }} />
+          </div>
+          <span className="text-[11px] text-[#A09890] ml-2">Gmail</span>
+        </div>
+        <div
+          className="px-4 sm:px-7 py-4 relative overflow-hidden"
           style={{
             background: "linear-gradient(135deg, rgba(198,93,62,0.06), rgba(243,237,230,0.8))",
             borderBottom: "1px solid rgba(221,213,204,0.3)",
@@ -177,7 +189,7 @@ export default function SPRSignals() {
           {[
             { day: "Day 1", text: "Signal scan across 150 contacts. Identify top 10 opportunities." },
             { day: "Day 2", text: "Draft messages with signal + proof + context for top opportunities." },
-            { day: "Day 3", text: "Kristin reviews content quality. Brian validates contact data." },
+            { day: "Day 3", text: "Kristen reviews content quality. Brian validates contact data." },
             { day: "Day 4", text: "Kyle applies relationship knowledge. Final approval on each message." },
             { day: "Day 5", text: "Send approved messages. Track opens, replies. Weekly report." },
           ].map((d) => (

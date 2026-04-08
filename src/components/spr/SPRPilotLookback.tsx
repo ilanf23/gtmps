@@ -2,7 +2,7 @@ import PepperAnimatedCounter from "../pepper/PepperAnimatedCounter";
 
 export default function SPRPilotLookback() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Dark Hero */}
       <section
         className="relative rounded-2xl overflow-hidden text-center py-16 px-8"
@@ -69,7 +69,7 @@ export default function SPRPilotLookback() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { name: "Brian Chorba", role: "Contact Enrichment", desc: "Enriched every contact via ZoomInfo and NeverBounce before outreach." },
-            { name: "Kristin Rosa", role: "Content Review", desc: "Reviewed and edited every AI generated sequence. Ensured brand voice accuracy." },
+            { name: "Kristen Rosa", role: "Content Review", desc: "Reviewed and edited every AI generated sequence. Ensured brand voice accuracy." },
             { name: "Kyle Gams", role: "Final Approval", desc: "Applied relationship knowledge as final filter. Approved, rejected, or edited each message." },
             { name: "Rebecca Butman", role: "Executive Sponsor", desc: "Coordinated pilot, set strategy, connected teams." },
           ].map((person, i) => (
@@ -109,7 +109,7 @@ export default function SPRPilotLookback() {
               It's the signal that's making it personalized, really. Your guys' signal is the personalization piece. It's smarter now, it's connecting based on that signal.
             </blockquote>
             <footer className="mt-4 text-[12px] text-[#A09890] tracking-wide">
-              <span className="font-semibold text-[#6B6560]">Kristin Rosa</span>, Creative & Content Manager
+              <span className="font-semibold text-[#6B6560]">Kristen Rosa</span>, Creative & Content Manager
             </footer>
           </div>
         </div>
