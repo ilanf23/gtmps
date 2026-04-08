@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import SPRTopBar from "@/components/spr/SPRTopBar";
 import SPRTabBar from "@/components/spr/SPRTabBar";
-import SPROverview from "@/components/spr/SPROverview";
-import SPRIdentity from "@/components/spr/SPRIdentity";
-import SPROrbits from "@/components/spr/SPROrbits";
-import SPRSignals from "@/components/spr/SPRSignals";
-import SPRRoadmap from "@/components/spr/SPRRoadmap";
-import SPRContentEngine from "@/components/spr/SPRContentEngine";
+import SPRCompletionStrip from "@/components/spr/SPRCompletionStrip";
+import SPRWhoYouAre from "@/components/spr/SPRWhoYouAre";
+import SPRSittingOn from "@/components/spr/SPRSittingOn";
+import SPRTriggers from "@/components/spr/SPRTriggers";
+import SPRWhereGoing from "@/components/spr/SPRWhereGoing";
 
-const TABS = [SPROverview, SPRIdentity, SPROrbits, SPRSignals, SPRRoadmap, SPRContentEngine];
+const TABS = [SPRWhoYouAre, SPRSittingOn, SPRTriggers, SPRWhereGoing];
 
 export default function SPRGroup() {
   const [activeTab, setActiveTab] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
 
   const handleTabChange = (i: number) => {
+    if (i === activeTab) return;
     setFadeIn(false);
     setTimeout(() => {
       setActiveTab(i);
@@ -25,7 +25,7 @@ export default function SPRGroup() {
 
   useEffect(() => {
     const title = "SPR — Market Activation Profile | Mabbly";
-    const description = "A personalized market activation profile prepared for Doug, Tom Ryan & Rebecca Butman by Mabbly.";
+    const description = "A personalized market activation profile prepared for Doug, Tom Ryan and Rebecca Butman by Mabbly.";
     const ogImage = `${window.location.origin}/og-spr.jpg`;
 
     document.title = title;
@@ -54,17 +54,17 @@ export default function SPRGroup() {
 
   return (
     <div className="min-h-screen relative" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <div className="fixed inset-0 -z-20" style={{ background: "#FBF8F4" }} />
+      <div className="fixed inset-0 -z-20" style={{ background: "#F5F0EB" }} />
       <div
         className="fixed inset-0 -z-10 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(198,93,62,0.04) 0%, transparent 60%)",
+          background: "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,150,62,0.04) 0%, transparent 60%)",
         }}
       />
       <div
         className="fixed inset-0 -z-10 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 60% 60% at 80% 100%, rgba(196,167,71,0.03) 0%, transparent 50%)",
+          background: "radial-gradient(ellipse 60% 60% at 80% 100%, rgba(198,93,62,0.03) 0%, transparent 50%)",
         }}
       />
       <div
@@ -85,6 +85,7 @@ export default function SPRGroup() {
           transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
       >
+        <SPRCompletionStrip onNavigate={handleTabChange} />
         <ActiveComponent />
       </main>
     </div>
