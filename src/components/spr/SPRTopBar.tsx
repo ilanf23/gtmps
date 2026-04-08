@@ -3,7 +3,7 @@ export default function SPRTopBar() {
     <div
       className="fixed top-0 left-0 right-0 z-50"
       style={{
-        background: "linear-gradient(180deg, rgba(251,248,244,0.98) 0%, rgba(251,248,244,0.95) 100%)",
+        background: "linear-gradient(180deg, rgba(245,240,235,0.98) 0%, rgba(245,240,235,0.95) 100%)",
         backdropFilter: "blur(16px) saturate(1.4)",
         WebkitBackdropFilter: "blur(16px) saturate(1.4)",
         borderBottom: "1px solid rgba(198,93,62,0.08)",
@@ -44,7 +44,7 @@ export default function SPRTopBar() {
           style={{ color: "#6B6560", fontFamily: "'Inter', sans-serif" }}
         >
           Prepared for{" "}
-          <strong style={{ color: "#2D2A26", fontWeight: 600 }}>Doug, Tom &amp; Rebecca</strong>
+          <strong style={{ color: "#2D2A26", fontWeight: 600 }}>Doug, Tom, and Rebecca</strong>
         </span>
       </div>
     </div>
