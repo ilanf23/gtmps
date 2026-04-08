@@ -1,10 +1,8 @@
 const TABS = [
-  "Overview",
-  "Identity",
-  "Orbits",
-  "Signals",
-  "Roadmap",
-  "Content Engine",
+  "Who You Are",
+  "What You're Sitting On",
+  "What Triggers Growth",
+  "Where You're Going",
 ];
 
 interface Props {
@@ -19,7 +17,7 @@ export default function SPRTabBar({ activeTab, onTabChange }: Props) {
     <div
       className="fixed top-14 left-0 right-0 z-40"
       style={{
-        background: "rgba(251,248,244,0.92)",
+        background: "rgba(245,240,235,0.92)",
         backdropFilter: "blur(12px) saturate(1.3)",
         WebkitBackdropFilter: "blur(12px) saturate(1.3)",
         borderBottom: "1px solid rgba(0,0,0,0.04)",
@@ -33,7 +31,7 @@ export default function SPRTabBar({ activeTab, onTabChange }: Props) {
               role="tab"
               aria-selected={activeTab === i}
               onClick={() => onTabChange(i)}
-              className="relative whitespace-nowrap px-3 sm:px-4 py-3 sm:py-3.5 text-[11px] sm:text-[12px] font-medium tracking-wide transition-all duration-300"
+              className="relative whitespace-nowrap px-3 sm:px-5 py-3 sm:py-3.5 text-[11px] sm:text-[12px] font-medium tracking-wide transition-all duration-300"
               style={{
                 color: activeTab === i ? "#C65D3E" : "#A09890",
                 fontFamily: "'Inter', sans-serif",
@@ -44,7 +42,7 @@ export default function SPRTabBar({ activeTab, onTabChange }: Props) {
               <span
                 className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full transition-all duration-300"
                 style={{
-                  background: activeTab === i ? "linear-gradient(90deg, #C65D3E, #C4A747)" : "transparent",
+                  background: activeTab === i ? "linear-gradient(90deg, #C65D3E, #C8963E)" : "transparent",
                   opacity: activeTab === i ? 1 : 0,
                   transform: activeTab === i ? "scaleX(1)" : "scaleX(0)",
                 }}
@@ -58,7 +56,7 @@ export default function SPRTabBar({ activeTab, onTabChange }: Props) {
           className="h-full transition-all duration-700 ease-out"
           style={{
             width: `${progress}%`,
-            background: "linear-gradient(90deg, #C65D3E, #C4A747)",
+            background: "linear-gradient(90deg, #C65D3E, #C8963E)",
             boxShadow: "0 0 8px rgba(198,93,62,0.3)",
           }}
         />
