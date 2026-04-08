@@ -1,10 +1,10 @@
 const TABS = [
-  "Overview",
-  "Identity",
-  "Orbits",
-  "Signals",
-  "Roadmap",
-  "Content Engine",
+  "The Mirror",
+  "The Math",
+  "The Proof",
+  "What If",
+  "Pilot Lookback",
+  "Path Forward",
 ];
 
 interface Props {
