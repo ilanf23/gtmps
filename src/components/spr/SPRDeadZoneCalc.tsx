@@ -64,14 +64,14 @@ export default function SPRDeadZoneCalc() {
         })}
         <div className="text-center pt-6 mt-2 relative" style={{ borderTop: "1px solid rgba(221,213,204,0.4)" }}>
           <div
-            className="text-[clamp(36px,5vw,56px)] font-bold leading-none"
+            className="text-[clamp(40px,6vw,64px)] font-bold leading-none"
             style={{
               fontFamily: "'Playfair Display', serif",
               color: "#C65D3E",
               textShadow: "0 0 30px rgba(198,93,62,0.15)",
             }}
           >
-            ${result.toLocaleString()}
+            $<PepperAnimatedCounter end={Math.round(result)} />
           </div>
           <p className="text-[13px] text-[#A09890] mt-2">from relationships you already earned</p>
           <p className="text-[12px] text-[#6B6560] mt-3 italic">

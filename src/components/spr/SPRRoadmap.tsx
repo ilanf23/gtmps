@@ -59,6 +59,7 @@ export default function SPRRoadmap() {
         <h3 className="text-[clamp(22px,3vw,30px)] font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
           Quarterly Roadmap
         </h3>
+        <p className="text-[12px] text-[#A09890] italic -mt-3">These are layers, not phases. Each quarter adds capability without removing what came before.</p>
         <div className="space-y-4">
           {[
             {
