@@ -22,7 +22,7 @@ const progressPct = Math.round(
 );
 
 interface Props {
-  onNavigate: (tab: number) => void;
+  onNavigate: (tab: number, fieldId?: string) => void;
 }
 
 const statusStyle = (s: "complete" | "partial" | "incomplete") => {
@@ -71,7 +71,7 @@ export default function SPRCompletionStrip({ onNavigate }: Props) {
               {FIELDS.map((f) => (
                 <button
                   key={f.num}
-                  onClick={() => { onNavigate(f.tab); setExpanded(false); }}
+                  onClick={() => { onNavigate(f.tab, `map-field-${f.num}`); setExpanded(false); }}
                   className="flex items-center justify-between w-full text-left px-3 py-2 rounded-lg transition-colors"
                   style={{ background: "rgba(245,240,235,0.5)" }}
                 >
@@ -111,7 +111,7 @@ export default function SPRCompletionStrip({ onNavigate }: Props) {
           {FIELDS.map((f) => (
             <button
               key={f.num}
-              onClick={() => onNavigate(f.tab)}
+              onClick={() => onNavigate(f.tab, `map-field-${f.num}`)}
               className="flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-200 hover:bg-black/[0.03]"
               title={`${f.name}: ${statusLabel(f.status)}`}
             >

@@ -48,7 +48,7 @@ export default function SPRSittingOn() {
   return (
     <div className="space-y-12">
       {/* Dead Zone Estimate */}
-      <section>
+      <section id="map-field-8" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={8} name="DEAD ZONE ESTIMATE" status="partial" />
         <h2 className="text-[28px] md:text-[36px] font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           The Revenue Already in Your CRM
@@ -120,7 +120,7 @@ export default function SPRSittingOn() {
       </section>
 
       {/* Spectrum Position */}
-      <section>
+      <section id="map-field-7" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={7} name="SPECTRUM POSITION" status="partial" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-4" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           Where SPR Sits Today
@@ -133,7 +133,7 @@ export default function SPRSittingOn() {
       </section>
 
       {/* Orbit Priority */}
-      <section>
+      <section id="map-field-9" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={9} name="ORBIT PRIORITY" status="complete" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-4" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           Where to Focus First

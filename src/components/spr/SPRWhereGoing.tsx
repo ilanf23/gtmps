@@ -29,7 +29,7 @@ export default function SPRWhereGoing() {
   return (
     <div className="space-y-12">
       {/* Corporate Objectives */}
-      <section>
+      <section id="map-field-3" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={3} name="CORPORATE OBJECTIVES" status="partial" />
         <h2 className="text-[28px] md:text-[36px] font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           What SPR Is Trying to Achieve
@@ -65,7 +65,7 @@ export default function SPRWhereGoing() {
       </section>
 
       {/* Vision State */}
-      <section>
+      <section id="map-field-11" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={11} name="VISION STATE" status="incomplete" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-4" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           Where SPR Wants to Be in Three Years

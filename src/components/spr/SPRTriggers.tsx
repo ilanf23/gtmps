@@ -21,7 +21,7 @@ export default function SPRTriggers() {
   return (
     <div className="space-y-12">
       {/* Primary Signal Type */}
-      <section>
+      <section id="map-field-10" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={10} name="PRIMARY SIGNAL TYPE" status="partial" />
         <h2 className="text-[28px] md:text-[36px] font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           What Creates a Reason to Reach Out
@@ -97,7 +97,7 @@ export default function SPRTriggers() {
       </section>
 
       {/* Beachhead Segment */}
-      <section>
+      <section id="map-field-6" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={6} name="BEACHHEAD SEGMENT" status="incomplete" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-4" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           The One Segment to Win First
@@ -116,7 +116,7 @@ export default function SPRTriggers() {
       </section>
 
       {/* Competitive Landscape Signal */}
-      <section>
+      <section id="map-field-12" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={12} name="COMPETITIVE LANDSCAPE SIGNAL" status="partial" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-4" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           What Is Happening Around You

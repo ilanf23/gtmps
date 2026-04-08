@@ -57,7 +57,7 @@ export default function SPRWhoYouAre() {
   return (
     <div className="space-y-12">
       {/* Session Voice */}
-      <section>
+      <section id="map-field-2" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={2} name="SESSION VOICE" status="complete" />
         <h2 className="text-[28px] md:text-[36px] font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           What You Said
@@ -94,7 +94,7 @@ export default function SPRWhoYouAre() {
       </section>
 
       {/* The Core */}
-      <section>
+      <section id="map-field-1" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={1} name="THE CORE" status="incomplete" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-3" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           The Core: Purpose and Niche
@@ -137,7 +137,7 @@ export default function SPRWhoYouAre() {
       </section>
 
       {/* Core Values */}
-      <section>
+      <section id="map-field-4" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={4} name="CORE VALUES" status="incomplete" />
         <p className="text-[14px]" style={{ color: "#6B6560" }}>
           Not discussed in the discovery session. Core Values feed into The Core, they are not a standalone exercise. To be captured in a follow-up conversation.
@@ -145,7 +145,7 @@ export default function SPRWhoYouAre() {
       </section>
 
       {/* ICP Lock */}
-      <section>
+      <section id="map-field-5" style={{ scrollMarginTop: "120px" }}>
         <FieldLabel num={5} name="ICP LOCK" status="partial" />
         <h2 className="text-[24px] md:text-[30px] font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif", color: "#2D2A26" }}>
           Who You Sell To
