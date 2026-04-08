@@ -116,7 +116,7 @@ export default function SPRCompletionStrip({ onNavigate }: Props) {
               title={`${f.name}: ${statusLabel(f.status)}`}
             >
               <span
-                className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+                className="min-w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold leading-none px-1"
                 style={statusStyle(f.status)}
               >
                 {f.num}
