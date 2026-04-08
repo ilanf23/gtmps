@@ -1,3 +1,5 @@
+import { Check, Minus, X } from "lucide-react";
+
 export default function SPRContentEngine() {
   return (
     <div className="space-y-14">
