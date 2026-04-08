@@ -5,10 +5,7 @@ import SPROverview from "@/components/spr/SPROverview";
 import SPROrbits from "@/components/spr/SPROrbits";
 import SPRProof from "@/components/spr/SPRProof";
 import SPRWhatIf from "@/components/spr/SPRWhatIf";
-import SPRPilotLookback from "@/components/spr/SPRPilotLookback";
-import SPRPathForward from "@/components/spr/SPRPathForward";
-
-const TABS = [SPROverview, SPROrbits, SPRProof, SPRWhatIf, SPRPilotLookback, SPRPathForward];
+const TABS = [SPROverview, SPROrbits, SPRProof, SPRWhatIf];
 
 export default function SPRGroup() {
   const [activeTab, setActiveTab] = useState(0);
