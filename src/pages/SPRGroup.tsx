@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import SPRTopBar from "@/components/spr/SPRTopBar";
 import SPRTabBar from "@/components/spr/SPRTabBar";
 import SPROverview from "@/components/spr/SPROverview";
-import SPRIdentity from "@/components/spr/SPRIdentity";
 import SPROrbits from "@/components/spr/SPROrbits";
-import SPRSignals from "@/components/spr/SPRSignals";
-import SPRRoadmap from "@/components/spr/SPRRoadmap";
-import SPRContentEngine from "@/components/spr/SPRContentEngine";
+import SPRProof from "@/components/spr/SPRProof";
+import SPRWhatIf from "@/components/spr/SPRWhatIf";
+import SPRPilotLookback from "@/components/spr/SPRPilotLookback";
+import SPRPathForward from "@/components/spr/SPRPathForward";
 
-const TABS = [SPROverview, SPRIdentity, SPROrbits, SPRSignals, SPRRoadmap, SPRContentEngine];
+const TABS = [SPROverview, SPROrbits, SPRProof, SPRWhatIf, SPRPilotLookback, SPRPathForward];
 
 export default function SPRGroup() {
   const [activeTab, setActiveTab] = useState(0);

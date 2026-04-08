@@ -3,9 +3,15 @@ import PepperAnimatedCounter from "../pepper/PepperAnimatedCounter";
 
 export default function SPRDeadZoneCalc() {
   const [contacts, setContacts] = useState(8000);
-  const [value, setValue] = useState(250000);
+  const [value, setValue] = useState(150000);
   const [rate, setRate] = useState(3);
   const result = contacts * value * (rate / 100);
+
+  const scenarios = [
+    { label: "1% (conservative)", rate: 1 },
+    { label: "3% (moderate)", rate: 3 },
+    { label: "5% (aggressive)", rate: 5 },
+  ];
 
   return (
     <div
@@ -30,12 +36,12 @@ export default function SPRDeadZoneCalc() {
         >
           Dead Zone Revenue Calculator
         </h4>
-        <p className="text-white/60 text-[12px] mt-1 relative">Adjust the sliders to see your potential</p>
+        <p className="text-white/60 text-[12px] mt-1 relative">Adjust the sliders to match your actual numbers</p>
       </div>
       <div className="p-7 space-y-7">
         {[
-          { label: "Dormant Contacts", min: 1000, max: 20000, step: 500, val: contacts, set: setContacts, fmt: (v: number) => v.toLocaleString() },
-          { label: "Avg Engagement Value", min: 50000, max: 500000, step: 10000, val: value, set: setValue, fmt: (v: number) => `$${v.toLocaleString()}`, note: "Estimated — validate with Tom's team" },
+          { label: "Dormant Contacts", min: 1000, max: 15000, step: 500, val: contacts, set: setContacts, fmt: (v: number) => v.toLocaleString() },
+          { label: "Avg Engagement Value", min: 50000, max: 500000, step: 10000, val: value, set: setValue, fmt: (v: number) => `$${v.toLocaleString()}`, note: "Estimate. Validate with Tom's team." },
           { label: "Reactivation Rate (Year 1)", min: 1, max: 10, step: 1, val: rate, set: setRate, fmt: (v: number) => `${v}%` },
         ].map((s) => {
           const pct = ((s.val - s.min) / (s.max - s.min)) * 100;
@@ -65,7 +71,7 @@ export default function SPRDeadZoneCalc() {
         })}
         <div className="text-center pt-6 mt-2 relative" style={{ borderTop: "1px solid rgba(221,213,204,0.4)" }}>
           <div
-            className="text-[clamp(40px,6vw,64px)] font-bold leading-none"
+            className="text-[clamp(48px,7vw,64px)] font-bold leading-none"
             style={{
               fontFamily: "'Playfair Display', serif",
               color: "#C65D3E",
@@ -75,9 +81,31 @@ export default function SPRDeadZoneCalc() {
             $<PepperAnimatedCounter end={Math.round(result)} />
           </div>
           <p className="text-[13px] text-[#A09890] mt-2">from relationships you already earned</p>
-          <p className="text-[12px] text-[#6B6560] mt-3 italic">
-            Even at 1% conversion: $20M in influenced revenue over 12 months.
-          </p>
+        </div>
+
+        {/* Comparison table */}
+        <div className="mt-6 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(221,213,204,0.4)" }}>
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ background: "rgba(251,248,244,0.7)" }}>
+                <th className="text-left p-3 text-[12px] font-semibold text-[#6B6560]">Reactivation Rate</th>
+                <th className="text-right p-3 text-[12px] font-semibold text-[#6B6560]">Influenced Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scenarios.map((s) => {
+                const rev = contacts * value * (s.rate / 100);
+                return (
+                  <tr key={s.label} style={{ borderTop: "1px solid rgba(221,213,204,0.3)" }}>
+                    <td className="p-3 text-[13px] text-[#2D2A26]">{s.label}</td>
+                    <td className="p-3 text-right text-[13px] font-semibold text-[#C65D3E]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      ${Math.round(rev).toLocaleString()}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
