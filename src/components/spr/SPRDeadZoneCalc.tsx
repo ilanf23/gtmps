@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PepperAnimatedCounter from "../pepper/PepperAnimatedCounter";
 
 export default function SPRDeadZoneCalc() {
   const [contacts, setContacts] = useState(8000);
