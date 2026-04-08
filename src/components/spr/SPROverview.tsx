@@ -318,26 +318,34 @@ export default function SPROverview() {
 
       {/* RROS PROGRESS */}
       <section className="space-y-5">
-        <h3 className="text-lg font-semibold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
-          RROS Progress
-        </h3>
-        <div className="grid grid-cols-5 gap-2">
-          {["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"].map((stage, i) => (
-            <div key={stage}>
-              <div
-                className="h-2.5 rounded-full"
-                style={{
-                  background: i === 0 ? "linear-gradient(90deg, #C65D3E, #C4A747)" : "rgba(228,222,214,0.5)",
-                  boxShadow: i === 0 ? "0 0 10px rgba(198,93,62,0.2)" : "none",
-                }}
-              />
-              <div className="text-[10px] mt-2 text-center tracking-[0.08em]" style={{ color: "#A09890" }}>
-                {stage}
-                {i === 0 && <span className="block text-[#C65D3E] font-semibold mt-0.5">In Progress</span>}
-                {i === 1 && <span className="block text-[#A09890]">Next</span>}
+        <div className="space-y-2">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">System Progress</span>
+          <h3 className="text-[clamp(22px,3vw,32px)] font-bold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            RROS Progress
+          </h3>
+        </div>
+        <div
+          className="rounded-2xl p-6 sm:p-8"
+          style={{ background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 100%)", boxShadow: "0 12px 40px rgba(26,26,46,0.2)" }}
+        >
+          <div className="grid grid-cols-5 gap-3">
+            {["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"].map((stage, i) => (
+              <div key={stage} className="text-center">
+                <div
+                  className="h-3 rounded-full mb-3"
+                  style={{
+                    background: i === 0 ? "linear-gradient(90deg, #C65D3E, #C4A747)" : "rgba(255,255,255,0.08)",
+                    boxShadow: i === 0 ? "0 0 16px rgba(198,93,62,0.4)" : "none",
+                  }}
+                />
+                <div className="text-[10px] sm:text-[11px] tracking-[0.12em] font-semibold" style={{ color: i === 0 ? "#C65D3E" : "rgba(255,255,255,0.3)" }}>
+                  {stage}
+                </div>
+                {i === 0 && <span className="block text-[10px] text-[#C4A747] font-semibold mt-1">In Progress</span>}
+                {i === 1 && <span className="block text-[10px] text-white/30 mt-1">Next</span>}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
     </div>
