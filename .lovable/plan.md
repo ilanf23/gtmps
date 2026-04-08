@@ -1,64 +1,121 @@
 
 
-# Build SPR Market Activation Profile
+# SPR MAP Page Improvements
 
-A new 8-tab microsite at `/spr` following the same architecture as Pepper Group, customized for SPR (53-year technology consulting firm, Anderson acquisition context).
+A comprehensive update to the `/spr` page covering content accuracy, framework alignment, and visual polish. Organized by priority.
 
-## Scope
+## Phase 1 — P0: Critical Bugs
 
-**13 new files** in `src/components/spr/` + 1 page file + 1 route addition:
+### B1. Fix dark void / excessive spacing
+Inspect `SPRGroup.tsx` and each tab component for the reported massive dark gaps between sections. The `space-y-20` on each tab component creates ~80px gaps — likely the issue combined with any dark-background sections bleeding. Reduce to `space-y-12` or `space-y-16` where appropriate.
 
-```text
-src/pages/SPRGroup.tsx          ← Main page (tab state, transitions, meta tags)
-src/components/spr/
-  SPRTopBar.tsx                 ← "MABBLY" | discover.mabbly.com/spr | "Prepared for Doug, Tom & Rebecca"
-  SPRTabBar.tsx                 ← 8 tabs (Overview through Path Forward)
-  SPROverview.tsx               ← Rebecca quote, 4 stat cards, What You Said/Heard table, company accordion, RROS progress
-  SPRIdentity.tsx               ← Current vs RROS positioning, 6-company competitor grid, digital presence
-  SPROrbits.tsx                 ← Spectrum bar (1.5-2.0), Have/Gap cards, Network Assets (4 cards + total bar), Dead Zone calc, Orbit diagram
-  SPRSignals.tsx                ← Formula visual, email mockup (Kyle to former CIO), signal type chips, first week playbook
-  SPRRoadmap.tsx                ← Today vs 12 Months comparison, quarterly cards (Q2 2026 - Q1 2027)
-  SPRContentEngine.tsx          ← Gap explanation, Kyle LinkedIn post, Rebecca blog outline, "Did We Get This Right?", data request, CTA
-  SPRPilotLookback.tsx          ← NEW TAB: Dark hero (~7% stat), 4 stat cards, team workflow (Brian→Kristin→Kyle→Rebecca), Kristin quote, two-phase approach, Accenture callout, adoption signal
-  SPRPathForward.tsx            ← NEW TAB: 10-sender roster, 3 pricing options (A/B/C), comparison table, closing section with CTA
-  SPRSpectrumBar.tsx            ← Marker at 1.5-2.0 position (vs Pepper's 1.5)
-  SPRDeadZoneCalc.tsx           ← Sliders: 1K-20K contacts, $50K-$500K value, 1-10% rate, default=$60M
-  SPROrbitMap.tsx                ← SVG rings: Core Proof → Active (Kyle 150) → Dead Zone (8K-10K pulsing) → Anderson → New Gravity
-```
+### B2. Tab scroll-to-top
+Already implemented in `SPRGroup.tsx` (`window.scrollTo({ top: 0, behavior: "smooth" })`). Verify it works — may need `top: 0` with `instant` instead of `smooth` to avoid landing in middle of content.
 
-## Reusable from Pepper
+## Phase 2 — P1: Content Accuracy (6 changes)
 
-These Pepper components can be imported directly (no duplication needed):
-- `PepperAnimatedCounter` — same count-up logic
-- `PepperExpandable` — same accordion pattern
-- `PepperDotMatrix` — can be reused or SPR gets its own version given different numbers
+### A1.1 — Fix dormancy stat
+`SPROverview.tsx` line 101: Already shows `2 yrs`. ✅ No change needed.
 
-## Key Differences from Pepper Group
+### A1.4 — Soften headline
+`SPROverview.tsx` line 33-35: Change "Zero Systems Activating It" → "No System Compounding It"
 
-| Aspect | Pepper Group | SPR |
-|--------|-------------|-----|
-| Tabs | 6 | 8 (+ Pilot Lookback, Path Forward) |
-| Tone | Scrappy 32yr agency | Enterprise 53yr, acquisition context |
-| Stats | 400+ dormant, 80% revenue | 59K CRM, 8-10K dormant, 10 BDMs |
-| Spectrum | 1.5 of 4 | 1.5-2.0 of 5 |
-| Dead Zone calc defaults | 500 contacts, $120K, 5% | 8,000 contacts, $250K, 3% |
-| Orbit rings | 4 rings | 5 rings (adds Anderson ring) |
-| Competitors | 5 agencies | 5 tech consultancies (Slalom, West Monroe, etc.) |
-| Content Engine | George's voice | Kyle LinkedIn + Rebecca blog |
-| Pricing | Not shown | 3 options ($1,199 / ~$3,949 / $7.5K-$12K) |
-| CTA | 30-min review | "Schedule MAP Review with Adam" |
+### A3.1 — Fix Spectrum scale (0-4, not 0-5)
+- `SPROrbits.tsx` line 4: Change "1.5–2.0 out of 5" → "1.5–2.0 out of 4"
+- `SPRSpectrumBar.tsx`: Update scale labels to 0-4 (remove "5 — Compounding"), update marker position from 35% to ~43% (1.75/4)
 
-## Route
+### A3.2 — Restore Orbit 04: Warm Adjacency
+`SPROrbitMap.tsx`: Rename "Anderson" ring to "Warm Adjacency" with sub-detail "Anderson's 10 firms feed this ring". Keep 5 rings with correct locked names: Core Proof, Active, Dead Zone, Warm Adjacency, New Gravity.
 
-Add `/spr` route in `App.tsx` pointing to `SPRGroup.tsx`.
+### A3.3 — Add ⊙ symbols to orbit labels
+`SPROrbitMap.tsx`: Prepend `⊙ 01`, `⊙ 02`, etc. to each orbit label in the RINGS array and SVG text.
+
+### A4.2 — Fix "Kristin" → "Kristen"
+`SPRSignals.tsx` line 180: Change "Kristin" to "Kristen"
+`SPRPilotLookback.tsx` line 74, 112: Change "Kristin Rosa" to "Kristen Rosa" and all references
+`SPRRoadmap.tsx` line 67: "Scale Kristin's" → "Scale Kristen's"
+`SPRPathForward.tsx` lines 68, 103, 112: All "Kristin" → "Kristen"
+
+### A3.4 — Fix activation percentage
+`SPROrbits.tsx`: Update the activation bar to show both: "150 of 59,000 total CRM (0.25%)" and "150 of ~10,000 dormant (1.5%)"
+
+### A3.5 — Flag revenue calculator assumptions
+`SPRDeadZoneCalc.tsx`: Add note below "Avg Engagement Value" label: "Estimated — validate with Tom's team"
+
+## Phase 3 — P2: Framework Alignment (5 additions)
+
+### A1.2 — Add The Three Laws
+`SPROverview.tsx`: Add a styled navy card with gold accents after the hero section displaying the three laws (Proof before pitch, Relationships before revenue, Signal before message).
+
+### A1.3 — Add The Five Truths
+`SPROverview.tsx`: Add a section between Discovery Insights and Company Profile with Roman numeral list, deep navy left border, gold numerals.
+
+### A1.5 — Add locked book definition
+`SPROverview.tsx`: Add callout: "GTM for professional services is a system for activating the market you already own."
+
+### A2.1 — Add Core Diagnostic + A2.2 ICP Lock + A2.3 Beachhead
+`SPRIdentity.tsx`: Add three new sections — The Core diagnostic (Purpose + Niche not yet locked), ICP Lock (IT in mid-to-enterprise), Beachhead Segment (TBD).
+
+### A6.2 — Add MAP Completion Grid
+`SPRContentEngine.tsx`: Add 4×3 grid of 12 MAP fields with completion badges (COMPLETE/PARTIAL/INCOMPLETE).
+
+## Phase 4 — P3: Visual Polish (5 improvements)
+
+### A5.2 — Add "layers not phases" note
+`SPRRoadmap.tsx`: Add small note under quarterly heading.
+
+### B5 — Stats bar styling
+`SPROverview.tsx`: Make stat numbers larger/bolder, improve visual hierarchy.
+
+### B7 — Orbit map improvements
+`SPROrbitMap.tsx`: Use book color scheme (gold center, navy rings), improve pulse animation on Dead Zone.
+
+### B8 — Revenue calculator drama
+`SPRDeadZoneCalc.tsx`: Make result number larger (48-64px serif), add count-up animation using PepperAnimatedCounter.
+
+### B9 — Email mockup styling
+`SPRSignals.tsx`: Add Gmail-like chrome to the email mockup (To/From/Subject header bar).
+
+### B13 — RROS Progress tracker
+`SPROverview.tsx`: Make the DISCOVER/PROVE/DESIGN/ACTIVATE/COMPOUND bar larger and more visually prominent.
+
+## Phase 5 — P4: Nice to Have
+
+### B3 — Sticky header condensing
+Consider making only the tab bar sticky after scroll, or condensing the top bar.
+
+### B10 — First Week timeline
+`SPRSignals.tsx`: Restyle Day 1-5 as cards with prominent day numbers and team initials.
+
+### B12 — LinkedIn post mockup
+`SPRContentEngine.tsx`: Add LinkedIn UI chrome (avatar, like/comment/share).
+
+### B14/B15 — Typography and color consistency audit
+Verify all headings, subheadings, quotes use consistent fonts/colors across all 8 tabs.
+
+### B16 — Mobile responsiveness audit
+Verify tab bar scroll, orbit SVG scaling, calculator touch usability, table horizontal scroll.
+
+## Files Modified
+
+~10 files across all phases:
+- `src/components/spr/SPROverview.tsx` — headline, Three Laws, Five Truths, locked definition, stats styling, RROS tracker
+- `src/components/spr/SPRIdentity.tsx` — Core diagnostic, ICP Lock, Beachhead
+- `src/components/spr/SPROrbits.tsx` — spectrum scale, activation %, orbit heading
+- `src/components/spr/SPROrbitMap.tsx` — ring names, ⊙ symbols, colors
+- `src/components/spr/SPRSpectrumBar.tsx` — scale 0-4
+- `src/components/spr/SPRDeadZoneCalc.tsx` — assumption note, larger result, count-up
+- `src/components/spr/SPRSignals.tsx` — Kristen spelling, email styling, timeline cards
+- `src/components/spr/SPRRoadmap.tsx` — Kristen spelling, layers note
+- `src/components/spr/SPRContentEngine.tsx` — MAP completion grid, LinkedIn chrome
+- `src/components/spr/SPRPilotLookback.tsx` — Kristen spelling
+- `src/components/spr/SPRPathForward.tsx` — Kristen spelling
+- `src/pages/SPRGroup.tsx` — spacing/gap fixes
 
 ## Implementation Order
 
-Due to the size, this will be built across multiple messages:
-1. **Foundation**: SPRGroup page, TopBar, TabBar, route — gets navigation working
-2. **Tabs 1-3**: Overview, Identity, Orbits (with SPRSpectrumBar, SPRDeadZoneCalc, SPROrbitMap)
-3. **Tabs 4-6**: Signals, Roadmap, Content Engine
-4. **Tabs 7-8**: Pilot Lookback, Path Forward (the two new tabs)
-
-All content is static/hardcoded per the prompt. Same visual identity (colors, fonts, textures, interactions) as Pepper Group.
+Due to scope, this will be built across multiple messages:
+1. **P0 + P1**: Bug fixes + content accuracy (~10 edits)
+2. **P2**: Framework additions (Three Laws, Five Truths, Core diagnostic, MAP grid)
+3. **P3 + P4**: Visual polish and nice-to-haves
 
