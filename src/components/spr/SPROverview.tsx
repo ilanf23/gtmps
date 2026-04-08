@@ -32,7 +32,7 @@ export default function SPROverview() {
         >
           53 Years of Trust
           <br />
-          Zero Systems Activating It<span style={{ color: "#C65D3E" }}>.</span>
+          No System Compounding It<span style={{ color: "#C65D3E" }}>.</span>
         </h1>
 
         <div
