@@ -13,13 +13,27 @@ export default function SPRGroup() {
   const [activeTab, setActiveTab] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
 
-  const handleTabChange = (i: number) => {
-    if (i === activeTab) return;
+  const handleTabChange = (i: number, fieldId?: string) => {
+    const scrollToField = (id?: string) => {
+      if (!id) return;
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    };
+
+    if (i === activeTab) {
+      scrollToField(fieldId);
+      return;
+    }
     setFadeIn(false);
     setTimeout(() => {
       setActiveTab(i);
       setFadeIn(true);
-      window.scrollTo({ top: 0, behavior: "instant" });
+      if (fieldId) {
+        scrollToField(fieldId);
+      } else {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
     }, 250);
   };
 
