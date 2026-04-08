@@ -71,6 +71,67 @@ export default function SPROverview() {
         </div>
       </section>
 
+      {/* THREE LAWS */}
+      <section
+        className="relative rounded-2xl overflow-hidden p-8 sm:p-10"
+        style={{
+          background: "linear-gradient(135deg, #1A1A2E 0%, #0D0D1A 100%)",
+          boxShadow: "0 20px 60px rgba(26,26,46,0.3)",
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at top left, rgba(196,167,71,0.06) 0%, transparent 50%)" }}
+        />
+        <div className="relative space-y-6">
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-px" style={{ background: "linear-gradient(90deg, transparent, #C4A747)" }} />
+            <span className="text-[11px] font-semibold tracking-[0.28em] uppercase" style={{ color: "#C4A747" }}>
+              The Three Laws
+            </span>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-5">
+            {[
+              { num: "I", law: "Proof before pitch." },
+              { num: "II", law: "Relationships before revenue." },
+              { num: "III", law: "Signal before message." },
+            ].map((l) => (
+              <div key={l.num} className="flex gap-4 items-start">
+                <span
+                  className="text-[28px] font-bold leading-none shrink-0"
+                  style={{ fontFamily: "'Playfair Display', serif", color: "#C4A747", textShadow: "0 0 15px rgba(196,167,71,0.2)" }}
+                >
+                  {l.num}
+                </span>
+                <p className="text-[15px] text-white/80 leading-relaxed pt-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {l.law}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* LOCKED BOOK DEFINITION */}
+      <section
+        className="relative rounded-xl px-8 py-6"
+        style={{
+          background: "rgba(196,167,71,0.04)",
+          border: "1px solid rgba(196,167,71,0.15)",
+          borderLeft: "4px solid #C4A747",
+        }}
+      >
+        <p
+          className="text-[17px] sm:text-[19px] italic leading-[1.7] text-[#2D2A26]"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          GTM for professional services is not a plan for entering a new market. It is a system for activating the market you already own.
+        </p>
+        <footer className="mt-3 text-[11px] text-[#A09890] tracking-wide uppercase font-semibold">
+          The Relationship Revenue OS — Locked Definition
+        </footer>
+      </section>
+
       {/* KEY NUMBERS */}
       <section
         className="relative rounded-2xl overflow-hidden"
@@ -118,6 +179,42 @@ export default function SPROverview() {
               <div className="text-[12px] mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {s.label}
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* THE FIVE TRUTHS */}
+      <section className="space-y-6">
+        <div className="space-y-3">
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#C65D3E]">Foundation</span>
+          <h2
+            className="text-[clamp(26px,3.5vw,40px)] font-bold text-[#2D2A26] leading-tight tracking-[-0.01em]"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            The Five Truths
+          </h2>
+        </div>
+        <div className="space-y-4">
+          {[
+            { num: "I", text: "Your existing relationships are your most valuable growth asset." },
+            { num: "II", text: "Trust compounds — but only when a system sustains it." },
+            { num: "III", text: "The Dead Zone is not a loss. It is an unactivated portfolio." },
+            { num: "IV", text: "Proof must travel ahead of every conversation." },
+            { num: "V", text: "Growth in professional services is relationship-led, not marketing-led." },
+          ].map((t) => (
+            <div
+              key={t.num}
+              className="flex gap-5 items-start rounded-xl p-5"
+              style={{ borderLeft: "3px solid #1A1A2E", background: "rgba(26,26,46,0.02)" }}
+            >
+              <span
+                className="text-[22px] font-bold shrink-0 leading-none"
+                style={{ fontFamily: "'Playfair Display', serif", color: "#C4A747" }}
+              >
+                {t.num}
+              </span>
+              <p className="text-[15px] text-[#2D2A26] leading-relaxed">{t.text}</p>
             </div>
           ))}
         </div>
