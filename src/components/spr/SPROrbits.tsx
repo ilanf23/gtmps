@@ -6,7 +6,7 @@ import SPROrbitMap from "./SPROrbitMap";
 
 export default function SPROrbits() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Spectrum */}
       <section className="space-y-6">
         <div className="flex items-center gap-3">
@@ -17,7 +17,7 @@ export default function SPROrbits() {
           className="text-[clamp(30px,4.5vw,48px)] font-bold text-[#2D2A26] leading-[1.05] tracking-[-0.02em]"
           style={{ fontFamily: "'Playfair Display', serif" }}
         >
-          You're at 1.5&ndash;2.0 out of 5<span style={{ color: "#C65D3E" }}>.</span>
+          You're at 1.5&ndash;2.0 out of 4<span style={{ color: "#C65D3E" }}>.</span>
         </h2>
         <p className="text-[#6B6560] text-lg max-w-[600px]">
           You have the raw materials. You do not have the system.
@@ -138,9 +138,11 @@ export default function SPROrbits() {
           }}
         >
           <span className="text-sm text-[#6B6560]">
-            Currently activating: <strong className="text-[#8B3A3A]">~150 (0.25%)</strong>
+            Currently activating: <strong className="text-[#8B3A3A]">~150 of 59,000 total CRM (0.25%)</strong>
             <span className="mx-2">|</span>
-            <strong className="text-[#2D2A26]">You are activating less than 1% of your relationship asset.</strong>
+            <strong className="text-[#8B3A3A]">~150 of ~10,000 dormant (1.5%)</strong>
+            <span className="mx-2">|</span>
+            <strong className="text-[#2D2A26]">You are activating less than 2% of your dormant relationships.</strong>
           </span>
         </div>
       </section>

@@ -34,14 +34,17 @@ export default function SPRDeadZoneCalc() {
       <div className="p-7 space-y-7">
         {[
           { label: "Dormant Contacts", min: 1000, max: 20000, step: 500, val: contacts, set: setContacts, fmt: (v: number) => v.toLocaleString() },
-          { label: "Avg Engagement Value", min: 50000, max: 500000, step: 10000, val: value, set: setValue, fmt: (v: number) => `$${v.toLocaleString()}` },
+          { label: "Avg Engagement Value", min: 50000, max: 500000, step: 10000, val: value, set: setValue, fmt: (v: number) => `$${v.toLocaleString()}`, note: "Estimated — validate with Tom's team" },
           { label: "Reactivation Rate (Year 1)", min: 1, max: 10, step: 1, val: rate, set: setRate, fmt: (v: number) => `${v}%` },
         ].map((s) => {
           const pct = ((s.val - s.min) / (s.max - s.min)) * 100;
           return (
             <div key={s.label} className="space-y-3">
               <div className="flex justify-between text-[13px]">
-                <span className="text-[#6B6560]">{s.label}</span>
+                <span className="text-[#6B6560]">
+                  {s.label}
+                  {(s as any).note && <span className="block text-[10px] text-[#A09890] italic mt-0.5">{(s as any).note}</span>}
+                </span>
                 <span className="font-semibold text-[#2D2A26]" style={{ fontFamily: "'Playfair Display', serif" }}>
                   {s.fmt(s.val)}
                 </span>

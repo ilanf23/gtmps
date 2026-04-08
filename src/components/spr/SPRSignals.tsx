@@ -2,7 +2,7 @@ import PepperExpandable from "../pepper/PepperExpandable";
 
 export default function SPRSignals() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Header */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">
@@ -177,7 +177,7 @@ export default function SPRSignals() {
           {[
             { day: "Day 1", text: "Signal scan across 150 contacts. Identify top 10 opportunities." },
             { day: "Day 2", text: "Draft messages with signal + proof + context for top opportunities." },
-            { day: "Day 3", text: "Kristin reviews content quality. Brian validates contact data." },
+            { day: "Day 3", text: "Kristen reviews content quality. Brian validates contact data." },
             { day: "Day 4", text: "Kyle applies relationship knowledge. Final approval on each message." },
             { day: "Day 5", text: "Send approved messages. Track opens, replies. Weekly report." },
           ].map((d) => (

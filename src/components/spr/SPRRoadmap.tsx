@@ -1,6 +1,6 @@
 export default function SPRRoadmap() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Header */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function SPRRoadmap() {
             {
               q: "Q2 2026",
               stage: "PROVE",
-              items: ["Expand Kyle to 500 contacts", "Add Tom Ryan as 2nd sender", "Scale Kristin's review workflow", "First Anderson briefing"],
+              items: ["Expand Kyle to 500 contacts", "Add Tom Ryan as 2nd sender", "Scale Kristen's review workflow", "First Anderson briefing"],
               highlight: true,
             },
             {

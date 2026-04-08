@@ -1,6 +1,6 @@
 export default function SPRContentEngine() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* Header */}
       <section className="max-w-[820px] space-y-5">
         <div className="flex items-center gap-3">

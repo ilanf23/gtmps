@@ -3,7 +3,7 @@ import PepperExpandable from "../pepper/PepperExpandable";
 
 export default function SPROverview() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-14">
       {/* HERO */}
       <section className="relative text-center max-w-[860px] mx-auto space-y-10 pt-4">
         <div

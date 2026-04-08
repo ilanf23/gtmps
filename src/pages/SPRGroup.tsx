@@ -21,7 +21,7 @@ export default function SPRGroup() {
     setTimeout(() => {
       setActiveTab(i);
       setFadeIn(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "instant" });
     }, 250);
   };
 

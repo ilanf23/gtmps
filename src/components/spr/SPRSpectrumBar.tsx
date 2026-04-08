@@ -35,7 +35,7 @@ export default function SPRSpectrumBar() {
         <div
           className="absolute top-1/2 -translate-y-1/2 transition-all ease-out"
           style={{
-            left: animate ? "35%" : "0%",
+            left: animate ? "43%" : "0%",
             transform: `translate(-50%, -50%)`,
             transitionDuration: "1.2s",
             transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
@@ -66,8 +66,7 @@ export default function SPRSpectrumBar() {
         <span>1 — Random</span>
         <span>2 — Emerging</span>
         <span>3 — Scalable</span>
-        <span>4 — Predictable</span>
-        <span>5 — Compounding</span>
+        <span>4 — Compounding</span>
       </div>
     </div>
   );
