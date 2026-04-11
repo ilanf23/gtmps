@@ -8,7 +8,7 @@ import BookSection from "@/components/v1/BookSection";
 import AuthorsSection from "@/components/v1/AuthorsSection";
 
 import ResultsSection from "@/components/v1/ResultsSection";
-import ApplySection from "@/components/v1/ApplySection";
+
 import Footer from "@/components/v1/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
@@ -28,7 +28,7 @@ const IndexV1 = () => {
         <AuthorsSection />
         
         <ResultsSection />
-        <ApplySection />
+        
       </main>
       <Footer />
     </>
