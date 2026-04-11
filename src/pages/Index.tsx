@@ -26,7 +26,7 @@ const Index = () => {
         <EpisodeSection />
         <BookSection />
         <AuthorsSection />
-        
+        <DeeperSection />
         <ResultsSection />
         <ApplySection />
       </main>

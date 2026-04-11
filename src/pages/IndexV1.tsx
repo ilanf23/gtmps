@@ -6,7 +6,7 @@ import MissionSection from "@/components/v1/MissionSection";
 import EpisodeSection from "@/components/v1/EpisodeSection";
 import BookSection from "@/components/v1/BookSection";
 import AuthorsSection from "@/components/v1/AuthorsSection";
-import DeeperSection from "@/components/v1/DeeperSection";
+
 import ResultsSection from "@/components/v1/ResultsSection";
 import ApplySection from "@/components/v1/ApplySection";
 import Footer from "@/components/v1/Footer";
@@ -26,7 +26,7 @@ const IndexV1 = () => {
         <EpisodeSection />
         <BookSection />
         <AuthorsSection />
-        <DeeperSection />
+        
         <ResultsSection />
         <ApplySection />
       </main>
