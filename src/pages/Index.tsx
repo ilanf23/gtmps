@@ -6,7 +6,7 @@ import MissionSection from "@/components/MissionSection";
 import EpisodeSection from "@/components/EpisodeSection";
 import BookSection from "@/components/BookSection";
 import AuthorsSection from "@/components/AuthorsSection";
-
+import DeeperSection from "@/components/DeeperSection";
 import ResultsSection from "@/components/ResultsSection";
 import ApplySection from "@/components/ApplySection";
 import Footer from "@/components/Footer";
