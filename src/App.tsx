@@ -6,7 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import IndexV1 from "./pages/IndexV1.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import PepperGroup from "./pages/PepperGroup.tsx";
+import PepperGroup from "./pages/microsites/PepperGroup.tsx";
+import Google from "./pages/microsites/Google.tsx";
 import SPRGroup from "./pages/SPRGroup.tsx";
 
 const queryClient = new QueryClient();
@@ -21,8 +22,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/1" element={<IndexV1 />} />
           <Route path="/pepper-group" element={<PepperGroup />} />
+          <Route path="/google" element={<Google />} />
           <Route path="/spr" element={<SPRGroup />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* ADD NEW MICROSITE ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
@@ -31,4 +33,3 @@ const App = () => (
 );
 
 export default App;
-
