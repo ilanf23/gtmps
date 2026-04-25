@@ -202,3 +202,178 @@ select.custom-select {
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
+
+/* ───────────── DISCOVER PAGE — EDITORIAL MOTION ───────────── */
+
+/* Slow breathing ember for primary CTAs */
+@keyframes goldEmber {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(184,147,58,0.0), 0 8px 24px rgba(184,147,58,0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(184,147,58,0.10), 0 8px 32px rgba(184,147,58,0.42);
+  }
+}
+.gold-ember { animation: goldEmber 8s ease-in-out infinite; }
+.gold-ember-half { animation: goldEmber 8s ease-in-out infinite; opacity: 0.85; }
+
+/* Slow drift of a multi-radial gradient mesh */
+@keyframes meshDrift {
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
+  50%  { background-position: 8% 4%, 92% 6%, 48% 96%; }
+  100% { background-position: 0% 0%, 100% 0%, 50% 100%; }
+}
+
+/* SVG hairline draw — paired with stroke-dasharray inline */
+@keyframes hairlineDraw {
+  from { stroke-dashoffset: var(--dash, 1000); }
+  to   { stroke-dashoffset: 0; }
+}
+.hairline-draw {
+  stroke-dasharray: var(--dash, 1000);
+  stroke-dashoffset: var(--dash, 1000);
+  animation: hairlineDraw 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Vellum grain — subtle multiplicative noise modulation */
+@keyframes vellumGrain {
+  0%, 100% { opacity: 0.02; }
+  50%      { opacity: 0.035; }
+}
+
+/* Five Orbits diagram — keyframes for single-fire reveal */
+@keyframes orbitDraw {
+  from { stroke-dashoffset: var(--circ); }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes orbitGlow {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes leaderDraw {
+  from { stroke-dashoffset: var(--leader-len, 80); }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes labelRise {
+  from { opacity: 0; transform: translate3d(0, 4px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes centerPulseOnce {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+@keyframes chipFade {
+  from { opacity: 0; transform: translate3d(0, 4px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbits-triggered circle.orbit-ring,
+  .orbits-triggered .orbit-leader,
+  .orbits-triggered .orbit-label,
+  .orbits-triggered .orbit-glow,
+  .orbits-triggered .orbit-center,
+  .orbits-triggered .orbit-chip,
+  .orbits-triggered .orbit-formula > * {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Cover fade — single fade-up applied to the hero content block as one unit */
+@keyframes coverFade {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.cover-fade {
+  opacity: 0;
+  animation: coverFade 720ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-fade { opacity: 1; transform: none; animation: none; }
+}
+
+/* Headline word reveal: each word fades up 8px, staggered via inline delay */
+@keyframes wordRise {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.word-rise {
+  display: inline-block;
+  opacity: 0;
+  animation: wordRise 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* Gold sweep mask — paired with .gold-sweep-mask wrapper */
+@keyframes goldSweep {
+  from { -webkit-mask-position: -120% 0; mask-position: -120% 0; }
+  to   { -webkit-mask-position: 120% 0;  mask-position: 120% 0;  }
+}
+.gold-sweep-mask {
+  -webkit-mask-image: linear-gradient(110deg, transparent 35%, black 50%, transparent 65%);
+          mask-image: linear-gradient(110deg, transparent 35%, black 50%, transparent 65%);
+  -webkit-mask-size: 220% 100%;
+          mask-size: 220% 100%;
+  animation: goldSweep 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* Vellum surface — paper-like card background */
+.vellum {
+  background:
+    linear-gradient(180deg, rgba(255,253,248,1) 0%, rgba(252,248,242,1) 100%),
+    radial-gradient(circle at 20% 10%, rgba(184,147,58,0.05), transparent 40%);
+  background-blend-mode: multiply;
+  position: relative;
+}
+.vellum-dark {
+  background:
+    linear-gradient(180deg, rgba(20,18,16,1) 0%, rgba(14,12,10,1) 100%);
+  position: relative;
+}
+
+/* Editorial accent — keeps inline emphasis subtle and uniform */
+.editorial-italic {
+  font-family: 'Inter Tight', sans-serif;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+/* Hairline-rule helpers */
+.hairline-rule-gold {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(184,147,58,0.6), transparent);
+}
+.hairline-rule-ink {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.18), transparent);
+}
+.double-rule-gold {
+  border-top: 1px solid rgba(184,147,58,0.6);
+  border-bottom: 1px solid rgba(184,147,58,0.6);
+  height: 4px;
+}
+
+/* Drop cap utility */
+.drop-cap::first-letter {
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 700;
+  font-size: 4.2em;
+  line-height: 0.9;
+  float: left;
+  padding: 6px 14px 0 0;
+  color: #B8933A;
+  letter-spacing: -0.04em;
+}
+
+/* Reduce motion: kill all the discover-specific animations */
+@media (prefers-reduced-motion: reduce) {
+  .gold-ember, .gold-ember-half,
+  .word-rise, .gold-sweep-mask, .hairline-draw {
+    animation: none !important;
+  }
+  .word-rise { opacity: 1; transform: none; }
+}

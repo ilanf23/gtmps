@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import IndexV1 from "./pages/IndexV1.tsx";
+import Discover from "./pages/Discover.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import PepperGroup from "./pages/microsites/PepperGroup.tsx";
 import Google from "./pages/microsites/Google.tsx";
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/1" element={<IndexV1 />} />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/pepper-group" element={<PepperGroup />} />
           <Route path="/google" element={<Google />} />
           <Route path="/spr" element={<SPRGroup />} />
