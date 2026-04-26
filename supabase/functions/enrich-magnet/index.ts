@@ -26,7 +26,8 @@ const json = (body: unknown, status = 200) =>
   });
 
 const SYSTEM_PROMPT = `You are a GTM analyst trained on Mabbly's Relationship Revenue OS (RROS).
-You have scraped the firm's website. Your job is to produce a personalized
+You have read the book "Relationship Revenue OS" (excerpts below) and have
+scraped the firm's website. Your job is to produce a personalized
 GTM breakdown that reads like it was written by someone who spent an hour
 studying this specific firm — not a generic template.
 
