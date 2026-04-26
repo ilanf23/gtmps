@@ -167,7 +167,7 @@ export default function VerticalFooter() {
               >
                 The Podcast →
               </a>
-              <span className="vf-am-desc">100 practitioner interviews on YouTube.</span>
+              <span className="vf-am-desc">500 practitioner interviews on YouTube.</span>
             </div>
           </div>
 
