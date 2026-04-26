@@ -1,155 +1,177 @@
-# Plan: /about Page + GTM Literacy Fix + Footer About Link
+# Three Surgical Fixes
 
-Three coordinated additions to discover.mabbly.com.
+## Scope summary
 
----
+| Fix | Files touched | Risk |
+|---|---|---|
+| 1. About in top nav | `src/pages/Discover.tsx`, `src/pages/About.tsx`, `src/pages/Awards.tsx` | Low |
+| 2. Footer "100 → 500" typo | `src/components/Footer.tsx`, `src/components/VerticalLanding/VerticalFooter.tsx` | Trivial |
+| 3. Per-page meta titles | `src/pages/Discover.tsx`, `src/pages/About.tsx`, `src/pages/Awards.tsx`, `src/content/verticals.ts` (one helper edit in `VerticalLanding.tsx`) | Low |
 
-## Part 1 — New `/about` Page
-
-### Route
-- Add `/about` route in `src/App.tsx`, importing `pages/About.tsx` (placed above the catch-all `*`).
-
-### File: `src/pages/About.tsx`
-A new page following the dark/cream alternating cinematic rhythm of `/discover`. Reuses the existing `TopNav` pattern (lifted from `Discover.tsx`) and the shared `Footer` component. **No** sticky CTA, **no** scroll progress rail. Uses the project's design tokens (`#1C1008` dark, cream vellum, gold `#B8933A`, Cormorant Garamond + Inter Tight + DM Mono).
-
-To keep the nav consistent with the rest of the site without code duplication, extract the existing `TopNav` from `Discover.tsx` into a new shared component:
-
-### File: `src/components/discover/DiscoverTopNav.tsx` (extracted)
-Move the current `TopNav` component out of `Discover.tsx` into its own file. Then:
-- `Discover.tsx` imports it.
-- `About.tsx` imports the same component so the nav stays identical (logo wordmark "Discover · Mabbly", For Your Firm dropdown, Awards, Podcast, Add Your Firm CTA).
-
-### Section A — HERO (dark `#1C1008`)
-- Eyebrow (DM Mono, gold, 0.18em): `ABOUT MABBLY`
-- Headline (Cormorant Garamond, `clamp(40px, 5.5vw, 72px)`, color `#F5EFE0`):
-  > We are building the operating system for relationship revenue.
-- Sub (Cormorant Garamond, 20px, `rgba(245,239,224,0.7)`, max 640px):
-  > Mabbly began with one observation across hundreds of professional services firms: the next client almost always already knew them. The relationships existed. The trust was built. The system to activate them did not.
-- Padded `padding: 144px 24px 96px` to clear the fixed nav.
-
-### Section B — THE THREE ROOMS (cream `#FBF8F4` / vellum)
-- Eyebrow: `HOW WE ARE BUILT`
-- Headline (Cormorant, dark `#0D1117`): "Three rooms. One mission."
-- Three cards in a responsive grid (1col mobile / 3col `md:`):
-  1. **discover.mabbly.com** — `THE RESEARCH` — "The category authority hub. The book, the podcast, the diagnostic, the research cohort, the awards. Where we publish what we are learning."
-  2. **mabbly.com →** (external, new tab) — `THE AGENCY` — "Hands-on GTM consulting and execution for professional services firms. Where we apply the framework end to end with named teams."
-  3. **mabbly.ai →** (external, new tab) — `THE PRODUCT` — "The Lead Nurturing Agent. AI-powered relationship reactivation, signal detection, and human-reviewed outreach. Where the framework runs at scale."
-- Card style: subtle 1px gold border at `rgba(184,147,58,0.25)`, padding 32px, gold eyebrow on top, room name in Inter Tight 18px semibold, body in Inter Tight 14px line-height 1.6.
-
-### Section C — THE FOUNDERS (dark)
-- Eyebrow: `WHO IS BUILDING THIS`
-- Headline: "Built by practitioners, not researchers." (Cormorant)
-- Two side-by-side blocks (`md:grid-cols-2`, gap 48px):
-  - **Adam Fridman** — Co-Author + Founder, Mabbly
-    - 140px circular photo from `@/assets/adam-fridman.png` with 3px gold ring.
-    - Bullets (DM Mono, gold dots):
-      - 500 practitioner interviews (Science of Story)
-      - 180 podcast episodes on GTM for Professional Services
-      - 2 yrs Inc. columnist
-    - LinkedIn icon link → `https://linkedin.com/in/adamfridman` (lucide `Linkedin` icon, gold on hover).
-  - **Richard Ashbaugh** — Co-Author + CEO, Mabbly
-    - 140px circular photo from `@/assets/richard-ashbaugh.png`.
-    - Bullets:
-      - 26 years across 9 professional services firms
-      - $125M AArete revenue as CMO
-      - $1.2B A.T. Kearney scaled from $250M
-    - LinkedIn icon link → `https://linkedin.com/in/richardfashbaugh`.
-
-### Section D — THE ORIGIN (cream)
-- Eyebrow: `WHY THIS BOOK EXISTS`
-- Single column, max-width 720px, editorial prose.
-- Pull quote (Cormorant italic, large `clamp(24px, 3vw, 36px)`, gold left border 2px), with proper typographic curly quotes (no em/en dashes per project rule):
-  > "We kept making the same mistake. We would meet with a firm. They had 400 dormant contacts. We would ask 'have you called them?' The answer was always no. Not because they forgot. Because they had no system. No permission. No cadence."
-- Attribution: `ADAM FRIDMAN · CO-AUTHOR` (DM Mono, gold)
-- Closing paragraph below (Inter Tight, 16px, dark):
-  > Mabbly exists to fix that. The book documents what we found. The agency applies it. The product runs it at scale.
-
-### Section E — VALIDATION (dark)
-- Eyebrow: `FOREWORD`
-- Reuse the foreword content already shown in `AuthorityStrip.tsx` (Jonathan Copulsky block). To avoid duplication and keep this page lighter, render a self-contained version inline (since `AuthorityStrip` is a multi-column composite). Content:
-  - Pull quote in Cormorant: a representative line from Copulsky's foreword (mirroring what already appears in `AuthorityStrip`; we will copy the exact quoted lines from that file verbatim during build to keep wording consistent).
-  - Attribution: `JONATHAN COPULSKY` · "Former CMO, Deloitte · Senior Lecturer, Northwestern Kellogg".
-
-### Section F — CONTACT + PRESS (cream)
-- Eyebrow: `PRESS + INQUIRIES`
-- Email line (Inter Tight 18px): `press@mabbly.com` (mailto link, hover gold).
-- Location (Inter Tight 14px, muted): "Based in Chicago, Illinois."
-
-### Section G — FINAL CTA (dark)
-- Single line (Cormorant, `clamp(28px, 3.5vw, 44px)`): "Ready to add your firm to the research?"
-- Single CTA button (matches existing `Add Your Firm` gold pill style used in nav/hero): `Add Your Firm →` linking to `/assess`.
-- Centered, generous vertical padding 128px.
-
-### Footer
-- Render shared `<Footer />` (the same one used on `/discover`).
-
-### Behavior
-- Page mounts at top (the global `ScrollToTop` component already handles this — no extra logic).
-- No sticky bottom CTA, no scroll progress rail.
-- All external links use `target="_blank" rel="noopener noreferrer"`.
-- Mobile-first: cards stack 1-col, founders stack, hero padding compresses on narrow viewports.
-- Respects `prefers-reduced-motion` (no scroll-reveal staggers needed; static fades only).
+No new components, no routing changes, no DB work. About link in footer bottom strip stays as-is per requirement.
 
 ---
 
-## Part 2 — `/discover` Hero Eyebrow Update
+## Fix 1 — Add "About" link to top nav (between For Your Firm and Awards)
 
-### File: `src/components/discover/DiscoverHero.tsx`
-**Line 554** — change the inner text only:
-- From: `GTM Research for Professional Services Firms`
-- To:   `The First Research on How PS Firms Grow`
+The site has **three independent nav implementations**, each with its own desktop and mobile menus. All three need the same edit.
 
-(Display style stays uppercase via the existing `text-transform: uppercase` rule on `.dh-industry`, so the on-page rendering reads `THE FIRST RESEARCH ON HOW PS FIRMS GROW`.)
+### 1a. `src/pages/Discover.tsx` (Discover page TopNav)
 
-Nothing else on `/discover` changes. Body, sub copy, Section 04 "The Relationship Revenue OS", and Section 09 "The GTM Score" remain intact. Vertical pages are untouched (they have native vocabulary already per the brief).
+The `navItems` array drives both desktop and mobile renderers.
+
+```ts
+// line 39-42 — current
+const navItems = [
+  { label: "Awards", href: "/awards", external: false, internal: true },
+  { label: "Podcast", href: PODCAST_HREF, external: true },
+];
+
+// becomes
+const navItems = [
+  { label: "About", href: "/about", external: false, internal: true },
+  { label: "Awards", href: "/awards", external: false, internal: true },
+  { label: "Podcast", href: PODCAST_HREF, external: true },
+];
+```
+
+That single change cascades through both the desktop list (line 167) and the mobile list (line 265). Active state is not currently rendered on this nav (it lives on `/discover` only), so no extra work needed here.
+
+### 1b. `src/pages/About.tsx` (About page TopNav)
+
+Same `navItems` array structure (line 17-20). Apply the same insertion. **Important:** since the user is on `/about` when this nav renders, give the About link an active-state color treatment matching how `/awards` highlights itself in the Awards nav (gold `#B8933A`). Inline the active style on the About `<Link>` only (not via `data-active` since this nav doesn't have that CSS hook).
+
+```ts
+// Insert About first, mark it visually active when on /about
+{ label: "About", href: "/about", internal: true, active: true },
+```
+
+In the JSX, conditionally apply `color: "#B8933A"` when `n.active` is true (overriding the default `linkColor`). Same on mobile.
+
+### 1c. `src/pages/Awards.tsx` (Awards page AwardsNav)
+
+This nav uses scoped CSS classes (`.an-link`, `.an-link[data-active="true"]`). Add About **before** the Awards link, both desktop (around line 154) and mobile (around line 177).
+
+```tsx
+// desktop, between For Your Firm dropdown and Awards
+<Link to="/about" className="an-link">About</Link>
+<Link to="/awards" className="an-link" data-active="true">Awards</Link>
+
+// mobile, between vertical list and Awards
+<Link to="/about" className="an-mobile-link" onClick={() => setOpen(false)}>About</Link>
+```
+
+The existing `.an-link:hover` rule already handles hover. The `data-active="true"` selector is reserved for the page's own link, so on `/awards` the About link stays in default color — correct.
+
+### Acceptance for Fix 1
+- Top nav order on `/discover`, `/about`, `/awards`: **For Your Firm ▼ | About | Awards | Podcast | Add Your Firm →**
+- About is gold/active when on `/about`
+- About is default color (not active) on `/discover` and `/awards`
+- Hamburger menu on mobile shows About in the same order
+- Footer About link in bottom strip is **not removed** — keeps both paths
 
 ---
 
-## Part 3 — Footer "About" Link (Bottom Strip)
+## Fix 2 — Footer "100 → 500" typo
 
-Add an internal `About` link into the bottom strip of both footer components. Style matches Privacy/Terms (12px, gold `rgba(184,147,58,0.7)`, hover `#F5EFE0`).
+Two places, identical change.
 
-### File: `src/components/Footer.tsx`
-In the bottom-strip legal row (currently `Privacy Policy · Terms of Service`), prepend an `About` link as the first item:
-- `About` (uses `react-router-dom` `<Link to="/about">`, no new tab — internal route)
-- ` · ` separator
-- `Privacy Policy` (existing)
-- ` · ` separator
-- `Terms of Service` (existing)
+### 2a. `src/components/Footer.tsx` line 158
 
-Note: `Footer.tsx` currently uses bare `<a>` tags with no router import. We will import `Link` from `react-router-dom` for the new About entry so client-side navigation works without a full page reload. The order in the bottom strip per the brief: `© 2026 Mabbly LLC · About · Privacy Policy · Terms of Service` — the `©` line stays on its own row above the legal row (matching current layout); within the legal row the order becomes `About · Privacy · Terms`.
+```diff
+- 100 practitioner interviews on YouTube.
++ 500 practitioner interviews on YouTube.
+```
 
-### File: `src/components/VerticalLanding/VerticalFooter.tsx`
-Same change in `.vf-legal-row`: prepend `<Link to="/about" className="vf-legal">About</Link>` followed by the existing `·` separators and Privacy/Terms links. Import `Link` is already present in the file.
+### 2b. `src/components/VerticalLanding/VerticalFooter.tsx` line 170
 
-### Constraints respected
-- About is **not** added to the top nav (no change to `navItems` in `Discover.tsx` or `VerticalNav.tsx`).
-- About is **not** added to the Across Mabbly grid.
-- Bottom-strip only.
+```diff
+- <span className="vf-am-desc">100 practitioner interviews on YouTube.</span>
++ <span className="vf-am-desc">500 practitioner interviews on YouTube.</span>
+```
+
+That covers every page (Discover, About, Awards, magnet pages all use `Footer.tsx`; verticals use `VerticalFooter.tsx`).
+
+I checked `src/components/v1/Footer.tsx` — the legacy footer does not contain this descriptor, and is only mounted on `/1` (the V1 archive). Leaving it untouched.
 
 ---
 
-## Files Touched
+## Fix 3 — Per-page meta titles
 
-**New**
-- `src/pages/About.tsx`
-- `src/components/discover/DiscoverTopNav.tsx` (extracted from `Discover.tsx` for shared use)
+Currently:
+- `/discover` and `/about` inherit `index.html`'s static `<title>GTM for Professional Services | Book Research by Mabbly</title>`.
+- `/awards` already sets a title but with slightly different copy than spec.
+- Vertical pages compute `${vertical.name} · ${researchLabel ?? 'GTM Research'} · Mabbly`. Spec wants different copy for several.
 
-**Edited**
-- `src/App.tsx` — register `/about` route + import.
-- `src/pages/Discover.tsx` — replace inline `TopNav` definition with import from new shared file (no behavior change).
-- `src/components/discover/DiscoverHero.tsx` — line 554 eyebrow text swap.
-- `src/components/Footer.tsx` — add About link in bottom strip + import `Link`.
-- `src/components/VerticalLanding/VerticalFooter.tsx` — add About link in bottom strip.
+### 3a. Add `useEffect` title setters to `/discover` and `/about`
 
-## QA Checklist (post-build)
-1. `/about` renders all 7 sections top-to-bottom, anchors at top of hero on load.
-2. `/about` shows the same `Footer` (Across Mabbly grid + bottom strip) as `/discover`.
-3. `/about` has no sticky bottom CTA, no scroll progress rail.
-4. `/discover` hero eyebrow now reads `THE FIRST RESEARCH ON HOW PS FIRMS GROW`. Sub copy and all other sections unchanged.
-5. Footer bottom strip on every page (`/discover`, `/awards`, all 8 verticals, `/about`) shows `About · Privacy Policy · Terms of Service`.
-6. `About` link routes via React Router (no full reload) to `/about`.
-7. `About` does **not** appear in top nav or Across Mabbly grid anywhere.
-8. External links (mabbly.com, mabbly.ai, podcast, LinkedIn) open in new tab on `/about`.
-9. Mobile (≤767px): three-rooms cards stack, founders stack, hero padding compresses, footer bottom strip stacks center-aligned.
-10. No hyphens / em-dashes / en-dashes in any new copy (per project memory).
+`src/pages/Discover.tsx` — add inside the `Discover` component (alongside the existing scroll-restoration effect, or as a new effect):
+
+```ts
+useEffect(() => {
+  document.title = 'Discover · GTM for Professional Services · Mabbly';
+}, []);
+```
+
+`src/pages/About.tsx` — add inside the `About` component:
+
+```ts
+useEffect(() => {
+  document.title = 'About · Mabbly';
+}, []);
+```
+
+(`useEffect` is already imported in both files.)
+
+### 3b. Update Awards title string
+
+`src/pages/Awards.tsx` line 192:
+
+```diff
+- document.title = 'GTM for Professional Services Awards · Mabbly';
++ document.title = 'GTM for PS Awards · Mabbly';
+```
+
+### 3c. Vertical page titles — content-data approach
+
+The cleanest fix is to update `researchLabel` (and one `name`) in `src/content/verticals.ts` so the existing `${name} · ${researchLabel} · Mabbly` template produces exactly the spec strings. No code changes to `VerticalLanding.tsx`.
+
+Required spec → current → action:
+
+| Slug | Spec title | Current `name` | Current `researchLabel` | Edit |
+|---|---|---|---|---|
+| law | `Law Firms · Origination Strategy Research · Mabbly` | `Law Firms` | `Origination Research` | researchLabel → `Origination Strategy Research` |
+| consulting | `Management Consulting · Practice Growth Research · Mabbly` | `Management Consulting` | `Practice Growth Research` | none ✓ |
+| accounting | `Accounting & Tax · Client Development Research · Mabbly` | `Accounting & Tax` | `Client Development Research` | none ✓ |
+| msp | `MSP & IT Services · GTM Research · Mabbly` | `MSP & IT Services` | (none, falls back to `GTM Research`) | none ✓ |
+| advisory | `Financial Advisory · Prospecting Research · Mabbly` | `Financial Advisory` | `Prospecting Strategy Research` | researchLabel → `Prospecting Research` |
+| ae | `Architecture & Engineering · BD Research · Mabbly` | `Architecture & Engineering` | `Business Development Research` | researchLabel → `BD Research` |
+| recruiting | `Executive Search · Mandate Origination Research · Mabbly` | `Executive Search` | `Mandate Origination Research` | none ✓ |
+| agency | `Marketing & Creative · New Business Research · Mabbly` | `Marketing & Creative` | `New Business Research` | none ✓ |
+
+Three single-line `researchLabel` edits in `src/content/verticals.ts` (law line 177, advisory line 409, ae line 483). No JSX touched.
+
+**Risk note:** `researchLabel` is also used as the `diagnosticEyebrow` fallback in some places — I'll grep to confirm it isn't surfaced in user-visible body copy elsewhere. If it is, I'll add a separate `metaTitle` field on `VerticalContent` instead and switch the title template to prefer it. Default plan assumes researchLabel is title-only.
+
+### Acceptance for Fix 3
+Open each route in a fresh tab, browser tab title equals the exact spec string above. Verify by opening 4-5 tabs side-by-side.
+
+---
+
+## Out of scope (intentionally not touching)
+
+- `/`, `/1`, `/manuscript`, `/spr`, `/pepper-group`, `/google`, `/m/:slug`, `/book`, `/assess` — not in spec
+- Footer About link (already shipped, stays)
+- Top-nav About on the magnet/microsite pages (different shells, not in spec)
+- React Helmet — overkill for 11 simple titles; `document.title` in `useEffect` is the established pattern in this codebase
+
+---
+
+## Test plan after ship
+
+1. `/discover` — top nav shows For Your Firm ▼ | About | Awards | Podcast. About not highlighted. Tab title: `Discover · GTM for Professional Services · Mabbly`.
+2. Click About → `/about` loads. About link is gold. Tab title: `About · Mabbly`.
+3. `/awards` — About present, Awards highlighted gold. Tab title: `GTM for PS Awards · Mabbly`.
+4. Footer (any page using `Footer.tsx` or `VerticalFooter.tsx`) — Podcast item reads "500 practitioner interviews on YouTube."
+5. Visit each of the 8 vertical pages, confirm tab title matches the spec table above.
+6. Mobile (375px): hamburger menu on `/discover`, `/about`, `/awards` shows About in the same order between For Your Firm verticals and Awards.
