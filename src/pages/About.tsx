@@ -7,6 +7,10 @@ import SectionRail from "@/components/discover/SectionRail";
 import Footer from "@/components/Footer";
 import adamPhoto from "@/assets/adam-fridman.png";
 import richardPhoto from "@/assets/richard-ashbaugh.png";
+import bookCover from "@/assets/book-cover-v2.png";
+import scienceOfStory from "@/assets/science-of-story-cover.png";
+import { useRevealRef, revealStyle } from "@/hooks/useRevealRef";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const ADD_YOUR_FIRM_HREF = "/assess";
 const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
@@ -378,6 +382,212 @@ const railItems = [
 ];
 
 /* ─────────────────────────────────────────────
+   INLINE VISUAL COMPONENTS
+   ───────────────────────────────────────────── */
+
+/* S6E1 cold-open audio embed (lives inside Section 02 / Mission) */
+const S6E1AudioBlock = () => {
+  const reduced = useReducedMotion();
+  const { ref, isVisible } = useRevealRef(200);
+  const style = reduced
+    ? { opacity: 1, transform: "none" }
+    : revealStyle(isVisible, 600);
+  return (
+    <div
+      ref={ref}
+      style={{
+        marginTop: 56,
+        maxWidth: 640,
+        ...style,
+      }}
+    >
+      <p style={{ ...eyebrowStyle, marginBottom: 18 }}>Hear the Thesis · 30 Seconds</p>
+      <blockquote
+        style={{
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontStyle: "italic",
+          fontSize: "clamp(18px, 2vw, 22px)",
+          lineHeight: 1.5,
+          color: "rgba(13,17,23,0.82)",
+          margin: "0 0 24px",
+          paddingLeft: 20,
+          borderLeft: "4px solid #B8933A",
+          maxWidth: 600,
+        }}
+      >
+        “Professional service firms deserve marketing as sophisticated as the work they sell.”
+      </blockquote>
+      <div
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid rgba(184,147,58,0.28)",
+          borderRadius: 6,
+          padding: "16px 18px",
+          boxShadow: "0 6px 20px -10px rgba(0,0,0,0.12)",
+        }}
+      >
+        <audio
+          controls
+          preload="metadata"
+          src="/s6e1-cold-open.mp3"
+          aria-label="S6E1 cold open, 30 seconds"
+          style={{ width: "100%", minHeight: 48, display: "block" }}
+        >
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <p
+        style={{
+          ...eyebrowStyle,
+          marginTop: 14,
+          fontSize: 11,
+          opacity: 0.85,
+        }}
+      >
+        Adam Fridman · S6E1 of GTM for Professional Services
+      </p>
+    </div>
+  );
+};
+
+/* Editorial pull quote — appears as its own quiet section between content blocks */
+const PullQuoteBlock = ({
+  id,
+  quote,
+  attribution,
+}: {
+  id: string;
+  quote: string;
+  attribution: string;
+}) => {
+  const reduced = useReducedMotion();
+  const { ref, isVisible } = useRevealRef(200);
+  const style = reduced
+    ? { opacity: 1, transform: "none" }
+    : revealStyle(isVisible, 600);
+  return (
+    <section
+      id={id}
+      style={{
+        background: "#FBF8F4",
+        color: "#0D1117",
+        padding: "96px 24px",
+      }}
+    >
+      <figure
+        ref={ref as unknown as React.Ref<HTMLElement>}
+        style={{
+          maxWidth: 720,
+          margin: "0 auto",
+          padding: 0,
+          ...style,
+        }}
+      >
+        <blockquote
+          style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: "italic",
+            fontSize: "clamp(24px, 3vw, 36px)",
+            lineHeight: 1.55,
+            fontWeight: 400,
+            color: "#0D1117",
+            margin: 0,
+            paddingLeft: 24,
+            borderLeft: "4px solid #B8933A",
+            letterSpacing: "-0.005em",
+          }}
+        >
+          “{quote}”
+        </blockquote>
+        <figcaption
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 13,
+            letterSpacing: "0.16em",
+            textTransform: "uppercase",
+            color: "rgba(184,147,58,0.7)",
+            marginTop: 20,
+            paddingLeft: 26,
+          }}
+        >
+          {attribution}
+        </figcaption>
+      </figure>
+    </section>
+  );
+};
+
+/* Founder humanizing marks — Adam: Science of Story thumb. Richard: AArete + Kearney chips. */
+const FounderMarks = ({ name }: { name: string }) => {
+  if (name === "Adam Fridman") {
+    return (
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+        }}
+      >
+        <img
+          src={scienceOfStory}
+          alt="Science of Story book cover"
+          loading="lazy"
+          style={{
+            width: 60,
+            height: 90,
+            objectFit: "cover",
+            border: "1px solid rgba(184,147,58,0.25)",
+            boxShadow: "0 8px 16px -8px rgba(0,0,0,0.5)",
+            borderRadius: 2,
+            display: "block",
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 10,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(184,147,58,0.6)",
+          }}
+        >
+          Science of Story · 2014
+        </span>
+      </div>
+    );
+  }
+  if (name === "Richard Ashbaugh") {
+    const chipStyle: React.CSSProperties = {
+      fontFamily: "'DM Mono', monospace",
+      fontSize: 10,
+      letterSpacing: "0.18em",
+      textTransform: "uppercase",
+      color: "rgba(184,147,58,0.85)",
+      padding: "6px 12px",
+      border: "1px solid rgba(184,147,58,0.35)",
+      borderRadius: 2,
+      whiteSpace: "nowrap",
+    };
+    return (
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
+        <span style={chipStyle}>AArete · CMO</span>
+        <span style={chipStyle}>A.T. Kearney · GTM</span>
+      </div>
+    );
+  }
+  return null;
+};
+
+/* ─────────────────────────────────────────────
    PAGE
    ───────────────────────────────────────────── */
 const About = () => {
@@ -457,6 +667,9 @@ const About = () => {
             <p style={bodyLight}>
               Most growth playbooks are built for software. They reward speed, scale, and outbound volume. They do not work for relationship-driven firms. Mabbly exists to build the system that does.
             </p>
+
+            {/* S6E1 cold-open audio embed */}
+            <S6E1AudioBlock />
           </div>
         </section>
 
@@ -568,51 +781,193 @@ const About = () => {
           </div>
         </section>
 
+        {/* Pull quote A — between definition (03) and rooms (04) */}
+        <PullQuoteBlock
+          id="pq-a"
+          quote="The right person at the wrong moment is just another name in your CRM. The right person at the right moment is revenue."
+          attribution="Chapter 4 · Truth II"
+        />
+
         {/* ── 05 — THE MANUSCRIPT (dark) ── */}
         <section id="manuscript" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
-          <div className="max-w-[920px] mx-auto">
-            <p style={eyebrowStyle}>The Book</p>
-            <h2 style={h2Dark}>GTM for Professional Services: The Relationship Revenue OS.</h2>
-            <p style={bodyDark}>
-              30 chapters. Three frameworks. Built from 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026.
-            </p>
-            <Link
-              to="/discover#beta-reader"
-              style={outlineCtaBase}
-              onMouseEnter={outlineHoverIn}
-              onMouseLeave={outlineHoverOut}
-            >
-              Read the manuscript before publication →
+          <div className="max-w-[1100px] mx-auto manuscript-grid">
+            <style>{`
+              .manuscript-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 48px;
+                align-items: center;
+                justify-items: center;
+              }
+              @media (min-width: 768px) {
+                .manuscript-grid {
+                  grid-template-columns: 240px 1fr;
+                  gap: 64px;
+                  justify-items: start;
+                }
+              }
+              .about-book-wrap { perspective: 1200px; display: block; }
+              .about-book {
+                width: 180px;
+                height: auto;
+                display: block;
+                transform: rotateY(-8deg);
+                transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+                box-shadow:
+                  0 30px 60px -20px rgba(0,0,0,0.4),
+                  0 0 80px -20px rgba(184,147,58,0.25);
+              }
+              @media (min-width: 768px) {
+                .about-book { width: 240px; }
+              }
+              .about-book-wrap:hover .about-book { transform: rotateY(0deg); }
+              @media (prefers-reduced-motion: reduce) {
+                .about-book { transform: none; transition: none; }
+              }
+            `}</style>
+            <div className="about-book-wrap" aria-hidden>
+              <img
+                src={bookCover}
+                alt="GTM for Professional Services manuscript cover"
+                className="about-book"
+                loading="lazy"
+              />
+            </div>
+            <div>
+              <p style={eyebrowStyle}>The Book</p>
+              <h2 style={h2Dark}>GTM for Professional Services: The Relationship Revenue OS.</h2>
+              <p style={bodyDark}>
+                30 chapters. Three frameworks. Built from 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026.
+              </p>
+              <Link
+                to="/discover#beta-reader"
+                style={outlineCtaBase}
+                onMouseEnter={outlineHoverIn}
+                onMouseLeave={outlineHoverOut}
+              >
+                Read the manuscript before publication →
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 06 — THE AWARDS (cream) — text + trophy mini-sculpture ── */}
+        <section id="awards" style={{ background: "#FBF8F4", color: "#0D1117", padding: "120px 24px" }}>
+          <div className="max-w-[1100px] mx-auto awards-grid">
+            <style>{`
+              .awards-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 48px;
+                align-items: center;
+                justify-items: center;
+              }
+              @media (min-width: 768px) {
+                .awards-grid {
+                  grid-template-columns: 1fr 200px;
+                  gap: 64px;
+                  justify-items: start;
+                }
+                .awards-grid > .awards-trophy-link { justify-self: end; }
+              }
+              .awards-trophy-link {
+                display: block;
+                text-decoration: none;
+                transition: transform 400ms ease;
+              }
+              .awards-trophy-link:hover { transform: scale(1.05); }
+              .at-mini {
+                position: relative;
+                width: 140px;
+                height: 140px;
+                filter: drop-shadow(0 24px 48px rgba(184,147,58,0.28));
+              }
+              @media (min-width: 768px) {
+                .at-mini { width: 200px; height: 200px; }
+              }
+              .at-ring {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                border: 1px solid rgba(184,147,58,0.9);
+                animation: atSpin 60s linear infinite;
+              }
+              .at-ring.r2 {
+                inset: 14%;
+                border-color: rgba(184,147,58,0.55);
+                animation-duration: 80s;
+                animation-direction: reverse;
+              }
+              .at-ring.r3 {
+                inset: 30%;
+                border-color: rgba(184,147,58,0.3);
+                animation-duration: 100s;
+              }
+              @keyframes atSpin { to { transform: rotate(360deg); } }
+              .at-dot {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #D4AE48, #B8933A);
+                box-shadow: 0 0 12px rgba(212,174,72,0.6);
+              }
+              .at-dot.d1 { top: -4px; left: 50%; transform: translateX(-50%); }
+              .at-dot.d2 { bottom: 14%; right: 6%; width: 6px; height: 6px; }
+              .at-dot.core {
+                inset: 44%;
+                width: auto;
+                height: auto;
+                background: radial-gradient(circle, #F5EFE0, #B8933A 70%);
+                box-shadow: 0 0 24px rgba(212,174,72,0.75);
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .at-ring { animation: none; }
+                .awards-trophy-link:hover { transform: none; }
+              }
+            `}</style>
+            <div>
+              <p style={eyebrowStyle}>The Recognition</p>
+              <h2 style={h2Light}>Awards built for the firms that win unfairly.</h2>
+              <p style={bodyLight}>
+                Eight awards. One per vertical. Named in your industry's vocabulary. The Origination Award for law. The Practice Growth Award for consulting. The New Business Award for agencies. Inaugural cohort Q3 2026. Your firm is considered by default when you take the diagnostic.
+              </p>
+              <Link
+                to="/awards"
+                style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(184,147,58,0.65)" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(184,147,58,0.12)";
+                  e.currentTarget.style.color = "#5E4810";
+                  e.currentTarget.style.borderColor = "#B8933A";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "#8A6B1F";
+                  e.currentTarget.style.borderColor = "rgba(184,147,58,0.65)";
+                }}
+              >
+                See the awards →
+              </Link>
+            </div>
+            <Link to="/awards" className="awards-trophy-link" aria-label="See the inaugural GTM for Professional Services Awards">
+              <div className="at-mini" aria-hidden>
+                <div className="at-ring r1" />
+                <div className="at-ring r2" />
+                <div className="at-ring r3" />
+                <div className="at-dot core" />
+                <div className="at-dot d1" />
+                <div className="at-dot d2" />
+              </div>
             </Link>
           </div>
         </section>
 
-        {/* ── 06 — THE AWARDS (cream) ── */}
-        <section id="awards" style={{ background: "#FBF8F4", color: "#0D1117", padding: "120px 24px" }}>
-          <div className="max-w-[920px] mx-auto">
-            <p style={eyebrowStyle}>The Recognition</p>
-            <h2 style={h2Light}>Awards built for the firms that win unfairly.</h2>
-            <p style={bodyLight}>
-              Eight awards. One per vertical. Named in your industry's vocabulary. The Origination Award for law. The Practice Growth Award for consulting. The New Business Award for agencies. Inaugural cohort Q3 2026. Your firm is considered by default when you take the diagnostic.
-            </p>
-            <Link
-              to="/awards"
-              style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(184,147,58,0.65)" }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(184,147,58,0.12)";
-                e.currentTarget.style.color = "#5E4810";
-                e.currentTarget.style.borderColor = "#B8933A";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#8A6B1F";
-                e.currentTarget.style.borderColor = "rgba(184,147,58,0.65)";
-              }}
-            >
-              See the awards →
-            </Link>
-          </div>
-        </section>
+        {/* Pull quote B — between awards (06) and agency (07) */}
+        <PullQuoteBlock
+          id="pq-b"
+          quote="The Dead Zone is not a CRM problem. It is an avoidance problem. The contacts are there. The trust is there. The only thing missing is the willingness to pick up the phone."
+          attribution="Richard Ashbaugh · Chapter 7"
+        />
 
         {/* ── 07 — THE AGENCY (dark) ── */}
         <section id="agency" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
@@ -767,6 +1122,13 @@ const About = () => {
           </div>
         </section>
 
+        {/* Pull quote C — between vision (10) and founders (11) */}
+        <PullQuoteBlock
+          id="pq-c"
+          quote="Your next client already knows you. The relationships exist. The trust is built. The system to activate them did not."
+          attribution="Introduction"
+        />
+
         {/* ── 11 — THE FOUNDERS (dark) ── */}
         <section id="founders" style={{ background: "#0A0807", color: "#F5EFE0", padding: "112px 24px" }}>
           <div className="max-w-[1100px] mx-auto">
@@ -892,6 +1254,7 @@ const About = () => {
                       </li>
                     ))}
                   </ul>
+                  <FounderMarks name={p.name} />
                 </div>
               ))}
             </div>
