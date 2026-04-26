@@ -188,8 +188,8 @@ ${JSON.stringify(linkedin_data)}`;
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
-          temperature: 0.3,
-          max_tokens: 4000,
+          temperature: 0.4,
+          max_tokens: 2000,
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
