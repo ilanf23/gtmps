@@ -289,8 +289,11 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 2: THE FORMULA / GTM ASSESSMENT */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
+          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
             THE FORMULA: SIGNAL + PROOF + CONTEXT = RESPONSE, NOT PITCH
+          </p>
+          <p className="text-sm opacity-60 mb-6 leading-relaxed">
+            Signal + Proof + Context = Response, Not Pitch — here's how each element lands for {data.client_company_name ?? "your firm"} right now.
           </p>
 
           {data.gtm_profile_observed && (
@@ -318,8 +321,11 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 3: YOUR ORBIT MAP */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
+          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
             YOUR FIVE ORBITS
+          </p>
+          <p className="text-sm text-black/50 mb-6 leading-relaxed">
+            Your next client is already in one of these five orbits. The question is which signal reaches them first.
           </p>
 
           {orbits.map((desc, i) => {
@@ -355,6 +361,9 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               dealSizeEstimate={data.deal_size_estimate ?? undefined}
             />
           </div>
+          <p className="text-xs italic opacity-50 text-center px-6 py-4">
+            Every month without a system, 3–5 warm contacts cross the Dead Zone threshold permanently.
+          </p>
         </section>
 
         {/* SECTION 5: WHERE TO START */}
@@ -384,8 +393,11 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         {/* SECTION 6: THREE QUICK WINS */}
         {actions.length > 0 && (
           <section className="py-12 border-b border-black/10">
-            <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
-              THREE QUICK WINS
+            <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
+              FIRST SIGNALS — THIS WEEK
+            </p>
+            <p className="text-sm opacity-60 mb-6 leading-relaxed">
+              Three actions. Each under an hour. Each designed to trigger a response, not ask for one.
             </p>
             {actions.map((action, i) => {
               const { title, description } = splitAction(action);
@@ -498,19 +510,21 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 8: CTA */}
         <section className="py-16 text-center">
+          <h2 className="text-2xl font-bold mb-4 leading-tight">
+            The system is mapped. The pipeline exists.
+          </h2>
           <p className="text-base opacity-70 max-w-md mx-auto mb-8 leading-relaxed">
-            This is the start of your map. The next step is a 30-minute conversation
-            to walk through the highest-leverage move for your firm.
+            The 90-minute Relationship Revenue session takes the breakdown above and turns it into a 90-day activation sequence — specific to {data.client_company_name ?? "your firm"}, starting from the layer with the most leverage.
           </p>
           <button
             type="button"
             onClick={() => navigate("/book")}
             className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
           >
-            BOOK A CALL WITH ADAM →
+            MAP YOUR ACTIVATION SEQUENCE →
           </button>
           <p className="text-xs opacity-30 mt-4">
-            30 minutes. No pitch. Just the plan.
+            90 minutes. No pitch. Just the plan.
           </p>
         </section>
       </div>

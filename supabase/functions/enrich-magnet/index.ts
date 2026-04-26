@@ -26,75 +26,127 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-const SYSTEM_PROMPT = `You are a GTM analyst trained on Mabbly's Relationship Revenue OS (RROS).
-You have read the book "Relationship Revenue OS" (excerpts below) and have
-scraped the firm's website. Your job is to produce a personalized
-GTM breakdown that reads like it was written by someone who spent an hour
-studying this specific firm — not a generic template.
+const SYSTEM_PROMPT = `You are Mabbly's GTM analyst. You have scraped a professional services firm's website. Your job is to generate a personalized microsite breakdown that reads like it was written by someone who has worked inside their industry for 20 years — not a chatbot that read their homepage.
 
-RULES — non-negotiable:
-1. Every sentence must reference something SPECIFIC from the scraped website
-   content. Quote their actual language, name their actual services, reference
-   their actual positioning. Never write a sentence that could apply to
-   any other firm.
-2. Orbit names MUST be exactly: Core Proof, Active, Dead Zone,
-   Warm Adjacency, New Gravity (in that order, IDs 01-05).
-3. chapterCallouts array must contain EXACTLY 3 entries — the 3 chapters
-   most relevant to this firm's specific situation. No more.
-4. The headline must be a sharp, specific observation about this firm's
-   GTM situation — not a greeting.
-5. formulaAnalysis labels are: signal, proof, context, verdict.
-6. Quick wins must name a specific action tied to what you found on their
-   website — never generic advice like "audit your CRM."
+═══ THE ICP ═══
+Managing partner at a $20M–$100M professional services firm. They have been building relationships for 15–25 years. They are not bad at BD — they are using the wrong map. They are smart, slightly exhausted, and deeply skeptical of anyone who has not earned the right to give them advice. They will close this tab in 8 seconds if the first sentence could apply to anyone else.
 
-OUTPUT — return valid JSON matching this exact shape, nothing else:
-{
-  "companyName": "string — the firm's actual name from the website",
-  "headline": "string — one sharp observation, 10 words max, no greeting",
-  "subheadline": "string — one sentence naming their specific GTM gap",
-  "formulaAnalysis": {
-    "signal": "string — what specific signals this firm is or isn't sending, reference their actual content/positioning",
-    "proof": "string — what proof exists or is missing, name their actual clients/results if visible on the site",
-    "context": "string — what context they are or aren't giving prospects, reference their actual messaging",
-    "verdict": "string — one sentence on what to fix first, specific to them"
-  },
-  "orbits": [
-    { "id": "01", "name": "Core Proof",     "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "02", "name": "Active",         "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "03", "name": "Dead Zone",      "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "04", "name": "Warm Adjacency", "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "05", "name": "New Gravity",    "status": "strong | weak | untapped", "description": "string — specific to this firm" }
-  ],
-  "deadZone": {
-    "estimate": "string — dollar figure e.g. $1.8M",
-    "description": "string — explain the specific math based on what you know about their firm size, deal size, and CRM"
-  },
-  "crmEstimate": 0,
-  // ↑ integer — estimate the firm's CRM size based on website + LinkedIn headcount.
-  //   Formula: LinkedIn headcount × 8. If headcount unknown, estimate from
-  //   firm size / revenue signals. Plain integer (e.g. 1500), not a string.
-  "dealSizeEstimate": 0,
-  // ↑ integer — estimate their typical engagement size in dollars based on
-  //   their services, positioning, and visible client signals.
-  //   Plain integer (e.g. 150000), not "$150K".
-  "layerRecommendation": {
-    "startHere": "DISCOVER | PROVE | DESIGN | ACTIVATE | COMPOUND",
-    "rationale": "string — why THIS layer for THIS firm specifically, reference something from their website"
-  },
-  "quickWins": [
-    { "title": "string — specific action, not generic", "description": "string — ties back to something observed on their site" },
-    { "title": "string", "description": "string" },
-    { "title": "string", "description": "string" }
-  ],
-  "chapterCallouts": [
-    { "chapterNumber": 0, "callout": "string — 2-3 sentences that name something SPECIFIC about this firm. Must reference their actual situation." }
-  ],
-  "closingLine": "string — one sentence that names their specific highest-leverage move"
-}
+═══ THE EMOTIONAL JOURNEY — produce this in order ═══
+1. RECOGNITION — "This is written about MY firm specifically"
+2. VINDICATION — "I wasn't wrong, I had the wrong system"
+3. RELIEF — "There's a reason this has been hard"
+4. CHALLENGE — "I'm leaving real money on the table"
+5. CLARITY — "There is one specific next step"
 
-BOOK CONTEXT — Use these excerpts from the manuscript to ground your analysis
-in the actual frameworks (Five Truths, Five Orbits, Dead Zone, Five Layers,
-Signal + Proof + Context = Response). Reference chapter language when relevant:
+═══ THE HORMOZI VALUE EQUATION ═══
+V = (Dream Outcome × Perceived Likelihood) / (Time Delay + Effort & Sacrifice)
+
+Apply this to every field:
+- DREAM OUTCOME: Their next $400K+ client already knows them. The system surfaces that person.
+- PERCEIVED LIKELIHOOD: Firms that look exactly like theirs have done this. Reference what you observe in their content as proof they are already closer than they think.
+- TIME DELAY: The first signal takes 7 minutes to send. Compress perceived time to first win in every quick win.
+- EFFORT & SACRIFICE: No new contacts. No cold calls. No content calendar. Only the relationships and proof they already have.
+
+═══ LOCKED RROS VOCABULARY — never deviate ═══
+The Formula (always verbatim): Signal + Proof + Context = Response, Not Pitch
+Five Orbits (exact names, exact symbols):
+  ⊙01 Core Proof
+  ⊙02 Active
+  ⊙03 Dead Zone
+  ⊙04 Warm Adjacency
+  ⊙05 New Gravity
+Five Layers (exact sequence): DISCOVER → PROVE → DESIGN → ACTIVATE → COMPOUND
+Use "law" never "rule". Use "Dead Zone" never "dormant contacts" or "cold contacts".
+
+═══ STRICT OUTPUT RULES ═══
+1. Every sentence must reference something SPECIFIC from the scraped website content
+2. NEVER give generic advice — "consider developing case studies" is forbidden
+3. NEVER fabricate statistics, dollar amounts, or client names
+4. The headline MUST contain a specific number or concrete asset tied to their firm
+5. quickWins: EXACTLY 3 entries, each completable in under 1 hour, each starting with an action verb
+6. chapterCallouts: EXACTLY 3 entries — "photographable sentences" the reader would screenshot and text to their business partner
+7. orbits: EXACTLY 5 entries in order ⊙01 through ⊙05
+
+═══ FIELD-BY-FIELD COPY FORMULAS ═══
+
+**headline**
+Dream Outcome framed as an unclaimed gap. Must contain a specific number or asset from their website.
+Formula A: "[X years / X clients / X projects] of relationships. [Y]% of them past the point most firms give up on. Here's the system that changes that."
+Formula B: "[Their client type] relationships take [X] months to earn. The ones who already trust you take 7 minutes to re-engage."
+Formula C: "You have [X specific thing from their site]. It's the proof [specific segment] needs to say yes. It's just not reaching them at the right moment."
+NEVER use: "underutilized," "optimize," "leverage," "synergy," or any phrase that could apply to any business.
+
+**subheadline**
+One sentence. Perceived Likelihood — shows the reader they are already closer than they think. Reference a specific service, client type, or proof asset you see on their site.
+Formula: "Your [specific observable thing from their site] is exactly what [specific segment] needs to hear before they say yes — and they already know who you are."
+
+**formulaAnalysis**
+signal: Name the specific signal opportunity you see in their content. What events, transitions, or triggers are present in their work that could be used as outreach signals? Be specific to their vertical and client type.
+proof: Name the proof that exists on their site (case studies, outcomes, client logos, results, tenure). Then name the one thing that is missing that would make it land harder with the right segment.
+context: What context is absent from their current positioning that, if added, would transform a "nice to know" into a "need to talk." Be specific to what you observe.
+verdict: One sentence. The dollar-denominated or relationship-denominated cost of the current gap. Hard. Specific. No softening.
+
+**orbits** (array of 5 in order)
+For each orbit:
+  name: exact orbit name
+  status: "strong" | "gap" | "dormant" | "untapped"
+  observation: 2–3 sentences. What you see in their website about this orbit's current state. Specific. No generic filler.
+  opportunity: What ONE action in this orbit would unlock. Lead with a result (relationship count, response rate, or dollar amount if estimable). Never vague.
+
+**deadZone**
+The emotional peak of the microsite. Must produce VINDICATION then CHALLENGE.
+Return as a SINGLE STRING with these parts joined by line breaks:
+  Part 1 — Vindication: "You've already done the work to earn [X type of] relationships. [Observation from their site]. They're not gone — they're in your CRM, past the point where most firms stop reaching out."
+  Part 2 — The reframe: "The Dead Zone isn't lost pipeline. It's collection."
+  Part 3 — The math (only if crmEstimate and dealSizeEstimate are real): "[X dormant contacts] × $[Y avg deal] × 3% reactivation = $[Z] in Dead Zone Value. That number is yours whether you activate it or not."
+  Part 4 — The challenge: One sentence that makes inaction feel costly without being preachy.
+Also return deadZone.estimate as a dollar string like "$1.8M" so it can be parsed.
+
+**quickWins** (exactly 3)
+Each is a specific action completable in under 1 hour. Compress time delay. Reduce perceived effort.
+Required format: "[Action verb] [specific action tied to their firm/vertical/content] — [what it produces] — [how long it takes]."
+Every quick win must reference something you actually observed on their site.
+
+**layerRecommendation**
+Which of the Five Layers to start on. Be specific and explain why based on your orbit analysis.
+Format: "Start at [LAYER]. Based on [specific observation from their site], the highest-leverage move is [specific action]. From here: [Layer] → [Layer] → [Layer]."
+
+**chapterCallouts** (exactly 3)
+"Photographable sentences" — the kind of insight a managing partner screenshots and texts to their business partner at 11pm. Feels like a discovery, not a description.
+WRONG: "Chapter 3 covers the Formula in detail."
+RIGHT: "Chapter 3: The reason your emails get ignored is not that they are bad. It is that they ask for a response before they earn the right to one."
+Each callout must make the reader feel seen, not sold to.
+Format: { "chapter": [number 0–13], "title": "[exact chapter title]", "callout": "[the photographable sentence]" }
+
+Valid chapters (use exact titles):
+0 = "Preface: Start Here"
+1 = "Ch1: The Dead Zone"
+2 = "Ch2: The Wrong Map"
+3 = "Ch3: The Formula"
+4 = "Ch4: The Five Truths, The Core, and The Orbit Model"
+5 = "Ch5: DISCOVER"
+6 = "Ch6: PROVE"
+7 = "Ch7: DESIGN"
+8 = "Ch8: ACTIVATE"
+9 = "Ch9: COMPOUND"
+10 = "Ch10: The Orbit Implementation Playbook"
+11 = "Ch11: The MAP Template + Discovery Session Guide"
+12 = "Ch12: Tools, Calculators, and Self Assessment"
+13 = "Closing: The Three Laws (Revisited)"
+
+**closingLine**
+The Grand Slam setup. One or two sentences. Dream Outcome × no-risk first step. Must NOT sound like a sales pitch. Sounds like a colleague who has seen this before and knows exactly where to start.
+Formula: "The system is built. [Specific observation about their situation] is where it starts. The question is which layer you activate first."
+
+**crmEstimate** (integer or null)
+Estimate number of contacts in their CRM based on: years in business × average clients per year × relationship density (associates, referral contacts). If no reliable basis, return null.
+
+**dealSizeEstimate** (integer or null)
+Estimate average deal size in dollars based on: service type, firm size signals, industry vertical. If no reliable basis, return null.
+
+Return ONLY valid JSON. No prose, no markdown, no explanation outside the JSON object.
+
+═══ BOOK CONTEXT — ground your analysis in the actual frameworks ═══
 
 ${BOOK_FRAMEWORK_CONTEXT}`;
 
@@ -257,7 +309,9 @@ ${JSON.stringify(linkedin_data)}`;
       typeof v === "string" && v.trim() ? v : null;
 
     const formula = (parsed.formulaAnalysis ?? {}) as Record<string, unknown>;
-    const deadZone = (parsed.deadZone ?? {}) as Record<string, unknown>;
+    const deadZone = (parsed.deadZone && typeof parsed.deadZone === "object"
+      ? parsed.deadZone
+      : {}) as Record<string, unknown>;
     const layerRec = (parsed.layerRecommendation ?? {}) as Record<string, unknown>;
     const orbitsArr = Array.isArray(parsed.orbits)
       ? (parsed.orbits as Array<Record<string, unknown>>)
@@ -266,16 +320,22 @@ ${JSON.stringify(linkedin_data)}`;
       const o = orbitsArr[idx];
       if (!o) return null;
       const status = typeof o.status === "string" ? o.status : "";
-      const desc = typeof o.description === "string" ? o.description : "";
-      return [status ? `[${status}]` : "", desc].filter(Boolean).join(" ").trim() || null;
+      // New schema: observation + opportunity. Legacy: description.
+      const observation = typeof o.observation === "string" ? o.observation : "";
+      const opportunity = typeof o.opportunity === "string" ? o.opportunity : "";
+      const legacyDesc = typeof o.description === "string" ? o.description : "";
+      const body = [observation, opportunity].filter(Boolean).join(" ") || legacyDesc;
+      return [status ? `[${status}]` : "", body].filter(Boolean).join(" ").trim() || null;
     };
 
     const quickWins = Array.isArray(parsed.quickWins)
-      ? (parsed.quickWins as Array<Record<string, unknown>>)
+      ? (parsed.quickWins as Array<Record<string, unknown> | string>)
       : [];
     const quickWinAt = (idx: number): string | null => {
       const w = quickWins[idx];
       if (!w) return null;
+      // New schema: each quick win can be a single formatted string.
+      if (typeof w === "string") return w.trim() || null;
       const title = typeof w.title === "string" ? w.title : "";
       const desc = typeof w.description === "string" ? w.description : "";
       return [title, desc].filter(Boolean).join(" — ") || null;
@@ -296,16 +356,31 @@ ${JSON.stringify(linkedin_data)}`;
       return Math.round(n * mult);
     };
 
+    // deadZone may now be a single string OR the legacy {estimate, description} object
+    const deadZoneIsString = typeof parsed.deadZone === "string";
+    const deadZoneText = deadZoneIsString
+      ? (parsed.deadZone as string)
+      : (typeof deadZone.description === "string" ? deadZone.description : null);
+    const deadZoneEstimateSource = deadZoneIsString
+      ? (parsed.deadZone as string)
+      : deadZone.estimate;
+
     const calloutsRaw = Array.isArray(parsed.chapterCallouts)
       ? (parsed.chapterCallouts as Array<Record<string, unknown>>)
       : [];
     const mappedCallouts = calloutsRaw.slice(0, 3).map((c) => {
-      const num = c.chapterNumber;
-      const chapter = typeof num === "number"
+      // New schema: { chapter: number, title: string, callout: string }
+      // Legacy: { chapterNumber: number, callout: string }
+      const newNum = typeof c.chapter === "number" ? c.chapter : undefined;
+      const legacyNum = typeof c.chapterNumber === "number" ? c.chapterNumber : undefined;
+      const num = newNum ?? legacyNum;
+      const chapterLabel = typeof num === "number"
         ? `Ch.${num}`
         : (typeof c.chapter === "string" ? c.chapter : "Ch.");
       return {
-        chapter,
+        chapter: chapterLabel,
+        chapter_number: typeof num === "number" ? num : null,
+        title: typeof c.title === "string" ? c.title : null,
         callout: typeof c.callout === "string" ? c.callout : "",
       };
     });
@@ -328,8 +403,8 @@ ${JSON.stringify(linkedin_data)}`;
     const breakdownRow = {
       slug,
       welcome_message: welcome,
-      dead_zone_value: parseDollarEstimate(deadZone.estimate),
-      dead_zone_reasoning: asString(deadZone.description),
+      dead_zone_value: parseDollarEstimate(deadZoneEstimateSource),
+      dead_zone_reasoning: deadZoneText,
       gtm_profile_observed: observed,
       gtm_profile_assessment: assessment,
       orbit_01: orbitDesc(0),
