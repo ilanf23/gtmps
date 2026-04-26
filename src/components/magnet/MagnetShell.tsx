@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useClientTheme } from "@/hooks/useClientTheme";
@@ -13,12 +13,33 @@ interface MagnetShellProps {
 }
 
 /**
+ * Inject a Google Fonts stylesheet for the client's brand font (idempotent).
+ * Only fires when the family is set. Does nothing for system or unknown fonts.
+ */
+function useGoogleFont(family: string | null) {
+  useEffect(() => {
+    if (!family) return;
+    const id = `ms-gfont-${family.replace(/\s+/g, "-")}`;
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
+      family,
+    )}:wght@300;400;500;600;700&display=swap`;
+    document.head.appendChild(link);
+  }, [family]);
+}
+
+/**
  * Shared navigation shell for the 4-page magnet microsite.
  * Wraps /m/:slug, /m/:slug/chat, /m/:slug/read, /m/:slug/feedback, and /book.
  *
  * Pulls the client theme from the breakdown row so EVERY tab — Map, Talk to
  * the Book, Read, Feedback — re-skins to the client's branding the moment
- * enrichment writes it.
+ * enrichment writes it. The `data-ms-themed` attribute on the wrapper
+ * activates the rule set in `styles/microsite-theme.css`, which remaps every
+ * hardcoded Mabbly color used by the inner components to the client tokens.
  */
 export default function MagnetShell({
   children,
@@ -28,6 +49,7 @@ export default function MagnetShell({
   const params = useParams<{ slug: string }>();
   const slug = slugProp ?? params.slug;
   const theme = useClientTheme(slug);
+  useGoogleFont(theme.fontFamily);
 
   // When no slug is present (e.g. /book), tabs link to base routes that won't
   // resolve — we hide the slug-scoped tabs and show only the base brand strip.
@@ -42,10 +64,18 @@ export default function MagnetShell({
       ]
     : [];
 
+  // Inject the font as a CSS variable for the override sheet to consume.
+  const wrapperStyle: React.CSSProperties = {
+    ...themeStyle(theme),
+    ...(theme.fontFamily ? { ["--ms-font" as never]: `"${theme.fontFamily}"` } : {}),
+  };
+
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={themeStyle(theme)}
+      data-ms-themed
+      data-ms-font={theme.fontFamily ? "" : undefined}
+      style={wrapperStyle}
     >
       {/* Top nav */}
       <header
@@ -56,31 +86,19 @@ export default function MagnetShell({
         }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-          {/* Brand */}
-          <a
-            href="https://mabbly.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 shrink-0"
-          >
-            <span
-              className="text-xs uppercase tracking-[0.32em] font-semibold"
-              style={{ color: theme.accent }}
-            >
-              Mabbly · GTM
-            </span>
-
+          {/* Brand: client logo first (prominent), then a small "by Mabbly" mark */}
+          <div className="flex items-center gap-3 shrink-0">
             {theme.logoUrl ? (
-              <>
-                <span
-                  className="h-4 w-px"
-                  style={{ backgroundColor: theme.border }}
-                  aria-hidden
-                />
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="flex items-center gap-3"
+                aria-label={theme.companyName ?? "Client"}
+              >
                 <img
                   src={theme.logoUrl}
                   alt={theme.companyName ? `${theme.companyName} logo` : "Client logo"}
-                  className="h-6 w-auto max-w-[140px] object-contain"
+                  className="h-7 w-auto max-w-[160px] object-contain"
                   loading="lazy"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).style.display = "none";
@@ -88,29 +106,49 @@ export default function MagnetShell({
                 />
                 {theme.companyName ? (
                   <span
-                    className="hidden md:inline text-xs uppercase tracking-[0.28em] font-medium"
-                    style={{ color: theme.text, opacity: 0.7 }}
+                    className="hidden md:inline text-xs uppercase tracking-[0.28em] font-semibold"
+                    style={{ color: theme.text }}
                   >
                     {theme.companyName}
                   </span>
                 ) : null}
-              </>
+              </a>
             ) : theme.companyName ? (
+              <span
+                className="text-xs uppercase tracking-[0.32em] font-semibold"
+                style={{ color: theme.text }}
+              >
+                {theme.companyName}
+              </span>
+            ) : (
+              <span
+                className="text-xs uppercase tracking-[0.32em] font-semibold"
+                style={{ color: theme.accent }}
+              >
+                Mabbly · GTM
+              </span>
+            )}
+
+            {/* "× Mabbly" credential — only show when client branding is present */}
+            {(theme.logoUrl || theme.companyName) && (
               <>
                 <span
-                  className="h-4 w-px"
+                  className="hidden sm:inline h-4 w-px"
                   style={{ backgroundColor: theme.border }}
                   aria-hidden
                 />
-                <span
-                  className="text-xs uppercase tracking-[0.32em] font-semibold"
-                  style={{ color: theme.text }}
+                <a
+                  href="https://mabbly.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline text-[10px] uppercase tracking-[0.32em]"
+                  style={{ color: theme.textMuted }}
                 >
-                  {theme.companyName}
-                </span>
+                  × Mabbly
+                </a>
               </>
-            ) : null}
-          </a>
+            )}
+          </div>
 
           {/* Tabs */}
           {tabs.length > 0 && (
