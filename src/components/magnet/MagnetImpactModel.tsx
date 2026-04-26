@@ -164,7 +164,7 @@ export default function MagnetImpactModel({
 
       {/* SECTION 4: The Formula multiplier */}
       <div>
-        <p className={labelClass}>
+        <p className={labelClass} style={labelStyle}>
           THE FORMULA MULTIPLIER, SAME {displayCompany.toUpperCase()} CONTACTS,
           DIFFERENT SYSTEM
         </p>
