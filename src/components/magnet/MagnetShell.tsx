@@ -232,6 +232,8 @@ export default function MagnetShell({
 
       <main className="flex-1 flex flex-col">{children}</main>
 
+      <Footer />
+
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
