@@ -257,8 +257,40 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
     Boolean(c.callout && c.callout.trim())
   ).length;
 
+  // Derive firm brand palette with safe fallbacks to existing Mabbly look.
+  const p = data.client_brand_profile?.palette ?? {};
+  const brand = {
+    primary: pick(p.primary, "#B8933A"),
+    background: pick(p.background, "#FBF8F4"),
+    surface: pick(p.surface, "#FFFFFF"),
+    text: pick(p.text, "#1C1008"),
+    textMuted: pick(p.textMuted, "#1C1008"),
+  };
+  const isDarkBg = (() => {
+    const m = brand.background.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+    if (!m) return false;
+    const r = parseInt(m[1], 16), g = parseInt(m[2], 16), b = parseInt(m[3], 16);
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
+  })();
+  // Subtle alpha tints derived from primary using 8-digit hex.
+  const tint = (alpha: string) => brand.primary + alpha;
+  // Neutral border that adapts to bg luminance.
+  const neutralBorder = isDarkBg ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.10)";
+  const neutralBorderSoft = isDarkBg ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
+
   return (
-    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
+    <div
+      style={{
+        ["--brand-primary" as string]: brand.primary,
+        ["--brand-bg" as string]: brand.background,
+        ["--brand-surface" as string]: brand.surface,
+        ["--brand-text" as string]: brand.text,
+        ["--brand-text-muted" as string]: brand.textMuted,
+        backgroundColor: brand.background,
+        color: brand.text,
+      } as React.CSSProperties}
+      className="min-h-screen"
+    >
       <div className="max-w-2xl mx-auto px-6 pb-24">
         {/* SECTION 1: PERSONAL HEADER */}
         <section className="pt-16 pb-12 border-b border-black/10">
