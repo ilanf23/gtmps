@@ -302,7 +302,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               const num = String(i + 1).padStart(2, "0");
               return (
                 <div key={i} className="flex gap-4 items-start mb-6 last:mb-0">
-                  <span className="text-3xl font-bold text-white/10 w-12 shrink-0 leading-none">
+                  <span className="text-3xl font-bold text-black/10 w-12 shrink-0 leading-none">
                     {num}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -375,7 +375,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                 className="border border-black/5 bg-transparent mb-3"
               >
                 <div className="flex items-start p-5 gap-4">
-                  <span className="text-white/20 text-xs font-mono w-8 pt-0.5 shrink-0">
+                  <span className="text-black/20 text-xs font-mono w-8 pt-0.5 shrink-0">
                     {num}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -391,7 +391,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             );
           })}
 
-          <div className="bg-white/[0.03] border border-black/10 p-6 mt-6 text-center">
+          <div className="bg-black/[0.03] border border-black/10 p-6 mt-6 text-center">
             <p className="text-sm opacity-50 mb-4">
               Want to see how all 14 chapters apply to{" "}
               {submission?.first_name ? `${submission.first_name}'s firm` : "your firm"}?
