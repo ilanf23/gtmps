@@ -81,7 +81,13 @@ OUTPUT — return valid JSON matching this exact shape, nothing else:
     { "chapterNumber": 0, "callout": "string — 2-3 sentences that name something SPECIFIC about this firm. Must reference their actual situation." }
   ],
   "closingLine": "string — one sentence that names their specific highest-leverage move"
-}`;
+}
+
+BOOK CONTEXT — Use these excerpts from the manuscript to ground your analysis
+in the actual frameworks (Five Truths, Five Orbits, Dead Zone, Five Layers,
+Signal + Proof + Context = Response). Reference chapter language when relevant:
+
+${BOOK_FRAMEWORK_CONTEXT}`;
 
 async function fetchViaJina(url: string, maxChars: number): Promise<string> {
   if (!url) return "";
