@@ -361,6 +361,9 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               dealSizeEstimate={data.deal_size_estimate ?? undefined}
             />
           </div>
+          <p className="text-xs italic opacity-50 text-center px-6 py-4">
+            Every month without a system, 3–5 warm contacts cross the Dead Zone threshold permanently.
+          </p>
         </section>
 
         {/* SECTION 5: WHERE TO START */}
