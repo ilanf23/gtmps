@@ -1,177 +1,119 @@
-# Three Surgical Fixes
+## Three surgical fixes
 
-## Scope summary
-
-| Fix | Files touched | Risk |
-|---|---|---|
-| 1. About in top nav | `src/pages/Discover.tsx`, `src/pages/About.tsx`, `src/pages/Awards.tsx` | Low |
-| 2. Footer "100 → 500" typo | `src/components/Footer.tsx`, `src/components/VerticalLanding/VerticalFooter.tsx` | Trivial |
-| 3. Per-page meta titles | `src/pages/Discover.tsx`, `src/pages/About.tsx`, `src/pages/Awards.tsx`, `src/content/verticals.ts` (one helper edit in `VerticalLanding.tsx`) | Low |
-
-No new components, no routing changes, no DB work. About link in footer bottom strip stays as-is per requirement.
+### Audit of current state
+- `/discover` nav (`src/pages/Discover.tsx`) `navItems` = `[Awards, Podcast]`. No About.
+- `/about` nav (`src/pages/About.tsx`) `navItems` = `[Awards, Podcast]`. No About.
+- `/awards` nav (`src/pages/Awards.tsx`) is a custom inline `AwardsNav` with hand-written `<Link>` rows for Awards + Podcast. No About.
+- Footer typo `"100 practitioner interviews on YouTube"` lives in **both** `src/components/Footer.tsx:158` and `src/components/VerticalLanding/VerticalFooter.tsx:170`.
+- `/discover` and `/about` never call `document.title` → both inherit the static `<title>` from `index.html` (`"GTM for Professional Services | Book Research by Mabbly"`).
+- `/awards` already sets `document.title = 'GTM for Professional Services Awards · Mabbly'` (needs tweak to match spec).
+- Vertical pages all flow through `VerticalLanding.tsx` which sets `document.title = ${vertical.name} · ${researchLabel ?? 'GTM Research'} · Mabbly`. So titles are driven by `name` + `researchLabel` in `src/content/verticals.ts`.
 
 ---
 
-## Fix 1 — Add "About" link to top nav (between For Your Firm and Awards)
+### FIX 1 — Add "About" to top nav (3 nav implementations)
 
-The site has **three independent nav implementations**, each with its own desktop and mobile menus. All three need the same edit.
-
-### 1a. `src/pages/Discover.tsx` (Discover page TopNav)
-
-The `navItems` array drives both desktop and mobile renderers.
-
+**`src/pages/Discover.tsx`** — prepend About to `navItems`:
 ```ts
-// line 39-42 — current
 const navItems = [
-  { label: "Awards", href: "/awards", external: false, internal: true },
-  { label: "Podcast", href: PODCAST_HREF, external: true },
-];
-
-// becomes
-const navItems = [
-  { label: "About", href: "/about", external: false, internal: true },
-  { label: "Awards", href: "/awards", external: false, internal: true },
+  { label: "About", href: "/about", internal: true },
+  { label: "Awards", href: "/awards", internal: true },
   { label: "Podcast", href: PODCAST_HREF, external: true },
 ];
 ```
+The existing `navItems.map(...)` renderer in both desktop nav (line ~167) and mobile menu (line ~265) will pick it up automatically with identical Inter Tight 14px styling, gold hover, and `data-active` treatment.
 
-That single change cascades through both the desktop list (line 167) and the mobile list (line 265). Active state is not currently rendered on this nav (it lives on `/discover` only), so no extra work needed here.
-
-### 1b. `src/pages/About.tsx` (About page TopNav)
-
-Same `navItems` array structure (line 17-20). Apply the same insertion. **Important:** since the user is on `/about` when this nav renders, give the About link an active-state color treatment matching how `/awards` highlights itself in the Awards nav (gold `#B8933A`). Inline the active style on the About `<Link>` only (not via `data-active` since this nav doesn't have that CSS hook).
-
+**`src/pages/About.tsx`** — same change:
 ```ts
-// Insert About first, mark it visually active when on /about
-{ label: "About", href: "/about", internal: true, active: true },
+const navItems = [
+  { label: "About", href: "/about", internal: true },
+  { label: "Awards", href: "/awards", internal: true },
+  { label: "Podcast", href: PODCAST_HREF, external: true },
+];
 ```
+Also confirm the existing active-state logic (`data-active` / current-page styling) flags About as active when on `/about`. If active state is derived from `useLocation().pathname`, no extra change needed; if hardcoded, set the About entry to render with the gold accent on this page.
 
-In the JSX, conditionally apply `color: "#B8933A"` when `n.active` is true (overriding the default `linkColor`). Same on mobile.
+**`src/pages/Awards.tsx`** — manually insert About into the bespoke `AwardsNav`:
+- Desktop links block (between line 153 and 154):
+  ```tsx
+  <Link to="/about" className="an-link">About</Link>
+  <Link to="/awards" className="an-link" data-active="true">Awards</Link>
+  ```
+- Mobile menu (between the verticals loop ending line 176 and the existing Awards mobile link line 177):
+  ```tsx
+  <Link to="/about" className="an-mobile-link" onClick={() => setOpen(false)}>About</Link>
+  ```
 
-### 1c. `src/pages/Awards.tsx` (Awards page AwardsNav)
-
-This nav uses scoped CSS classes (`.an-link`, `.an-link[data-active="true"]`). Add About **before** the Awards link, both desktop (around line 154) and mobile (around line 177).
-
-```tsx
-// desktop, between For Your Firm dropdown and Awards
-<Link to="/about" className="an-link">About</Link>
-<Link to="/awards" className="an-link" data-active="true">Awards</Link>
-
-// mobile, between vertical list and Awards
-<Link to="/about" className="an-mobile-link" onClick={() => setOpen(false)}>About</Link>
-```
-
-The existing `.an-link:hover` rule already handles hover. The `data-active="true"` selector is reserved for the page's own link, so on `/awards` the About link stays in default color — correct.
-
-### Acceptance for Fix 1
-- Top nav order on `/discover`, `/about`, `/awards`: **For Your Firm ▼ | About | Awards | Podcast | Add Your Firm →**
-- About is gold/active when on `/about`
-- About is default color (not active) on `/discover` and `/awards`
-- Hamburger menu on mobile shows About in the same order
-- Footer About link in bottom strip is **not removed** — keeps both paths
+**Footer About link**: already present in both `Footer.tsx` (line 207) and `VerticalFooter.tsx` (line 186). Leave untouched — both paths supported as requested.
 
 ---
 
-## Fix 2 — Footer "100 → 500" typo
+### FIX 2 — Footer "100" → "500"
 
-Two places, identical change.
-
-### 2a. `src/components/Footer.tsx` line 158
-
-```diff
-- 100 practitioner interviews on YouTube.
-+ 500 practitioner interviews on YouTube.
+Two surgical string edits, both copy:
+```
+100 practitioner interviews on YouTube.
+```
+to:
+```
+500 practitioner interviews on YouTube.
 ```
 
-### 2b. `src/components/VerticalLanding/VerticalFooter.tsx` line 170
-
-```diff
-- <span className="vf-am-desc">100 practitioner interviews on YouTube.</span>
-+ <span className="vf-am-desc">500 practitioner interviews on YouTube.</span>
-```
-
-That covers every page (Discover, About, Awards, magnet pages all use `Footer.tsx`; verticals use `VerticalFooter.tsx`).
-
-I checked `src/components/v1/Footer.tsx` — the legacy footer does not contain this descriptor, and is only mounted on `/1` (the V1 archive). Leaving it untouched.
+Files:
+- `src/components/Footer.tsx:158`
+- `src/components/VerticalLanding/VerticalFooter.tsx:170`
 
 ---
 
-## Fix 3 — Per-page meta titles
+### FIX 3 — Per-page meta titles
 
-Currently:
-- `/discover` and `/about` inherit `index.html`'s static `<title>GTM for Professional Services | Book Research by Mabbly</title>`.
-- `/awards` already sets a title but with slightly different copy than spec.
-- Vertical pages compute `${vertical.name} · ${researchLabel ?? 'GTM Research'} · Mabbly`. Spec wants different copy for several.
-
-### 3a. Add `useEffect` title setters to `/discover` and `/about`
-
-`src/pages/Discover.tsx` — add inside the `Discover` component (alongside the existing scroll-restoration effect, or as a new effect):
-
+**`src/pages/Discover.tsx`** — add a `useEffect` at the top of the `Discover` page component:
 ```ts
 useEffect(() => {
-  document.title = 'Discover · GTM for Professional Services · Mabbly';
+  document.title = "Discover · GTM for Professional Services · Mabbly";
 }, []);
 ```
 
-`src/pages/About.tsx` — add inside the `About` component:
-
+**`src/pages/About.tsx`** — same pattern in the `About` component:
 ```ts
 useEffect(() => {
-  document.title = 'About · Mabbly';
+  document.title = "About · Mabbly";
 }, []);
 ```
 
-(`useEffect` is already imported in both files.)
-
-### 3b. Update Awards title string
-
-`src/pages/Awards.tsx` line 192:
-
-```diff
-- document.title = 'GTM for Professional Services Awards · Mabbly';
-+ document.title = 'GTM for PS Awards · Mabbly';
+**`src/pages/Awards.tsx:192`** — change existing line to:
+```ts
+document.title = 'GTM for PS Awards · Mabbly';
 ```
 
-### 3c. Vertical page titles — content-data approach
+**`src/content/verticals.ts`** — vertical titles are built as `${name} · ${researchLabel} · Mabbly`. Set `researchLabel` per spec (and adjust `name` only where needed to match exact wording):
 
-The cleanest fix is to update `researchLabel` (and one `name`) in `src/content/verticals.ts` so the existing `${name} · ${researchLabel} · Mabbly` template produces exactly the spec strings. No code changes to `VerticalLanding.tsx`.
+| Slug | Required title | `name` | `researchLabel` |
+|---|---|---|---|
+| law | `Law Firms · Origination Strategy Research · Mabbly` | `Law Firms` | `Origination Strategy Research` |
+| consulting | `Management Consulting · Practice Growth Research · Mabbly` | `Management Consulting` | `Practice Growth Research` (no change) |
+| accounting | `Accounting & Tax · Client Development Research · Mabbly` | `Accounting & Tax` | `Client Development Research` (no change) |
+| msp | `MSP & IT Services · GTM Research · Mabbly` | `MSP & IT Services` | unset (falls back to `GTM Research`) — verify and remove any current override if present |
+| advisory | `Financial Advisory · Prospecting Research · Mabbly` | `Financial Advisory` | `Prospecting Research` |
+| ae | `Architecture & Engineering · BD Research · Mabbly` | `Architecture & Engineering` | `BD Research` |
+| recruiting | `Executive Search · Mandate Origination Research · Mabbly` | `Executive Search` | `Mandate Origination Research` (no change) |
+| agency | `Marketing & Creative · New Business Research · Mabbly` | `Marketing & Creative` | `New Business Research` (no change) |
 
-Required spec → current → action:
-
-| Slug | Spec title | Current `name` | Current `researchLabel` | Edit |
-|---|---|---|---|---|
-| law | `Law Firms · Origination Strategy Research · Mabbly` | `Law Firms` | `Origination Research` | researchLabel → `Origination Strategy Research` |
-| consulting | `Management Consulting · Practice Growth Research · Mabbly` | `Management Consulting` | `Practice Growth Research` | none ✓ |
-| accounting | `Accounting & Tax · Client Development Research · Mabbly` | `Accounting & Tax` | `Client Development Research` | none ✓ |
-| msp | `MSP & IT Services · GTM Research · Mabbly` | `MSP & IT Services` | (none, falls back to `GTM Research`) | none ✓ |
-| advisory | `Financial Advisory · Prospecting Research · Mabbly` | `Financial Advisory` | `Prospecting Strategy Research` | researchLabel → `Prospecting Research` |
-| ae | `Architecture & Engineering · BD Research · Mabbly` | `Architecture & Engineering` | `Business Development Research` | researchLabel → `BD Research` |
-| recruiting | `Executive Search · Mandate Origination Research · Mabbly` | `Executive Search` | `Mandate Origination Research` | none ✓ |
-| agency | `Marketing & Creative · New Business Research · Mabbly` | `Marketing & Creative` | `New Business Research` | none ✓ |
-
-Three single-line `researchLabel` edits in `src/content/verticals.ts` (law line 177, advisory line 409, ae line 483). No JSX touched.
-
-**Risk note:** `researchLabel` is also used as the `diagnosticEyebrow` fallback in some places — I'll grep to confirm it isn't surfaced in user-visible body copy elsewhere. If it is, I'll add a separate `metaTitle` field on `VerticalContent` instead and switch the title template to prefer it. Default plan assumes researchLabel is title-only.
-
-### Acceptance for Fix 3
-Open each route in a fresh tab, browser tab title equals the exact spec string above. Verify by opening 4-5 tabs side-by-side.
+For each vertical, I'll verify the current `name` field matches the required prefix; if any differ, I'll only update `researchLabel` (and `name` only if absolutely required). This keeps in-page hero/eyebrow copy untouched — the spec only requires the **document `<title>`** to match.
 
 ---
 
-## Out of scope (intentionally not touching)
+### Files to be modified
+1. `src/pages/Discover.tsx` — nav + title `useEffect`
+2. `src/pages/About.tsx` — nav + title `useEffect`
+3. `src/pages/Awards.tsx` — insert About link (desktop + mobile) + title string
+4. `src/components/Footer.tsx` — 100 → 500
+5. `src/components/VerticalLanding/VerticalFooter.tsx` — 100 → 500
+6. `src/content/verticals.ts` — `researchLabel` adjustments for law, advisory, ae (and verify msp falls through to default)
 
-- `/`, `/1`, `/manuscript`, `/spr`, `/pepper-group`, `/google`, `/m/:slug`, `/book`, `/assess` — not in spec
-- Footer About link (already shipped, stays)
-- Top-nav About on the magnet/microsite pages (different shells, not in spec)
-- React Helmet — overkill for 11 simple titles; `document.title` in `useEffect` is the established pattern in this codebase
-
----
-
-## Test plan after ship
-
-1. `/discover` — top nav shows For Your Firm ▼ | About | Awards | Podcast. About not highlighted. Tab title: `Discover · GTM for Professional Services · Mabbly`.
-2. Click About → `/about` loads. About link is gold. Tab title: `About · Mabbly`.
-3. `/awards` — About present, Awards highlighted gold. Tab title: `GTM for PS Awards · Mabbly`.
-4. Footer (any page using `Footer.tsx` or `VerticalFooter.tsx`) — Podcast item reads "500 practitioner interviews on YouTube."
-5. Visit each of the 8 vertical pages, confirm tab title matches the spec table above.
-6. Mobile (375px): hamburger menu on `/discover`, `/about`, `/awards` shows About in the same order between For Your Firm verticals and Awards.
+### Verification after ship
+1. Top nav on `/discover`, `/about`, `/awards` shows About between For Your Firm and Awards.
+2. Click About → `/about` loads; About link shows gold active state on that page.
+3. Footer Across Mabbly Podcast row reads "500 practitioner interviews on YouTube." on every page.
+4. Browser tab title matches spec on each of the 11 routes listed.
+5. No regressions: For Your Firm dropdown, Add Your Firm CTA, Podcast link unchanged.
