@@ -289,8 +289,11 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 2: THE FORMULA / GTM ASSESSMENT */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
+          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
             THE FORMULA: SIGNAL + PROOF + CONTEXT = RESPONSE, NOT PITCH
+          </p>
+          <p className="text-sm opacity-60 mb-6 leading-relaxed">
+            Signal + Proof + Context = Response, Not Pitch — here's how each element lands for {data.client_company_name ?? "your firm"} right now.
           </p>
 
           {data.gtm_profile_observed && (
