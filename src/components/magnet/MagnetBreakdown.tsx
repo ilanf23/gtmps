@@ -49,7 +49,7 @@ const CHAPTERS = [
     number: 1,
     title: "Ch1: The Dead Zone",
     summary:
-      "Why 60–96% of your CRM is sleeping and what it costs you every quarter.",
+      "Why 60 to 96% of your CRM is sleeping and what it costs you every quarter.",
   },
   {
     number: 2,
@@ -79,7 +79,7 @@ const CHAPTERS = [
     number: 6,
     title: "Ch6: PROVE",
     summary:
-      "Why most PS firms can't close — and how to fix the proof library in 7 days.",
+      "Why most PS firms can't close, and how to fix the proof library in 7 days.",
   },
   {
     number: 7,
@@ -103,7 +103,7 @@ const CHAPTERS = [
     number: 10,
     title: "Ch10: The Orbit Implementation Playbook",
     summary:
-      "Orbit by orbit — the exact steps to activate ⊙01 through ⊙05 in sequence.",
+      "Orbit by orbit, the exact steps to activate ⊙01 through ⊙05 in sequence.",
   },
   {
     number: 11,
@@ -376,7 +376,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             {orbits.map((desc, i) => {
               const id = String(i + 1).padStart(2, "0");
               const name = ORBIT_NAMES[i];
-              const hasContent = Boolean(desc && desc.trim() && desc.trim() !== "—");
+              const hasContent = Boolean(desc && desc.trim() && desc.trim() !== "—" && desc.trim() !== "");
               return (
                 <div
                   key={id}
@@ -397,7 +397,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                         </span>
                       </div>
                       <p className="text-xs opacity-60 mt-1.5 leading-relaxed">
-                        {desc ?? "—"}
+                        {desc ?? "Pending"}
                       </p>
                     </div>
                   </div>
@@ -495,7 +495,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             <div className="flex items-center gap-2 mb-3">
               <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
               <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
-                First Signals — This Week
+                First Signals This Week
               </p>
             </div>
             <h2 className="text-2xl font-bold leading-tight mb-3">
@@ -552,7 +552,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           <div className="flex items-center gap-2 mb-3">
             <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
             <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
-              The Manuscript — Relationship Revenue OS
+              The Manuscript: Relationship Revenue OS
             </p>
           </div>
           <h2 className="text-2xl font-bold leading-tight mb-3">

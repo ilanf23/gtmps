@@ -146,6 +146,9 @@ Estimate average deal size in dollars based on: service type, firm size signals,
 
 Return ONLY valid JSON. No prose, no markdown, no explanation outside the JSON object.
 
+═══ TYPOGRAPHY RULE (HARD CONSTRAINT) ═══
+NEVER use any of these characters in the output text: em dash (—), en dash (–), or hyphen (-). Use commas, periods, colons, or "to" for ranges (e.g. "60 to 96%" not "60-96%" or "60–96%"). This applies to every string field in the JSON: vindicationLine, observation, deadZoneOpening, sequencedActivation, chapterCallouts, closingLine, etc. If you would naturally write a dash, rewrite the sentence without one.
+
 ═══ BOOK CONTEXT — ground your analysis in the actual frameworks ═══
 
 ${BOOK_FRAMEWORK_CONTEXT}`;
