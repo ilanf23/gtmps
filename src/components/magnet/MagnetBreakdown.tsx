@@ -327,6 +327,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 [data-magnet-theme] .text-black\\/20 { color: ${brand.textMuted} !important; opacity: 0.45; }
 [data-magnet-theme] .bg-white\\/10 { background-color: ${isDarkBg ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)"} !important; }
 [data-magnet-theme] .border-white\\/10 { border-color: ${isDarkBg ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.10)"} !important; }
+[data-magnet-theme] .accent-\\[\\#B8933A\\] { accent-color: ${brand.primary} !important; }
 [data-magnet-theme] .bg-\\[\\#B8933A\\]\\/40 { background-color: ${tint("66")} !important; }
 [data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
           `,
