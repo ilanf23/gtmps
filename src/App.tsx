@@ -22,6 +22,9 @@ import Agency from "./pages/verticals/Agency.tsx";
 import MagnetAssess from "./pages/MagnetAssess.tsx";
 import MagnetSite from "./pages/MagnetSite.tsx";
 import MagnetBook from "./pages/MagnetBook.tsx";
+import MagnetBookChatPage from "./pages/MagnetBookChatPage.tsx";
+import MagnetBookReaderPage from "./pages/MagnetBookReaderPage.tsx";
+import MagnetFeedbackPage from "./pages/MagnetFeedbackPage.tsx";
 import Awards from "./pages/Awards.tsx";
 import About from "./pages/About.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
@@ -53,6 +56,9 @@ const App = () => (
           <Route path="/agency" element={<Agency />} />
           <Route path="/assess" element={<MagnetAssess />} />
           <Route path="/m/:slug" element={<MagnetSite />} />
+          <Route path="/m/:slug/chat" element={<MagnetBookChatPage />} />
+          <Route path="/m/:slug/read" element={<MagnetBookReaderPage />} />
+          <Route path="/m/:slug/feedback" element={<MagnetFeedbackPage />} />
           <Route path="/book" element={<MagnetBook />} />
           <Route path="/awards" element={<Awards />} />
           <Route path="/about" element={<About />} />
