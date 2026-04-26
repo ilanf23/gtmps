@@ -510,19 +510,21 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 8: CTA */}
         <section className="py-16 text-center">
+          <h2 className="text-2xl font-bold mb-4 leading-tight">
+            The system is mapped. The pipeline exists.
+          </h2>
           <p className="text-base opacity-70 max-w-md mx-auto mb-8 leading-relaxed">
-            This is the start of your map. The next step is a 30-minute conversation
-            to walk through the highest-leverage move for your firm.
+            The 90-minute Relationship Revenue session takes the breakdown above and turns it into a 90-day activation sequence — specific to {data.client_company_name ?? "your firm"}, starting from the layer with the most leverage.
           </p>
           <button
             type="button"
             onClick={() => navigate("/book")}
             className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
           >
-            BOOK A CALL WITH ADAM →
+            MAP YOUR ACTIVATION SEQUENCE →
           </button>
           <p className="text-xs opacity-30 mt-4">
-            30 minutes. No pitch. Just the plan.
+            90 minutes. No pitch. Just the plan.
           </p>
         </section>
       </div>
