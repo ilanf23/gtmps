@@ -150,21 +150,21 @@ Deno.serve(async (req) => {
       .update({ status: "processing" })
       .eq("slug", slug);
 
-    // 3. Parallel fetches — website + LinkedIn (Jina Reader) + raw HTML for branding
+    // 3. Parallel fetches — website + LinkedIn (Jina Reader) + raw HTML/CSS for branding
     const [websiteResult, linkedinResult, brandingResult] = await Promise.allSettled([
       fetchViaJina(submission.website_url, 6000),
       fetchViaJina(submission.linkedin_url, 4000),
-      extractBranding(submission.website_url),
+      extractBrandProfile(submission.website_url),
     ]);
 
     const website_content =
       websiteResult.status === "fulfilled" ? websiteResult.value : "";
     const linkedin_markdown =
       linkedinResult.status === "fulfilled" ? linkedinResult.value : "";
-    const branding: ClientBranding =
+    const branding =
       brandingResult.status === "fulfilled"
         ? brandingResult.value
-        : { logoUrl: null, brandColor: null, companyName: null };
+        : null;
 
     const linkedin_data: Record<string, unknown> = linkedin_markdown
       ? { source: "jina_reader", markdown: linkedin_markdown }
@@ -336,9 +336,14 @@ ${JSON.stringify(linkedin_data)}`;
       chapter_callouts: mappedCallouts,
       raw_website_content: website_content || null,
       raw_linkedin_data: linkedin_data,
-      client_logo_url: branding.logoUrl,
-      client_brand_color: branding.brandColor,
-      client_company_name: branding.companyName,
+      client_logo_url: branding?.logoUrl ?? null,
+      client_brand_color: branding?.brandColor ?? null,
+      client_company_name: branding?.companyName ?? null,
+      client_accent_color: branding?.accentColor ?? null,
+      client_background_color: branding?.backgroundColor ?? null,
+      client_text_color: branding?.textColor ?? null,
+      client_font_family: branding?.fontFamily ?? null,
+      client_brand_profile: branding ?? {},
       enrichment_error: null,
     };
 
