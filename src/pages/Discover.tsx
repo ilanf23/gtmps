@@ -74,7 +74,7 @@ const TopNav = () => {
           <span
             className="font-display"
             style={{
-              fontSize: 14,
+              fontSize: 15,
               letterSpacing: "0.22em",
               color: wordColor,
               textTransform: "uppercase",
