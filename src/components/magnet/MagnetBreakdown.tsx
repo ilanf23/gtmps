@@ -33,7 +33,22 @@ interface BreakdownRow {
   client_company_name?: string | null;
   crm_estimate?: number | null;
   deal_size_estimate?: number | null;
+  client_brand_profile?: {
+    palette?: {
+      primary?: string | null;
+      background?: string | null;
+      surface?: string | null;
+      text?: string | null;
+      textMuted?: string | null;
+    } | null;
+  } | null;
 }
+
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
+const isHex = (v: unknown): v is string =>
+  typeof v === "string" && HEX_RE.test(v.trim());
+const pick = (v: unknown, fallback: string): string =>
+  isHex(v) ? (v as string).trim() : fallback;
 
 interface SubmissionRow {
   first_name: string | null;
