@@ -62,6 +62,7 @@ export default function MagnetAssess() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema) as never,
@@ -72,6 +73,118 @@ export default function MagnetAssess() {
       bdChallenge: '' as unknown as FormValues['bdChallenge'],
     },
   });
+
+  const watched = watch();
+  const {
+    websiteUrl,
+    crmSize,
+    dealSize,
+    bdChallenge,
+    caseStudiesUrl,
+  } = watched;
+
+  // Weighted progress calc
+  const fieldWeights: Record<string, number> = {
+    name: 10,
+    role: 5,
+    websiteUrl: 20,
+    email: 10,
+    crmSize: 15,
+    dealSize: 15,
+    bdChallenge: 10,
+    linkedinUrl: 5,
+    caseStudiesUrl: 5,
+    teamPageUrl: 5,
+  };
+  const progress = Object.entries(fieldWeights).reduce((sum, [k, w]) => {
+    const v = watched[k as keyof FormValues];
+    return sum + (v && String(v).trim() !== '' ? w : 0);
+  }, 0);
+
+  const getProgressLabel = (p: number): string => {
+    if (p === 0) return 'Start building your breakdown →';
+    if (p < 20) return 'Setting up your profile...';
+    if (p < 40) return 'Mapping your firm context...';
+    if (p < 60) return 'Identifying your orbits...';
+    if (p < 80) return 'Calculating your Dead Zone...';
+    if (p < 100) return 'Almost there, breakdown nearly ready...';
+    return 'Full breakdown unlocked';
+  };
+
+  // Live Dead Zone Value (in $K)
+  const crmMidpoints: Record<string, number> = {
+    under_100: 75,
+    '100_300': 200,
+    '300_700': 500,
+    '700_plus': 800,
+  };
+  const dealMidpoints: Record<string, number> = {
+    under_50k: 35000,
+    '50k_150k': 100000,
+    '150k_500k': 325000,
+    '500k_plus': 650000,
+  };
+  const deadZoneValue =
+    crmSize && dealSize && crmSize !== '' && dealSize !== ''
+      ? Math.round(
+          ((crmMidpoints[crmSize] ?? 0) *
+            0.81 *
+            (dealMidpoints[dealSize] ?? 0) *
+            0.03) /
+            1000,
+        )
+      : null;
+
+  // Pulse the Dead Zone badge briefly when it first appears
+  const [deadZonePulsed, setDeadZonePulsed] = useState(false);
+  useEffect(() => {
+    if (deadZoneValue !== null && !deadZonePulsed) {
+      const t = setTimeout(() => setDeadZonePulsed(true), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [deadZoneValue, deadZonePulsed]);
+
+  const layerMap: Record<string, string> = {
+    finding_new: '⊙ Starting layer: PROVE',
+    reengaging_past: '⊙ Starting layer: ACTIVATE',
+    converting_warm: '⊙ Starting layer: DESIGN',
+    consistent_intros: '⊙ Starting layer: ACTIVATE',
+    generating_inbound: '⊙ Starting layer: COMPOUND',
+  };
+
+  const badges = [
+    {
+      id: 'website',
+      condition: Boolean(websiteUrl && String(websiteUrl).trim() !== ''),
+      label: '⊙ Website: Ready to analyze',
+      color:
+        'border-[#1C1008]/20 bg-[#1C1008]/5 text-[#1C1008]/80',
+    },
+    {
+      id: 'deadzone',
+      condition: deadZoneValue !== null,
+      label:
+        deadZoneValue !== null
+          ? `⊙ Dead Zone estimate: ~$${deadZoneValue}K`
+          : '',
+      color:
+        'border-[#B8933A]/40 bg-[#B8933A]/10 text-[#8a6e2b]',
+    },
+    {
+      id: 'layer',
+      condition: Boolean(bdChallenge && bdChallenge !== ''),
+      label: bdChallenge ? layerMap[bdChallenge] ?? '⊙ Starting layer: Identified' : '',
+      color:
+        'border-[#3D5A4A]/30 bg-[#3D5A4A]/10 text-[#3D5A4A]',
+    },
+    {
+      id: 'proof',
+      condition: Boolean(caseStudiesUrl && String(caseStudiesUrl).trim() !== ''),
+      label: '⊙ Proof assets: Will be analyzed',
+      color:
+        'border-[#8B3A2A]/30 bg-[#8B3A2A]/10 text-[#8B3A2A]',
+    },
+  ];
 
   const onSubmit = async (data: FormValues) => {
     setSubmitting(true);
