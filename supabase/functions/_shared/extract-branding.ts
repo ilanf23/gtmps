@@ -433,7 +433,7 @@ export async function extractBrandProfile(
   }
 
   // ---- Logo, font, name ----
-  const logoUrl = findLogoUrl(html, websiteUrl);
+  const logoUrl = await findLogoUrl(html, websiteUrl);
   const fontFamily = findFontFamily(html, css);
 
   const siteName =
