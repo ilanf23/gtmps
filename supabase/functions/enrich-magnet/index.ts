@@ -302,7 +302,17 @@ USE THIS DATA:
 `
       : "";
 
-    const userMessage = `${intakeContext}FIRM: ${submission.first_name}, ${submission.role}
+    const candidateColors = branding?.raw?.candidateColors ?? [];
+    const colorCandidatesBlock = `=== COLOR CANDIDATES EXTRACTED FROM WEBSITE ===
+${candidateColors.length > 0 ? candidateColors.join(", ") : "No color candidates found, infer brand colors from firm type and industry."}
+Heuristic primary so far: ${branding?.accentColor ?? "none"}
+Heuristic background: ${branding?.backgroundColor ?? "none"}
+Heuristic text: ${branding?.textColor ?? "none"}
+=== END COLOR CANDIDATES ===
+
+`;
+
+    const userMessage = `${colorCandidatesBlock}${intakeContext}FIRM: ${submission.first_name}, ${submission.role}
 WEBSITE: ${submission.website_url}
 LINKEDIN: ${submission.linkedin_url}
 
