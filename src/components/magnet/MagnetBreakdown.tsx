@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import MagnetChat from "./MagnetChat";
+// MagnetChat was replaced by the dedicated /m/:slug/chat page in MagnetShell.
 
 interface ChapterCallout {
   /** Preferred: numeric chapter (1–14). */
@@ -424,10 +424,6 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           </p>
         </section>
       </div>
-      <MagnetChat
-        slug={slug}
-        companyName={submission?.first_name ? `${submission.first_name}'s firm` : "Your firm"}
-      />
     </div>
   );
 }
