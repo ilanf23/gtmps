@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MagnetBreakdown from '@/components/magnet/MagnetBreakdown';
 import MagnetShell from '@/components/magnet/MagnetShell';
+import MagnetLoadingScene from '@/components/magnet/MagnetLoadingScene';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
