@@ -1,179 +1,119 @@
+## Goal
+Make every `/m/[slug]` microsite visually feel like it was designed for that specific firm by applying a 5-color brand palette (primary, background, surface, text, textMuted) extracted from the firm's website and refined by GPT.
 
-# Make the GTM Assessment form interactive
+## Current state
+- `supabase/functions/_shared/extract-branding.ts` already extracts hex/rgb/hsl color candidates, ranks them, and returns `accentColor`, `backgroundColor`, `textColor`, `fontFamily`, plus `raw.candidateColors[]`. This runs in `enrich-magnet/index.ts` and is stored in `magnet_breakdowns` columns (`client_brand_color`, `client_accent_color`, `client_background_color`, `client_text_color`, `client_font_family`, `client_brand_profile`).
+- The breakdown RPC `get_magnet_breakdown_by_slug` already returns these columns.
+- However, `MagnetBreakdown.tsx` only reads `client_logo_url` and `client_company_name` — it ignores all color fields and renders with the hardcoded cream/gold Mabbly palette (`#FBF8F4`, `#1C1008`, `#B8933A`).
+- `MagnetImpactModel.tsx` is also fully hardcoded.
 
-Transform `/m` from a static form into a live "build your breakdown" experience. As the user types, a progress bar fills, a phase label updates, insight badges fade in, and a real-time Dead Zone Value estimate appears the moment CRM size and deal size are both selected.
+## Plan
 
-All changes are scoped to `src/pages/MagnetAssess.tsx`. **No** changes to validation, submit handler, slug generation, Supabase insert, edge function, or routing.
+### Part 1 — Edge function: have GPT refine candidates into a 5-key palette
 
-## 1. Watch all field values reactively
+`supabase/functions/enrich-magnet/index.ts`
 
-Switch from default react-hook-form usage to using `watch()` so we can react to every keystroke / select change:
+1. We already have `branding.raw.candidateColors` (top scored candidates) from the existing `extractBrandProfile()` call. **Reuse those** rather than re-fetching raw HTML — this avoids a duplicate fetch, respects the careful HSL/CSS-var parsing already in `extract-branding.ts`, and keeps the rate-limiting friendly to firms' sites.
+2. Inject the candidates into the user message so the AI can pick:
+   ```
+   === COLOR CANDIDATES EXTRACTED FROM WEBSITE ===
+   <comma-separated hexes from branding.raw.candidateColors, or "none found">
+   Heuristic primary so far: <branding.accentColor or "none">
+   Heuristic background: <branding.backgroundColor or "none">
+   === END COLOR CANDIDATES ===
+   ```
+3. Append a `BRANDING EXTRACTION` block to `SYSTEM_PROMPT` (after the COPY FORMULAS section, before "Return ONLY valid JSON") spelling out the selection rules and per-vertical inference fallback (consulting=navy, creative=vibrant, legal=dark gold, tech=blue, financial=green) exactly as the user specified.
+4. Update the JSON schema instruction to require a `branding` object with the 5 hex keys: `primary`, `background`, `surface`, `text`, `textMuted`.
+5. After parsing the AI response, validate each branding hex with `/^#[0-9a-fA-F]{6}$/`. Drop any malformed value (so the frontend default kicks in). Merge AI palette over the heuristic palette as fallback per-key:
+   - `primary` ← AI.primary || branding.accentColor
+   - `background` ← AI.background || branding.backgroundColor
+   - `surface` ← AI.surface (no heuristic equivalent today)
+   - `text` ← AI.text || branding.textColor
+   - `textMuted` ← AI.textMuted
+6. Persist the resulting palette inside the existing `client_brand_profile` JSONB column under a new `palette` key (e.g. `client_brand_profile.palette = { primary, background, surface, text, textMuted }`). No DB migration needed — `client_brand_profile` is already `jsonb`.
 
-```ts
-const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({ ... });
+### Part 2 — Surface palette to the frontend
 
-const watched = watch();
-const { name, role, websiteUrl, linkedinUrl, email,
-        crmSize, dealSize, bdChallenge, caseStudiesUrl, teamPageUrl } = watched;
-```
+`get_magnet_breakdown_by_slug` already returns `client_brand_profile` — no migration needed. The frontend will read `data.client_brand_profile?.palette`.
 
-## 2. Progress percentage (weighted)
+`src/components/magnet/MagnetBreakdown.tsx`
+1. Extend `BreakdownRow`:
+   ```ts
+   client_brand_profile?: {
+     palette?: {
+       primary?: string;
+       background?: string;
+       surface?: string;
+       text?: string;
+       textMuted?: string;
+     } | null;
+   } | null;
+   ```
+2. At the top of the render, derive a `brand` object with safe defaults that match today's look (so untouched / older submissions don't change visually):
+   ```ts
+   const p = data.client_brand_profile?.palette ?? {};
+   const brand = {
+     primary:    isHex(p.primary)    ? p.primary    : '#B8933A',  // current gold
+     background: isHex(p.background) ? p.background : '#FBF8F4',  // current cream
+     surface:    isHex(p.surface)    ? p.surface    : '#FFFFFF',
+     text:       isHex(p.text)       ? p.text       : '#1C1008',
+     textMuted:  isHex(p.textMuted)  ? p.textMuted  : '#1C1008',  // used at opacity
+   };
+   ```
+   Use a small `isHex(v)` regex guard so malformed values fall through.
 
-```ts
-const fieldWeights = {
-  name: 10, role: 5, websiteUrl: 20, email: 10,
-  crmSize: 15, dealSize: 15, bdChallenge: 10,
-  linkedinUrl: 5, caseStudiesUrl: 5, teamPageUrl: 5,
-};
-const progress = Object.entries(fieldWeights).reduce((sum, [k, w]) => {
-  const v = watched[k as keyof FormValues];
-  return sum + (v && String(v).trim() !== '' ? w : 0);
-}, 0);
-```
+### Part 3 — Apply colors in `MagnetBreakdown.tsx`
 
-## 3. Dynamic phase label
-
-```ts
-const getProgressLabel = (p: number) => {
-  if (p === 0)   return 'Start building your breakdown →';
-  if (p < 20)    return 'Setting up your profile...';
-  if (p < 40)    return 'Mapping your firm context...';
-  if (p < 60)    return 'Identifying your orbits...';
-  if (p < 80)    return 'Calculating your Dead Zone...';
-  if (p < 100)   return 'Almost there, breakdown nearly ready...';
-  return 'Full breakdown unlocked';
-};
-```
-
-(No hyphens / em dashes per project memory; uses commas + arrow.)
-
-## 4. Live Dead Zone Value
-
-```ts
-const crmMidpoints = { under_100: 75, '100_300': 200, '300_700': 500, '700_plus': 800 };
-const dealMidpoints = { under_50k: 35000, '50k_150k': 100000, '150k_500k': 325000, '500k_plus': 650000 };
-
-const deadZoneValue = (crmSize && dealSize)
-  ? Math.round((crmMidpoints[crmSize] ?? 0) * 0.81 * (dealMidpoints[dealSize] ?? 0) * 0.03 / 1000)
-  : null; // value in $K
-```
-
-## 5. Insight badges
-
-Four badges that conditionally render as small chips:
-
-| Badge | Trigger | Label |
-|---|---|---|
-| website | `websiteUrl` filled | `⊙ Website: Ready to analyze` |
-| deadzone | `deadZoneValue !== null` | `⊙ Dead Zone estimate: ~$<value>K` |
-| layer | `bdChallenge` filled | `⊙ Starting layer: PROVE / ACTIVATE / DESIGN / COMPOUND` (mapped from challenge) |
-| proof | `caseStudiesUrl` filled | `⊙ Proof assets: Will be analyzed` |
-
-Layer mapping:
-- `finding_new` → PROVE
-- `reengaging_past` → ACTIVATE
-- `converting_warm` → DESIGN
-- `consistent_intros` → ACTIVATE
-- `generating_inbound` → COMPOUND
-
-**Styling note**: Instead of generic blue/amber/green/purple Tailwind utilities (which would clash with the form's editorial cream + gold palette), each badge uses on-brand tints:
-
-- website → `border-[#1C1008]/20 bg-[#1C1008]/5 text-[#1C1008]/80`
-- deadzone → `border-[#B8933A]/40 bg-[#B8933A]/10 text-[#8a6e2b]` (gold, the money moment)
-- layer → `border-[#3D5A4A]/30 bg-[#3D5A4A]/8 text-[#3D5A4A]` (sage)
-- proof → `border-[#8B3A2A]/30 bg-[#8B3A2A]/8 text-[#8B3A2A]` (rust)
-
-## 6. Dead Zone "money moment" pulse
-
-When the Dead Zone badge first appears, pulse it briefly so the user notices:
-
-```ts
-const [deadZonePulsed, setDeadZonePulsed] = useState(false);
-useEffect(() => {
-  if (deadZoneValue !== null && !deadZonePulsed) {
-    const t = setTimeout(() => setDeadZonePulsed(true), 2000);
-    return () => clearTimeout(t);
-  }
-}, [deadZoneValue, deadZonePulsed]);
-```
-
-Apply `animate-pulse` to the deadzone badge while `deadZoneValue !== null && !deadZonePulsed`.
-
-## 7. Progress block (rendered above form fields)
-
-Inserted between the header copy and the `<form>`, styled to match the existing editorial aesthetic (no shadcn tokens, no rounded-xl — keeps the flat, sharp-cornered look):
-
+3a. Move the outermost wrapper from `bg-[#FBF8F4] text-[#1C1008]` to inline style + CSS variables on the root div:
 ```tsx
-<div className="mt-8 p-5 border border-black/10 bg-black/[0.02]">
-  <div className="flex justify-between items-center mb-2">
-    <span className="text-xs uppercase tracking-wider font-medium text-[#1C1008]">
-      {getProgressLabel(progress)}
-    </span>
-    <span className="text-xs font-mono text-[#1C1008]/60">{progress}%</span>
-  </div>
-
-  <div className="w-full h-1 bg-black/10 overflow-hidden">
-    <div
-      className="h-full bg-[#B8933A] transition-all duration-500 ease-out"
-      style={{ width: `${progress}%` }}
-    />
-  </div>
-
-  {badges.some(b => b.condition) && (
-    <div className="flex flex-wrap gap-2 mt-4">
-      {badges.filter(b => b.condition && b.label).map(b => (
-        <span
-          key={b.id}
-          className={`text-[11px] px-3 py-1 border font-medium tracking-wide
-                      transition-opacity duration-300 ${b.color}
-                      ${b.id === 'deadzone' && !deadZonePulsed ? 'animate-pulse' : ''}`}
-        >
-          {b.label}
-        </span>
-      ))}
-    </div>
-  )}
-</div>
-```
-
-Sharp corners (no `rounded-full` / `rounded-xl`) to match the existing form's flat editorial style.
-
-## 8. Submit button reflects progress state
-
-Replace the existing button label/disabled logic:
-
-```tsx
-<button
-  type="submit"
-  disabled={submitting || progress < 60}
-  className="w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] 
-             font-semibold tracking-wide uppercase text-sm transition-colors 
-             flex items-center justify-center gap-2 
-             disabled:opacity-50 disabled:cursor-not-allowed"
+<div
+  style={{
+    '--brand-primary': brand.primary,
+    '--brand-bg': brand.background,
+    '--brand-surface': brand.surface,
+    '--brand-text': brand.text,
+    '--brand-text-muted': brand.textMuted,
+    backgroundColor: brand.background,
+    color: brand.text,
+  } as React.CSSProperties}
+  className="min-h-screen"
 >
-  {submitting ? (
-    <><span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" /> BUILDING…</>
-  ) : progress < 60 ? (
-    `COMPLETE YOUR PROFILE (${progress}%)`
-  ) : progress === 100 ? (
-    'GENERATE FULL BREAKDOWN →'
-  ) : (
-    'GENERATE BREAKDOWN →'
-  )}
-</button>
 ```
 
-Disabled until 60% (name + website + email + at least one dropdown), preventing thin submissions while still allowing skip of optional fields.
+3b. Targeted inline-style additions (keep existing Tailwind classes for layout/spacing — only override colors):
+- **All gold accent rules / labels** (`bg-[#B8933A]` rule, `text-[#B8933A]` labels): add `style={{ backgroundColor: brand.primary }}` / `style={{ color: brand.primary }}`.
+- **Section headings (`h1`, `h2`)**: add `style={{ color: brand.primary }}` for the firm-name H1 and the orange-accent H2 within sections (currently relying on inherited `text-[#1C1008]`). Per spec, brand primary on headings.
+- **Snapshot strip cards** (the 3-column firm/layer/sections block) and other `bg-[#FBF8F4]` panels (orbit cards, action cards, manuscript stat strip): inline `style={{ backgroundColor: brand.surface }}` so they sit slightly above `brand.background`.
+- **Formula "Observed" card** (`bg-black/[0.04]`): inline `style={{ backgroundColor: brand.primary + '0D' }}` (~5% tint) so it stays subtle but takes the brand hue.
+- **Formula "Assessment" card** (`bg-[#B8933A]/10 border-[#B8933A]/30`): `style={{ backgroundColor: brand.primary + '1A', borderColor: brand.primary + '4D' }}` and the inner left bar `style={{ backgroundColor: brand.primary }}`.
+- **Orbit symbol badges** (the `⊙01`–`⊙05` chips): `style={{ backgroundColor: brand.primary + '26', color: brand.primary, borderColor: brand.primary + '4D' }}`.
+- **Layer progression** active pill, "Why X first" callout box, "WALK THROUGH IT" outline button, manuscript callout cards (border + ✦ icon + left rule): all switch from `#B8933A` references to `brand.primary` via inline style.
+- **Section dividers** (`border-b border-black/10`): unchanged — they read fine on light or dark backgrounds.
+- **Primary CTA** ("Map Your Activation Sequence →") at the bottom: `style={{ backgroundColor: brand.primary, color: '#FFFFFF' }}` and remove the hardcoded `bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05]` color classes (keep layout classes).
+- **Section 8 wrapper**: currently uses `text-[#FBF8F4]` against transparent (broken in light mode but pre-existing). Switch to `style={{ color: brand.text }}` so it reads against the brand background.
+- **Loading + error fallback states** (lines 204–223): also switch from hardcoded cream/ink to `brand.background` / `brand.text` — but only when `data` is loaded. Pre-load they default to the current cream palette since `brand` isn't computed yet.
 
-## What does NOT change
+### Part 4 — `MagnetImpactModel.tsx`
 
-- Field order, labels, placeholders, helper text
-- Zod schema and validation behavior
-- `onSubmit` handler, slug generation, Supabase insert, `enrich-magnet` invocation
-- Routing / navigation
-- Page heading and intro copy above the form
-- Edge function (`enrich-magnet`) — already consumes the new fields from the previous task
+1. Add `primaryColor?: string` to `MagnetImpactModelProps` (default `'#B8933A'`).
+2. Replace the hardcoded `#B8933A` references with `primaryColor` via inline styles for: section labels, dormant card label, Dead Zone card border + value, Formula multiplier "WITH" card border + value + label, multiplier text, and the gold `h-2 bg-[#B8933A]` bar fill.
+3. The neutral cards (`bg-black/[0.03]`, `border-black/10`) stay as they are — they read against any background that has enough contrast. 
+4. From `MagnetBreakdown.tsx`, pass `primaryColor={brand.primary}` to `<MagnetImpactModel ... />`.
+
+### Part 5 — Defensive guards
+
+- `isHex()` validator drops any malformed AI output silently.
+- All `?? defaults` keep the existing Mabbly palette intact when `branding.palette` is absent (every existing `/m/[slug]` row continues to render unchanged).
+- The accent-opacity tints use 8-digit hex (`brand.primary + '1A'`) so any browser ignores them gracefully if `brand.primary` is malformed.
 
 ## Files touched
+- `supabase/functions/enrich-magnet/index.ts` — add color candidates to user message, BRANDING block in system prompt, parse + validate `branding` object, persist into `client_brand_profile.palette`.
+- `src/components/magnet/MagnetBreakdown.tsx` — extend `BreakdownRow`, derive `brand`, apply CSS variables + targeted inline styles, pass `primaryColor` to impact model.
+- `src/components/magnet/MagnetImpactModel.tsx` — accept and apply `primaryColor` prop.
 
-- **Edited**: `src/pages/MagnetAssess.tsx` (only file)
+## What is NOT changed
+- No DB migration (palette piggybacks on existing `client_brand_profile` jsonb).
+- No change to logo, font extraction, or company-name handling — already working.
+- No change to `MagnetChat` (the chat now lives on a dedicated `/m/:slug/chat` page per the existing comment, not as a floating bubble in this component).
+- No change to scoring or extraction in `extract-branding.ts` — only consumed.
+- No change to validation or routing of the `/m/[slug]` page itself.

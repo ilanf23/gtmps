@@ -33,7 +33,22 @@ interface BreakdownRow {
   client_company_name?: string | null;
   crm_estimate?: number | null;
   deal_size_estimate?: number | null;
+  client_brand_profile?: {
+    palette?: {
+      primary?: string | null;
+      background?: string | null;
+      surface?: string | null;
+      text?: string | null;
+      textMuted?: string | null;
+    } | null;
+  } | null;
 }
+
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
+const isHex = (v: unknown): v is string =>
+  typeof v === "string" && HEX_RE.test(v.trim());
+const pick = (v: unknown, fallback: string): string =>
+  isHex(v) ? (v as string).trim() : fallback;
 
 interface SubmissionRow {
   first_name: string | null;
@@ -242,8 +257,82 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
     Boolean(c.callout && c.callout.trim())
   ).length;
 
+  // Derive firm brand palette with safe fallbacks to existing Mabbly look.
+  const p = data.client_brand_profile?.palette ?? {};
+  const brand = {
+    primary: pick(p.primary, "#B8933A"),
+    background: pick(p.background, "#FBF8F4"),
+    surface: pick(p.surface, "#FFFFFF"),
+    text: pick(p.text, "#1C1008"),
+    textMuted: pick(p.textMuted, "#1C1008"),
+  };
+  const isDarkBg = (() => {
+    const m = brand.background.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+    if (!m) return false;
+    const r = parseInt(m[1], 16), g = parseInt(m[2], 16), b = parseInt(m[3], 16);
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
+  })();
+  // Subtle alpha tints derived from primary using 8-digit hex.
+  const tint = (alpha: string) => brand.primary + alpha;
+  // Neutral border that adapts to bg luminance.
+  const neutralBorder = isDarkBg ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.10)";
+  const neutralBorderSoft = isDarkBg ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
+
   return (
-    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
+    <div
+      style={{
+        ["--brand-primary" as string]: brand.primary,
+        ["--brand-bg" as string]: brand.background,
+        ["--brand-surface" as string]: brand.surface,
+        ["--brand-text" as string]: brand.text,
+        ["--brand-text-muted" as string]: brand.textMuted,
+        backgroundColor: brand.background,
+        color: brand.text,
+      } as React.CSSProperties}
+      className="min-h-screen magnet-themed"
+      data-magnet-theme
+    >
+      <style
+        // Scoped overrides: remap the hardcoded Mabbly palette to the firm's brand palette
+        // wherever it appears as a Tailwind arbitrary-value class, while leaving everything else intact.
+        dangerouslySetInnerHTML={{
+          __html: `
+[data-magnet-theme] .bg-\\[\\#FBF8F4\\] { background-color: ${brand.surface} !important; }
+[data-magnet-theme] .text-\\[\\#1C1008\\] { color: ${brand.text} !important; }
+[data-magnet-theme] .text-\\[\\#FBF8F4\\] { color: ${brand.text} !important; }
+[data-magnet-theme] .text-\\[\\#B8933A\\] { color: ${brand.primary} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\] { background-color: ${brand.primary} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/10 { background-color: ${tint("1A")} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/15 { background-color: ${tint("26")} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/20 { background-color: ${tint("33")} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/5 { background-color: ${tint("0D")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\] { border-color: ${brand.primary} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/30 { border-color: ${tint("4D")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/40 { border-color: ${tint("66")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/30 { border-color: ${tint("4D")} !important; }
+[data-magnet-theme] .hover\\:bg-\\[\\#B8933A\\]\\/10:hover { background-color: ${tint("1A")} !important; }
+[data-magnet-theme] .hover\\:bg-\\[\\#a07c2e\\]:hover { background-color: ${brand.primary} !important; filter: brightness(0.9); }
+[data-magnet-theme] .hover\\:border-\\[\\#B8933A\\]\\/40:hover { border-color: ${tint("66")} !important; }
+[data-magnet-theme] .text-\\[\\#120D05\\] { color: ${isDarkBg ? brand.background : "#FFFFFF"} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
+[data-magnet-theme] .border-black\\/5 { border-color: ${neutralBorderSoft} !important; }
+[data-magnet-theme] .border-black\\/10 { border-color: ${neutralBorder} !important; }
+[data-magnet-theme] .border-t.border-black\\/10 { border-color: ${neutralBorder} !important; }
+[data-magnet-theme] .bg-black\\/\\[0\\.03\\] { background-color: ${isDarkBg ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"} !important; }
+[data-magnet-theme] .bg-black\\/\\[0\\.04\\] { background-color: ${isDarkBg ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)"} !important; }
+[data-magnet-theme] .bg-black\\/10 { background-color: ${isDarkBg ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.10)"} !important; }
+[data-magnet-theme] .bg-black\\/5 { background-color: ${isDarkBg ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)"} !important; }
+[data-magnet-theme] .text-black\\/30 { color: ${brand.textMuted} !important; opacity: 0.6; }
+[data-magnet-theme] .text-black\\/20 { color: ${brand.textMuted} !important; opacity: 0.45; }
+[data-magnet-theme] .bg-white\\/10 { background-color: ${isDarkBg ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)"} !important; }
+[data-magnet-theme] .border-white\\/10 { border-color: ${isDarkBg ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.10)"} !important; }
+[data-magnet-theme] .accent-\\[\\#B8933A\\] { accent-color: ${brand.primary} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/40 { background-color: ${tint("66")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
+          `,
+        }}
+      />
       <div className="max-w-2xl mx-auto px-6 pb-24">
         {/* SECTION 1: PERSONAL HEADER */}
         <section className="pt-16 pb-12 border-b border-black/10">
@@ -425,6 +514,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               companyName={data.client_company_name ?? ""}
               crmEstimate={data.crm_estimate ?? undefined}
               dealSizeEstimate={data.deal_size_estimate ?? undefined}
+              primaryColor={brand.primary}
             />
           </div>
           <div className="bg-black/[0.04] border-t border-black/10 px-6 py-5">

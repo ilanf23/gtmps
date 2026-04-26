@@ -144,7 +144,26 @@ Estimate number of contacts in their CRM based on: years in business × average 
 **dealSizeEstimate** (integer or null)
 Estimate average deal size in dollars based on: service type, firm size signals, industry vertical. If no reliable basis, return null.
 
-Return ONLY valid JSON. No prose, no markdown, no explanation outside the JSON object.
+═══ BRANDING EXTRACTION ═══
+You will receive a list of hex color codes extracted from the firm's website (and a heuristic guess at primary/background). Your job is to select or infer the best brand color palette and output it as a "branding" object.
+
+Selection rules:
+- primary: The firm's main brand color. Should appear in CTAs, nav, or headings. Pick the most distinctive non-neutral color from the candidates. If no good candidates, infer from industry (consulting=navy, creative=vibrant, legal=dark gold, tech=blue, financial=dark green).
+- background: The page background color. If the firm uses a colored or dark background on their site, use it. Otherwise use a warm off-white (#FAF9F7) for traditional PS firms or cool light (#F8FAFC) for tech PS.
+- surface: Card and panel background. Should be 8 to 12% lighter or darker than background. If background is light, surface should be slightly warmer/brighter white. If background is dark, surface should be slightly lighter than the background.
+- text: Primary body text. Must contrast strongly against background (aim for 4.5:1 ratio minimum). If background is light, use near-black (#1A1A2E or #111827). If background is dark, use near-white (#F9FAFB or #E5E7EB).
+- textMuted: Secondary/caption text. Same rule as text but 20 to 30% lighter/darker.
+
+Palette inference by firm type (use when candidates are weak):
+- Management consulting / strategy: primary #1B3A6B, bg #FAFAF9, surface #FFFFFF, text #1A1A2E, textMuted #6B7280
+- Creative / brand / marketing PS: pick a vibrant primary from candidates, bg #FFFFFF, surface #F9FAFB, text #111827, textMuted #6B7280
+- Legal / compliance PS: primary #8B6914, bg #1C1C1E, surface #2C2C2E, text #F5F5F0, textMuted #9CA3AF
+- Tech / digital transformation PS: primary #2563EB, bg #F8FAFC, surface #FFFFFF, text #0F172A, textMuted #64748B
+- Financial advisory PS: primary #14532D, bg #FAFAF9, surface #FFFFFF, text #111827, textMuted #6B7280
+
+Output the branding object with exactly these 5 keys: primary, background, surface, text, textMuted. All values must be valid 6-digit hex codes (e.g. #1B3A6B). No 3-digit shorthand, no rgb(), no named colors.
+
+Return ONLY valid JSON matching the schema, including all content fields plus a "branding" object with keys: primary, background, surface, text, textMuted (all hex strings). No prose, no markdown, no explanation outside the JSON object.
 
 ═══ TYPOGRAPHY RULE (HARD CONSTRAINT) ═══
 NEVER use any of these characters in the output text: em dash (—), en dash (–), or hyphen (-). Use commas, periods, colons, or "to" for ranges (e.g. "60 to 96%" not "60-96%" or "60–96%"). This applies to every string field in the JSON: vindicationLine, observation, deadZoneOpening, sequencedActivation, chapterCallouts, closingLine, etc. If you would naturally write a dash, rewrite the sentence without one.
@@ -283,7 +302,17 @@ USE THIS DATA:
 `
       : "";
 
-    const userMessage = `${intakeContext}FIRM: ${submission.first_name}, ${submission.role}
+    const candidateColors = branding?.raw?.candidateColors ?? [];
+    const colorCandidatesBlock = `=== COLOR CANDIDATES EXTRACTED FROM WEBSITE ===
+${candidateColors.length > 0 ? candidateColors.join(", ") : "No color candidates found, infer brand colors from firm type and industry."}
+Heuristic primary so far: ${branding?.accentColor ?? "none"}
+Heuristic background: ${branding?.backgroundColor ?? "none"}
+Heuristic text: ${branding?.textColor ?? "none"}
+=== END COLOR CANDIDATES ===
+
+`;
+
+    const userMessage = `${colorCandidatesBlock}${intakeContext}FIRM: ${submission.first_name}, ${submission.role}
 WEBSITE: ${submission.website_url}
 LINKEDIN: ${submission.linkedin_url}
 
@@ -452,6 +481,25 @@ ${JSON.stringify(linkedin_data)}`;
       asString(parsed.closingLine),
     ].filter(Boolean).join(" ") || null;
 
+    // ---- Branding palette: AI-selected, validated, with heuristic fallback ----
+    const isHex6 = (v: unknown): v is string =>
+      typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v.trim());
+    const normHex = (v: unknown): string | null =>
+      isHex6(v) ? (v as string).trim().toLowerCase() : null;
+    const aiBranding = (parsed.branding && typeof parsed.branding === "object"
+      ? parsed.branding
+      : {}) as Record<string, unknown>;
+    const palette = {
+      primary:
+        normHex(aiBranding.primary) ?? normHex(branding?.accentColor) ?? null,
+      background:
+        normHex(aiBranding.background) ?? normHex(branding?.backgroundColor) ?? null,
+      surface: normHex(aiBranding.surface) ?? null,
+      text: normHex(aiBranding.text) ?? normHex(branding?.textColor) ?? null,
+      textMuted: normHex(aiBranding.textMuted) ?? null,
+    };
+    const mergedBrandProfile = { ...(branding ?? {}), palette };
+
     const breakdownRow = {
       slug,
       welcome_message: welcome,
@@ -474,11 +522,11 @@ ${JSON.stringify(linkedin_data)}`;
       client_logo_url: branding?.logoUrl ?? null,
       client_brand_color: branding?.brandColor ?? null,
       client_company_name: branding?.companyName ?? null,
-      client_accent_color: branding?.accentColor ?? null,
-      client_background_color: branding?.backgroundColor ?? null,
-      client_text_color: branding?.textColor ?? null,
+      client_accent_color: palette.primary ?? branding?.accentColor ?? null,
+      client_background_color: palette.background ?? branding?.backgroundColor ?? null,
+      client_text_color: palette.text ?? branding?.textColor ?? null,
       client_font_family: branding?.fontFamily ?? null,
-      client_brand_profile: branding ?? {},
+      client_brand_profile: mergedBrandProfile,
       crm_estimate:
         typeof parsed.crmEstimate === "number" && isFinite(parsed.crmEstimate)
           ? Math.round(parsed.crmEstimate)

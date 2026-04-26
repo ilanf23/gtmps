@@ -4,6 +4,7 @@ interface MagnetImpactModelProps {
   crmEstimate?: number;
   dealSizeEstimate?: number;
   companyName: string;
+  primaryColor?: string;
 }
 
 const DORMANCY_RATE = 0.81;
@@ -24,6 +25,7 @@ export default function MagnetImpactModel({
   crmEstimate,
   dealSizeEstimate,
   companyName,
+  primaryColor,
 }: MagnetImpactModelProps) {
   const [crm, setCrm] = useState<number>(crmEstimate ?? 1500);
   const [deal, setDeal] = useState<number>(dealSizeEstimate ?? 150_000);
@@ -42,7 +44,11 @@ export default function MagnetImpactModel({
       ? Math.round((pipelineWithout / pipelineWith) * 100) + "%"
       : "16%";
 
-  const labelClass = "text-[#B8933A] text-xs uppercase tracking-widest mb-4";
+  const accent = /^#[0-9a-fA-F]{6}$/.test(primaryColor ?? "")
+    ? (primaryColor as string)
+    : "#B8933A";
+  const labelClass = "text-xs uppercase tracking-widest mb-4";
+  const labelStyle = { color: accent } as const;
   const cardClass = "bg-black/[0.03] border border-black/10 p-5";
   const dividerClass = "border-t border-black/10 my-8";
 
@@ -52,7 +58,7 @@ export default function MagnetImpactModel({
     <div className="bg-transparent text-[#1C1008]">
       {/* SECTION 1: Monday Morning Test header */}
       <div>
-        <p className={labelClass}>THE MONDAY MORNING TEST</p>
+        <p className={labelClass} style={labelStyle}>THE MONDAY MORNING TEST</p>
         <p className="text-sm opacity-75 mt-1 leading-relaxed">
           "Open your CRM. Count the contacts you haven't spoken to in 90 days.
           Multiply by your average deal size. Multiply by 3%."
@@ -158,7 +164,7 @@ export default function MagnetImpactModel({
 
       {/* SECTION 4: The Formula multiplier */}
       <div>
-        <p className={labelClass}>
+        <p className={labelClass} style={labelStyle}>
           THE FORMULA MULTIPLIER, SAME {displayCompany.toUpperCase()} CONTACTS,
           DIFFERENT SYSTEM
         </p>
@@ -259,7 +265,7 @@ export default function MagnetImpactModel({
 
       {/* SECTION 6: Verified in Practice */}
       <div>
-        <p className={labelClass}>VERIFIED IN PRACTICE</p>
+        <p className={labelClass} style={labelStyle}>VERIFIED IN PRACTICE</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
             <p className="text-sm font-semibold text-[#1C1008] mb-1">
