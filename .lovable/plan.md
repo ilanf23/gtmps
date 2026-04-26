@@ -1,61 +1,55 @@
-I found the root issue: the current implementation only adds a small client logo and only tints one active nav underline if a `theme-color` meta tag exists. For Maverich, the website has no `theme-color`, so the microsite falls back to Mabbly gold. Also, the Read, Chat, and Feedback pages render the shared shell without loading the client branding at all. The result is technically co-branded, but not actually customized to the client's website.
+## Goal
 
-Plan to fix the personalized microsite branding
+Replace the current abstract "constellation + radar arc" loading scene with a more **professional and recognizable** animation that visually represents what's actually being built for the client: their GTM/Relationship Revenue Map.
 
-1. Upgrade brand extraction during microsite generation
-   - Keep Firecrawl out of the flow.
-   - Expand the current direct website crawl to extract a richer brand profile from HTML, CSS, meta tags, and visible page styles.
-   - Capture:
-     - Logo candidates, prioritizing true logo assets over `og:image` screenshots.
-     - Primary accent color from buttons, CSS variables, gradients, inline styles, and repeated brand colors.
-     - Background color and text style signals.
-     - Font family from Google Fonts and CSS.
-     - A compact brand profile JSON for future use.
-   - For Maverich specifically, this should detect the black/white foundation and orange accent visible on the site, instead of returning `client_brand_color: null`.
+The current scene (`src/components/magnet/MagnetLoadingScene.tsx`) has a generic celestial/radar feel that doesn't tell the story of the product. The new version stays editorial and on-brand, but shows the system *constructing the map* in front of the user — concrete, narrative, and tied to each loading step.
 
-2. Store a real client theme, not just logo/color
-   - Add database fields such as:
-     - `client_accent_color`
-     - `client_background_color`
-     - `client_text_color`
-     - `client_font_family`
-     - `client_brand_profile` JSON
-   - Update the public breakdown RPC so the app can load these theme values securely by slug.
-   - Preserve the existing columns so current microsites do not break.
+## Concept: "Cartographer's Drafting Table"
 
-3. Centralize branding across every microsite page
-   - Create a shared client branding loader for `/m/:slug`, `/m/:slug/chat`, `/m/:slug/read`, and `/m/:slug/feedback`.
-   - Make `MagnetShell` use the slug to fetch branding if it was not already provided.
-   - Ensure the nav, Read page, Talk to the Book page, Feedback page, and loading experience all receive the same client theme.
+Editorial publishing house meets strategy deck. Feels like watching a cartographer draft a custom market map — line by line, label by label — instead of a sci-fi radar sweep.
 
-4. Rebuild the microsite visual system around dynamic theme variables
-   - Keep the Mabbly/RROS structure, but make the page feel client-specific.
-   - Apply the client's brand theme to:
-     - Page background and subtle gradients.
-     - Header divider and active tabs.
-     - Loading orbit animation.
-     - Section labels.
-     - Formula assessment cards.
-     - Orbit numerals and ring accents.
-     - Starting layer chip.
-     - Quick win numbering.
-     - Book/chat send buttons and focus states.
-   - Add safe contrast handling so light client colors do not create unreadable text.
-   - Fall back to the current Mabbly warm editorial palette if extraction fails.
+### Visual layers (built sequentially as steps progress)
 
-5. Fix this existing Maverich microsite
-   - Backfill branding for the already-created slug `ilan_2izvdg78iy`.
-   - Update its stored brand profile so the current page reflects Maverich's black/white/orange look without requiring the user to resubmit the assessment.
+1. **Step 01 — Reading your website**
+   A horizontal scanning rule sweeps top-to-bottom across a faint document outline (a tall rectangle suggesting a webpage). Small data ticks light up along the rule as it passes. Concrete and recognizable: this is *reading*.
 
-6. Validate the experience
-   - Check that the generated breakdown still loads.
-   - Verify the nav logo appears correctly.
-   - Verify `/m/ilan_2izvdg78iy`, `/m/ilan_2izvdg78iy/chat`, `/m/ilan_2izvdg78iy/read`, and `/m/ilan_2izvdg78iy/feedback` share the same client theme.
-   - Confirm existing microsites without extracted branding still render cleanly with the Mabbly fallback.
+2. **Step 02 — Identifying your relationship orbits**
+   The document fades; five concentric orbit rings draw themselves outward from the center, one per second. As each ring completes, a small labeled node ("Clients", "Partners", "Press", "Talent", "Capital") fades in on the ring at a hand-placed angle.
 
-Technical notes
+3. **Step 03 — Mapping your Dead Zone**
+   A soft wedge / sector (15 to 25 degree arc) fills with a translucent accent tint between two orbits, with a thin dashed boundary. A tiny serif italic label "Dead Zone" sets next to it.
 
-- I will not edit the generated backend client or generated backend types directly.
-- I will use Lovable Cloud migrations for the database changes.
-- I will keep the extractor dependency-free: direct fetch plus HTML/CSS parsing, no Firecrawl connector.
-- I will keep the OpenAI map and Talk to the Book context intact. This change is focused on how the generated microsite is themed and branded.
+4. **Step 04 — Calibrating your Five Layers**
+   Five short horizontal calibration bars (mini level meters) appear stacked on the right edge of the stage. Each fills smoothly to a different percentage. Reads instantly as tuning or calibrating.
+
+5. **Step 05 — Writing your GTM breakdown**
+   A short serif manuscript line types itself out beneath the map (e.g. "Drafting your map..."), with a blinking caret. Optional: a subtle pen nib SVG glides along the line.
+
+### Persistent elements throughout
+- The center seal becomes a **compass rose**: a thin 4 point star inside a circle, with the rotating italic numeral (01 through 05) in the center.
+- 4 hairline tick marks at N, E, S, W on the center circle. One of the most recognizable mapping cues.
+- Background dots reduced from 40 to about 25; lose the random flare pulse. They become quiet paper texture, not stars.
+- The radar arc is **removed** (the most sci-fi and least professional element).
+
+### Motion principles
+- Every motion is purposeful and tied to a step. No looping decoration that runs forever regardless of progress.
+- Durations match the existing `STEP_DURATION_MS = 14_000`.
+- `prefers-reduced-motion` shows the final composed state (all 5 layers visible) with no animation.
+
+### Color and type
+- Reuses CSS variables (`--ms-accent`, `--ms-text`, `--ms-bg`) so it auto re-skins per client. No hardcoded hex.
+- Cormorant Garamond italic for the numeral and inline labels (already used).
+- Hairline 1px strokes throughout. Keeps the editorial feel.
+
+## Implementation
+
+Single file change: rewrite `src/components/magnet/MagnetLoadingScene.tsx`.
+- Same props signature (`firstName`, `stepIndex`, `stepVisible`, `steps`) so `MagnetSite.tsx` does not change.
+- Keep the editorial text block below the stage exactly as is. It is working well.
+- Replace only the SVG stage contents and the keyframe block.
+- Use `stepIndex` to drive which layers are visible. Each layer mounts when its step starts and remains visible afterward (building, not flickering).
+
+### Files touched
+- `src/components/magnet/MagnetLoadingScene.tsx` — full rewrite of the SVG stage and keyframes. Editorial text block below stays untouched.
+
+No schema changes, no routing changes, no other files affected.
