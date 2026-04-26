@@ -31,6 +31,8 @@ interface BreakdownRow {
   enrichment_error: string | null;
   client_logo_url?: string | null;
   client_company_name?: string | null;
+  crm_estimate?: number | null;
+  deal_size_estimate?: number | null;
 }
 
 interface SubmissionRow {
