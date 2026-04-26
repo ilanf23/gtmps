@@ -1,119 +1,121 @@
-## Three surgical fixes
+# Magnet Microsite — 4-Page Restructure
 
-### Audit of current state
-- `/discover` nav (`src/pages/Discover.tsx`) `navItems` = `[Awards, Podcast]`. No About.
-- `/about` nav (`src/pages/About.tsx`) `navItems` = `[Awards, Podcast]`. No About.
-- `/awards` nav (`src/pages/Awards.tsx`) is a custom inline `AwardsNav` with hand-written `<Link>` rows for Awards + Podcast. No About.
-- Footer typo `"100 practitioner interviews on YouTube"` lives in **both** `src/components/Footer.tsx:158` and `src/components/VerticalLanding/VerticalFooter.tsx:170`.
-- `/discover` and `/about` never call `document.title` → both inherit the static `<title>` from `index.html` (`"GTM for Professional Services | Book Research by Mabbly"`).
-- `/awards` already sets `document.title = 'GTM for Professional Services Awards · Mabbly'` (needs tweak to match spec).
-- Vertical pages all flow through `VerticalLanding.tsx` which sets `document.title = ${vertical.name} · ${researchLabel ?? 'GTM Research'} · Mabbly`. So titles are driven by `name` + `researchLabel` in `src/content/verticals.ts`.
+Transform the current single-page magnet experience at `/m/:slug` into a 4-page microsite with a shared nav bar that also covers `/book`.
 
----
+## Architecture
 
-### FIX 1 — Add "About" to top nav (3 nav implementations)
+### New routes (slug-scoped, all share the nav)
+| Route | Purpose | Source |
+|---|---|---|
+| `/m/:slug` | **MAP** — the existing breakdown | Current `MagnetBreakdown.tsx` (untouched content) |
+| `/m/:slug/chat` | **Book Chat** — talk to the GTM book | New, OpenAI gpt-4o-mini |
+| `/m/:slug/read` | **Read the Book** — embedded PDF reader | New, PDF served from `/public` |
+| `/m/:slug/feedback` | **Feedback** — contact form | New, sends email to `adam@mabbly.com` |
 
-**`src/pages/Discover.tsx`** — prepend About to `navItems`:
-```ts
-const navItems = [
-  { label: "About", href: "/about", internal: true },
-  { label: "Awards", href: "/awards", internal: true },
-  { label: "Podcast", href: PODCAST_HREF, external: true },
-];
+The standalone `/book` route also gets the same nav (linking back to `/m/:slug` for slug-aware tabs when a slug is in storage; otherwise nav points to base routes).
+
+### New shared layout component
+**`src/components/magnet/MagnetShell.tsx`** — wraps all 4 magnet pages with:
+- Persistent top nav bar (dark theme matching breakdown: `#120D05` bg, `#B8933A` gold accents)
+- Tab-style nav: `MAP · Talk to the Book · Read · Feedback`
+- Active tab indicator (gold underline)
+- Mobile: collapses to a horizontal scroll strip (no hamburger — only 4 items)
+- Logo left ("Mabbly · GTM") · Tabs center · Visitor first name right (fetched once via existing RPC)
+
+## Page-by-page implementation
+
+### 1. MAP page (`/m/:slug`)
+- Wrap existing `MagnetSite.tsx` polling/loading flow inside `MagnetShell`
+- Once status === 'complete', render `MagnetBreakdown` (unchanged)
+- The existing `MagnetChat` floating widget on the breakdown is **removed** — chat lives on its own page now
+- Loading and error states stay as-is but get the nav shell
+
+### 2. Book Chat page (`/m/:slug/chat`)
+**New component**: `src/components/magnet/BookChat.tsx`
+- Full-page OpenAI-style chat UI (centered column, max-w-3xl)
+- Streaming token-by-token rendering with markdown via `react-markdown` (already a common pattern, will add)
+- Input pinned to bottom, multiline textarea, Enter to send / Shift+Enter for newline
+- Welcome message: "Ask me anything about the GTM book."
+- No persistence — session-scoped messages in component state
+
+**New edge function**: `supabase/functions/book-chat/index.ts`
+- Uses **OpenAI direct (`gpt-4o-mini`)** with streaming SSE
+- System prompt: scoped strictly to the GTM book content
+- Book content injected as a long system message (extracted from PDF — see Reader section below)
+- Reuses existing `OPENAI_API_KEY` secret
+- Returns 402 / 429 with friendly messages
+
+**Book content for the LLM**: I'll extract text from the PDF you upload using `pdfplumber` and write it to `supabase/functions/book-chat/_book-content.ts` as an exported string constant. This gives the model the full book as context without runtime PDF parsing.
+- If the book is large (> ~120k tokens), I'll chunk it and include only top-level summaries + chapter excerpts with a note in the welcome message.
+- This file is regenerated whenever you upload a new version of the PDF.
+
+### 3. Reader page (`/m/:slug/read`)
+**New component**: `src/components/magnet/BookReader.tsx`
+- Embeds `/relationship-revenue-os.pdf` (placed in `/public`) using a native `<iframe>` with PDF.js viewer fallback
+- Top toolbar: "Download PDF" button (links to file directly)
+- Full-height reader, responsive
+- **Action item for you**: drop the PDF into `/public/relationship-revenue-os.pdf` after this ships. Until then, the page shows a styled placeholder ("Book uploading soon").
+
+### 4. Feedback page (`/m/:slug/feedback`)
+**New component**: `src/components/magnet/FeedbackForm.tsx`
+- Form fields (zod-validated client + server side):
+  - Name (required, max 100)
+  - Email (required, valid email, max 255)
+  - Feedback (required, max 2000)
+  - Hidden: `slug` from URL params
+- Submit calls new edge function
+- Success state replaces form: "Thanks. Adam reads every one."
+- Loading + error states with toast
+
+**Email delivery**: Uses Lovable's built-in transactional email system (no Resend, no API keys needed).
+1. Call `email_domain--scaffold_transactional_email` to set up infra
+2. New edge function `supabase/functions/submit-feedback/index.ts`:
+   - Validates input with zod
+   - Calls the scaffolded `send-transactional-email` function
+   - Sends to `adam@mabbly.com` with subject `New magnet feedback from {name}` and body containing all fields + the slug
+3. **No database storage** (per your "Email only" choice — no `magnet_feedback` table)
+4. Note: this requires a verified email sending domain. If the project doesn't have one yet, the scaffold tool will prompt for setup. I'll guide you through it when the time comes.
+
+## Routing changes (`src/App.tsx`)
+
+```tsx
+<Route path="/m/:slug" element={<MagnetSite />} />
+<Route path="/m/:slug/chat" element={<MagnetBookChatPage />} />
+<Route path="/m/:slug/read" element={<MagnetBookReaderPage />} />
+<Route path="/m/:slug/feedback" element={<MagnetFeedbackPage />} />
+<Route path="/book" element={<MagnetBook />} />  {/* gets nav shell too */}
 ```
-The existing `navItems.map(...)` renderer in both desktop nav (line ~167) and mobile menu (line ~265) will pick it up automatically with identical Inter Tight 14px styling, gold hover, and `data-active` treatment.
 
-**`src/pages/About.tsx`** — same change:
-```ts
-const navItems = [
-  { label: "About", href: "/about", internal: true },
-  { label: "Awards", href: "/awards", internal: true },
-  { label: "Podcast", href: PODCAST_HREF, external: true },
-];
-```
-Also confirm the existing active-state logic (`data-active` / current-page styling) flags About as active when on `/about`. If active state is derived from `useLocation().pathname`, no extra change needed; if hardcoded, set the About entry to render with the gold accent on this page.
+Each new page is a thin wrapper that passes the slug into `MagnetShell` and renders its child component.
 
-**`src/pages/Awards.tsx`** — manually insert About into the bespoke `AwardsNav`:
-- Desktop links block (between line 153 and 154):
-  ```tsx
-  <Link to="/about" className="an-link">About</Link>
-  <Link to="/awards" className="an-link" data-active="true">Awards</Link>
-  ```
-- Mobile menu (between the verticals loop ending line 176 and the existing Awards mobile link line 177):
-  ```tsx
-  <Link to="/about" className="an-mobile-link" onClick={() => setOpen(false)}>About</Link>
-  ```
+## Files created
+- `src/components/magnet/MagnetShell.tsx` — nav wrapper
+- `src/components/magnet/BookChat.tsx` — chat UI w/ streaming
+- `src/components/magnet/BookReader.tsx` — PDF embed
+- `src/components/magnet/FeedbackForm.tsx` — feedback form
+- `src/pages/MagnetBookChatPage.tsx`, `MagnetBookReaderPage.tsx`, `MagnetFeedbackPage.tsx` — route components
+- `supabase/functions/book-chat/index.ts` — streaming chat function
+- `supabase/functions/book-chat/_book-content.ts` — extracted book text (regenerated when you upload PDF)
+- `supabase/functions/submit-feedback/index.ts` — feedback handler
 
-**Footer About link**: already present in both `Footer.tsx` (line 207) and `VerticalFooter.tsx` (line 186). Leave untouched — both paths supported as requested.
+## Files modified
+- `src/App.tsx` — register 3 new routes
+- `src/pages/MagnetSite.tsx` — wrap content in `MagnetShell`
+- `src/pages/MagnetBook.tsx` — wrap in `MagnetShell` (slug-less variant)
+- `src/components/magnet/MagnetBreakdown.tsx` — remove the floating `MagnetChat` widget (chat is now its own page)
+- `package.json` — add `react-markdown` for chat rendering
 
----
+## Open follow-ups (your action)
+1. **Upload the GTM book PDF** — I'll place it in `/public/relationship-revenue-os.pdf` and extract its text for the chatbot
+2. **Verify email domain** in Lovable Cloud → Emails (only required if not already done) so feedback emails can send to `adam@mabbly.com`
 
-### FIX 2 — Footer "100" → "500"
-
-Two surgical string edits, both copy:
-```
-100 practitioner interviews on YouTube.
-```
-to:
-```
-500 practitioner interviews on YouTube.
-```
-
-Files:
-- `src/components/Footer.tsx:158`
-- `src/components/VerticalLanding/VerticalFooter.tsx:170`
-
----
-
-### FIX 3 — Per-page meta titles
-
-**`src/pages/Discover.tsx`** — add a `useEffect` at the top of the `Discover` page component:
-```ts
-useEffect(() => {
-  document.title = "Discover · GTM for Professional Services · Mabbly";
-}, []);
-```
-
-**`src/pages/About.tsx`** — same pattern in the `About` component:
-```ts
-useEffect(() => {
-  document.title = "About · Mabbly";
-}, []);
-```
-
-**`src/pages/Awards.tsx:192`** — change existing line to:
-```ts
-document.title = 'GTM for PS Awards · Mabbly';
-```
-
-**`src/content/verticals.ts`** — vertical titles are built as `${name} · ${researchLabel} · Mabbly`. Set `researchLabel` per spec (and adjust `name` only where needed to match exact wording):
-
-| Slug | Required title | `name` | `researchLabel` |
-|---|---|---|---|
-| law | `Law Firms · Origination Strategy Research · Mabbly` | `Law Firms` | `Origination Strategy Research` |
-| consulting | `Management Consulting · Practice Growth Research · Mabbly` | `Management Consulting` | `Practice Growth Research` (no change) |
-| accounting | `Accounting & Tax · Client Development Research · Mabbly` | `Accounting & Tax` | `Client Development Research` (no change) |
-| msp | `MSP & IT Services · GTM Research · Mabbly` | `MSP & IT Services` | unset (falls back to `GTM Research`) — verify and remove any current override if present |
-| advisory | `Financial Advisory · Prospecting Research · Mabbly` | `Financial Advisory` | `Prospecting Research` |
-| ae | `Architecture & Engineering · BD Research · Mabbly` | `Architecture & Engineering` | `BD Research` |
-| recruiting | `Executive Search · Mandate Origination Research · Mabbly` | `Executive Search` | `Mandate Origination Research` (no change) |
-| agency | `Marketing & Creative · New Business Research · Mabbly` | `Marketing & Creative` | `New Business Research` (no change) |
-
-For each vertical, I'll verify the current `name` field matches the required prefix; if any differ, I'll only update `researchLabel` (and `name` only if absolutely required). This keeps in-page hero/eyebrow copy untouched — the spec only requires the **document `<title>`** to match.
-
----
-
-### Files to be modified
-1. `src/pages/Discover.tsx` — nav + title `useEffect`
-2. `src/pages/About.tsx` — nav + title `useEffect`
-3. `src/pages/Awards.tsx` — insert About link (desktop + mobile) + title string
-4. `src/components/Footer.tsx` — 100 → 500
-5. `src/components/VerticalLanding/VerticalFooter.tsx` — 100 → 500
-6. `src/content/verticals.ts` — `researchLabel` adjustments for law, advisory, ae (and verify msp falls through to default)
-
-### Verification after ship
-1. Top nav on `/discover`, `/about`, `/awards` shows About between For Your Firm and Awards.
-2. Click About → `/about` loads; About link shows gold active state on that page.
-3. Footer Across Mabbly Podcast row reads "500 practitioner interviews on YouTube." on every page.
-4. Browser tab title matches spec on each of the 11 routes listed.
-5. No regressions: For Your Firm dropdown, Add Your Firm CTA, Podcast link unchanged.
+## Test plan
+After ship:
+1. Visit `/m/<existing-slug>` → MAP renders with new nav bar at top
+2. Click "Talk to the Book" → routes to `/m/<slug>/chat`, shows empty chat with welcome message
+3. Send a chat message → streams reply token-by-token from gpt-4o-mini
+4. Click "Read" → routes to `/m/<slug>/read`, shows PDF embed (or placeholder if PDF not yet uploaded)
+5. Click "Feedback" → form renders; submit a test → email arrives at `adam@mabbly.com`
+6. Visit `/book` → same nav shell renders; tabs work without a slug (link to base routes)
+7. Active tab indicator follows current route correctly
+8. Mobile (375px wide): nav strip is horizontally scrollable, tabs remain tappable
