@@ -43,21 +43,21 @@ export default function MagnetImpactModel({
       : "16%";
 
   const labelClass = "text-[#B8933A] text-xs uppercase tracking-widest mb-4";
-  const cardClass = "bg-white/5 border border-white/10 p-5";
-  const dividerClass = "border-t border-white/10 my-8";
+  const cardClass = "bg-black/[0.03] border border-black/10 p-5";
+  const dividerClass = "border-t border-black/10 my-8";
 
   const displayCompany = companyName?.trim() ? companyName : "Your";
 
   return (
-    <div className="bg-transparent text-[#F5EFE0]">
+    <div className="bg-transparent text-[#1C1008]">
       {/* SECTION 1: Monday Morning Test header */}
       <div>
         <p className={labelClass}>THE MONDAY MORNING TEST</p>
-        <p className="text-sm opacity-50 mt-1 leading-relaxed">
+        <p className="text-sm opacity-75 mt-1 leading-relaxed">
           "Open your CRM. Count the contacts you haven't spoken to in 90 days.
           Multiply by your average deal size. Multiply by 3%."
         </p>
-        <p className="text-xs opacity-30 mt-1 italic">
+        <p className="text-xs opacity-60 mt-1 italic">
           From Chapter 1: The Dead Zone
         </p>
       </div>
@@ -67,7 +67,7 @@ export default function MagnetImpactModel({
       {/* SECTION 2: Sliders */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label className="text-xs text-[#F5EFE0]/50 mb-2 block">
+          <label className="text-xs text-[#1C1008]/60 mb-2 block">
             Contacts in your CRM
           </label>
           <div className="flex items-center gap-3">
@@ -80,17 +80,17 @@ export default function MagnetImpactModel({
               onChange={(e) => setCrm(Number(e.target.value))}
               className="accent-[#B8933A] w-full"
             />
-            <span className="text-sm font-semibold text-[#F5EFE0] min-w-[60px] text-right">
+            <span className="text-sm font-semibold text-[#1C1008] min-w-[60px] text-right">
               {crm.toLocaleString()}
             </span>
           </div>
           {typeof crmEstimate === "number" && crmEstimate > 0 ? (
-            <p className="text-xs opacity-30 mt-2">Estimated from your website</p>
+            <p className="text-xs opacity-60 mt-2">Estimated from your website</p>
           ) : null}
         </div>
 
         <div>
-          <label className="text-xs text-[#F5EFE0]/50 mb-2 block">
+          <label className="text-xs text-[#1C1008]/60 mb-2 block">
             Average engagement size
           </label>
           <div className="flex items-center gap-3">
@@ -103,12 +103,12 @@ export default function MagnetImpactModel({
               onChange={(e) => setDeal(Number(e.target.value))}
               className="accent-[#B8933A] w-full"
             />
-            <span className="text-sm font-semibold text-[#F5EFE0] min-w-[60px] text-right">
+            <span className="text-sm font-semibold text-[#1C1008] min-w-[60px] text-right">
               {fmtMoney(deal)}
             </span>
           </div>
           {typeof dealSizeEstimate === "number" && dealSizeEstimate > 0 ? (
-            <p className="text-xs opacity-30 mt-2">Estimated from your market</p>
+            <p className="text-xs opacity-60 mt-2">Estimated from your market</p>
           ) : null}
         </div>
       </div>
@@ -121,10 +121,10 @@ export default function MagnetImpactModel({
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             DORMANT CONTACTS
           </p>
-          <p className="text-3xl font-bold text-[#F5EFE0] mt-3">
+          <p className="text-3xl font-bold text-[#1C1008] mt-3">
             {dormant.toLocaleString()}
           </p>
-          <p className="text-xs opacity-50 mt-2 leading-relaxed">
+          <p className="text-xs opacity-75 mt-2 leading-relaxed">
             Sitting silent in your CRM. Not lost. Not gone. Waiting.
           </p>
         </div>
@@ -136,7 +136,7 @@ export default function MagnetImpactModel({
           <p className="text-3xl font-bold text-[#B8933A] mt-3">
             {fmtMoney(deadZoneValue)}
           </p>
-          <p className="text-xs opacity-50 mt-2 leading-relaxed">
+          <p className="text-xs opacity-75 mt-2 leading-relaxed">
             What you're leaving on the table every quarter you do nothing.
           </p>
         </div>
@@ -145,10 +145,10 @@ export default function MagnetImpactModel({
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             COST TO REPLACE THIS PIPELINE
           </p>
-          <p className="text-3xl font-bold text-[#F5EFE0] mt-3">
+          <p className="text-3xl font-bold text-[#1C1008] mt-3">
             {fmtMoney(replaceCost)}
           </p>
-          <p className="text-xs opacity-50 mt-2 leading-relaxed">
+          <p className="text-xs opacity-75 mt-2 leading-relaxed">
             7× more expensive to acquire new clients than reactivate these.
           </p>
         </div>
@@ -162,20 +162,20 @@ export default function MagnetImpactModel({
           THE FORMULA MULTIPLIER, SAME {displayCompany.toUpperCase()} CONTACTS,
           DIFFERENT SYSTEM
         </p>
-        <p className="text-xs opacity-40 mb-6 leading-relaxed">
+        <p className="text-xs opacity-70 mb-6 leading-relaxed">
           Verified case: 200 contacts, same firm, same time period. $78K pipeline
           without the Formula. $486K with it.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white/5 border border-white/10 p-5">
-            <p className="text-xs opacity-40 uppercase tracking-wider mb-3">
+          <div className="bg-black/[0.03] border border-black/10 p-5">
+            <p className="text-xs opacity-70 uppercase tracking-wider mb-3">
               WITHOUT THE FORMULA
             </p>
-            <p className="text-3xl font-bold opacity-40">
+            <p className="text-3xl font-bold opacity-70">
               {fmtMoney(pipelineWithout)}
             </p>
-            <p className="text-xs opacity-30 mt-2 leading-relaxed">
+            <p className="text-xs opacity-60 mt-2 leading-relaxed">
               Generic outreach. No signal, no proof, no context. 1.3% reply rate
               on the same contacts.
             </p>
@@ -188,7 +188,7 @@ export default function MagnetImpactModel({
             <p className="text-[#B8933A] text-3xl font-bold">
               {fmtMoney(pipelineWith)}
             </p>
-            <p className="text-xs opacity-50 mt-2 leading-relaxed">
+            <p className="text-xs opacity-75 mt-2 leading-relaxed">
               Signal + Proof + Context. 8.1% reply rate. 37% win rate on
               reactivated pipeline.
             </p>
@@ -196,30 +196,30 @@ export default function MagnetImpactModel({
         </div>
 
         {/* Multiplier bar */}
-        <div className="bg-white/5 p-4 mt-4">
+        <div className="bg-black/[0.03] p-4 mt-4">
           <div className="flex justify-between mb-3">
-            <span className="text-xs opacity-40">Pipeline multiplier</span>
+            <span className="text-xs opacity-70">Pipeline multiplier</span>
             <span className="text-sm font-semibold text-[#B8933A]">
               {multiplier}× from the same contacts
             </span>
           </div>
 
-          <div className="h-2 bg-white/10 rounded-full mb-2 overflow-hidden">
+          <div className="h-2 bg-black/10 rounded-full mb-2 overflow-hidden">
             <div
-              className="h-full bg-white/30 rounded-full"
+              className="h-full bg-black/30 rounded-full"
               style={{ width: grayBarWidth }}
             />
           </div>
-          <p className="text-xs opacity-30 mb-3">
+          <p className="text-xs opacity-60 mb-3">
             Without: {fmtMoney(pipelineWithout)}
           </p>
 
           <div className="h-2 bg-[#B8933A] rounded-full" style={{ width: "100%" }} />
           <div className="flex justify-between mt-2">
-            <span className="text-xs opacity-50">
+            <span className="text-xs opacity-75">
               With: {fmtMoney(pipelineWith)}
             </span>
-            <span className="text-xs opacity-30">
+            <span className="text-xs opacity-60">
               Scaled from verified $78K to $486K case
             </span>
           </div>
@@ -248,9 +248,9 @@ export default function MagnetImpactModel({
             l: "Conversion rate from existing relationships vs. 5 to 20% new",
           },
         ].map((s) => (
-          <div key={s.n} className="bg-white/5 border border-white/10 p-4">
-            <p className="text-2xl font-bold text-[#F5EFE0]">{s.n}</p>
-            <p className="text-xs opacity-40 mt-1 leading-relaxed">{s.l}</p>
+          <div key={s.n} className="bg-black/[0.03] border border-black/10 p-4">
+            <p className="text-2xl font-bold text-[#1C1008]">{s.n}</p>
+            <p className="text-xs opacity-70 mt-1 leading-relaxed">{s.l}</p>
           </div>
         ))}
       </div>
@@ -262,24 +262,24 @@ export default function MagnetImpactModel({
         <p className={labelClass}>VERIFIED IN PRACTICE</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
-            <p className="text-sm font-semibold text-[#F5EFE0] mb-1">
+            <p className="text-sm font-semibold text-[#1C1008] mb-1">
               Stephen at Madcraft
             </p>
-            <p className="text-xs opacity-50 leading-relaxed">
+            <p className="text-xs opacity-75 leading-relaxed">
               $400K proposal dormant 10 months. One signal-triggered email. Reply
               in 7 minutes. Closed in 3 weeks.
             </p>
           </div>
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
-            <p className="text-sm font-semibold text-[#F5EFE0] mb-1">SPR</p>
-            <p className="text-xs opacity-50 leading-relaxed">
+            <p className="text-sm font-semibold text-[#1C1008] mb-1">SPR</p>
+            <p className="text-xs opacity-75 leading-relaxed">
               150 dormant enterprise contacts. 43 signal-activated emails. ~7%
               reply rate. Benchmark: less than 1% cold.
             </p>
           </div>
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
-            <p className="text-sm font-semibold text-[#F5EFE0] mb-1">AArete</p>
-            <p className="text-xs opacity-50 leading-relaxed">
+            <p className="text-sm font-semibold text-[#1C1008] mb-1">AArete</p>
+            <p className="text-xs opacity-75 leading-relaxed">
               160 dormant proposals found in HubSpot. Not a pipeline problem. A
               parking lot full of Ferraris with the keys still in them.
             </p>
