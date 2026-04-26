@@ -58,7 +58,7 @@ export default function MagnetImpactModel({
     <div className="bg-transparent text-[#1C1008]">
       {/* SECTION 1: Monday Morning Test header */}
       <div>
-        <p className={labelClass}>THE MONDAY MORNING TEST</p>
+        <p className={labelClass} style={labelStyle}>THE MONDAY MORNING TEST</p>
         <p className="text-sm opacity-75 mt-1 leading-relaxed">
           "Open your CRM. Count the contacts you haven't spoken to in 90 days.
           Multiply by your average deal size. Multiply by 3%."
