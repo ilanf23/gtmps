@@ -4,11 +4,10 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 
-// Use the worker bundled by Vite from pdfjs-dist (no CDN, no external deps).
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
+// Serve the worker as a static asset from /public so the URL is stable across
+// dev, preview iframe, and production. Avoids Vite module-URL resolution
+// quirks that broke the embed in the Lovable preview iframe.
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf-worker/pdf.worker.min.mjs";
 
 const PDF_URL = "/book/relationship-revenue-os.pdf";
 
@@ -23,11 +22,13 @@ export default function BookReader() {
   // Existence check (avoid mounting <Document> against an HTML 404).
   useEffect(() => {
     let cancelled = false;
+    // Soft existence check — only reject on a hard 404. Some hosts return
+    // application/octet-stream on HEAD even when GET serves the PDF fine,
+    // so we don't gate on content-type.
     fetch(PDF_URL, { method: "HEAD" })
       .then((r) => {
         if (cancelled) return;
-        const ct = r.headers.get("content-type") || "";
-        setPdfAvailable(r.ok && ct.toLowerCase().includes("pdf"));
+        setPdfAvailable(r.ok);
       })
       .catch(() => !cancelled && setPdfAvailable(false));
     return () => {
@@ -148,6 +149,12 @@ export default function BookReader() {
             <Document
               file={file}
               onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+              onLoadError={(err) =>
+                console.error("[BookReader] PDF load error:", err)
+              }
+              onSourceError={(err) =>
+                console.error("[BookReader] PDF source error:", err)
+              }
               loading={
                 <div className="py-20">
                   <div
