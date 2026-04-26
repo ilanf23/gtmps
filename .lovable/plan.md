@@ -1,57 +1,65 @@
-## Problem
+## Why the reader is broken
 
-The "logo" shown for Idea2Result is actually their `og:image` social-share photo. The brand extractor's logo priority list is:
+The `<Document>` component is throwing into its `error` slot ("We couldn't load the book"), which means the HEAD check passed but pdf.js itself failed to parse. Two stacked problems are causing this:
 
-1. `<img>` with `logo` in alt/class/id
-2. `apple-touch-icon`
-3. **`og:image`** ← landscape marketing photo
-4. **`twitter:image`** ← landscape marketing photo
+### 1. Worker / API version mismatch (the primary culprit)
 
-When sites lack #1 and #2 (very common), it falls through to a marketing image and we display it as a brand logo. We need to (a) stop using social-share images as logos, (b) add better real-logo signals, and (c) defend the UI so a bad asset never ships even if extraction misfires.
+- `react-pdf@10.4.1` pins **`pdfjs-dist@5.4.296`**
+- The project actually installed **`pdfjs-dist@5.6.205`** (a floating `^5.6.205` resolved during install)
+- pdf.js refuses to run when the API version and the worker version don't match exactly, throwing `The API version "5.4.296" does not match the Worker version "5.6.205"`. That throw bubbles into `<Document onError>` and we render the error slot.
 
-## Fix Strategy
+### 2. Worker URL resolution is fragile in the Lovable preview iframe
 
-### 1. Rewrite `findLogoUrl` in `supabase/functions/_shared/extract-branding.ts`
+`pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString()` works in normal Vite dev but is unreliable in the sandboxed preview iframe — the resolved blob/module URL can fail CORS or MIME checks. The standard fix is to copy the worker into `public/` once and reference it as a plain absolute path, which always works.
 
-Replace the priority list with a stricter, logo-only sequence:
+### 3. The HEAD content-type gate is too strict
 
-1. `<img>` with `logo` in alt/class/id/src (both attribute orders)
-2. Inline `<svg>` inside `<header>` or `<nav>` (extract and return as data URL, capped at ~25KB)
-3. `<img>` whose `src` ends in `logo.svg`, `logo.png`, `logo-*.svg`, etc., anywhere in the document
-4. `<link rel="icon" type="image/svg+xml">` (vector favicons are almost always the real mark)
-5. `<link rel="mask-icon">` (Safari pinned-tab SVG, always a logo)
-6. `<link rel="apple-touch-icon">` (square, designed asset)
-7. `<link rel="icon">` only when size ≥ 96×96 (skip 16/32 favicons)
+Some hosts (and the Lovable preview proxy) return `application/octet-stream` on HEAD even though GET works. When that happens we currently render "Coming Soon" instead of letting pdf.js try. Not what's biting us in the screenshot, but worth softening so we don't trade one bug for another tomorrow.
 
-**Removed**: `og:image` and `twitter:image` are no longer logo candidates. Period.
+## Should we ditch the PDF and paste the transcript instead?
 
-### 2. Add a server-side sanity check
+No. PDF is the right format here:
 
-Before returning the logo URL, do a `HEAD` request and reject:
+- The book has typography, hierarchy, page rhythm, and (eventually) illustrations that a Markdown transcript would flatten into a blog post.
+- The "no download" requirement is straightforward to enforce with PDF.js — disable the toolbar, block right-click, render via canvas only.
+- The user expectation set by "Read the Book" is *the actual book*, not a web article version.
+- We already have a per-page personalization layer ("Talk to the Book") that handles the conversational/extractive use case. Read = fidelity. Chat = personalization.
 
-- `content-type` not in `image/svg+xml`, `image/png`, `image/webp`, `image/x-icon`, `image/vnd.microsoft.icon`
-- `content-length` > 500 KB (real logos are tiny; hero photos are huge)
+The fix is making the embedded reader bulletproof, not abandoning it.
 
-If rejected, return `null` rather than a bad URL — the UI will gracefully fall back to the company name.
+## Fix plan
 
-### 3. Front-end aspect-ratio guard
+### A. Pin pdfjs-dist to the version react-pdf wants
 
-In `src/components/magnet/MagnetShell.tsx` and `src/components/magnet/MagnetBreakdown.tsx`, when the logo `<img>` loads, measure `naturalWidth / naturalHeight`. If the aspect ratio is **wider than 5:1** or **taller than 1:2**, hide the image (`display: none`) — that's a banner/photo, not a logo. This is the safety net that protects against any extractor edge cases we haven't thought of.
+Change `package.json` from `"pdfjs-dist": "^5.6.205"` to `"pdfjs-dist": "5.4.296"` (exact pin, no caret). Reinstall. This is the single most important fix — once API and worker versions match, the reader will load.
 
-### 4. Re-enrich existing rows
+### B. Serve the worker from `public/`, not from a Vite-resolved import URL
 
-Rows already in `magnet_breakdowns` keep their bad `client_logo_url`. Add a one-shot SQL migration that nulls out `client_logo_url` for any row whose URL contains `og-image`, `social`, `share`, `cover`, `hero`, `banner`, or ends in `.jpg`/`.jpeg` (real logos are virtually never JPEG). Future visits to those microsites will then re-trigger enrichment with the new extractor.
+- Copy `node_modules/pdfjs-dist/build/pdf.worker.min.mjs` to `public/pdf-worker/pdf.worker.min.mjs` so it ships as a static asset at `/pdf-worker/pdf.worker.min.mjs`.
+- Add a tiny prebuild step (or just a one-time copy + a script entry) so future installs/upgrades refresh it. Simplest: a `prebuild`/`predev` npm script that runs `node -e "fs.copyFileSync(...)"`.
+- In `BookReader.tsx`, set `pdfjs.GlobalWorkerOptions.workerSrc = "/pdf-worker/pdf.worker.min.mjs"`. No `new URL(..., import.meta.url)`, no module resolution gymnastics.
 
-## Files
+### C. Soften the existence check
 
-- `supabase/functions/_shared/extract-branding.ts` — rewrite `findLogoUrl`, add `validateLogoAsset` HEAD check
-- `src/components/magnet/MagnetShell.tsx` — add `onLoad` aspect-ratio guard on the logo img
-- `src/components/magnet/MagnetBreakdown.tsx` — same guard on the hero logo img
-- New migration: `null` out junk `client_logo_url` values so they re-enrich
+Replace the strict `content-type.includes("pdf")` gate with: HEAD must return `r.ok` only. We don't need to inspect content-type — if the file exists, let pdf.js try to parse it. If pdf.js fails, the existing error slot already shows the right message.
+
+### D. Add diagnostic logging on load failure
+
+Wire `<Document onLoadError={(err) => console.error("PDF load error:", err)}>` so any future regression surfaces immediately in the Lovable console feed instead of leaving us guessing.
+
+### E. Verify in the preview after the fix
+
+After the changes ship, navigate to `/m/ilan_7fo8vw0kc4/read`, confirm the first page renders, paginate forward and back, toggle fullscreen, and confirm right-click is blocked.
+
+## Files to change
+
+- `package.json` — pin `pdfjs-dist` to `5.4.296`, add a `predev`/`prebuild` script that copies the worker into `public/pdf-worker/`
+- `public/pdf-worker/pdf.worker.min.mjs` — new (copied from node_modules)
+- `src/components/magnet/BookReader.tsx` — switch `workerSrc` to `/pdf-worker/pdf.worker.min.mjs`, drop the content-type check, add `onLoadError` logging
 
 ## Result
 
-- No more landscape marketing photos masquerading as logos
-- Real SVG / favicon logos pulled from sites that don't tag their `<img>` with "logo"
-- Idea2Result and any similarly-affected client microsites self-heal on next visit
-- Hard front-end guard means even a future extractor regression can't ship a stretched banner
+- The book renders inline in the Read tab on every microsite, branded to the client
+- No download / no toolbar / no right-click save — same protections as today
+- No CDN dependency, no version drift between the API and worker
+- If anything ever breaks again, the error surfaces in console with a real stack trace instead of a silent "We couldn't load the book"
