@@ -25,6 +25,7 @@ export default function MagnetImpactModel({
   crmEstimate,
   dealSizeEstimate,
   companyName,
+  primaryColor,
 }: MagnetImpactModelProps) {
   const [crm, setCrm] = useState<number>(crmEstimate ?? 1500);
   const [deal, setDeal] = useState<number>(dealSizeEstimate ?? 150_000);
@@ -43,7 +44,11 @@ export default function MagnetImpactModel({
       ? Math.round((pipelineWithout / pipelineWith) * 100) + "%"
       : "16%";
 
-  const labelClass = "text-[#B8933A] text-xs uppercase tracking-widest mb-4";
+  const accent = /^#[0-9a-fA-F]{6}$/.test(primaryColor ?? "")
+    ? (primaryColor as string)
+    : "#B8933A";
+  const labelClass = "text-xs uppercase tracking-widest mb-4";
+  const labelStyle = { color: accent } as const;
   const cardClass = "bg-black/[0.03] border border-black/10 p-5";
   const dividerClass = "border-t border-black/10 my-8";
 
