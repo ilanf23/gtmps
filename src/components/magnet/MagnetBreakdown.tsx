@@ -356,22 +356,15 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           })}
         </section>
 
-        {/* SECTION 4: YOUR DEAD ZONE */}
-        <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest">
-            YOUR DEAD ZONE
-          </p>
-          <p className="text-5xl font-bold mt-4 tracking-tight">
-            {formatDeadZone(data.dead_zone_value)}
-          </p>
-          {data.dead_zone_reasoning && (
-            <p className="text-sm opacity-60 mt-4 max-w-lg leading-relaxed">
-              {data.dead_zone_reasoning}
-            </p>
-          )}
-          <p className="italic opacity-40 text-xs mt-3">
-            Estimated based on typical conversion rates for firms at your stage and size.
-          </p>
+        {/* SECTION 4: IMPACT MODEL — Dead Zone calc + Formula multiplier */}
+        <section className="border-b border-black/10 -mx-6">
+          <div className="bg-[#120D05] px-6 py-12">
+            <MagnetImpactModel
+              companyName={data.client_company_name ?? ""}
+              crmEstimate={data.crm_estimate ?? undefined}
+              dealSizeEstimate={data.deal_size_estimate ?? undefined}
+            />
+          </div>
         </section>
 
         {/* SECTION 5: WHERE TO START */}
