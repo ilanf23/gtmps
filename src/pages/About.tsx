@@ -914,12 +914,12 @@ const About = () => {
               }}
             >
               <a
-                href="mailto:press@mabbly.com"
+                href="mailto:adam@mabbly.com"
                 style={{ color: "#0D1117", textDecoration: "none", borderBottom: "1px solid rgba(184,147,58,0.6)" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#B8933A")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#0D1117")}
               >
-                press@mabbly.com
+                adam@mabbly.com
               </a>
               {" · Based in Chicago, Illinois"}
             </p>
