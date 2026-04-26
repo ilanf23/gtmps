@@ -425,7 +425,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             THE MANUSCRIPT — RELATIONSHIP REVENUE OS
           </p>
           <p className="text-sm opacity-40 mb-8 leading-relaxed">
-            14 chapters. The complete system. Sections marked ✦ are written
+            14 sections. The complete system. Sections marked ✦ are written
             specifically for your firm.
           </p>
 
