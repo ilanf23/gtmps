@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import bookOpen from "@/assets/book-open.png";
 
 /* ── Stat counter hook ── */
@@ -35,6 +36,7 @@ function useCountUp(
 }
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const statRef = useRef<HTMLDivElement>(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const [pageHover, setPageHover] = useState(false);
@@ -196,9 +198,10 @@ const HeroSection = () => {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <a
-              href="#apply"
-              className="inline-flex items-center justify-center h-[52px] min-w-[200px] sm:min-w-[220px] rounded-full text-sm font-semibold no-underline cursor-pointer transition-all duration-300"
+            <button
+              type="button"
+              onClick={() => navigate("/assess")}
+              className="inline-flex items-center justify-center h-[52px] min-w-[200px] sm:min-w-[220px] rounded-full text-sm font-semibold no-underline cursor-pointer transition-all duration-300 border-none"
               style={{
                 background: "linear-gradient(135deg, #b8972e 0%, #d4a832 100%)",
                 color: "#1e1a10",
@@ -215,7 +218,7 @@ const HeroSection = () => {
               }}
             >
               Apply for a Research Session
-            </a>
+            </button>
             <a
               href="#book"
               className="inline-flex items-center justify-center h-[52px] min-w-[180px] rounded-full text-sm font-medium no-underline cursor-pointer transition-all duration-300"

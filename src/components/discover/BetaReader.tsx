@@ -1,4 +1,4 @@
-const BADGES = ['Coda Strategy', 'AArete', 'West Monroe', 'Kearney', 'Accenture'];
+const BADGES = ['AArete', 'West Monroe', 'Kearney', 'Accenture', 'Madcraft'];
 
 const eyebrow: React.CSSProperties = {
   fontFamily: "'Inter Tight', sans-serif",
@@ -82,7 +82,7 @@ export default function BetaReader() {
 
       <div className="br-grid">
         <div className="br-left">
-          <p style={eyebrow}>06 · BETA READER PROGRAM</p>
+          <p style={eyebrow}>06 · EARLY ACCESS</p>
           <div aria-hidden style={goldRule} />
           <h2
             style={{
@@ -95,72 +95,38 @@ export default function BetaReader() {
               margin: '0 0 20px',
             }}
           >
-            Get the manuscript before it ships.
+            Get this system 90 days before launch.
           </h2>
           <p
             style={{
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 'clamp(18px, 1.8vw, 22px)',
               color: 'rgba(42,26,8,0.55)',
+              margin: '0 0 14px',
+              lineHeight: 1.5,
+              fontWeight: 300,
+            }}
+          >
+            Apply the method now, ahead of public launch. Active PS BD teams approved priority.
+          </p>
+          <p
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 15,
+              fontStyle: 'italic',
+              color: 'rgba(42,26,8,0.5)',
               margin: '0 0 36px',
               lineHeight: 1.5,
               fontWeight: 300,
             }}
           >
-            25 seats. Peer cohort. First access to the full MAP framework.
+            30 chapters. Three frameworks (Dead Zone, Five Orbits, MAP). Available now to Early Access readers.
           </p>
 
-          <div style={{ display: 'flex', gap: 56, marginBottom: 36, flexWrap: 'wrap' }}>
-            <div>
-              <div
-                style={{
-                  fontFamily: "'Inter Tight', sans-serif",
-                  fontSize: 'clamp(64px, 8vw, 96px)',
-                  fontWeight: 600,
-                  color: '#2A1A08',
-                  lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                }}
-              >
-                30
-              </div>
-              <div
-                style={{
-                  fontFamily: "'Inter Tight', sans-serif",
-                  fontSize: 14,
-                  color: 'rgba(42,26,8,0.5)',
-                  marginTop: 10,
-                  fontWeight: 400,
-                }}
-              >
-                chapters of the manuscript
-              </div>
-            </div>
-            <div>
-              <div
-                style={{
-                  fontFamily: "'Inter Tight', sans-serif",
-                  fontSize: 'clamp(64px, 8vw, 96px)',
-                  fontWeight: 600,
-                  color: '#B8933A',
-                  lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                }}
-              >
-                25
-              </div>
-              <div
-                style={{
-                  fontFamily: "'Inter Tight', sans-serif",
-                  fontSize: 14,
-                  color: 'rgba(42,26,8,0.5)',
-                  marginTop: 10,
-                  fontWeight: 400,
-                }}
-              >
-                seats per cohort
-              </div>
-            </div>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
+            <span className="br-badge">30 chapters</span>
+            <span className="br-badge">Three frameworks</span>
+            <span className="br-badge">Approved by application</span>
           </div>
 
           <div
@@ -181,8 +147,8 @@ export default function BetaReader() {
                 letterSpacing: '-0.01em',
               }}
             >
-              "Read Chapter 7 on a flight to a pitch. Walked in and closed a $2.4M engagement the
-              next morning using only the Dead Zone framework."
+              "Lead nurturing agent created a customized note that reactivated a $400,000
+              opportunity for us."
             </p>
             <p
               style={{
@@ -196,7 +162,7 @@ export default function BetaReader() {
                 fontWeight: 500,
               }}
             >
-              Travis Holaway · President, Coda Strategy
+              Stephen Cuccio · Head of New Client Strategy, Madcraft
             </p>
           </div>
 
@@ -230,7 +196,7 @@ export default function BetaReader() {
                 fontWeight: 500,
               }}
             >
-              Request a Beta Seat
+              Early Access Application
             </div>
             <input
               className="br-input"
@@ -261,8 +227,9 @@ export default function BetaReader() {
                 cursor: 'pointer',
                 fontWeight: 500,
               }}
+              data-cta="add-your-firm"
             >
-              Request a Seat
+              Add Your Firm →
             </button>
             <p
               style={{
@@ -275,7 +242,7 @@ export default function BetaReader() {
                 fontWeight: 400,
               }}
             >
-              25 seats per cohort · Priority: active PS BD teams
+              Free. Approved by application. Most decisions within 48 hours.
             </p>
           </form>
         </div>

@@ -1,12 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSpring } from 'framer-motion';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+
+const DEFAULT_CRM = 500;
+const DORMANCY_RATE = 0.7;
 
 export default function DeadZone() {
   const sectionRef = useRef<HTMLElement>(null);
   const [triggered, setTriggered] = useState(false);
-  const [crmSize, setCrmSize] = useState(500);
-  const [displayResult, setDisplayResult] = useState(0);
-  const resultRafRef = useRef<number>(0);
-  const animFromRef = useRef(0);
+  const [crmInput, setCrmInput] = useState<string>(String(DEFAULT_CRM));
+  const [displayResult, setDisplayResult] = useState<number>(
+    Math.round(DEFAULT_CRM * DORMANCY_RATE),
+  );
+  const reducedMotion = useReducedMotion();
+
+  const effectiveCrm =
+    crmInput.trim() === ''
+      ? DEFAULT_CRM
+      : Math.max(0, Number(crmInput) || 0);
+  const target = Math.round(effectiveCrm * DORMANCY_RATE);
+
+  const spring = useSpring(Math.round(DEFAULT_CRM * DORMANCY_RATE), {
+    stiffness: 100,
+    damping: 15,
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -30,29 +47,20 @@ export default function DeadZone() {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const target = Math.round((Number.isFinite(crmSize) ? crmSize : 0) * 0.7);
-    const from = animFromRef.current;
-    const start = performance.now();
-    const duration = 600;
+    if (reducedMotion) {
+      spring.jump(target);
+      setDisplayResult(target);
+      return;
+    }
+    spring.set(target);
+  }, [target, reducedMotion, spring]);
 
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const value = Math.round(from + (target - from) * eased);
-      setDisplayResult(value);
-      if (t < 1) {
-        resultRafRef.current = requestAnimationFrame(step);
-      } else {
-        animFromRef.current = target;
-      }
-    };
-
-    cancelAnimationFrame(resultRafRef.current);
-    resultRafRef.current = requestAnimationFrame(step);
-
-    return () => cancelAnimationFrame(resultRafRef.current);
-  }, [crmSize, triggered]);
+  useEffect(() => {
+    const unsubscribe = spring.on('change', (v) => {
+      setDisplayResult(Math.round(v));
+    });
+    return () => unsubscribe();
+  }, [spring]);
 
   return (
     <section
@@ -252,6 +260,13 @@ export default function DeadZone() {
           gap: 18px;
           flex-wrap: wrap;
         }
+        .dz-calc-field-label {
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 16px;
+          color: rgba(245,239,224,0.55);
+          font-weight: 300;
+          order: 2;
+        }
         .dz-calc-input {
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(184,147,58,0.3);
@@ -264,8 +279,10 @@ export default function DeadZone() {
           width: 160px;
           outline: none;
           transition: border-color 0.15s ease;
+          order: 1;
         }
         .dz-calc-input:focus { border-color: rgba(184,147,58,0.7); }
+        .dz-calc-input::placeholder { color: rgba(245,239,224,0.3); }
         .dz-calc-sep {
           font-family: 'Inter Tight', sans-serif;
           font-size: 16px;
@@ -278,14 +295,29 @@ export default function DeadZone() {
           gap: 14px;
           padding-top: 12px;
           border-top: 1px solid rgba(255,255,255,0.06);
+          flex-wrap: wrap;
         }
         .dz-calc-num {
           font-family: 'Inter Tight', sans-serif;
-          font-size: clamp(48px, 7vw, 88px);
+          font-size: clamp(48px, 8vw, 64px);
           font-weight: 600;
           color: #B8933A;
           line-height: 1;
           letter-spacing: -0.03em;
+        }
+        @media (max-width: 640px) {
+          .dz-calc-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+          }
+          .dz-calc-field-label {
+            order: 0;
+          }
+          .dz-calc-input {
+            width: 100%;
+            order: 1;
+          }
         }
         .dz-calc-unit {
           font-family: 'Inter Tight', sans-serif;
@@ -360,26 +392,31 @@ export default function DeadZone() {
         <div className="dz-calc">
           <p className="dz-calc-label">Your Dead Zone estimate</p>
           <div className="dz-calc-row">
+            <label htmlFor="dz-crm" className="dz-calc-field-label">
+              contacts in your CRM
+            </label>
             <input
-              type="number"
+              id="dz-crm"
+              type="text"
+              inputMode="numeric"
               className="dz-calc-input"
-              value={crmSize}
-              min={0}
+              value={crmInput}
+              placeholder="500"
               onChange={(e) => {
-                const v = Number(e.target.value);
-                setCrmSize(Number.isFinite(v) && v >= 0 ? v : 0);
+                const raw = e.target.value;
+                if (raw === '' || /^\d+$/.test(raw)) {
+                  setCrmInput(raw);
+                }
               }}
               aria-label="Number of contacts in your CRM"
             />
-            <span className="dz-calc-sep">contacts in your CRM</span>
           </div>
           <div className="dz-calc-result-block">
-            <span className="dz-calc-num">{displayResult.toLocaleString()}</span>
-            <span className="dz-calc-unit">are likely in your Dead Zone</span>
+            <span className="dz-calc-num">~{displayResult.toLocaleString()}</span>
+            <span className="dz-calc-unit">contacts likely in your Dead Zone</span>
           </div>
           <p className="dz-calc-note">
-            Based on industry average of 60–80% dormancy. Build your MAP to get a precise
-            estimate benchmarked against peer firms.
+            Based on industry average of 60-80% dormancy. Adjust the number above to match your CRM.
           </p>
         </div>
       </div>

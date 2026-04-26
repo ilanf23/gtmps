@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Linkedin } from 'lucide-react';
 
 type StatCard = {
   target?: number;
@@ -11,7 +12,7 @@ type StatCard = {
 
 const PRACTITIONER_STATS: StatCard[] = [
   { target: 26, display: '26', label: 'years across 9 professional services firms' },
-  { target: 400, prefix: '$', suffix: 'M', display: '$400M', label: 'AArete revenue as CMO' },
+  { target: 125, prefix: '$', suffix: 'M', display: '$125M', label: 'AArete revenue as CMO' },
   { float: 1.2, prefix: '$', suffix: 'B', display: '$1.2B', label: 'A.T. Kearney, scaled from $250M' },
 ];
 
@@ -184,6 +185,35 @@ export default function AuthorityStrip() {
           margin: 0;
           font-weight: 400;
         }
+        .as-affil-logos {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-top: 14px;
+          flex-wrap: wrap;
+        }
+        .as-affil-mark {
+          font-family: 'Inter Tight', sans-serif;
+          font-weight: 700;
+          font-size: 18px;
+          line-height: 1;
+          letter-spacing: -0.01em;
+          color: rgba(184,147,58,0.6);
+          text-transform: none;
+        }
+        .as-affil-mark--kellogg {
+          font-style: italic;
+          letter-spacing: 0.02em;
+        }
+        .as-affil-dot {
+          color: rgba(184,147,58,0.45);
+          font-size: 16px;
+        }
+        @media (max-width: 768px) {
+          .as-affil-logos { gap: 14px; }
+          .as-affil-mark { font-size: 22px; }
+          .as-affil-dot { display: none; }
+        }
 
         .as-name {
           font-family: 'Inter Tight', sans-serif;
@@ -200,6 +230,35 @@ export default function AuthorityStrip() {
           letter-spacing: 0.05em;
           margin: 4px 0 22px;
           font-weight: 400;
+        }
+        .as-role-row {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin: 4px 0 22px;
+          flex-wrap: wrap;
+        }
+        .as-role-row .as-role {
+          margin: 0;
+        }
+        .as-li {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          margin: -14px 0 -14px -10px;
+          color: #B8933A;
+          border-radius: 4px;
+          transition: color 0.18s ease, transform 0.18s ease;
+        }
+        .as-li:hover {
+          color: #D4AE48;
+          transform: scale(1.1);
+        }
+        .as-li:focus-visible {
+          outline: 2px solid rgba(184,147,58,0.55);
+          outline-offset: 2px;
         }
 
         .as-stats {
@@ -326,8 +385,12 @@ export default function AuthorityStrip() {
             </div>
             <div className="as-attribution">
               <p className="as-attr-name">Jonathan Copulsky</p>
-              <p className="as-attr-line">Former CMO, Deloitte</p>
-              <p className="as-attr-line">Senior Lecturer, Northwestern Kellogg</p>
+              <p className="as-attr-line">Former CMO, Deloitte · Senior Lecturer, Northwestern Kellogg</p>
+              <div className="as-affil-logos" aria-label="Deloitte and Northwestern Kellogg">
+                <span className="as-affil-mark">Deloitte.</span>
+                <span className="as-affil-dot" aria-hidden>·</span>
+                <span className="as-affil-mark as-affil-mark--kellogg">Kellogg</span>
+              </div>
             </div>
           </div>
 
@@ -336,7 +399,18 @@ export default function AuthorityStrip() {
             <p className="as-eyebrow">THE PRACTITIONER</p>
             <div className="as-rule" aria-hidden />
             <p className="as-name">Richard Ashbaugh</p>
-            <p className="as-role">Co-Author · CEO, Mabbly</p>
+            <div className="as-role-row">
+              <p className="as-role">Co-Author · CEO, Mabbly</p>
+              <a
+                href="https://www.linkedin.com/in/richardfashbaugh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Richard Ashbaugh on LinkedIn"
+                className="as-li"
+              >
+                <Linkedin size={16} strokeWidth={1.75} />
+              </a>
+            </div>
             <div className="as-stats">
               {PRACTITIONER_STATS.map((s, i) => renderStatCard(s, `p-${i}`))}
             </div>

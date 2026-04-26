@@ -1,3 +1,4 @@
+import { Linkedin } from 'lucide-react';
 import adamPhoto from '@/assets/adam-fridman.png';
 import richardPhoto from '@/assets/richard-ashbaugh.png';
 
@@ -8,6 +9,7 @@ type Author = {
   quote: string;
   badges: string[];
   delay: string;
+  linkedin: string;
 };
 
 const AUTHORS: Author[] = [
@@ -18,14 +20,16 @@ const AUTHORS: Author[] = [
     quote: 'Six hundred conversations. One framework that survived contact with reality.',
     badges: ['500 interviews', '180 episodes', 'Inc. Columnist'],
     delay: '0.1s',
+    linkedin: 'https://www.linkedin.com/in/adamfridman/',
   },
   {
     photo: richardPhoto,
     name: 'Richard Ashbaugh',
     role: 'Co-Author · CEO, Mabbly',
     quote: 'The framework in this book is the one I wish I had at AArete.',
-    badges: ['$400M CMO', '$1.2B Scale', '26 years'],
+    badges: ['$125M CMO', '$1.2B Scale', '26 years'],
     delay: '0.25s',
+    linkedin: 'https://www.linkedin.com/in/richardfashbaugh/',
   },
 ];
 
@@ -68,15 +72,70 @@ export default function Authors() {
         @media (min-width: 768px) {
           .au-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
         }
+        .au-portrait-wrap {
+          position: relative;
+          width: 140px;
+          height: 140px;
+          margin: 0 auto 28px;
+          border-radius: 50%;
+          border: 3px solid #B8933A;
+          background: #1C1008;
+          overflow: hidden;
+          box-shadow: 0 8px 24px -10px rgba(42,26,8,0.35);
+        }
+        .au-portrait-wrap::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          box-shadow:
+            0 0 0 1px rgba(245,239,224,0.10) inset,
+            0 0 40px rgba(28,16,8,0.30) inset;
+          pointer-events: none;
+        }
         .au-portrait {
           width: 100%;
-          aspect-ratio: 4 / 5;
-          background: rgba(42,26,8,0.08);
-          border-radius: 6px;
+          height: 100%;
           object-fit: cover;
-          margin-bottom: 28px;
+          object-position: center 22%;
           display: block;
-          filter: grayscale(15%);
+          filter: grayscale(40%) saturate(0.7);
+          transform: scale(1.05);
+          transform-origin: center 30%;
+        }
+        @media (max-width: 1023px) {
+          .au-portrait-wrap { width: 120px; height: 120px; }
+        }
+        @media (max-width: 767px) {
+          .au-portrait-wrap { width: 96px; height: 96px; margin: 0 auto 20px; }
+          .au-text-block { text-align: center; }
+          .au-role-row { justify-content: center; }
+        }
+        .au-role-row {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin: 0 0 24px;
+          flex-wrap: wrap;
+        }
+        .au-li {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          margin: -14px 0 -14px -10px;
+          color: #B8933A;
+          border-radius: 4px;
+          transition: color 0.18s ease, transform 0.18s ease;
+        }
+        .au-li:hover {
+          color: #D4AE48;
+          transform: scale(1.1);
+        }
+        .au-li:focus-visible {
+          outline: 2px solid rgba(184,147,58,0.55);
+          outline-offset: 2px;
         }
       `}</style>
 
@@ -137,7 +196,9 @@ export default function Authors() {
               key={a.name}
               style={{ animation: `fadeUp 0.7s ease ${a.delay} both` }}
             >
-              <img src={a.photo} alt={a.name} className="au-portrait" />
+              <div className="au-portrait-wrap">
+                <img src={a.photo} alt={a.name} className="au-portrait" loading="lazy" />
+              </div>
               <p
                 style={{
                   fontFamily: "'Inter Tight', sans-serif",
@@ -151,18 +212,29 @@ export default function Authors() {
               >
                 {a.name}
               </p>
-              <p
-                style={{
-                  fontFamily: "'Inter Tight', sans-serif",
-                  fontSize: 14,
-                  color: '#6A5038',
-                  letterSpacing: '0.06em',
-                  margin: '0 0 24px',
-                  fontWeight: 500,
-                }}
-              >
-                {a.role}
-              </p>
+              <div className="au-role-row">
+                <p
+                  style={{
+                    fontFamily: "'Inter Tight', sans-serif",
+                    fontSize: 14,
+                    color: '#6A5038',
+                    letterSpacing: '0.06em',
+                    margin: 0,
+                    fontWeight: 500,
+                  }}
+                >
+                  {a.role}
+                </p>
+                <a
+                  href={a.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${a.name} on LinkedIn`}
+                  className="au-li"
+                >
+                  <Linkedin size={16} strokeWidth={1.75} />
+                </a>
+              </div>
               <p
                 style={{
                   fontFamily: "'Inter Tight', sans-serif",

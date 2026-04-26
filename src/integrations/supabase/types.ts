@@ -14,7 +14,234 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      beta_reader_applications: {
+        Row: {
+          created_at: string
+          email: string | null
+          employees: string | null
+          firm_name: string | null
+          firm_revenue: string | null
+          firm_type: string | null
+          full_name: string | null
+          gtm_challenge: string | null
+          id: string
+          role: string | null
+          source: string | null
+          utm_campaign: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          employees?: string | null
+          firm_name?: string | null
+          firm_revenue?: string | null
+          firm_type?: string | null
+          full_name?: string | null
+          gtm_challenge?: string | null
+          id?: string
+          role?: string | null
+          source?: string | null
+          utm_campaign?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          employees?: string | null
+          firm_name?: string | null
+          firm_revenue?: string | null
+          firm_type?: string | null
+          full_name?: string | null
+          gtm_challenge?: string | null
+          id?: string
+          role?: string | null
+          source?: string | null
+          utm_campaign?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
+      magnet_breakdowns: {
+        Row: {
+          action_1: string | null
+          action_2: string | null
+          action_3: string | null
+          chapter_callouts: Json
+          created_at: string
+          dead_zone_reasoning: string | null
+          dead_zone_value: number | null
+          enrichment_error: string | null
+          gtm_profile_assessment: string | null
+          gtm_profile_observed: string | null
+          id: string
+          orbit_01: string | null
+          orbit_02: string | null
+          orbit_03: string | null
+          orbit_04: string | null
+          orbit_05: string | null
+          raw_linkedin_data: Json
+          raw_website_content: string | null
+          recommended_layer: string | null
+          slug: string
+          welcome_message: string | null
+        }
+        Insert: {
+          action_1?: string | null
+          action_2?: string | null
+          action_3?: string | null
+          chapter_callouts?: Json
+          created_at?: string
+          dead_zone_reasoning?: string | null
+          dead_zone_value?: number | null
+          enrichment_error?: string | null
+          gtm_profile_assessment?: string | null
+          gtm_profile_observed?: string | null
+          id?: string
+          orbit_01?: string | null
+          orbit_02?: string | null
+          orbit_03?: string | null
+          orbit_04?: string | null
+          orbit_05?: string | null
+          raw_linkedin_data?: Json
+          raw_website_content?: string | null
+          recommended_layer?: string | null
+          slug: string
+          welcome_message?: string | null
+        }
+        Update: {
+          action_1?: string | null
+          action_2?: string | null
+          action_3?: string | null
+          chapter_callouts?: Json
+          created_at?: string
+          dead_zone_reasoning?: string | null
+          dead_zone_value?: number | null
+          enrichment_error?: string | null
+          gtm_profile_assessment?: string | null
+          gtm_profile_observed?: string | null
+          id?: string
+          orbit_01?: string | null
+          orbit_02?: string | null
+          orbit_03?: string | null
+          orbit_04?: string | null
+          orbit_05?: string | null
+          raw_linkedin_data?: Json
+          raw_website_content?: string | null
+          recommended_layer?: string | null
+          slug?: string
+          welcome_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "magnet_breakdowns_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: true
+            referencedRelation: "magnet_submissions"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      magnet_call_bookings: {
+        Row: {
+          calendly_event_id: string | null
+          created_at: string
+          id: string
+          scheduled_at: string | null
+          slug: string
+        }
+        Insert: {
+          calendly_event_id?: string | null
+          created_at?: string
+          id?: string
+          scheduled_at?: string | null
+          slug: string
+        }
+        Update: {
+          calendly_event_id?: string | null
+          created_at?: string
+          id?: string
+          scheduled_at?: string | null
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "magnet_call_bookings_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: false
+            referencedRelation: "magnet_submissions"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      magnet_chat_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          messages: Json
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "magnet_chat_sessions_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: false
+            referencedRelation: "magnet_submissions"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      magnet_submissions: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          linkedin_url: string
+          role: string
+          slug: string
+          status: string
+          website_url: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          linkedin_url: string
+          role: string
+          slug: string
+          status?: string
+          website_url: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          linkedin_url?: string
+          role?: string
+          slug?: string
+          status?: string
+          website_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -18,11 +18,19 @@ const ITEMS: Item[] = [
   },
   {
     q: 'What makes this different from other GTM books?',
-    a: 'Most GTM books are written for SaaS companies and retrofitted to services. This one was built from inside 9 PS firms, 26 years of practice, and 500 practitioner interviews. The framework has been tested at firms ranging from $5M to $1.2B.',
+    a: 'Most GTM books are written for SaaS companies and retrofitted to services. This one was built from inside professional services firms with operating partners, not consultants. The framework has been tested at firms ranging from $5M to $1.2B.',
   },
   {
     q: 'When does the book ship?',
     a: 'The Beta Reader Program provides manuscript access now, ahead of the official publication date. Beta readers receive all 30 chapters, the MAP diagnostic, and a seat in the peer cohort. Official publication is scheduled for later this year.',
+  },
+  {
+    q: 'Does this work if we already burned bridges with past clients?',
+    a: 'Sometimes. If the relationship ended badly, this does not uncook that egg. If you simply disappeared and stopped following up, yes. Most dormant relationships are the second category.',
+  },
+  {
+    q: 'What happens if my firm scores poorly on the diagnostic?',
+    a: 'You score with everyone else in your revenue band. Most PS firms score between 28 and 44 out of 100. A low score is not a verdict. It is a starting point. The chapter we send addresses your weakest dimension first.',
   },
 ];
 

@@ -93,10 +93,22 @@ export default function FinalCta() {
             fontSize: 14,
             color: 'rgba(245,239,224,0.45)',
             lineHeight: 1.65,
-            margin: '0 0 36px',
+            margin: '0 0 24px',
           }}
         >
           The MAP tells you which relationship to activate first. The manuscript tells you how.
+        </p>
+        <p
+          style={{
+            fontFamily: "'Inter Tight', system-ui, sans-serif",
+            fontSize: 13,
+            fontStyle: 'italic',
+            color: '#B8933A',
+            lineHeight: 1.55,
+            margin: '0 0 28px',
+          }}
+        >
+          You will need someone to own this. It cannot be delegated to marketing alone.
         </p>
 
         <div
@@ -108,11 +120,12 @@ export default function FinalCta() {
             marginBottom: 36,
           }}
         >
-          <a href="#beta-reader" className="fc-btn-primary">
-            Request a Beta Seat
-          </a>
-          <a href="#map" className="fc-btn-secondary">
-            Take the MAP Diagnostic
+          <a
+            href="/assess"
+            className="fc-btn-primary"
+            data-cta="add-your-firm"
+          >
+            Add Your Firm →
           </a>
         </div>
 

@@ -1,117 +1,50 @@
-import { useEffect, useRef } from 'react';
-
-type Stat = {
-  target?: number;
-  float?: number;
-  prefix?: string;
-  suffix?: string;
-  display: string;
+type Case = {
+  industry: string;
+  bigNumber: string;
   label: string;
+  detail: string;
+  quote: string;
+  attribution: string;
+  href: string;
 };
 
-const STATS: Stat[] = [
+const CASES: Case[] = [
   {
-    prefix: '$',
-    target: 400,
-    suffix: 'K',
-    display: '$400K',
-    label: 'avg. new revenue per reactivated Dead Zone client',
+    industry: 'MADCRAFT · DIGITAL AGENCY',
+    bigNumber: '$400K',
+    label: 'dormant proposal reactivated. 7 minute reply.',
+    detail:
+      'Proposal had been silent 9 months. Buyer replied 7 minutes after a signal-matched email. Asked Madcraft to be their agency of record for 2026.',
+    quote:
+      'Lead nurturing agent created a customized note that reactivated a $400,000 opportunity for us.',
+    attribution: 'Stephen Cuccio · Head of New Client Strategy',
+    href: 'https://mabbly.ai/case-study/madcraft',
   },
   {
-    float: 8.1,
-    suffix: '×',
-    display: '8.1×',
-    label: 'ROI on MAP implementation vs. cold outreach spend',
+    industry: 'CALLIOPE COMMUNICATIONS · HEALTHCARE B2B CONTENT',
+    bigNumber: '2/2',
+    label: 'dormant healthcare contacts replied',
+    detail:
+      'First 2 emails sent. Both replied. One positive engagement, one "stay in touch" reopened door. Founder voice preserved through human review.',
+    quote: 'The AI has done a pretty good job connecting the dots.',
+    attribution: 'Mary Tindall · Founder',
+    href: 'https://mabbly.ai/case-study/calliope',
   },
   {
-    target: 167,
-    suffix: '%',
-    display: '167%',
-    label: 'increase in qualified opportunities within 90 days',
-  },
-  {
-    target: 51,
-    suffix: '%',
-    display: '51%',
-    label: 'reduction in sales cycle length at Orbits I–II',
-  },
-  {
-    target: 288,
-    suffix: '%',
-    display: '288%',
-    label: 'growth in referral pipeline after MAP activation',
-  },
-  {
-    target: 100,
-    suffix: '%',
-    display: '100%',
-    label: 'of beta cohort firms reported at least one closed deal within 90 days',
+    industry: 'SPR · CHICAGO TECHNOLOGY CONSULTING',
+    bigNumber: '150',
+    label: 'dormant enterprise contacts identified, 43 emails sent, 3 conversations restarted',
+    detail:
+      '3-layer human review (enrichment, content, executive). 4 ICPs. Reply rate ~7%. Kyle Gams (Managing Director) was final approver.',
+    quote: "Your guys' signal is the personalization piece.",
+    attribution: 'Kristin Rosa · Creative & Content Manager',
+    href: 'https://mabbly.ai/case-study/spr',
   },
 ];
 
-function countUp(
-  el: HTMLElement,
-  target: number | null,
-  floatTarget: number | null,
-  prefix: string,
-  suffix: string,
-  duration: number,
-) {
-  const start = performance.now();
-  const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
-
-  function tick(now: number) {
-    const p = Math.min((now - start) / duration, 1);
-    const e = easeOut(p);
-    const display =
-      floatTarget !== null
-        ? (e * floatTarget).toFixed(1)
-        : Math.round(e * (target ?? 0)).toString();
-    el.textContent = prefix + display + suffix;
-    if (p < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      el.textContent =
-        prefix + (floatTarget !== null ? floatTarget.toFixed(1) : String(target)) + suffix;
-    }
-  }
-
-  el.textContent = prefix + (floatTarget !== null ? '0.0' : '0') + suffix;
-  requestAnimationFrame(tick);
-}
-
 export default function Results() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const node = sectionRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          const nums = node.querySelectorAll<HTMLElement>('.rs-stat-num');
-          nums.forEach((el, i) => {
-            const target = el.dataset.target ? parseInt(el.dataset.target, 10) : null;
-            const floatTarget = el.dataset.float ? parseFloat(el.dataset.float) : null;
-            const prefix = el.dataset.prefix ?? '';
-            const suffix = el.dataset.suffix ?? '';
-            setTimeout(() => countUp(el, target, floatTarget, prefix, suffix, 700), i * 80);
-          });
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
       id="results"
       className="px-6 md:px-10"
       style={{
@@ -128,20 +61,18 @@ export default function Results() {
           gap: 22px;
           animation: fadeUp 0.8s ease 0.1s both;
         }
-        @media (min-width: 640px) {
-          .rs-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
+        @media (min-width: 768px) {
           .rs-grid { grid-template-columns: repeat(3, 1fr); }
         }
         .rs-card {
           background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(184,147,58,0.15);
+          border: 1px solid rgba(184,147,58,0.18);
           border-radius: 4px;
-          padding: 40px 32px;
-          text-align: center;
+          padding: 36px 28px;
           position: relative;
           overflow: hidden;
+          display: flex;
+          flex-direction: column;
           transition: background 0.18s, border-color 0.18s, transform 0.18s;
         }
         .rs-card::before {
@@ -166,26 +97,75 @@ export default function Results() {
         }
         .rs-card:hover {
           background: rgba(255,255,255,0.06);
-          border-color: rgba(184,147,58,0.4);
+          border-color: rgba(184,147,58,0.45);
           transform: translateY(-3px);
         }
-        .rs-stat-num {
+        .rs-industry {
           font-family: 'Inter Tight', sans-serif;
-          font-size: clamp(56px, 6vw, 80px);
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          color: rgba(184,147,58,0.85);
+          font-weight: 500;
+          margin: 0 0 20px;
+          line-height: 1.4;
+        }
+        .rs-bignum {
+          font-family: 'Inter Tight', sans-serif;
+          font-size: clamp(48px, 5vw, 64px);
           font-weight: 600;
           color: #B8933A;
           line-height: 1;
-          display: block;
-          margin-bottom: 16px;
           letter-spacing: -0.04em;
+          margin: 0 0 12px;
         }
-        .rs-stat-label {
+        .rs-label {
           font-family: 'Inter Tight', sans-serif;
-          font-size: 16px;
-          color: rgba(245,239,224,0.55);
+          font-size: 14px;
+          color: rgba(245,239,224,0.7);
           line-height: 1.5;
-          font-weight: 300;
+          font-weight: 400;
+          margin: 0 0 16px;
         }
+        .rs-detail {
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 13.5px;
+          color: rgba(245,239,224,0.5);
+          line-height: 1.6;
+          font-weight: 300;
+          margin: 0 0 20px;
+        }
+        .rs-quote {
+          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-size: 16px;
+          color: rgba(245,239,224,0.85);
+          font-style: italic;
+          line-height: 1.5;
+          border-left: 2px solid #B8933A;
+          padding-left: 14px;
+          margin: 0 0 12px;
+        }
+        .rs-attr {
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(184,147,58,0.75);
+          font-weight: 500;
+          margin: 0 0 18px;
+        }
+        .rs-link {
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 12px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #B8933A;
+          text-decoration: none;
+          margin-top: auto;
+          padding-top: 12px;
+          border-top: 1px solid rgba(184,147,58,0.18);
+          transition: color 0.18s;
+        }
+        .rs-link:hover { color: #D4AE48; }
       `}</style>
 
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -215,15 +195,15 @@ export default function Results() {
         <h2
           style={{
             fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 'clamp(56px, 8vw, 104px)',
+            fontSize: 'clamp(48px, 7vw, 88px)',
             fontWeight: 500,
             color: '#F5EFE0',
             lineHeight: 0.98,
-            letterSpacing: '-0.04em',
+            letterSpacing: '-0.035em',
             margin: '0 0 18px',
           }}
         >
-          What happens when the system runs.
+          The framework works in the field.
         </h2>
         <p
           style={{
@@ -235,24 +215,55 @@ export default function Results() {
             lineHeight: 1.5,
           }}
         >
-          Across 9 PS firms, 14 engagements, $2.6B in tracked pipeline.
+          Three documented cases. Real firms. Real outcomes. Real quotes.
         </p>
 
         <div className="rs-grid">
-          {STATS.map((s, i) => (
-            <div key={i} className="rs-card">
-              <span
-                className="rs-stat-num"
-                data-target={s.target ?? undefined}
-                data-float={s.float ?? undefined}
-                data-prefix={s.prefix ?? ''}
-                data-suffix={s.suffix ?? ''}
+          {CASES.map((c) => (
+            <article key={c.industry} className="rs-card">
+              <p className="rs-industry">{c.industry}</p>
+              <p className="rs-bignum">{c.bigNumber}</p>
+              <p className="rs-label">{c.label}</p>
+              <p className="rs-detail">{c.detail}</p>
+              <p className="rs-quote">"{c.quote}"</p>
+              <p className="rs-attr">{c.attribution}</p>
+              <a
+                href={c.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rs-link"
               >
-                {s.display}
-              </span>
-              <span className="rs-stat-label">{s.label}</span>
-            </div>
+                Read full case study →
+              </a>
+            </article>
           ))}
+        </div>
+
+        <div
+          style={{
+            maxWidth: 680,
+            margin: '64px auto 0',
+            paddingTop: 32,
+            borderTop: '1px solid rgba(184,147,58,0.25)',
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 14,
+              fontStyle: 'italic',
+              color: 'rgba(245,239,224,0.55)',
+              lineHeight: 1.65,
+              margin: 0,
+              fontWeight: 300,
+            }}
+          >
+            What did not work for everyone: each of these firms had an internal owner who ran the
+            work. Without an owner, the framework does not run itself. Three firms in our pilot
+            saw little movement. The pattern was the same: no one owned it. We tell you this
+            because you should know.
+          </p>
         </div>
       </div>
     </section>

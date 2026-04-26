@@ -1,3 +1,4 @@
+// RETIRED: this section was removed from /discover. Subscribe links now live in the Footer (#footer-podcast). File kept for easy restore.
 const PLATFORMS = ['Apple Podcasts', 'Spotify', 'YouTube'];
 
 const STATS = [

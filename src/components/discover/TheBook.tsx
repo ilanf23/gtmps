@@ -1,3 +1,7 @@
+// RETIRED: This component is no longer rendered on /discover.
+// Section 10 (The Manuscript) was cut from the homepage; its SEO surface
+// now lives on the standalone /manuscript route (src/pages/Manuscript.tsx).
+// Kept on disk for restore parity.
 type Chapter = { num: string; title: string; meta: string };
 
 const CHAPTERS: Chapter[] = [

@@ -45,9 +45,7 @@ export default function WhyNow() {
             margin: 0,
           }}
         >
-          The window is
-          <br />
-          <em style={{ color: '#B8933A', fontStyle: 'italic' }}>12 to 18 months.</em>
+          Why this matters now.
         </h2>
 
         <div
@@ -92,39 +90,6 @@ export default function WhyNow() {
               of PS buyers say they will use AI-native firms by 2026
             </div>
           </div>
-          <div
-            style={{
-              flex: '1 1 240px',
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(184,147,58,0.15)',
-              borderRadius: 3,
-              padding: '18px 20px',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontSize: 48,
-                fontWeight: 700,
-                color: '#B8933A',
-                lineHeight: 1,
-              }}
-            >
-              18
-              <span style={{ fontSize: 20, marginLeft: 4 }}>mo</span>
-            </div>
-            <div
-              style={{
-                fontFamily: "'Inter Tight', system-ui, sans-serif",
-                fontSize: 11,
-                color: 'rgba(245,239,224,0.4)',
-                lineHeight: 1.5,
-                marginTop: 8,
-              }}
-            >
-              median window before category leaders are set
-            </div>
-          </div>
         </div>
 
         <p
@@ -138,7 +103,7 @@ export default function WhyNow() {
             margin: '0 0 28px',
           }}
         >
-          The firms building systematic relationship infrastructure now will own the categories
+          The firms building a relationship system now will own the categories
           their competitors are still trying to define. The firms that wait will compete on price.
         </p>
 
@@ -158,7 +123,7 @@ export default function WhyNow() {
               margin: '0 0 4px',
             }}
           >
-            The technology is not the advantage.
+            Most firms will wait.
           </p>
           <p
             style={{
@@ -168,7 +133,7 @@ export default function WhyNow() {
               margin: 0,
             }}
           >
-            The relationships are. They always were.
+            The ones that move first set the terms.
           </p>
         </div>
       </div>

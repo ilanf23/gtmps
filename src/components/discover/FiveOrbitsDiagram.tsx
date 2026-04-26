@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 interface Props {
   /** Set true once the section enters the viewport. Triggers the reveal animation. */
   triggered: boolean;
@@ -7,244 +10,350 @@ interface Props {
 }
 
 /**
- * Five concentric gold rings + labeled callouts at distinct clock positions.
- * Single-fire reveal: rings cascade in (~900ms), Dead Zone glow fades up,
- * leader lines draw, labels rise, layer chips fill, formula reveals.
+ * Five concentric gold rings with pill-style labels positioned trigonometrically
+ * around each ring at distinct clock angles. Mobile (<768px) renders a vertical
+ * orbit list instead of the SVG diagram.
  */
 
-const orbits = [
-  { n: "01", title: "Core Proof",      desc: "Best stories",        r: 60,  angle: -90 },
-  { n: "02", title: "Active",          desc: "Current pipeline",    r: 120, angle: -18 },
-  { n: "03", title: "The Dead Zone",   desc: "Highest-ROI layer",   r: 188, angle:  54, emphasis: true },
-  { n: "04", title: "Warm Adjacency",  desc: "Referral network",    r: 252, angle: 126 },
-  { n: "05", title: "New Gravity",     desc: "ICP-matched market",  r: 312, angle: 198 },
+type Orbit = {
+  n: string;
+  title: string;
+  desc: string;
+  r: number;
+  angle: number;
+  emphasis?: boolean;
+  detail: string;
+  chapter: number;
+};
+
+const orbits: Orbit[] = [
+  { n: "01", title: "Core Proof",     desc: "Best stories",       r: 50,  angle: 270, chapter: 2,
+    detail: "Your existing clients, case studies, named outcomes. The proof base every other orbit references." },
+  { n: "02", title: "Active",         desc: "Current pipeline",   r: 100, angle: 342, chapter: 3,
+    detail: "Pipeline that is currently engaged. Where most firms over-invest." },
+  { n: "03", title: "The Dead Zone",  desc: "Highest ROI layer",  r: 150, angle: 54,  emphasis: true, chapter: 1,
+    detail: "Dormant relationships. The framework reactivated $400K at Madcraft in 7 minutes." },
+  { n: "04", title: "Warm Adjacency", desc: "Referral network",   r: 200, angle: 126, chapter: 4,
+    detail: "Referrals already inside reach. The network of networks." },
+  { n: "05", title: "New Gravity",    desc: "ICP matched market", r: 250, angle: 198, chapter: 5,
+    detail: "New firms pulled by your authority. The category creation play." },
 ];
 
 const layers = ["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"];
 const formulaTokens = ["Signal", "+", "Proof", "+", "Context", "="];
 
-const toRad = (deg: number) => (deg * Math.PI) / 180;
+const CENTER = 300;
+const GOLD = "#B8933A";
+const GOLD_DIM = "rgba(184,147,58,0.4)";
 
 const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Props) => {
-  // Animation runs once when triggered or when staticMode forces final state.
+  const isMobile = useIsMobile();
   const playing = triggered || staticMode;
+  const [active, setActive] = useState<Orbit | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null); // mobile inline
 
-  // Time map — needs to match the keyframes in index.css
-  const ringDur = 900;
-  const ringStaggerStep = 80;       // 0, 80, 160, 240, 320 ms
-  const glowStart = ringStaggerStep * 4 + ringDur - 200; // ~1020ms
-  const leadersStart = ringStaggerStep * 4 + ringDur + 80; // ~1300ms
-  const leaderStep = 80;
-  const labelDelayAfterLeader = 200;
-  const layersStart = leadersStart + leaderStep * 5 + labelDelayAfterLeader + 240; // ~2020ms
+  // ESC to dismiss modal
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActive(null);
+    };
+    window.addEventListener("keydown", onKey);
+    // lock scroll
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [active]);
+
+
+  // Ring draw timing
+  const ringDur = 800;
+  const ringStep = 150;
+  const labelDelayAfterRing = 200;
+  const totalRingsDur = ringDur + (orbits.length - 1) * ringStep; // ~1400ms
+  const layersStart = totalRingsDur + 400;
   const layerStep = 70;
-  const formulaStart = layersStart + layerStep * layers.length + 200; // ~2520ms
+  const formulaStart = layersStart + layerStep * layers.length + 200;
   const formulaTokenStep = 80;
 
   return (
-    <div className={`relative w-full ${playing ? "orbits-triggered" : ""} ${className}`}>
-      <svg
-        viewBox="-380 -380 760 760"
-        className="block w-full max-w-[720px] mx-auto"
-        style={{ aspectRatio: "1 / 1" }}
-        aria-label="The Relationship Revenue OS — Five Orbits diagram"
-      >
-        <defs>
-          <radialGradient id="orbit-center-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="rgba(212,174,72,0.55)" />
-            <stop offset="55%"  stopColor="rgba(184,147,58,0.10)" />
-            <stop offset="100%" stopColor="rgba(184,147,58,0)" />
-          </radialGradient>
-          <filter id="dz-outer-glow" x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation="4.5" />
-          </filter>
-        </defs>
+    <div className={`relative w-full ${className}`}>
+      <style>{`
+        @keyframes orbitDraw {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes orbitPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.55; }
+        }
+        @keyframes orbitLabelFade {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes orbitChipFade {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .orbit-03-pulse { animation: orbitPulse 1.5s ease-in-out infinite; }
+        .orbit-hit {
+          cursor: pointer;
+          transition: stroke-width 180ms ease, opacity 180ms ease, filter 180ms ease;
+        }
+        .orbit-hit:hover { stroke-width: 2.6 !important; filter: drop-shadow(0 0 6px rgba(184,147,58,0.55)); }
+        .orbit-hit-emph:hover { stroke-width: 3 !important; }
+        .orbit-label-g { cursor: pointer; }
+        .orbit-label-g rect {
+          transition: fill 180ms ease, stroke 180ms ease;
+        }
+        .orbit-label-g:hover rect { fill: rgba(184,147,58,0.18); stroke: #B8933A; }
+        .orbit-label-g:focus-visible { outline: none; }
+        .orbit-label-g:focus-visible rect { stroke: #F5F1E8; stroke-width: 2; }
 
-        {/* Center glow disc */}
-        <circle r="44" fill="url(#orbit-center-glow)" />
+        @keyframes orbitModalSlide {
+          from { transform: translateX(100%); }
+          to   { transform: translateX(0); }
+        }
+        @keyframes orbitModalFade {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .orbit-modal-panel { animation: orbitModalFade 200ms ease forwards !important; transform: none !important; }
+        }
+      `}</style>
 
-        {/* Center marker — represents the firm */}
-        <circle
-          className="orbit-center"
-          r="4"
-          fill="#D4AE48"
-          style={{
-            transformOrigin: "center",
-            transformBox: "fill-box",
-            opacity: playing ? 1 : 0,
-            animation: playing && !staticMode ? `centerPulseOnce 700ms ${glowStart}ms ease-out 1` : undefined,
-          }}
-        />
-
-        {/* Rings */}
-        {orbits.map((o, i) => {
-          const circ = 2 * Math.PI * o.r;
-          const isDZ = !!o.emphasis;
-          const stroke = isDZ ? "#D4AE48" : "rgba(184,147,58,0.55)";
-          const strokeWidth = isDZ ? 2.5 : 1;
-          const ringOpacity = staticMode
-            ? (isDZ ? 1 : (i === 0 ? 0.55 : i === 1 ? 0.5 : i === 3 ? 0.4 : 0.3))
-            : undefined;
-
-          return (
-            <g key={o.n}>
-              {/* Dead Zone glow halo, only behind ring 03 */}
-              {isDZ && (
-                <circle
-                  className="orbit-glow"
-                  r={o.r}
-                  fill="none"
-                  stroke="rgba(212,174,72,0.45)"
-                  strokeWidth={6}
-                  filter="url(#dz-outer-glow)"
+      {isMobile ? (
+        // ── Mobile: vertical orbit list with tap-to-expand ───────────────
+        <ul className="mx-auto w-full max-w-[420px] flex flex-col gap-3 px-2">
+          {orbits.map((o) => {
+            const isDZ = !!o.emphasis;
+            const isOpen = expanded === o.n;
+            return (
+              <li key={o.n}>
+                <button
+                  type="button"
+                  onClick={() => setExpanded(isOpen ? null : o.n)}
+                  aria-expanded={isOpen}
                   style={{
-                    opacity: 0,
-                    animation:
-                      playing && !staticMode
-                        ? `orbitGlow 600ms ${glowStart}ms ease-out forwards`
-                        : staticMode
-                        ? undefined
-                        : undefined,
-                    ...(staticMode ? { opacity: 1 } : {}),
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 14,
+                    padding: "14px 16px",
+                    background: isDZ ? "rgba(184,147,58,0.08)" : "rgba(255,253,248,0.02)",
+                    borderLeft: `2px solid ${isDZ ? GOLD : "rgba(184,147,58,0.25)"}`,
+                    borderTop: 'none', borderRight: 'none', borderBottom: 'none',
+                    borderRadius: 4,
+                    textAlign: "left",
+                    cursor: "pointer",
+                    minHeight: 48,
                   }}
-                />
-              )}
+                >
+                  <span
+                    className="font-mono"
+                    style={{
+                      fontSize: 11,
+                      letterSpacing: 1.4,
+                      color: GOLD,
+                      paddingTop: 2,
+                      minWidth: 22,
+                    }}
+                  >
+                    {o.n}
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
+                    <span
+                      className="font-display"
+                      style={{
+                        fontSize: 15,
+                        fontWeight: isDZ ? 600 : 500,
+                        color: isDZ ? GOLD : "#F5F1E8",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      {o.title}
+                    </span>
+                    <span
+                      className="font-display"
+                      style={{ fontSize: 12, color: "rgba(245,241,232,0.55)", fontWeight: 300 }}
+                    >
+                      {o.desc}
+                    </span>
+                  </div>
+                  <span aria-hidden style={{ color: GOLD, fontSize: 14, paddingTop: 2 }}>
+                    {isOpen ? "−" : "+"}
+                  </span>
+                </button>
+                {isOpen && (
+                  <div
+                    style={{
+                      padding: "12px 16px 16px 36px",
+                      borderLeft: `2px solid ${isDZ ? GOLD : "rgba(184,147,58,0.25)"}`,
+                      borderRadius: "0 0 4px 4px",
+                      background: "rgba(245,239,224,0.03)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontSize: 15,
+                        lineHeight: 1.55,
+                        color: "rgba(245,239,224,0.78)",
+                        margin: "0 0 12px",
+                      }}
+                    >
+                      {o.detail}
+                    </p>
+                    <a
+                      href={`/manuscript#chapter-${o.chapter}`}
+                      style={{
+                        fontFamily: "'Inter Tight', sans-serif",
+                        fontSize: 12,
+                        letterSpacing: "0.16em",
+                        textTransform: "uppercase",
+                        color: GOLD,
+                        textDecoration: "none",
+                        borderBottom: `1px solid ${GOLD_DIM}`,
+                        paddingBottom: 2,
+                      }}
+                    >
+                      Read Chapter {o.chapter} →
+                    </a>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        // ── Desktop: SVG diagram ──────────────────────────────────────────
+        <svg
+          viewBox="0 0 600 600"
+          className="block w-full mx-auto"
+          style={{ maxWidth: 600, aspectRatio: "1 / 1" }}
+          aria-label="The Relationship Revenue OS — Five Orbits diagram"
+        >
+          <defs>
+            <radialGradient id="orbit-center-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stopColor="rgba(212,174,72,0.45)" />
+              <stop offset="60%"  stopColor="rgba(184,147,58,0.08)" />
+              <stop offset="100%" stopColor="rgba(184,147,58,0)" />
+            </radialGradient>
+          </defs>
 
-              {/* The ring itself */}
+          {/* Center glow + marker */}
+          <circle cx={CENTER} cy={CENTER} r={36} fill="url(#orbit-center-glow)" />
+          <circle cx={CENTER} cy={CENTER} r={4} fill={GOLD} />
+
+          {/* Rings — draw sequentially on trigger */}
+          {orbits.map((o, i) => {
+            const circ = 2 * Math.PI * o.r;
+            const isDZ = !!o.emphasis;
+            const stroke = isDZ ? GOLD : GOLD_DIM;
+            const strokeWidth = isDZ ? 2 : 1;
+
+            const ringStyle: React.CSSProperties = staticMode
+              ? { opacity: 1 }
+              : {
+                  strokeDasharray: circ,
+                  strokeDashoffset: playing ? undefined : circ,
+                  transformOrigin: `${CENTER}px ${CENTER}px`,
+                  transform: "rotate(-90deg)",
+                  animation: playing
+                    ? `orbitDraw ${ringDur}ms ${i * ringStep}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
+                    : undefined,
+                };
+
+            return (
               <circle
-                className="orbit-ring"
+                key={`ring-${o.n}`}
+                cx={CENTER}
+                cy={CENTER}
                 r={o.r}
                 fill="none"
                 stroke={stroke}
                 strokeWidth={strokeWidth}
-                style={
-                  staticMode
-                    ? { opacity: ringOpacity }
-                    : {
-                        ["--circ" as never]: circ,
-                        strokeDasharray: circ,
-                        strokeDashoffset: playing ? undefined : circ,
-                        opacity: isDZ ? 1 : (i === 0 ? 0.55 : i === 1 ? 0.5 : i === 3 ? 0.4 : 0.3),
-                        transformOrigin: "center",
-                        transform: "rotate(-90deg)",
-                        transformBox: "fill-box",
-                        animation: playing
-                          ? `orbitDraw ${ringDur}ms ${i * ringStaggerStep}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
-                          : undefined,
-                      }
-                }
+                className={`${isDZ && !staticMode ? "orbit-03-pulse " : ""}orbit-hit${isDZ ? " orbit-hit-emph" : ""}`}
+                style={{ ...ringStyle, pointerEvents: "stroke" }}
+                onClick={() => setActive(o)}
               />
-            </g>
-          );
-        })}
+            );
+          })}
 
-        {/* Leader lines + labels */}
-        {orbits.map((o, i) => {
-          const rad = toRad(o.angle);
-          const onRingX = Math.cos(rad) * o.r;
-          const onRingY = Math.sin(rad) * o.r;
-          const labelOffset = 36;
-          const labelX = Math.cos(rad) * (o.r + labelOffset);
-          const labelY = Math.sin(rad) * (o.r + labelOffset);
+          {/* Labels — pill background + centered text */}
+          {orbits.map((o, i) => {
+            const angleRad = ((o.angle - 90) * Math.PI) / 180;
+            const x = CENTER + o.r * Math.cos(angleRad);
+            const y = CENTER + o.r * Math.sin(angleRad);
+            const isDZ = !!o.emphasis;
 
-          // Leader length for stroke-dash
-          const leaderLen = labelOffset;
+            const labelText = `${o.n}  ${o.title}`;
+            // Approx pill width from text length
+            const pillW = Math.max(96, labelText.length * 7.2 + 24);
+            const pillH = 26;
 
-          // Anchor flips by horizontal position so labels sit outboard
-          const anchor: "start" | "middle" | "end" =
-            Math.abs(Math.cos(rad)) < 0.2
-              ? "middle"
-              : Math.cos(rad) > 0
-              ? "start"
-              : "end";
+            const labelDelay = ringDur + i * ringStep + labelDelayAfterRing;
 
-          const isDZ = !!o.emphasis;
-          const startDelay = leadersStart + i * leaderStep;
-          const labelStartDelay = startDelay + labelDelayAfterLeader;
+            const groupStyle: React.CSSProperties = staticMode
+              ? { opacity: 1 }
+              : {
+                  opacity: playing ? undefined : 0,
+                  animation: playing
+                    ? `orbitLabelFade 380ms ${labelDelay}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
+                    : undefined,
+                  transformOrigin: `${x}px ${y}px`,
+                };
 
-          return (
-            <g key={`label-${o.n}`}>
-              {/* Leader line from ring perimeter outward */}
-              <line
-                className="orbit-leader"
-                x1={onRingX}
-                y1={onRingY}
-                x2={labelX - Math.cos(rad) * 6}
-                y2={labelY - Math.sin(rad) * 6}
-                stroke="rgba(184,147,58,0.55)"
-                strokeWidth={1}
-                style={
-                  staticMode
-                    ? undefined
-                    : {
-                        ["--leader-len" as never]: leaderLen,
-                        strokeDasharray: leaderLen,
-                        strokeDashoffset: playing ? undefined : leaderLen,
-                        animation: playing
-                          ? `leaderDraw 380ms ${startDelay}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
-                          : undefined,
-                      }
-                }
-              />
-
-              {/* Label group */}
+            return (
               <g
-                className="orbit-label"
-                transform={`translate(${labelX}, ${labelY})`}
-                style={
-                  staticMode
-                    ? undefined
-                    : {
-                        opacity: playing ? undefined : 0,
-                        animation: playing
-                          ? `labelRise 480ms ${labelStartDelay}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
-                          : undefined,
-                      }
-                }
+                key={`label-${o.n}`}
+                className="orbit-label-g"
+                style={groupStyle}
+                role="button"
+                tabIndex={0}
+                onClick={() => setActive(o)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(o); } }}
               >
+                <rect
+                  x={x - pillW / 2}
+                  y={y - pillH / 2}
+                  width={pillW}
+                  height={pillH}
+                  rx={pillH / 2}
+                  fill="#0A0807"
+                  stroke={isDZ ? GOLD : GOLD_DIM}
+                  strokeWidth={isDZ ? 1.5 : 1}
+                  className={isDZ && !staticMode ? "orbit-03-pulse" : undefined}
+                />
                 <text
-                  textAnchor={anchor}
-                  fontFamily="'DM Mono', monospace"
-                  fontSize={11}
-                  letterSpacing={1.5}
-                  fill="#D4AE48"
-                  y={-14}
-                >
-                  {o.n}
-                </text>
-                <text
-                  textAnchor={anchor}
+                  x={x}
+                  y={y}
+                  textAnchor="middle"
+                  dy="0.35em"
                   fontFamily="'Inter Tight', sans-serif"
-                  fontSize={isDZ ? 17 : 14}
+                  fontSize={12}
                   fontWeight={isDZ ? 600 : 500}
-                  fill="#F5F1E8"
-                  letterSpacing={-0.2}
-                  y={4}
+                  fill={isDZ ? GOLD : "#F5F1E8"}
+                  letterSpacing={isDZ ? 0.2 : 0}
+                  style={{ whiteSpace: "pre", pointerEvents: "none" }}
                 >
-                  {o.title}
-                </text>
-                <text
-                  textAnchor={anchor}
-                  fontFamily="'Inter Tight', sans-serif"
-                  fontSize={11}
-                  fill="rgba(245,241,232,0.55)"
-                  fontWeight={300}
-                  y={20}
-                >
-                  {o.desc}
+                  {labelText}
                 </text>
               </g>
-            </g>
-          );
-        })}
-      </svg>
+            );
+          })}
+        </svg>
+      )}
 
       {/* Layer flow */}
       <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 mt-16">
         {layers.map((l, i) => (
           <div key={l} className="flex items-center gap-2">
             <span
-              className="orbit-chip font-display uppercase rounded-full"
+              className="font-display uppercase rounded-full"
               style={{
                 fontSize: 11,
                 letterSpacing: "0.22em",
@@ -256,7 +365,7 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
                 opacity: playing ? undefined : 0,
                 animation:
                   playing && !staticMode
-                    ? `chipFade 360ms ${layersStart + i * layerStep}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
+                    ? `orbitChipFade 360ms ${layersStart + i * layerStep}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
                     : undefined,
                 ...(staticMode ? { opacity: 1 } : {}),
               }}
@@ -265,14 +374,13 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
             </span>
             {i < layers.length - 1 && (
               <span
-                className="orbit-chip"
                 style={{
                   color: "rgba(212,174,72,0.7)",
                   fontSize: 14,
                   opacity: playing ? undefined : 0,
                   animation:
                     playing && !staticMode
-                      ? `chipFade 360ms ${layersStart + i * layerStep + 35}ms ease-out forwards`
+                      ? `orbitChipFade 360ms ${layersStart + i * layerStep + 35}ms ease-out forwards`
                       : undefined,
                   ...(staticMode ? { opacity: 1 } : {}),
                 }}
@@ -285,7 +393,7 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
       </div>
 
       {/* Formula */}
-      <div className="orbit-formula text-center mx-auto mt-14 px-4" style={{ maxWidth: 800 }}>
+      <div className="text-center mx-auto mt-14 px-4" style={{ maxWidth: 800 }}>
         <p
           className="font-mono uppercase mb-3"
           style={{ fontSize: 10, letterSpacing: "0.28em", color: "rgba(212,174,72,0.7)" }}
@@ -311,7 +419,7 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
                 opacity: playing ? undefined : 0,
                 animation:
                   playing && !staticMode
-                    ? `chipFade 320ms ${formulaStart + i * formulaTokenStep}ms ease-out forwards`
+                    ? `orbitChipFade 320ms ${formulaStart + i * formulaTokenStep}ms ease-out forwards`
                     : undefined,
                 ...(staticMode ? { opacity: 1 } : {}),
               }}
@@ -321,12 +429,12 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
           ))}
           <span
             style={{
-              color: "#D4AE48",
+              color: GOLD,
               fontStyle: "italic",
               opacity: playing ? undefined : 0,
               animation:
                 playing && !staticMode
-                  ? `chipFade 360ms ${formulaStart + formulaTokens.length * formulaTokenStep + 80}ms ease-out forwards`
+                  ? `orbitChipFade 360ms ${formulaStart + formulaTokens.length * formulaTokenStep + 80}ms ease-out forwards`
                   : undefined,
               ...(staticMode ? { opacity: 1 } : {}),
             }}
@@ -335,6 +443,76 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
           </span>
         </p>
       </div>
+
+      {/* Desktop modal — slide-in from right */}
+      {!isMobile && active && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="orbit-modal-title"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 200,
+            background: 'rgba(8,6,4,0.6)',
+            animation: 'orbitModalFade 240ms ease forwards',
+          }}
+          onClick={() => setActive(null)}
+        >
+          <div
+            className="orbit-modal-panel"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              height: '100%',
+              width: 480,
+              maxWidth: '92vw',
+              background: '#F5EFE0',
+              borderLeft: '1px solid #B8933A',
+              boxShadow: '-20px 0 60px -20px rgba(0,0,0,0.5)',
+              padding: '56px 40px 40px',
+              overflowY: 'auto',
+              animation: 'orbitModalSlide 400ms cubic-bezier(0.22,1,0.36,1) forwards',
+              fontFamily: "'Inter Tight', sans-serif",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setActive(null)}
+              aria-label="Close"
+              style={{
+                position: 'absolute', top: 16, right: 16,
+                width: 40, height: 40, border: 'none', background: 'transparent',
+                fontSize: 22, color: '#6A5038', cursor: 'pointer', lineHeight: 1,
+              }}
+            >×</button>
+            <p style={{
+              fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: '0.32em',
+              textTransform: 'uppercase', color: '#B8933A', margin: 0,
+            }}>Orbit {active.n}</p>
+            <h3 id="orbit-modal-title" style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 500, color: '#2A1A08',
+              lineHeight: 1.1, letterSpacing: '-0.02em', margin: '14px 0 24px',
+            }}>{active.title}</h3>
+            <p style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 18, lineHeight: 1.6, color: 'rgba(42,26,8,0.78)', margin: '0 0 36px',
+            }}>{active.detail}</p>
+            <a
+              href={`/manuscript#chapter-${active.chapter}`}
+              style={{
+                display: 'inline-block', padding: '12px 22px',
+                background: '#B8933A', color: '#fff', textDecoration: 'none',
+                fontSize: 13, letterSpacing: '0.08em', fontWeight: 500,
+                borderRadius: 3,
+              }}
+            >Read the chapter →</a>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

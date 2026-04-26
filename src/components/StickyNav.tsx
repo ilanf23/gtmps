@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 const navItems = [
@@ -10,6 +11,7 @@ const navItems = [
 ];
 
 const StickyNav = () => {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -58,8 +60,9 @@ const StickyNav = () => {
         </div>
 
         {/* CTA */}
-        <a
-          href="#apply"
+        <button
+          type="button"
+          onClick={() => navigate("/assess")}
           className="hidden lg:inline-flex font-sans font-semibold rounded-full transition-all duration-200 text-white border border-white/25 hover:bg-white hover:text-ink"
           style={{
             fontSize: 13,
@@ -67,7 +70,7 @@ const StickyNav = () => {
           }}
         >
           Apply Now
-        </a>
+        </button>
 
         {/* Mobile hamburger */}
         <button
@@ -98,13 +101,16 @@ const StickyNav = () => {
               {item.label}
             </a>
           ))}
-          <a
-            href="#apply"
-            onClick={() => setMobileOpen(false)}
-            className="font-sans font-semibold text-ink bg-gold rounded-full mt-4 px-8 py-3 text-base"
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              navigate("/assess");
+            }}
+            className="font-sans font-semibold text-ink bg-gold rounded-full mt-4 px-8 py-3 text-base border-none"
           >
             Apply Now
-          </a>
+          </button>
         </div>
       )}
     </>

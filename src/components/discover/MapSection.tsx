@@ -1,8 +1,8 @@
 const DIMENSIONS = [
-  'I · Relationship Depth',
-  'II · Orbit Activation',
-  'III · Signal Capture',
-  'IV · Cadence & Systems',
+  'Relationship Depth',
+  'Orbit Activation',
+  'Signal Capture',
+  'Cadence & Systems',
 ];
 
 export default function MapSection() {
@@ -46,7 +46,7 @@ export default function MapSection() {
               fontWeight: 500,
             }}
           >
-            09 · THE MAP
+            09 · THE GTM SCORE
           </p>
           <div
             aria-hidden
@@ -81,8 +81,7 @@ export default function MapSection() {
               fontWeight: 300,
             }}
           >
-            The Market Activation Plan diagnostic. Four dimensions. One benchmark against peer PS
-            firms.
+            The GTM Score diagnostic. Four dimensions. One benchmark against peer PS firms.
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -108,16 +107,6 @@ export default function MapSection() {
                   >
                     {d}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'Inter Tight', sans-serif",
-                      fontSize: 14,
-                      color: 'rgba(42,26,8,0.4)',
-                      fontWeight: 400,
-                    }}
-                  >
-                    —/25
-                  </span>
                 </div>
                 <div
                   style={{
@@ -130,21 +119,6 @@ export default function MapSection() {
               </div>
             ))}
           </div>
-
-          <p
-            style={{
-              fontFamily: "'Inter Tight', sans-serif",
-              fontSize: 16,
-              color: 'rgba(42,26,8,0.5)',
-              lineHeight: 1.55,
-              marginTop: 32,
-              margin: '32px 0 0',
-              fontWeight: 300,
-            }}
-          >
-            Most PS firms score between 28 and 44 out of 100. The MAP tells you exactly where the
-            gap is.
-          </p>
         </div>
 
         <div className="ms-right">
@@ -160,52 +134,23 @@ export default function MapSection() {
               alignItems: 'center',
             }}
           >
-            <div
+            <p
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 13,
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: 'rgba(42,26,8,0.4)',
-                marginBottom: 14,
-                fontWeight: 500,
-              }}
-            >
-              YOUR MAP SCORE
-            </div>
-            <div
-              style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 'clamp(96px, 12vw, 140px)',
-                fontWeight: 600,
-                color: '#B8933A',
-                lineHeight: 1,
-                letterSpacing: '-0.05em',
-              }}
-            >
-              —
-            </div>
-            <div
-              style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 15,
-                color: 'rgba(42,26,8,0.4)',
-                marginTop: 10,
+                fontSize: 'clamp(18px, 1.9vw, 24px)',
+                color: '#2A1A08',
+                lineHeight: 1.35,
                 fontWeight: 400,
+                maxWidth: 320,
+                margin: '0 0 32px',
+                letterSpacing: '-0.01em',
               }}
             >
-              out of 100
-            </div>
-            <div
-              style={{
-                width: '100%',
-                height: 1,
-                background: 'rgba(184,147,58,0.18)',
-                margin: '32px 0',
-              }}
-            />
+              Get your GTM Score. See exactly where you stand.
+            </p>
             <a
-              href="#beta-reader"
+              href="/assess"
+              data-cta="add-your-firm"
               style={{
                 display: 'block',
                 width: '100%',
@@ -221,20 +166,20 @@ export default function MapSection() {
                 fontWeight: 600,
               }}
             >
-              Create Your GTM
+              Add Your Firm →
             </a>
             <p
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 13,
-                color: 'rgba(42,26,8,0.4)',
+                color: 'rgba(42,26,8,0.5)',
                 textAlign: 'center',
                 marginTop: 14,
                 margin: '14px 0 0',
                 fontWeight: 400,
               }}
             >
-              Free · 10 minutes · Instant results
+              Free. Instant results. 1,200+ PS leaders have taken it.
             </p>
           </div>
         </div>

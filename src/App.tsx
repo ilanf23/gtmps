@@ -6,10 +6,23 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import IndexV1 from "./pages/IndexV1.tsx";
 import Discover from "./pages/Discover.tsx";
+import Manuscript from "./pages/Manuscript.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import PepperGroup from "./pages/microsites/PepperGroup.tsx";
 import Google from "./pages/microsites/Google.tsx";
 import SPRGroup from "./pages/SPRGroup.tsx";
+import Consulting from "./pages/verticals/Consulting.tsx";
+import Law from "./pages/verticals/Law.tsx";
+import Accounting from "./pages/verticals/Accounting.tsx";
+import Msp from "./pages/verticals/Msp.tsx";
+import Advisory from "./pages/verticals/Advisory.tsx";
+import Ae from "./pages/verticals/Ae.tsx";
+import Recruiting from "./pages/verticals/Recruiting.tsx";
+import Agency from "./pages/verticals/Agency.tsx";
+import MagnetAssess from "./pages/MagnetAssess.tsx";
+import MagnetSite from "./pages/MagnetSite.tsx";
+import MagnetBook from "./pages/MagnetBook.tsx";
+import Awards from "./pages/Awards.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +39,19 @@ const App = () => (
           <Route path="/pepper-group" element={<PepperGroup />} />
           <Route path="/google" element={<Google />} />
           <Route path="/spr" element={<SPRGroup />} />
+          <Route path="/manuscript" element={<Manuscript />} />
+          <Route path="/consulting" element={<Consulting />} />
+          <Route path="/law" element={<Law />} />
+          <Route path="/accounting" element={<Accounting />} />
+          <Route path="/msp" element={<Msp />} />
+          <Route path="/advisory" element={<Advisory />} />
+          <Route path="/ae" element={<Ae />} />
+          <Route path="/recruiting" element={<Recruiting />} />
+          <Route path="/agency" element={<Agency />} />
+          <Route path="/assess" element={<MagnetAssess />} />
+          <Route path="/m/:slug" element={<MagnetSite />} />
+          <Route path="/book" element={<MagnetBook />} />
+          <Route path="/awards" element={<Awards />} />
           {/* ADD NEW MICROSITE ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

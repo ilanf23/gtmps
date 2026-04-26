@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Item {
   id: string;
@@ -6,12 +6,27 @@ interface Item {
 }
 
 /**
- * Vertical scroll-spy rail. Desktop-only (hidden under 1280px).
- * 12px dots, gold-filled when section is active. Hairline connector.
+ * Vertical scroll-spy rail. Visible from 1024px up.
+ * Active dot: filled gold 12px. Inactive: 8px outline.
+ * Label appears as a tooltip on hover/focus only — never in normal flow.
+ *
+ * Visibility:
+ *   - Hidden while the hero section (#hero) is in the viewport.
+ *   - Hidden once the page footer ([data-page-footer="true"]) enters the viewport.
+ *   - Visible only across the body sections in between.
+ *   - Fades opacity 250ms; instant for prefers-reduced-motion.
+ *   - Below 1024px the rail stays display:none regardless of state.
  */
 const SectionRail = ({ items }: { items: Item[] }) => {
   const [active, setActive] = useState(items[0]?.id);
+  const [visible, setVisible] = useState(false);
 
+  // Track each gate independently so out-of-order observer callbacks can't
+  // accidentally show the rail while either gate is still active.
+  const heroInView = useRef(true);
+  const footerInView = useRef(false);
+
+  // Scroll-spy
   useEffect(() => {
     const els = items
       .map((i) => ({ id: i.id, el: document.getElementById(i.id) }))
@@ -19,11 +34,10 @@ const SectionRail = ({ items }: { items: Item[] }) => {
 
     const obs = new IntersectionObserver(
       (entries) => {
-        // Track all entries' ratios; pick the most-visible
-        const visible = entries
+        const visibleEntry = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target?.id) setActive(visible.target.id);
+        if (visibleEntry?.target?.id) setActive(visibleEntry.target.id);
       },
       { threshold: [0.2, 0.4, 0.6], rootMargin: "-30% 0px -50% 0px" }
     );
@@ -32,61 +46,166 @@ const SectionRail = ({ items }: { items: Item[] }) => {
     return () => obs.disconnect();
   }, [items]);
 
+  // Visibility gating: hide in hero and footer, show in body
+  useEffect(() => {
+    const recompute = () => {
+      setVisible(!heroInView.current && !footerInView.current);
+    };
+
+    let heroObs: IntersectionObserver | null = null;
+    let footerObs: IntersectionObserver | null = null;
+    let rafId = 0;
+
+    const attachHero = () => {
+      const hero = document.getElementById("hero");
+      if (!hero) return;
+      heroObs = new IntersectionObserver(
+        ([entry]) => {
+          heroInView.current = entry.isIntersecting;
+          recompute();
+        },
+        { threshold: 0.5 }
+      );
+      heroObs.observe(hero);
+    };
+
+    const attachFooter = () => {
+      const footer = document.querySelector('[data-page-footer="true"]');
+      if (!footer) {
+        rafId = requestAnimationFrame(attachFooter);
+        return;
+      }
+      footerObs = new IntersectionObserver(
+        ([entry]) => {
+          footerInView.current = entry.isIntersecting;
+          recompute();
+        },
+        { threshold: 0.3 }
+      );
+      footerObs.observe(footer);
+    };
+
+    attachHero();
+    attachFooter();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      heroObs?.disconnect();
+      footerObs?.disconnect();
+    };
+  }, []);
+
   return (
-    <nav
-      aria-label="Sections"
-      className="hidden xl:flex fixed left-6 top-1/2 -translate-y-1/2 z-[80] flex-col items-center"
-      style={{ gap: 14 }}
-    >
-      <div
-        aria-hidden
-        style={{
-          width: 1,
-          height: items.length * 28,
-          background: "linear-gradient(to bottom, transparent, rgba(184,147,58,0.25), transparent)",
-          position: "absolute",
-          top: 6,
-        }}
-      />
-      {items.map((i) => {
-        const isActive = i.id === active;
-        return (
-          <a
-            key={i.id}
-            href={`#${i.id}`}
-            aria-label={i.label}
-            className="relative group block"
-            style={{ width: 12, height: 12, zIndex: 1 }}
-          >
-            <span
-              style={{
-                position: "absolute",
-                inset: 0,
-                borderRadius: "50%",
-                border: `1px solid ${isActive ? "#B8933A" : "rgba(184,147,58,0.45)"}`,
-                background: isActive ? "#B8933A" : "transparent",
-                transition: "all 300ms ease",
-                boxShadow: isActive ? "0 0 12px rgba(184,147,58,0.5)" : "none",
-              }}
-            />
-            <span
-              className="font-mono uppercase absolute whitespace-nowrap"
-              style={{
-                left: 22,
-                top: -2,
-                fontSize: 9,
-                letterSpacing: "0.18em",
-                color: isActive ? "#B8933A" : "rgba(184,147,58,0)",
-                transition: "color 300ms ease",
-                pointerEvents: "none",
-              }}
+    <>
+      <style>{`
+        .sr-rail {
+          position: fixed;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 16px;
+          z-index: 50;
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          gap: 14px;
+          width: 24px;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 250ms ease;
+        }
+        .sr-rail[data-visible="true"] {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .sr-rail { transition: none; }
+        }
+        @media (min-width: 1024px) { .sr-rail { display: flex; } }
+        @media (min-width: 1280px) { .sr-rail { left: 24px; } }
+
+        .sr-connector {
+          position: absolute;
+          top: 6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 1px;
+          background: linear-gradient(to bottom, transparent, rgba(184,147,58,0.25), transparent);
+          pointer-events: none;
+        }
+
+        .sr-dot {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          z-index: 1;
+        }
+        .sr-dot-mark {
+          display: block;
+          border-radius: 50%;
+          width: 8px;
+          height: 8px;
+          border: 1px solid rgba(184,147,58,0.45);
+          background: transparent;
+          transition: width 300ms ease, height 300ms ease, background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+        }
+        .sr-dot[data-active="true"] .sr-dot-mark {
+          width: 12px;
+          height: 12px;
+          background: #B8933A;
+          border-color: #B8933A;
+          box-shadow: 0 0 12px rgba(184,147,58,0.5);
+        }
+
+        .sr-tooltip {
+          position: absolute;
+          left: 28px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(28,16,8,0.92);
+          color: #B8933A;
+          font-family: 'DM Mono', monospace;
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          padding: 6px 10px;
+          border-radius: 4px;
+          max-width: 200px;
+          white-space: nowrap;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 150ms ease;
+          z-index: 100;
+          box-shadow: 0 4px 12px -4px rgba(0,0,0,0.4);
+        }
+        .sr-dot:hover .sr-tooltip,
+        .sr-dot:focus-visible .sr-tooltip,
+        .sr-dot:focus .sr-tooltip {
+          opacity: 1;
+        }
+      `}</style>
+
+      <nav aria-label="Sections" className="sr-rail" data-visible={visible}>
+        <div className="sr-connector" style={{ height: items.length * 28 }} aria-hidden />
+        {items.map((i) => {
+          const isActive = i.id === active;
+          return (
+            <a
+              key={i.id}
+              href={`#${i.id}`}
+              aria-label={i.label}
+              className="sr-dot"
+              data-active={isActive}
             >
-              {i.label}
-            </span>
-          </a>
-        );
-      })}
-    </nav>
+              <span className="sr-dot-mark" />
+              <span className="sr-tooltip">{i.label}</span>
+            </a>
+          );
+        })}
+      </nav>
+    </>
   );
 };
 
