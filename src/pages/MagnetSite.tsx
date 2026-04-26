@@ -165,7 +165,8 @@ export default function MagnetSite() {
     };
   }, [slug]);
 
-  // Cycle processing steps every 4s
+  // Cycle processing steps — slowed to 14s so each step can breathe alongside
+  // the cinematic loading scene's animations.
   useEffect(() => {
     if (status !== 'pending' && status !== 'processing') return;
 
@@ -174,8 +175,8 @@ export default function MagnetSite() {
       window.setTimeout(() => {
         setStepIndex((i) => (i + 1) % STEPS.length);
         setStepVisible(true);
-      }, 300);
-    }, 4000);
+      }, 500);
+    }, 14000);
 
     return () => window.clearInterval(id);
   }, [status]);
