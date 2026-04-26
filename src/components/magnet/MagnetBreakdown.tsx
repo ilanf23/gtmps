@@ -109,25 +109,18 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [{ data: row, error: err }, { data: sub }] = await Promise.all([
-        supabase
-          .from("magnet_breakdowns")
-          .select(
-            "welcome_message, dead_zone_value, dead_zone_reasoning, gtm_profile_observed, gtm_profile_assessment, orbit_01, orbit_02, orbit_03, orbit_04, orbit_05, recommended_layer, action_1, action_2, action_3, chapter_callouts, enrichment_error"
-          )
-          .eq("slug", slug)
-          .maybeSingle(),
-        supabase
-          .from("magnet_submissions")
-          .select("first_name")
-          .eq("slug", slug)
-          .maybeSingle(),
+      const [brkRes, subRes] = await Promise.all([
+        supabase.rpc("get_magnet_breakdown_by_slug", { _slug: slug }),
+        supabase.rpc("get_magnet_submission_by_slug", { _slug: slug }),
       ]);
 
       if (cancelled) return;
 
-      if (err) {
-        setError(err.message);
+      const row = Array.isArray(brkRes.data) ? brkRes.data[0] : null;
+      const sub = Array.isArray(subRes.data) ? subRes.data[0] : null;
+
+      if (brkRes.error) {
+        setError(brkRes.error.message);
       } else if (!row) {
         setError("Breakdown not found.");
       } else if (row.enrichment_error) {
