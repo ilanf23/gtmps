@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import MagnetShell from "@/components/magnet/MagnetShell";
 
 const STEPS = [
   {
@@ -53,8 +54,8 @@ export default function MagnetBook() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#120D05] text-[#F5EFE0]">
-      <div className="max-w-2xl mx-auto px-6">
+    <MagnetShell>
+      <div className="max-w-2xl mx-auto px-6 w-full">
         {/* SECTION 1: HEADER */}
         <section className="pt-20 pb-12">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
@@ -145,6 +146,6 @@ export default function MagnetBook() {
           </div>
         </section>
       </div>
-    </div>
+    </MagnetShell>
   );
 }
