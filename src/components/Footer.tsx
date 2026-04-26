@@ -155,7 +155,7 @@ const Footer = () => {
                 maxWidth: 240,
               }}
             >
-              100 practitioner interviews on YouTube.
+              500 practitioner interviews on YouTube.
             </span>
           </div>
         </div>

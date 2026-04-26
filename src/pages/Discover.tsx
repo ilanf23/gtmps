@@ -37,6 +37,7 @@ const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
    TOP NAV
    ───────────────────────────────────────────── */
 const navItems = [
+  { label: "About", href: "/about", external: false, internal: true },
   { label: "Awards", href: "/awards", external: false, internal: true },
   { label: "Podcast", href: PODCAST_HREF, external: true },
 ];
@@ -473,6 +474,10 @@ const StickyCTA = () => {
    ───────────────────────────────────────────── */
 const Discover = () => {
   useScrollReveal();
+
+  useEffect(() => {
+    document.title = "Discover · GTM for Professional Services · Mabbly";
+  }, []);
 
   const railItems = [
     { id: "hero", label: "01 · Hero" },

@@ -15,6 +15,7 @@ const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
    TOP NAV (light variant — page is light overall, hero is dark)
    ───────────────────────────────────────────── */
 const navItems = [
+  { label: "About", href: "/about", internal: true },
   { label: "Awards", href: "/awards", internal: true },
   { label: "Podcast", href: PODCAST_HREF, external: true },
 ];
@@ -284,6 +285,10 @@ const eyebrowStyle: React.CSSProperties = {
    PAGE
    ───────────────────────────────────────────── */
 const About = () => {
+  useEffect(() => {
+    document.title = "About · Mabbly";
+  }, []);
+
   return (
     <>
       <TopNav />

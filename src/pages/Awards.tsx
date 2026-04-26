@@ -151,6 +151,7 @@ function AwardsNav() {
                 </div>
               )}
             </div>
+            <Link to="/about" className="an-link">About</Link>
             <Link to="/awards" className="an-link" data-active="true">Awards</Link>
             <a href={PODCAST_HREF} target="_blank" rel="noopener noreferrer" className="an-link">Podcast</a>
             <a href="/assess" className="an-cta">Add Your Firm →</a>
@@ -174,6 +175,9 @@ function AwardsNav() {
               </Link>
             );
           })}
+          <Link to="/about" className="an-mobile-link" onClick={() => setOpen(false)}>
+            About
+          </Link>
           <Link to="/awards" className="an-mobile-link" style={{ color: '#B8933A' }} onClick={() => setOpen(false)}>
             Awards
           </Link>
@@ -189,7 +193,7 @@ function AwardsNav() {
 
 export default function Awards() {
   useEffect(() => {
-    document.title = 'GTM for Professional Services Awards · Mabbly';
+    document.title = 'GTM for PS Awards · Mabbly';
 
     const params = new URLSearchParams(window.location.search);
     const shouldAutoScroll =
