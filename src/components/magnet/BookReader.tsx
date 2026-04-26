@@ -1,79 +1,201 @@
-import { useEffect, useState } from "react";
-import { Download, ExternalLink } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
+
+// Use the worker bundled by Vite from pdfjs-dist (no CDN, no external deps).
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url,
+).toString();
 
 const PDF_URL = "/book/relationship-revenue-os.pdf";
 
 export default function BookReader() {
+  const [numPages, setNumPages] = useState<number | null>(null);
+  const [pageNumber, setPageNumber] = useState(1);
   const [pdfAvailable, setPdfAvailable] = useState<boolean | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [containerWidth, setContainerWidth] = useState<number>(800);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // Existence check (avoid mounting <Document> against an HTML 404).
   useEffect(() => {
     let cancelled = false;
     fetch(PDF_URL, { method: "HEAD" })
       .then((r) => {
         if (cancelled) return;
-        // Treat presence of an actual PDF (not a fallback HTML 404) as available.
         const ct = r.headers.get("content-type") || "";
         setPdfAvailable(r.ok && ct.toLowerCase().includes("pdf"));
       })
-      .catch(() => {
-        if (!cancelled) setPdfAvailable(false);
-      });
+      .catch(() => !cancelled && setPdfAvailable(false));
     return () => {
       cancelled = true;
     };
   }, []);
 
+  // Track container width so the page renders crisply at any viewport.
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const w = e.contentRect.width;
+        // Cap at 920 for readability; subtract a little gutter.
+        setContainerWidth(Math.min(920, Math.max(320, w - 32)));
+      }
+    });
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [pdfAvailable]);
+
+  // Block right-click save inside the reader region.
+  const onContextMenu = (e: React.MouseEvent) => e.preventDefault();
+
+  // Keyboard navigation.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!numPages) return;
+      if (e.key === "ArrowRight" || e.key === "PageDown") {
+        setPageNumber((p) => Math.min(numPages, p + 1));
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        setPageNumber((p) => Math.max(1, p - 1));
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [numPages]);
+
+  const file = useMemo(() => ({ url: PDF_URL }), []);
+
+  const goPrev = () => setPageNumber((p) => Math.max(1, p - 1));
+  const goNext = () =>
+    setPageNumber((p) => (numPages ? Math.min(numPages, p + 1) : p));
+
   return (
-    <div className="flex-1 flex flex-col">
+    <div
+      className={
+        fullscreen
+          ? "fixed inset-0 z-50 flex flex-col bg-[#F2EBDC]"
+          : "flex-1 flex flex-col"
+      }
+      onContextMenu={onContextMenu}
+    >
       {/* Toolbar */}
-      <div className="border-b border-black/10 bg-[#FBF8F4]/80">
+      <div className="border-b border-black/10 bg-[#FBF8F4]/90 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <p className="text-xs uppercase tracking-[0.28em] text-[#B8933A]">
             Read the Book
           </p>
-          <div className="flex items-center gap-2">
-            {pdfAvailable && (
-              <>
-                <a
-                  href={PDF_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-[#1C1008]/60 hover:text-[#1C1008] transition-colors px-3 py-1.5"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Open
-                </a>
-                <a
-                  href={PDF_URL}
-                  download
-                  className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-3 py-1.5 rounded transition-colors"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Download
-                </a>
-              </>
-            )}
-          </div>
+
+          {pdfAvailable && numPages ? (
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button
+                type="button"
+                onClick={goPrev}
+                disabled={pageNumber <= 1}
+                className="inline-flex items-center justify-center w-8 h-8 rounded text-[#1C1008]/70 hover:text-[#1C1008] hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs tabular-nums text-[#1C1008]/70 min-w-[64px] text-center">
+                {pageNumber} / {numPages}
+              </span>
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={pageNumber >= numPages}
+                className="inline-flex items-center justify-center w-8 h-8 rounded text-[#1C1008]/70 hover:text-[#1C1008] hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                aria-label="Next page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setFullscreen((v) => !v)}
+                className="ml-1 sm:ml-2 inline-flex items-center justify-center w-8 h-8 rounded text-[#1C1008]/70 hover:text-[#1C1008] hover:bg-black/5 transition-colors"
+                aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              >
+                {fullscreen ? (
+                  <Minimize2 className="w-4 h-4" />
+                ) : (
+                  <Maximize2 className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
 
       {/* Reader */}
-      <div className="flex-1 bg-[#F2EBDC]">
+      <div
+        ref={containerRef}
+        className="flex-1 bg-[#F2EBDC] overflow-y-auto select-none"
+        style={{ WebkitUserSelect: "none" }}
+      >
         {pdfAvailable === null && (
-          <div className="h-full flex items-center justify-center">
+          <div className="h-full flex items-center justify-center py-20">
             <div
               className="w-8 h-8 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
-              aria-label="Checking for book"
+              aria-label="Loading"
             />
           </div>
         )}
 
         {pdfAvailable === true && (
-          <iframe
-            src={`${PDF_URL}#view=FitH`}
-            title="GTM Book"
-            className="w-full h-[calc(100vh-7rem)] border-0"
-          />
+          <div className="flex flex-col items-center py-6 sm:py-10">
+            <Document
+              file={file}
+              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+              loading={
+                <div className="py-20">
+                  <div
+                    className="w-8 h-8 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
+                    aria-label="Loading"
+                  />
+                </div>
+              }
+              error={
+                <p className="text-[#1C1008]/60 text-sm py-20">
+                  We couldn't load the book.
+                </p>
+              }
+            >
+              <div className="shadow-[0_18px_60px_-20px_rgba(28,16,8,0.35)] bg-white">
+                <Page
+                  pageNumber={pageNumber}
+                  width={containerWidth}
+                  renderAnnotationLayer={false}
+                  renderTextLayer={false}
+                />
+              </div>
+            </Document>
+
+            {numPages ? (
+              <div className="mt-6 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-[#1C1008]/50">
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  disabled={pageNumber <= 1}
+                  className="hover:text-[#1C1008] disabled:opacity-30 transition-colors"
+                >
+                  ← Prev
+                </button>
+                <span>
+                  Page {pageNumber} of {numPages}
+                </span>
+                <button
+                  type="button"
+                  onClick={goNext}
+                  disabled={pageNumber >= numPages}
+                  className="hover:text-[#1C1008] disabled:opacity-30 transition-colors"
+                >
+                  Next →
+                </button>
+              </div>
+            ) : null}
+          </div>
         )}
 
         {pdfAvailable === false && (
