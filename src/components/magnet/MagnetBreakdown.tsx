@@ -652,23 +652,49 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         </section>
 
         {/* SECTION 8: CTA */}
-        <section className="py-16 text-center">
-          <h2 className="text-2xl font-bold mb-4 leading-tight">
-            The system is mapped. The pipeline exists.
-          </h2>
-          <p className="text-base opacity-70 max-w-md mx-auto mb-8 leading-relaxed">
-            The 90-minute Relationship Revenue session takes the breakdown above and turns it into a 90-day activation sequence — specific to {data.client_company_name ?? "your firm"}, starting from the layer with the most leverage.
-          </p>
-          <button
-            type="button"
-            onClick={() => navigate("/book")}
-            className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
-          >
-            MAP YOUR ACTIVATION SEQUENCE →
-          </button>
-          <p className="text-xs opacity-30 mt-4">
-            90 minutes. No pitch. Just the plan.
-          </p>
+        <section className="py-16">
+          <div className="bg-[#120D05] text-[#FBF8F4] p-8 md:p-10 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#B8933A] to-transparent opacity-60" aria-hidden />
+            <div className="flex items-center gap-2 mb-4">
+              <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+              <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+                Next Step
+              </p>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
+              The system is mapped. The pipeline already exists.
+            </h2>
+            <p className="text-base opacity-70 mb-8 leading-relaxed max-w-lg">
+              The 90-minute Relationship Revenue session turns the breakdown above into a 90-day activation sequence, specific to {customerName}, starting from the layer with the most leverage.
+            </p>
+
+            {/* Session detail strip */}
+            <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10 mb-8">
+              <div className="bg-[#120D05] p-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Length</p>
+                <p className="text-sm font-semibold">90 minutes</p>
+              </div>
+              <div className="bg-[#120D05] p-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Output</p>
+                <p className="text-sm font-semibold">90-day plan</p>
+              </div>
+              <div className="bg-[#120D05] p-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Cost</p>
+                <p className="text-sm font-semibold">No pitch</p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/book")}
+              className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
+            >
+              Map Your Activation Sequence →
+            </button>
+            <p className="text-xs opacity-40 mt-4">
+              90 minutes. No pitch. Just the plan.
+            </p>
+          </div>
         </section>
       </div>
     </div>
