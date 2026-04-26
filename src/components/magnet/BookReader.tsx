@@ -169,12 +169,46 @@ export default function BookReader() {
                 </p>
               }
             >
-              <div className="shadow-[0_18px_60px_-20px_rgba(28,16,8,0.35)] bg-white">
+              <div
+                className="relative shadow-[0_18px_60px_-20px_rgba(28,16,8,0.35)] bg-white"
+                onClick={(e) => {
+                  // Preserve scroll position — flipping the page must not
+                  // jump the reader back to the top.
+                  const scrollEl = containerRef.current;
+                  const savedScroll = scrollEl?.scrollTop ?? 0;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickedLeftHalf = e.clientX - rect.left < rect.width / 2;
+                  if (clickedLeftHalf) {
+                    if (pageNumber > 1) setPageNumber((p) => p - 1);
+                  } else {
+                    if (numPages && pageNumber < numPages)
+                      setPageNumber((p) => p + 1);
+                  }
+                  // Restore scroll on next frame, after React re-renders the
+                  // new page (which can briefly change content height).
+                  requestAnimationFrame(() => {
+                    if (scrollEl) scrollEl.scrollTop = savedScroll;
+                  });
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label="Click left half for previous page, right half for next page"
+                style={{ cursor: "pointer" }}
+              >
                 <Page
                   pageNumber={pageNumber}
                   width={containerWidth}
                   renderAnnotationLayer={false}
                   renderTextLayer={false}
+                />
+                {/* Subtle visual hint zones — invisible but make the affordance clear on hover */}
+                <div
+                  className="pointer-events-none absolute inset-y-0 left-0 w-1/2"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute inset-y-0 right-0 w-1/2"
+                  aria-hidden
                 />
               </div>
             </Document>
