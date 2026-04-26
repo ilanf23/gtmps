@@ -250,7 +250,41 @@ export default function MagnetAssess() {
           Takes 90 seconds. We analyze your website and build a custom RROS map for your firm.
         </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-5" noValidate>
+        {/* Live progress block */}
+        <div className="mt-8 p-5 border border-black/10 bg-black/[0.02]">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs uppercase tracking-wider font-medium text-[#1C1008]">
+              {getProgressLabel(progress)}
+            </span>
+            <span className="text-xs font-mono text-[#1C1008]/60">{progress}%</span>
+          </div>
+
+          <div className="w-full h-1 bg-black/10 overflow-hidden">
+            <div
+              className="h-full bg-[#B8933A] transition-all duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          {badges.some((b) => b.condition) && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {badges
+                .filter((b) => b.condition && b.label)
+                .map((b) => (
+                  <span
+                    key={b.id}
+                    className={`text-[11px] px-3 py-1 border font-medium tracking-wide transition-opacity duration-300 ${b.color} ${
+                      b.id === 'deadzone' && !deadZonePulsed ? 'animate-pulse' : ''
+                    }`}
+                  >
+                    {b.label}
+                  </span>
+                ))}
+            </div>
+          )}
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5" noValidate>
           <Field label="Your name" error={errors.name?.message}>
             <input
               type="text"
