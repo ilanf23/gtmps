@@ -393,8 +393,11 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         {/* SECTION 6: THREE QUICK WINS */}
         {actions.length > 0 && (
           <section className="py-12 border-b border-black/10">
-            <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
-              THREE QUICK WINS
+            <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
+              FIRST SIGNALS — THIS WEEK
+            </p>
+            <p className="text-sm opacity-60 mb-6 leading-relaxed">
+              Three actions. Each under an hour. Each designed to trigger a response, not ask for one.
             </p>
             {actions.map((action, i) => {
               const { title, description } = splitAction(action);
