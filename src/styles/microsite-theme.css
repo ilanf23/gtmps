@@ -1,0 +1,41 @@
+/**
+ * Microsite client-theme overrides.
+ *
+ * The microsite shell sets CSS variables (--ms-accent, --ms-bg, --ms-text,
+ * etc.) on its root wrapper. Existing components inside the shell still use
+ * the original Mabbly hex colors (#B8933A, #FBF8F4, #1C1008, #120D05) — so
+ * we map those exact colors to the live theme variables here. This re-skins
+ * MagnetBreakdown, BookChat, BookReader, FeedbackForm, and the loading scene
+ * without rewriting every className.
+ *
+ * Falls back to the Mabbly defaults when the variables are unset (the value
+ * after each var() is the original hex), so non-microsite pages are unchanged.
+ */
+
+[style*="--ms-accent"] {
+  /* ACCENT (gold by default) */
+  /* color: */
+  & .text-\[\#B8933A\],
+  & [class*="text-[#B8933A]"] { color: var(--ms-accent, #B8933A) !important; }
+
+  /* background-color: */
+  & .bg-\[\#B8933A\] { background-color: var(--ms-accent, #B8933A) !important; }
+  & .hover\:bg-\[\#a07c2e\]:hover { background-color: var(--ms-accent-hover, #a07c2e) !important; }
+
+  /* border-color: */
+  & .border-\[\#B8933A\] { border-color: var(--ms-accent, #B8933A) !important; }
+  & [class*="border-[#B8933A]"] { border-color: var(--ms-accent, #B8933A) !important; }
+
+  /* Accent foreground (text on top of accent buttons) */
+  & .text-\[\#120D05\] { color: var(--ms-accent-fg, #120D05) !important; }
+
+  /* PAGE BACKGROUND */
+  & .bg-\[\#FBF8F4\] { background-color: var(--ms-bg, #FBF8F4) !important; }
+  & .bg-\[\#FBF8F4\]\/95 { background-color: var(--ms-bg, #FBF8F4) !important; opacity: 0.97; }
+  & .bg-\[\#FBF8F4\]\/80 { background-color: var(--ms-bg, #FBF8F4) !important; opacity: 0.85; }
+  & .bg-\[\#F2EBDC\] { background-color: var(--ms-surface, #F2EBDC) !important; }
+
+  /* TEXT */
+  & .text-\[\#1C1008\],
+  & [class*="text-[#1C1008]"] { color: var(--ms-text, #1C1008) !important; }
+}
