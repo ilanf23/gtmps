@@ -513,6 +513,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               companyName={data.client_company_name ?? ""}
               crmEstimate={data.crm_estimate ?? undefined}
               dealSizeEstimate={data.deal_size_estimate ?? undefined}
+              primaryColor={brand.primary}
             />
           </div>
           <div className="bg-black/[0.04] border-t border-black/10 px-6 py-5">
