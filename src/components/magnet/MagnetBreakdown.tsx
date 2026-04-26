@@ -420,7 +420,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               The cost of leaving the Dead Zone untouched.
             </h2>
           </div>
-          <div className="bg-[#120D05] px-6 py-12 mt-6">
+          <div className="bg-transparent px-6 py-12 mt-6">
             <MagnetImpactModel
               companyName={data.client_company_name ?? ""}
               crmEstimate={data.crm_estimate ?? undefined}
