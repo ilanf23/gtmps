@@ -43,13 +43,13 @@ export default function MagnetImpactModel({
       : "16%";
 
   const labelClass = "text-[#B8933A] text-xs uppercase tracking-widest mb-4";
-  const cardClass = "bg-white/5 border border-white/10 p-5";
-  const dividerClass = "border-t border-white/10 my-8";
+  const cardClass = "bg-black/[0.03] border border-black/10 p-5";
+  const dividerClass = "border-t border-black/10 my-8";
 
   const displayCompany = companyName?.trim() ? companyName : "Your";
 
   return (
-    <div className="bg-transparent text-[#F5EFE0]">
+    <div className="bg-transparent text-[#1C1008]">
       {/* SECTION 1: Monday Morning Test header */}
       <div>
         <p className={labelClass}>THE MONDAY MORNING TEST</p>
