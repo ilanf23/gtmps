@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import MagnetBreakdown from '@/components/magnet/MagnetBreakdown';
 import MagnetShell from '@/components/magnet/MagnetShell';
 import MagnetLoadingScene from '@/components/magnet/MagnetLoadingScene';
+import { useClientTheme } from '@/hooks/useClientTheme';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
@@ -15,13 +16,10 @@ const STEPS = [
   'Writing your GTM breakdown…',
 ];
 
-// Polling tuning
-const POLL_BASE_MS = 3000;       // start at 3s
-const POLL_MAX_MS = 8000;        // cap backoff at 8s
-const HARD_TIMEOUT_MS = 90_000;  // give up after 90s of polling
-const MAX_FAILURES = 5;          // ~consecutive RPC errors before declaring error
-// Tolerance window — if the submission row is missing right after redirect,
-// keep polling for this long before treating "no submission" as a wrong slug.
+const POLL_BASE_MS = 3000;
+const POLL_MAX_MS = 8000;
+const HARD_TIMEOUT_MS = 90_000;
+const MAX_FAILURES = 5;
 const MISSING_ROW_GRACE_MS = 12_000;
 
 export default function MagnetSite() {
@@ -29,15 +27,12 @@ export default function MagnetSite() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<Status>('loading');
   const [firstName, setFirstName] = useState<string | null>(null);
-  const [clientLogoUrl, setClientLogoUrl] = useState<string | null>(null);
-  const [clientBrandColor, setClientBrandColor] = useState<string | null>(null);
-  const [clientCompanyName, setClientCompanyName] = useState<string | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [stepVisible, setStepVisible] = useState(true);
   const timeoutRef = useRef<number | null>(null);
+  // Theme is loaded via the shell, but the loading scene also needs accent.
+  const theme = useClientTheme(slug);
 
-  // Polling for submission status — uses SECURITY DEFINER RPCs so the
-  // anon client can read by slug without needing a Postgres GUC set.
   useEffect(() => {
     if (!slug) {
       setStatus('error');
@@ -64,7 +59,6 @@ export default function MagnetSite() {
     async function fetchStatus() {
       if (cancelled) return;
 
-      // Hard timeout — stop polling and surface error.
       if (Date.now() - startedAt > HARD_TIMEOUT_MS) {
         console.warn('Polling hard timeout reached', { slug });
         setStatus('error');
@@ -72,7 +66,6 @@ export default function MagnetSite() {
         return;
       }
 
-      // Query both RPCs in parallel — breakdown row is the source of truth.
       const [subRes, brkRes] = await Promise.all([
         supabase.rpc('get_magnet_submission_by_slug', { _slug: slug }),
         supabase.rpc('get_magnet_breakdown_by_slug', { _slug: slug }),
@@ -80,14 +73,8 @@ export default function MagnetSite() {
 
       if (cancelled) return;
 
-      // Tolerate transient network/RPC failures — back off and retry.
       if (subRes.error && brkRes.error) {
         consecutiveFailures += 1;
-        console.warn(
-          `Polling failure ${consecutiveFailures}/${MAX_FAILURES}`,
-          subRes.error,
-          brkRes.error,
-        );
         if (consecutiveFailures >= MAX_FAILURES) {
           setStatus('error');
           clearPending();
@@ -99,7 +86,6 @@ export default function MagnetSite() {
       }
       consecutiveFailures = 0;
 
-      // RPCs return arrays of rows (TABLE return type) — take the first.
       const submissionRow = Array.isArray(subRes.data) ? subRes.data[0] : null;
       const breakdownRow = Array.isArray(brkRes.data) ? brkRes.data[0] : null;
 
@@ -107,48 +93,26 @@ export default function MagnetSite() {
         setFirstName(submissionRow.first_name);
       }
 
-      // Branding data appears on the breakdown row once enrichment writes it.
-      // Capture as soon as it's present so the shell can co-brand even while
-      // the rest of the breakdown is still rendering.
-      if (breakdownRow) {
-        const row = breakdownRow as Record<string, unknown>;
-        if (typeof row.client_logo_url === 'string' && row.client_logo_url) {
-          setClientLogoUrl(row.client_logo_url);
-        }
-        if (typeof row.client_brand_color === 'string' && row.client_brand_color) {
-          setClientBrandColor(row.client_brand_color);
-        }
-        if (typeof row.client_company_name === 'string' && row.client_company_name) {
-          setClientCompanyName(row.client_company_name);
-        }
-      }
-
       const breakdownReady =
         breakdownRow &&
         !breakdownRow.enrichment_error &&
         breakdownRow.gtm_profile_observed;
 
-      // Source of truth: breakdown row populated → complete.
       if (breakdownReady) {
         setStatus('complete');
         clearPending();
         return;
       }
 
-      // Hard error from the enrichment pipeline.
       if (breakdownRow?.enrichment_error) {
         setStatus('error');
         clearPending();
         return;
       }
 
-      // No submission row at all.
       if (!submissionRow) {
-        // Tolerate brief missing-row window right after redirect from /assess
-        // (replication/read-after-write lag). Only fail after grace window.
         if (Date.now() - startedAt < MISSING_ROW_GRACE_MS) {
           setStatus((prev) => (prev === 'loading' ? 'pending' : prev));
-          // Reset to base delay during the grace window so we catch up fast.
           currentDelay = POLL_BASE_MS;
           schedule(currentDelay);
           return;
@@ -160,7 +124,6 @@ export default function MagnetSite() {
 
       const next = submissionRow.status as Status;
       if (next === 'complete') {
-        // Submission marked complete but breakdown not visible yet — keep polling.
         setStatus('processing');
       } else if (next === 'error') {
         setStatus('error');
@@ -170,8 +133,6 @@ export default function MagnetSite() {
         setStatus(next === 'pending' ? 'pending' : 'processing');
       }
 
-      // Reset to base interval once we're getting data; back off slightly while
-      // waiting for breakdown completion to ease load.
       currentDelay = Math.min(POLL_MAX_MS, Math.round(currentDelay * 1.15));
       schedule(currentDelay);
     }
@@ -184,11 +145,8 @@ export default function MagnetSite() {
     };
   }, [slug]);
 
-  // Cycle processing steps — slowed to 14s so each step can breathe alongside
-  // the cinematic loading scene's animations.
   useEffect(() => {
     if (status !== 'pending' && status !== 'processing') return;
-
     const id = window.setInterval(() => {
       setStepVisible(false);
       window.setTimeout(() => {
@@ -196,16 +154,19 @@ export default function MagnetSite() {
         setStepVisible(true);
       }, 500);
     }, 14000);
-
     return () => window.clearInterval(id);
   }, [status]);
 
   if (status === 'loading') {
     return (
-      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
+      <MagnetShell firstName={firstName}>
         <div className="flex-1 flex items-center justify-center">
           <div
-            className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
+            className="w-10 h-10 rounded-full border-2 animate-spin"
+            style={{
+              borderColor: `${theme.accent}33`,
+              borderTopColor: theme.accent,
+            }}
             aria-label="Loading"
           />
         </div>
@@ -215,7 +176,7 @@ export default function MagnetSite() {
 
   if (status === 'complete') {
     return (
-      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
+      <MagnetShell firstName={firstName}>
         <MagnetBreakdown slug={slug!} />
       </MagnetShell>
     );
@@ -223,9 +184,12 @@ export default function MagnetSite() {
 
   if (status === 'error') {
     return (
-      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
+      <MagnetShell firstName={firstName}>
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
-          <p className="text-xs uppercase tracking-[0.32em] text-[#B8933A] mb-4">
+          <p
+            className="text-xs uppercase tracking-[0.32em] mb-4"
+            style={{ color: theme.accent }}
+          >
             SOMETHING WENT WRONG
           </p>
           <p className="text-lg text-center max-w-md mb-8 opacity-80">
@@ -233,7 +197,11 @@ export default function MagnetSite() {
           </p>
           <button
             onClick={() => navigate('/assess')}
-            className="h-12 px-8 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors"
+            className="h-12 px-8 font-semibold tracking-wide uppercase text-sm transition-colors"
+            style={{
+              backgroundColor: theme.accent,
+              color: theme.accentForeground,
+            }}
           >
             Try Again
           </button>
@@ -242,9 +210,8 @@ export default function MagnetSite() {
     );
   }
 
-  // Processing UI (pending | processing)
   return (
-    <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
+    <MagnetShell firstName={firstName}>
       <MagnetLoadingScene
         firstName={firstName}
         stepIndex={stepIndex}

@@ -68,9 +68,14 @@ export type Database = {
           action_2: string | null
           action_3: string | null
           chapter_callouts: Json
+          client_accent_color: string | null
+          client_background_color: string | null
           client_brand_color: string | null
+          client_brand_profile: Json
           client_company_name: string | null
+          client_font_family: string | null
           client_logo_url: string | null
+          client_text_color: string | null
           created_at: string
           dead_zone_reasoning: string | null
           dead_zone_value: number | null
@@ -94,9 +99,14 @@ export type Database = {
           action_2?: string | null
           action_3?: string | null
           chapter_callouts?: Json
+          client_accent_color?: string | null
+          client_background_color?: string | null
           client_brand_color?: string | null
+          client_brand_profile?: Json
           client_company_name?: string | null
+          client_font_family?: string | null
           client_logo_url?: string | null
+          client_text_color?: string | null
           created_at?: string
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
@@ -120,9 +130,14 @@ export type Database = {
           action_2?: string | null
           action_3?: string | null
           chapter_callouts?: Json
+          client_accent_color?: string | null
+          client_background_color?: string | null
           client_brand_color?: string | null
+          client_brand_profile?: Json
           client_company_name?: string | null
+          client_font_family?: string | null
           client_logo_url?: string | null
+          client_text_color?: string | null
           created_at?: string
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
@@ -263,9 +278,14 @@ export type Database = {
           action_2: string
           action_3: string
           chapter_callouts: Json
+          client_accent_color: string
+          client_background_color: string
           client_brand_color: string
+          client_brand_profile: Json
           client_company_name: string
+          client_font_family: string
           client_logo_url: string
+          client_text_color: string
           dead_zone_reasoning: string
           dead_zone_value: number
           enrichment_error: string
