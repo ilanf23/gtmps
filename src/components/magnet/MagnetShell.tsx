@@ -32,10 +32,10 @@ export default function MagnetShell({ children, slug: slugProp, firstName }: Mag
     : [];
 
   return (
-    <div className="min-h-screen bg-[#120D05] text-[#F5EFE0] flex flex-col">
+    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008] flex flex-col">
       {/* Top nav */}
       <header
-        className="sticky top-0 z-40 border-b border-white/10 bg-[#120D05]/95 backdrop-blur"
+        className="sticky top-0 z-40 border-b border-black/10 bg-[#FBF8F4]/95 backdrop-blur"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           {/* Brand */}
@@ -66,8 +66,8 @@ export default function MagnetShell({ children, slug: slugProp, firstName }: Mag
                         cn(
                           "relative inline-flex items-center px-3 sm:px-4 h-14 text-xs sm:text-sm uppercase tracking-wider transition-colors whitespace-nowrap",
                           isActive
-                            ? "text-[#F5EFE0]"
-                            : "text-[#F5EFE0]/50 hover:text-[#F5EFE0]/80",
+                            ? "text-[#1C1008]"
+                            : "text-[#1C1008]/50 hover:text-[#1C1008]/80",
                         )
                       }
                     >
@@ -91,7 +91,7 @@ export default function MagnetShell({ children, slug: slugProp, firstName }: Mag
 
           {/* Visitor name */}
           {firstName ? (
-            <p className="hidden sm:block text-xs text-[#F5EFE0]/40 shrink-0">
+            <p className="hidden sm:block text-xs text-[#1C1008]/40 shrink-0">
               {firstName}
             </p>
           ) : (

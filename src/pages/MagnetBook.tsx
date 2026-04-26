@@ -72,14 +72,14 @@ export default function MagnetBook() {
         </section>
 
         {/* SECTION 2: WHAT TO EXPECT */}
-        <section className="py-14 border-t border-white/10">
+        <section className="py-14 border-t border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-10">
             WHAT HAPPENS ON THE CALL
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {STEPS.map((s) => (
               <div key={s.n}>
-                <p className="text-3xl font-bold text-white/10 leading-none">
+                <p className="text-3xl font-bold text-black/10 leading-none">
                   {s.n}
                 </p>
                 <p className="text-sm font-semibold mt-2">{s.title}</p>
@@ -92,7 +92,7 @@ export default function MagnetBook() {
         </section>
 
         {/* SECTION 3: SOCIAL PROOF */}
-        <section className="py-10 border-t border-white/10">
+        <section className="py-10 border-t border-black/10">
           {QUOTES.map((q, i) => (
             <div
               key={i}
@@ -109,19 +109,19 @@ export default function MagnetBook() {
         </section>
 
         {/* SECTION 4: CALENDLY EMBED */}
-        <section className="py-14 border-t border-white/10">
+        <section className="py-14 border-t border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-8">
             CHOOSE A TIME
           </p>
           <div
             className="calendly-inline-widget w-full"
-            data-url="https://calendly.com/adam-mabbly/gtm?hide_gdpr_banner=1&background_color=120D05&text_color=F5EFE0&primary_color=B8933A"
+            data-url="https://calendly.com/adam-mabbly/gtm?hide_gdpr_banner=1&background_color=FBF8F4&text_color=1C1008&primary_color=B8933A"
             style={{ minWidth: "320px", height: "700px" }}
           />
         </section>
 
         {/* SECTION 5: FOOTER STRIP */}
-        <section className="py-12 border-t border-white/10">
+        <section className="py-12 border-t border-black/10">
           <div className="flex flex-wrap items-center justify-between gap-8">
             <p className="text-sm opacity-30">
               © Mabbly · Relationship Revenue OS

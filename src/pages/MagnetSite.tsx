@@ -250,7 +250,7 @@ export default function MagnetSite() {
             {STEPS[stepIndex]}
           </p>
 
-          <div className="mt-6 w-full h-[2px] bg-white/10 overflow-hidden">
+          <div className="mt-6 w-full h-[2px] bg-black/10 overflow-hidden">
             <div
               key={stepIndex}
               className="h-full bg-[#B8933A] magnet-bar-fill"

@@ -18,7 +18,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const inputClass =
-  'w-full bg-white/5 border border-white/10 text-[#F5EFE0] placeholder:text-white/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-12 px-4 transition-colors';
+  'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-12 px-4 transition-colors';
 
 export default function MagnetAssess() {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ export default function MagnetAssess() {
   };
 
   return (
-    <div className="min-h-screen bg-[#120D05] text-[#F5EFE0]">
+    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
       <div className="max-w-lg mx-auto px-6 py-20 md:py-28">
         <p className="text-[11px] tracking-[0.18em] font-medium text-[#B8933A]">
           GET YOUR PERSONALIZED GTM BREAKDOWN

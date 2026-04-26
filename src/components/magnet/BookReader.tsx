@@ -26,7 +26,7 @@ export default function BookReader() {
   return (
     <div className="flex-1 flex flex-col">
       {/* Toolbar */}
-      <div className="border-b border-white/10 bg-[#120D05]/80">
+      <div className="border-b border-black/10 bg-[#FBF8F4]/80">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <p className="text-xs uppercase tracking-[0.28em] text-[#B8933A]">
             Read the Book
@@ -38,7 +38,7 @@ export default function BookReader() {
                   href={PDF_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-[#F5EFE0]/60 hover:text-[#F5EFE0] transition-colors px-3 py-1.5"
+                  className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-[#1C1008]/60 hover:text-[#1C1008] transition-colors px-3 py-1.5"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   Open
@@ -58,7 +58,7 @@ export default function BookReader() {
       </div>
 
       {/* Reader */}
-      <div className="flex-1 bg-[#0c0803]">
+      <div className="flex-1 bg-[#F2EBDC]">
         {pdfAvailable === null && (
           <div className="h-full flex items-center justify-center">
             <div
@@ -81,10 +81,10 @@ export default function BookReader() {
             <p className="text-[#B8933A] text-xs uppercase tracking-[0.32em] mb-4">
               Coming Soon
             </p>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-[#F5EFE0] mb-3 max-w-xl">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#1C1008] mb-3 max-w-xl">
               The book is on its way.
             </h2>
-            <p className="text-[#F5EFE0]/60 max-w-md leading-relaxed">
+            <p className="text-[#1C1008]/60 max-w-md leading-relaxed">
               We're putting the final polish on the GTM book PDF. It'll be
               readable here as soon as it lands. In the meantime, head to the{" "}
               <span className="text-[#B8933A]">Talk to the Book</span> tab to

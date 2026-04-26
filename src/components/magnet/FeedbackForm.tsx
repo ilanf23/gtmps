@@ -81,12 +81,12 @@ export default function FeedbackForm() {
           <p className="text-[#B8933A] text-xs uppercase tracking-[0.32em] mb-3">
             Received
           </p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#F5EFE0] mb-3">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1C1008] mb-3">
             Thanks. Adam reads every one.
           </h2>
-          <p className="text-[#F5EFE0]/60 leading-relaxed">
+          <p className="text-[#1C1008]/60 leading-relaxed">
             If your note needs a reply, you'll hear back at{" "}
-            <span className="text-[#F5EFE0]/80">{email}</span>.
+            <span className="text-[#1C1008]/80">{email}</span>.
           </p>
         </div>
       </div>
@@ -99,10 +99,10 @@ export default function FeedbackForm() {
         <p className="text-[#B8933A] text-xs uppercase tracking-[0.32em] mb-3">
           Feedback
         </p>
-        <h1 className="text-3xl sm:text-4xl font-semibold text-[#F5EFE0] mb-3 leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-semibold text-[#1C1008] mb-3 leading-tight">
           What worked. What didn't. What's missing.
         </h1>
-        <p className="text-[#F5EFE0]/60 mb-10 leading-relaxed">
+        <p className="text-[#1C1008]/60 mb-10 leading-relaxed">
           Direct line to Adam. Every note is read.
         </p>
 
@@ -110,7 +110,7 @@ export default function FeedbackForm() {
           <div>
             <label
               htmlFor="fb-name"
-              className="block text-xs uppercase tracking-wider text-[#F5EFE0]/60 mb-2"
+              className="block text-xs uppercase tracking-wider text-[#1C1008]/60 mb-2"
             >
               Your name
             </label>
@@ -121,7 +121,7 @@ export default function FeedbackForm() {
               onChange={(e) => setName(e.target.value)}
               maxLength={100}
               disabled={submitting}
-              className="w-full bg-white/5 border border-white/10 text-[#F5EFE0] placeholder:text-white/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors"
+              className="w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors"
               placeholder="Jane Smith"
             />
             {errors.name && (
@@ -132,7 +132,7 @@ export default function FeedbackForm() {
           <div>
             <label
               htmlFor="fb-email"
-              className="block text-xs uppercase tracking-wider text-[#F5EFE0]/60 mb-2"
+              className="block text-xs uppercase tracking-wider text-[#1C1008]/60 mb-2"
             >
               Email
             </label>
@@ -143,7 +143,7 @@ export default function FeedbackForm() {
               onChange={(e) => setEmail(e.target.value)}
               maxLength={255}
               disabled={submitting}
-              className="w-full bg-white/5 border border-white/10 text-[#F5EFE0] placeholder:text-white/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors"
+              className="w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors"
               placeholder="jane@firm.com"
             />
             {errors.email && (
@@ -154,7 +154,7 @@ export default function FeedbackForm() {
           <div>
             <label
               htmlFor="fb-message"
-              className="block text-xs uppercase tracking-wider text-[#F5EFE0]/60 mb-2"
+              className="block text-xs uppercase tracking-wider text-[#1C1008]/60 mb-2"
             >
               Feedback
             </label>
@@ -165,12 +165,12 @@ export default function FeedbackForm() {
               maxLength={2000}
               disabled={submitting}
               rows={6}
-              className="w-full bg-white/5 border border-white/10 text-[#F5EFE0] placeholder:text-white/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors resize-y"
+              className="w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors resize-y"
               placeholder="What stood out? What was confusing? What would have made this more useful?"
             />
             <div className="flex justify-between mt-1.5">
               <p className="text-xs text-red-400">{errors.message}</p>
-              <p className="text-xs text-white/30">{message.length}/2000</p>
+              <p className="text-xs text-black/30">{message.length}/2000</p>
             </div>
           </div>
 

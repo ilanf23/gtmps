@@ -72,7 +72,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
     <>
       {isOpen && (
         <div
-          className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] sm:w-80 h-[480px] bg-[#1a1409] border border-[#B8933A]/30 flex flex-col shadow-2xl"
+          className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] sm:w-80 h-[480px] bg-white border border-[#B8933A]/30 flex flex-col shadow-2xl"
           role="dialog"
           aria-label="GTM advisor chat"
         >
@@ -80,10 +80,10 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
           <div className="shrink-0 bg-[#B8933A]/10 border-b border-[#B8933A]/20 px-4 py-3 flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-[#B8933A] animate-pulse shrink-0" />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-[#F5EFE0] truncate">
+              <p className="text-sm font-semibold text-[#1C1008] truncate">
                 GTM Advisor — {companyName}
               </p>
-              <p className="text-xs opacity-40 text-[#F5EFE0]">
+              <p className="text-xs opacity-40 text-[#1C1008]">
                 Scoped to your breakdown
               </p>
             </div>
@@ -98,7 +98,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
               m.role === "assistant" ? (
                 <p
                   key={i}
-                  className="text-sm leading-relaxed text-[#F5EFE0] opacity-90"
+                  className="text-sm leading-relaxed text-[#1C1008] opacity-90"
                 >
                   <span className="text-[#B8933A] mr-1.5">⊙</span>
                   {m.content}
@@ -106,7 +106,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
               ) : (
                 <p
                   key={i}
-                  className="text-sm leading-relaxed text-[#F5EFE0]/70 bg-white/5 rounded-sm px-3 py-2 max-w-[85%] ml-auto"
+                  className="text-sm leading-relaxed text-[#1C1008]/70 bg-black/5 rounded-sm px-3 py-2 max-w-[85%] ml-auto"
                 >
                   {m.content}
                 </p>
@@ -128,7 +128,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
           </div>
 
           {/* Input */}
-          <div className="shrink-0 border-t border-white/10 p-3 flex gap-2">
+          <div className="shrink-0 border-t border-black/10 p-3 flex gap-2">
             <input
               type="text"
               value={input}
@@ -136,7 +136,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
               onKeyDown={onKeyDown}
               disabled={isLoading}
               placeholder="Ask about your GTM…"
-              className="flex-1 bg-white/5 border border-white/10 text-[#F5EFE0] placeholder:text-white/30 px-3 py-2 text-sm rounded-none focus:outline-none focus:border-[#B8933A]/50 disabled:opacity-50"
+              className="flex-1 bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2 text-sm rounded-none focus:outline-none focus:border-[#B8933A]/50 disabled:opacity-50"
             />
             <button
               type="button"
