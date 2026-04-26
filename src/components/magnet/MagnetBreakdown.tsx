@@ -321,8 +321,11 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 3: YOUR ORBIT MAP */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
+          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
             YOUR FIVE ORBITS
+          </p>
+          <p className="text-sm text-black/50 mb-6 leading-relaxed">
+            Your next client is already in one of these five orbits. The question is which signal reaches them first.
           </p>
 
           {orbits.map((desc, i) => {
