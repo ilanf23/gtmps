@@ -107,6 +107,22 @@ export default function MagnetSite() {
         setFirstName(submissionRow.first_name);
       }
 
+      // Branding data appears on the breakdown row once enrichment writes it.
+      // Capture as soon as it's present so the shell can co-brand even while
+      // the rest of the breakdown is still rendering.
+      if (breakdownRow) {
+        const row = breakdownRow as Record<string, unknown>;
+        if (typeof row.client_logo_url === 'string' && row.client_logo_url) {
+          setClientLogoUrl(row.client_logo_url);
+        }
+        if (typeof row.client_brand_color === 'string' && row.client_brand_color) {
+          setClientBrandColor(row.client_brand_color);
+        }
+        if (typeof row.client_company_name === 'string' && row.client_company_name) {
+          setClientCompanyName(row.client_company_name);
+        }
+      }
+
       const breakdownReady =
         breakdownRow &&
         !breakdownRow.enrichment_error &&
