@@ -1,100 +1,162 @@
-## Footer restructure
+# Why the magnet page silently failed
 
-### Files touched
-1. `src/components/Footer.tsx` — used by `/` and `/discover`
-2. `src/components/VerticalLanding/VerticalFooter.tsx` — used by `/awards` and all 8 vertical pages
+The `/m/:slug` page is **not** failing because of a race condition. It fails because of an RLS configuration that has never worked from the browser.
 
-No new files. No route or page-level changes. The `data-page-footer="true"` hook stays so the sticky CTA / SectionRail visibility logic keeps working.
+The four magnet tables all have SELECT policies of the form:
 
----
+```sql
+USING (slug = current_setting('app.current_slug', true))
+```
 
-### `src/components/Footer.tsx` (main: /, /discover)
+That GUC must be set per-request via something like `select set_config('app.current_slug', $1, true)`. **No client code anywhere sets it** (`rg "set_config|current_slug|\.rpc\(" src/` returns zero hits). So for every anon request:
 
-Replace entire body with one unified block:
+- `current_setting('app.current_slug', true)` returns `NULL`
+- `slug = NULL` is `NULL` (never `true`)
+- PostgREST returns `[]` with no error
 
-**Container**
-- Background: `bg-soft-navy` (unchanged)
-- Padding: `80px 24px 40px` desktop, `48px 24px 32px` mobile
-- `max-w-[1100px] mx-auto`
-- Keep `data-page-footer="true"` on the `<footer>`
+In `MagnetSite.tsx` polling, both queries return `data: null, error: null`, the code hits `if (!subRes.data)` → `setStatus('error')` → user sees "Something went wrong" even though the breakdown row is fully populated in the DB (verified for `ilan_6fwi5uylv3`: status `complete`, full data present).
 
-**Row 1 — ACROSS MABBLY (4-column primary grid)**
-- Eyebrow `ACROSS MABBLY`: DM Mono, 11px, `letter-spacing: 0.18em`, color `#B8933A`, margin-bottom 24px
-- Grid: `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`, gap 32px
-- Four items, each = stacked `<a>` (or span for current page) + descriptor, 8px gap:
-  1. **discover.mabbly.com** — Inter Tight, 18px, white, gold underline (`border-bottom: 1px solid rgba(184,147,58,0.6)`), no arrow, no link. Descriptor: `Research + the book.`
-  2. **mabbly.com →** — `https://mabbly.com`, target `_blank`, rel `noopener noreferrer`. Descriptor: `Agency. GTM for professional services firms.`
-  3. **mabbly.ai →** — `https://mabbly.ai`, target `_blank`, rel `noopener noreferrer`. Descriptor: `Product. Activate dormant relationships at scale.`
-  4. **The Podcast →** — `https://www.youtube.com/@GTMforPS`, target `_blank`, rel `noopener noreferrer`. Descriptor: `500 practitioner interviews on YouTube.`
-- Item URL style: Inter Tight, 18px, `rgba(245,239,224,0.92)`, font-weight 500
-- Descriptor style: Inter Tight, 13px, `rgba(245,239,224,0.55)`, line-height 1.5, max-width 240px
-- Hover (links only): URL → `#B8933A`; descriptor opacity → 0.4. Transition 180ms ease. Reuse the existing `.am-link` / `.am-desc` `<style>` block pattern, scoped via a unique class to avoid leaks.
+`MagnetBreakdown.tsx` has the same problem — it would show "Breakdown not found." even on the happy path.
 
-**Row 2 — Hairline divider**
-- 1px high, full width, background `rgba(184,147,58,0.2)`
-- `margin: 56px 0 28px`
-
-**Row 3 — Bottom strip**
-- Flex row on `md+`, stacked + center-aligned on mobile
-- Left (`max-width: 320px`):
-  - Wordmark `mabbly`: 16px, white, font-weight 600, font-display
-  - Tagline: 13px, `rgba(245,239,224,0.45)`, `GTM for the market you already own.`, margin-top 6px
-- Right (`max-width: 480px`, right-aligned on `md+`):
-  - `© 2026 Mabbly LLC` — 12px, `rgba(245,239,224,0.45)`
-  - Inline beside or below: `Privacy Policy · Terms of Service`
-    - Each link 12px, `rgba(184,147,58,0.7)`, hover `#F5EFE0`
-    - Separator `·` color `rgba(245,239,224,0.25)`
-    - Privacy: `https://mabbly.com/privacy`, Terms: `https://mabbly.com/terms`, both `_blank`
-
-**Removed from current `Footer.tsx`**
-- The standalone `#footer-podcast` band with the "Watch on YouTube" pill (Podcast now lives as Item 4 of Across Mabbly).
-- The 3-column section (wordmark / Across Mabbly / copyright). Replaced by the new structure above.
+This has been broken for every user since the slug-scoped RLS policies were added; nobody has been able to view their own breakdown from the browser.
 
 ---
 
-### `src/components/VerticalLanding/VerticalFooter.tsx` (/awards + 8 vertical pages)
+# The fix (two parts)
 
-Keep its existing `<style>` scoping pattern (`.vf-*` classes). Restructure into:
+## Part 1 — Replace per-session GUC with a SECURITY DEFINER RPC (migration)
 
-**Row 0 (kept) — "FOR YOUR FIRM" cross-link row**
-- Per the user choice: keep a compact horizontal row above Across Mabbly so vertical cross-nav survives.
-- Eyebrow: `FOR YOUR FIRM` (DM Mono, 10px, gold, letter-spacing 0.32em)
-- Links: all 8 entries from `NAV_VERTICAL_LINKS`, rendered as inline-flex wrap, 24px gap, `Inter Tight 13px rgba(245,239,224,0.7)`, hover `#B8933A`
-- Padding-bottom 40px, then a hairline `rgba(245,239,224,0.08)` 1px rule
-- Drop the current `1.2fr 1fr 1fr 0.8fr` 4-column grid (brand blurb + 2 vertical columns + Across Mabbly). Brand blurb merges into the bottom strip; YouTube button goes away (Podcast is in Across Mabbly now).
+The "set a session GUC from the client" pattern is fragile in PostgREST: connection pooling means the GUC may be cleared between the `set_config` call and the actual `SELECT`, even when wrapped in the same supabase-js call. The reliable, equally-safe pattern is a `SECURITY DEFINER` function that takes the slug as an argument and returns only that slug's row.
 
-**Row 1 — ACROSS MABBLY** (identical structure to main Footer)
-- Same eyebrow, 4-item grid, same 4 items + descriptors + arrows + hover behavior.
-- Use `.vf-am-*` classes already in the file for current-page indicator + descriptor + hover; extend with `.vf-am-grid` for the 4-col layout (`1fr` mobile, `1fr 1fr` md, `repeat(4, 1fr)` lg) with 32px gap.
-- Replace the current `.vf-am-list` (vertical) layout with the horizontal grid.
+New migration adds four read functions (one per table) and drops the broken SELECT policies, replacing them with `USING (false)` so the base tables stay locked down and the functions are the only read path.
 
-**Row 2 — Hairline divider**
-- 1px, `rgba(184,147,58,0.2)`, margin 56px 0 28px.
+```sql
+-- magnet_submissions: public read by slug
+CREATE OR REPLACE FUNCTION public.get_magnet_submission(_slug text)
+RETURNS TABLE (
+  slug text,
+  status text,
+  first_name text,
+  created_at timestamptz
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT slug, status, first_name, created_at
+  FROM public.magnet_submissions
+  WHERE slug = _slug
+  LIMIT 1;
+$$;
 
-**Row 3 — Bottom strip**
-- Flex row on md+, stacked center on mobile.
-- Left: `mabbly` wordmark (Inter Tight 16px, white, 600) + tagline `GTM for the market you already own.` (13px, 45% opacity). The current `.vf-blurb` long sentence about research is dropped (it duplicates Item 1's descriptor).
-- Right: `© {currentYear} Mabbly LLC` + `Privacy Policy · Terms of Service`, same styling/links as main Footer.
+-- magnet_breakdowns: public read by slug (excludes raw_* enrichment blobs)
+CREATE OR REPLACE FUNCTION public.get_magnet_breakdown(_slug text)
+RETURNS TABLE (
+  slug text,
+  welcome_message text,
+  dead_zone_value bigint,
+  dead_zone_reasoning text,
+  gtm_profile_observed text,
+  gtm_profile_assessment text,
+  orbit_01 text, orbit_02 text, orbit_03 text, orbit_04 text, orbit_05 text,
+  recommended_layer text,
+  action_1 text, action_2 text, action_3 text,
+  chapter_callouts jsonb,
+  enrichment_error text
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT slug, welcome_message, dead_zone_value, dead_zone_reasoning,
+         gtm_profile_observed, gtm_profile_assessment,
+         orbit_01, orbit_02, orbit_03, orbit_04, orbit_05,
+         recommended_layer, action_1, action_2, action_3,
+         chapter_callouts, enrichment_error
+  FROM public.magnet_breakdowns
+  WHERE slug = _slug
+  LIMIT 1;
+$$;
 
-**Removed from current `VerticalFooter.tsx`**
-- The big brand blurb column ("The largest research on GTM in Professional Services…") — superseded by Across Mabbly Item 1 + bottom-strip tagline.
-- The standalone "Watch the Podcast" YouTube pill button — Podcast is now Item 4.
-- The "More Verticals" split column — collapsed into one "For Your Firm" row of all 8.
-- The "Mabbly · Relationship Revenue OS / © year · All rights reserved" footer line — replaced by `© 2026 Mabbly LLC` + legal links.
+-- (Same pattern for get_magnet_chat_session and get_magnet_call_booking,
+--  plus matching upsert/insert RPCs for chat sessions and call bookings
+--  so writes don't depend on the GUC either.)
+
+GRANT EXECUTE ON FUNCTION public.get_magnet_submission(text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_magnet_breakdown(text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_magnet_chat_session(text) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.upsert_magnet_chat_session(text, jsonb) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.insert_magnet_call_booking(text, text, timestamptz) TO anon, authenticated;
+
+-- Lock down direct SELECT on all four tables (RPCs are now the only read path)
+DROP POLICY "View own submission by slug" ON public.magnet_submissions;
+CREATE POLICY "No direct select" ON public.magnet_submissions FOR SELECT USING (false);
+
+DROP POLICY "View own breakdown by slug" ON public.magnet_breakdowns;
+CREATE POLICY "No direct select" ON public.magnet_breakdowns FOR SELECT USING (false);
+
+DROP POLICY "View chat session by slug" ON public.magnet_chat_sessions;
+DROP POLICY "Insert chat session by slug" ON public.magnet_chat_sessions;
+DROP POLICY "Update chat session by slug" ON public.magnet_chat_sessions;
+CREATE POLICY "No direct access" ON public.magnet_chat_sessions FOR ALL USING (false) WITH CHECK (false);
+
+DROP POLICY "View call booking by slug" ON public.magnet_call_bookings;
+DROP POLICY "Insert call booking by slug" ON public.magnet_call_bookings;
+CREATE POLICY "No direct access" ON public.magnet_call_bookings FOR ALL USING (false) WITH CHECK (false);
+```
+
+Security properties preserved:
+- A visitor with a slug can read only that slug's row (same as before in intent).
+- No slug enumeration: slugs are random suffixes already; functions return empty when slug is unknown.
+- `raw_website_content` and `raw_linkedin_data` enrichment blobs are intentionally excluded from `get_magnet_breakdown` — they were exposed before.
+- Service-role insert/update on `magnet_breakdowns` is unchanged (edge functions still work).
+- INSERT on `magnet_submissions` stays open ("Anyone can submit assessment").
+
+## Part 2 — Update client + edge functions to use the RPCs
+
+**`src/pages/MagnetSite.tsx`** — replace the two `.from(...).select(...).eq("slug", slug).maybeSingle()` calls inside `fetchStatus` with:
+
+```ts
+const [subRes, brkRes] = await Promise.all([
+  supabase.rpc('get_magnet_submission', { _slug: slug }),
+  supabase.rpc('get_magnet_breakdown', { _slug: slug }),
+]);
+const submission = subRes.data?.[0] ?? null;
+const breakdown = brkRes.data?.[0] ?? null;
+```
+
+Then keep the existing "breakdown row populated → complete" priority logic (it's already correct), and add three small hardening tweaks:
+
+1. **Tolerate a missing submission row briefly.** Today: `if (!subRes.data) → error`. New: track `consecutiveMissingSub` and only flip to `error` after 5 consecutive empty polls (~15s), matching the existing `consecutiveFailures` pattern. This covers the small window between INSERT and the first poll.
+2. **Hard timeout.** If still in `pending`/`processing` after 90s, stop polling and show error with a "Try again" button (today the loop runs forever).
+3. **Backoff.** Poll every 3s for the first 30s, then every 6s. Reduces request volume on slow enrichment.
+
+**`src/components/magnet/MagnetBreakdown.tsx`** — replace both `.from(...)` reads with `supabase.rpc('get_magnet_breakdown', { _slug: slug })` and `supabase.rpc('get_magnet_submission', { _slug: slug })`. Same shape; existing error/empty handling stays.
+
+**`src/components/magnet/MagnetChat.tsx`** — chat reads/writes go through the existing `magnet-chat` edge function, which uses the service role. Update that function to use `get_magnet_chat_session` / `upsert_magnet_chat_session` (or keep direct table access — service role bypasses RLS so it still works). No client change needed there.
+
+**Edge functions** (`enrich-magnet`, `magnet-chat`) — already use `SUPABASE_SERVICE_ROLE_KEY`, so they bypass RLS entirely. No changes required, just verify by reading the two function files during implementation.
 
 ---
 
-### Responsive behavior
-- **lg (≥1024px)**: 4-col Across Mabbly, bottom strip horizontal (left + right edges)
-- **md (768–1023px)**: 2-col Across Mabbly, bottom strip horizontal
-- **<768px**: 1-col Across Mabbly stacked, bottom strip stacked + center-aligned (both left and right blocks centered, descriptors max-width auto and centered)
-- All touch targets stay ≥44px (link line-height + padding satisfies)
-- `prefers-reduced-motion`: hover opacity transitions become instant (no extra work; CSS transitions are 180ms and degrade gracefully — explicitly add a `@media (prefers-reduced-motion: reduce)` block that zeros transition durations on `.am-link`, `.am-desc`, `.vf-am-link`, `.vf-am-desc`).
+# Files touched
 
-### Verification checklist (after implementation)
-1. `/discover` and `/`: footer is one block; no separate Podcast band above; 4 items in Across Mabbly; thin bottom strip with brand + legal.
-2. `/awards` and any vertical page (e.g. `/accounting`): cross-link "For Your Firm" row at top, then 4-col Across Mabbly, then bottom strip. No duplicate Podcast button. No long brand blurb column.
-3. External links (mabbly.com, mabbly.ai, Podcast, Privacy, Terms) open in new tab; discover.mabbly.com is unlinked + gold-underlined.
-4. Hover on URL turns gold, descriptor fades.
-5. Mobile (375px): everything stacks single column; bottom strip centered; all interactive targets ≥44px.
-6. Sticky CTA + SectionRail logic still toggle correctly because `data-page-footer="true"` is preserved on `<footer>`.
+1. `supabase/migrations/<new>_magnet_rls_via_rpcs.sql` — new migration (Part 1)
+2. `src/pages/MagnetSite.tsx` — switch to RPCs + hardened polling (Part 2.1, 2.3)
+3. `src/components/magnet/MagnetBreakdown.tsx` — switch to RPCs (Part 2.2)
+4. (verify only) `supabase/functions/enrich-magnet/index.ts`, `supabase/functions/magnet-chat/index.ts`
+
+No changes to: types.ts (auto-regenerates), client.ts, routing, UI/copy, edge function deployment config.
+
+---
+
+# Verification
+
+1. Hit `/m/ilan_6fwi5uylv3` → breakdown renders immediately (data already complete in DB).
+2. Submit a fresh assessment → loading screen cycles steps → flips to breakdown when enrichment finishes.
+3. Hit a non-existent slug like `/m/nope_xxxxx` → after ~15s of empty polls, error screen appears (not instant).
+4. Network tab on `/m/:slug`: should see `POST /rest/v1/rpc/get_magnet_submission` and `…/get_magnet_breakdown` returning the rows (not empty arrays as today).
+5. Direct table reads from anon (`curl /rest/v1/magnet_breakdowns?slug=eq.…`) return `[]` — the RPCs are now the only read path.
+6. `raw_website_content` and `raw_linkedin_data` no longer reachable from the browser.
