@@ -265,7 +265,7 @@ export default function MagnetImpactModel({
 
       {/* SECTION 6: Verified in Practice */}
       <div>
-        <p className={labelClass}>VERIFIED IN PRACTICE</p>
+        <p className={labelClass} style={labelStyle}>VERIFIED IN PRACTICE</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
             <p className="text-sm font-semibold text-[#1C1008] mb-1">
