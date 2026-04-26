@@ -57,9 +57,10 @@
   & .focus-within\:border-\[\#B8933A\]\/50:focus-within { border-color: color-mix(in srgb, var(--ms-accent) 50%, transparent) !important; }
 
   /* ============================================================
-     ACCENT FOREGROUND (text on top of accent buttons)
+     ACCENT FOREGROUND (text + surfaces sitting on top of accent)
      ============================================================ */
   & .text-\[\#120D05\]          { color: var(--ms-accent-fg) !important; }
+  & .bg-\[\#120D05\]            { background-color: var(--ms-accent-fg) !important; }
 
   /* ============================================================
      BODY TEXT
