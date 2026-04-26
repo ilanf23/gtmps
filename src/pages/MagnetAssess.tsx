@@ -172,7 +172,7 @@ export default function MagnetAssess() {
     },
     {
       id: 'layer',
-      condition: Boolean(bdChallenge && bdChallenge !== ''),
+      condition: Boolean(bdChallenge),
       label: bdChallenge ? layerMap[bdChallenge] ?? '⊙ Starting layer: Identified' : '',
       color:
         'border-[#3D5A4A]/30 bg-[#3D5A4A]/10 text-[#3D5A4A]',
