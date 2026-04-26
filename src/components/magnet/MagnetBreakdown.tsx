@@ -493,7 +493,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
           <div className="bg-black/[0.03] border border-black/10 p-6 mt-6 text-center">
             <p className="text-sm opacity-50 mb-4">
-              Want to see how all 14 chapters apply to{" "}
+              Want to see how all 14 sections apply to{" "}
               {submission?.first_name ? `${submission.first_name}'s firm` : "your firm"}?
             </p>
             <button
