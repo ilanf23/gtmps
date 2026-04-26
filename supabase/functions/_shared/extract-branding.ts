@@ -2,6 +2,10 @@
 // Fetches a website's HTML and (optionally) its first inline/linked CSS,
 // then derives a usable brand profile: logo, accent color, background,
 // text color, font family.
+//
+// Handles modern shadcn/Tailwind setups where colors are stored as raw HSL
+// triplets in CSS variables (`--background: 0 0% 4%`) and consumed via
+// `hsl(var(--background))`.
 
 export type BrandProfile = {
   logoUrl: string | null;
@@ -65,10 +69,79 @@ function normalizeHex(hex: string): string | null {
 }
 
 function rgbStringToHex(s: string): string | null {
-  const m = s.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+  const m = s.match(/rgba?\(\s*(\d+)\s*[, ]\s*(\d+)\s*[, ]\s*(\d+)/i);
   if (!m) return null;
   const [r, g, b] = [m[1], m[2], m[3]].map((n) => Math.max(0, Math.min(255, parseInt(n, 10))));
   return "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Convert an HSL color expression to hex.
+ * Accepts:
+ *   - `hsl(0, 100%, 50%)`           (legacy comma form)
+ *   - `hsl(0 100% 50%)`             (modern space form)
+ *   - `hsla(0 100% 50% / 0.5)`      (alpha is dropped)
+ *   - `0 100% 50%`                  (raw shadcn/Tailwind triplet)
+ *   - `0 0% 4%`                     (background in shadcn projects)
+ * Returns null when the input is not parseable.
+ */
+function hslStringToHex(input: string): string | null {
+  if (!input) return null;
+  // Strip a leading hsl()/hsla() wrapper if present.
+  const wrapped = input.trim().match(/^hsla?\(\s*([^)]+)\s*\)$/i);
+  const inner = wrapped ? wrapped[1] : input.trim();
+  // Drop "/ alpha" suffix.
+  const noAlpha = inner.split("/")[0].trim();
+  // Split on commas OR whitespace.
+  const parts = noAlpha
+    .split(/[\s,]+/)
+    .filter(Boolean)
+    .slice(0, 3);
+  if (parts.length < 3) return null;
+
+  const h = parseFloat(parts[0]);
+  const s = parseFloat(parts[1].replace("%", "")) / 100;
+  const l = parseFloat(parts[2].replace("%", "")) / 100;
+  if (!isFinite(h) || !isFinite(s) || !isFinite(l)) return null;
+  if (s < 0 || s > 1.0001 || l < 0 || l > 1.0001) return null;
+
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const hp = (((h % 360) + 360) % 360) / 60;
+  const x = c * (1 - Math.abs((hp % 2) - 1));
+  let r1 = 0, g1 = 0, b1 = 0;
+  if (hp < 1) [r1, g1, b1] = [c, x, 0];
+  else if (hp < 2) [r1, g1, b1] = [x, c, 0];
+  else if (hp < 3) [r1, g1, b1] = [0, c, x];
+  else if (hp < 4) [r1, g1, b1] = [0, x, c];
+  else if (hp < 5) [r1, g1, b1] = [x, 0, c];
+  else [r1, g1, b1] = [c, 0, x];
+  const m = l - c / 2;
+  const r = Math.round((r1 + m) * 255);
+  const g = Math.round((g1 + m) * 255);
+  const b = Math.round((b1 + m) * 255);
+  return "#" + [r, g, b].map((n) => Math.max(0, Math.min(255, n)).toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Parse any color string we know how to handle. Try hex, rgb, hsl, then
+ * bare HSL triplet. Returns hex or null.
+ */
+function parseAnyColor(value: string): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  // hex
+  const hex = normalizeHex(trimmed);
+  if (hex) return hex;
+  // rgb()/rgba()
+  if (/^rgba?\(/i.test(trimmed)) return rgbStringToHex(trimmed);
+  // hsl()/hsla()
+  if (/^hsla?\(/i.test(trimmed)) return hslStringToHex(trimmed);
+  // Named colors we care about
+  if (/^(black|#?000)$/i.test(trimmed)) return "#000000";
+  if (/^(white|#?fff)$/i.test(trimmed)) return "#ffffff";
+  // Bare HSL triplet (shadcn/Tailwind): "0 0% 4%"
+  if (/^[\d.]+\s+[\d.]+%\s+[\d.]+%/i.test(trimmed)) return hslStringToHex(trimmed);
+  return null;
 }
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
@@ -134,6 +207,13 @@ function extractAllColors(text: string): string[] {
     const n = rgbStringToHex(r);
     if (n) out.push(n);
   }
+  // hsl()/hsla() — including ones that wrap a var() like hsl(var(--primary))
+  // Those will fail to parse and be skipped silently, which is correct.
+  const hslMatches = text.match(/hsla?\([^)]+\)/gi) ?? [];
+  for (const h of hslMatches) {
+    const n = hslStringToHex(h);
+    if (n) out.push(n);
+  }
   return out;
 }
 
@@ -141,6 +221,55 @@ function frequency(values: string[]): Map<string, number> {
   const m = new Map<string, number>();
   for (const v of values) m.set(v, (m.get(v) ?? 0) + 1);
   return m;
+}
+
+// ---- CSS variables ----------------------------------------------------------
+
+/**
+ * Pull `--name: value;` declarations from `:root`, `html`, `body`, and any
+ * dark-theme block (e.g. `[data-theme="dark"]`, `.dark`). Resolve each
+ * value through every color parser we have. Variables that hold a `var(...)`
+ * reference are followed up to two hops.
+ */
+function extractCssVariables(css: string): Record<string, string> {
+  const map: Record<string, string> = {};
+  const rawMap: Record<string, string> = {};
+
+  const blockRegex = /(?::root|html|body|\.dark|\[data-theme=["']dark["']\])\s*\{([^}]+)\}/gi;
+  let block: RegExpExecArray | null;
+  while ((block = blockRegex.exec(css)) !== null) {
+    const body = block[1];
+    const declRegex = /--([a-z0-9-]+)\s*:\s*([^;]+);/gi;
+    let decl: RegExpExecArray | null;
+    while ((decl = declRegex.exec(body)) !== null) {
+      const name = decl[1].toLowerCase();
+      const value = decl[2].trim();
+      rawMap[name] = value;
+    }
+  }
+
+  // Resolve. Two passes to chase one level of var() indirection.
+  const resolveOne = (raw: string): string | null => {
+    // Inline var() lookup: hsl(var(--background)) => raw value of --background
+    const varRef = raw.match(/var\(\s*--([a-z0-9-]+)/i);
+    if (varRef) {
+      const target = rawMap[varRef[1].toLowerCase()];
+      if (target) {
+        // If the original wraps in hsl(var(...)), wrap the resolved value too.
+        const wrap = raw.match(/^(hsla?|rgba?)\(/i);
+        const wrapped = wrap ? `${wrap[1]}(${target})` : target;
+        return parseAnyColor(wrapped) ?? parseAnyColor(target);
+      }
+      return null;
+    }
+    return parseAnyColor(raw);
+  };
+
+  for (const [name, raw] of Object.entries(rawMap)) {
+    const hex = resolveOne(raw);
+    if (hex) map[name] = hex;
+  }
+  return map;
 }
 
 // ---- Logo extraction --------------------------------------------------------
@@ -352,6 +481,136 @@ async function safeFetch(url: string, timeoutMs = 8_000): Promise<string> {
   }
 }
 
+/**
+ * Layered background detection. Returns a hex (or null) and the source label
+ * for debugging.
+ */
+function detectBackground(
+  html: string,
+  css: string,
+  vars: Record<string, string>,
+  themeColor: string | null,
+  neutralsByFreq: Array<[string, number]>,
+): { color: string | null; source: string } {
+  // 1. Theme-color meta — only trust as background when dark or saturated dark.
+  if (themeColor) {
+    const lum = relLuminance(themeColor);
+    if (lum !== null && lum < 0.5) {
+      return { color: themeColor, source: "meta:theme-color" };
+    }
+  }
+
+  // 2. Inline style="background[...]" on <html> or <body>.
+  const inlineBg = html.match(/<(?:html|body)[^>]*style=["'][^"']*background(?:-color)?\s*:\s*([^;"']+)/i);
+  if (inlineBg) {
+    const c = parseAnyColor(inlineBg[1]);
+    if (c) return { color: c, source: "inline:body-style" };
+  }
+
+  // 3. CSS variable --background / --bg / --page-bg.
+  for (const k of ["background", "bg", "page-bg", "color-background"]) {
+    if (vars[k]) return { color: vars[k], source: `css-var:--${k}` };
+  }
+
+  // 4. body { background-color: ... } — resolve var() against vars map.
+  const bodyBg = css.match(/body[^{]*\{[^}]*background(?:-color)?\s*:\s*([^;}\n]+)/i);
+  if (bodyBg) {
+    const raw = bodyBg[1].trim();
+    const varRef = raw.match(/var\(\s*--([a-z0-9-]+)/i);
+    if (varRef && vars[varRef[1].toLowerCase()]) {
+      return { color: vars[varRef[1].toLowerCase()], source: "css:body+var" };
+    }
+    const c = parseAnyColor(raw);
+    if (c) return { color: c, source: "css:body" };
+  }
+
+  // 5. html { background-color: ... }
+  const htmlBg = css.match(/html[^{]*\{[^}]*background(?:-color)?\s*:\s*([^;}\n]+)/i);
+  if (htmlBg) {
+    const c = parseAnyColor(htmlBg[1]);
+    if (c) return { color: c, source: "css:html" };
+  }
+
+  // 6. <meta name="color-scheme" content="dark"> → dark fallback.
+  const colorScheme = pickAttr(html, /<meta[^>]+name=["']color-scheme["'][^>]+content=["']([^"']+)["']/i);
+  if (colorScheme && /\bdark\b/i.test(colorScheme) && !/\blight\b/i.test(colorScheme)) {
+    return { color: "#0a0a0a", source: "meta:color-scheme" };
+  }
+
+  // 7. body/html with class indicating dark mode.
+  if (/<(?:html|body)[^>]+class=["'][^"']*\b(?:dark|theme-dark|bg-black)\b/i.test(html)) {
+    return { color: "#0a0a0a", source: "class:dark" };
+  }
+
+  // 8. Light fallback from neutral frequency.
+  for (const [hex] of neutralsByFreq) {
+    if (isLightColor(hex)) return { color: hex, source: "freq:neutral-light" };
+  }
+
+  return { color: null, source: "none" };
+}
+
+function detectText(
+  css: string,
+  vars: Record<string, string>,
+  neutralsByFreq: Array<[string, number]>,
+  bg: string | null,
+): { color: string | null; source: string } {
+  // 1. CSS variable --foreground / --text / --body-text.
+  for (const k of ["foreground", "text", "body-text", "text-primary", "color-text"]) {
+    if (vars[k]) return { color: vars[k], source: `css-var:--${k}` };
+  }
+  // 2. body { color: ... }
+  const bodyColor = css.match(/body[^{]*\{[^}]*[^-]color\s*:\s*([^;}\n]+)/i);
+  if (bodyColor) {
+    const raw = bodyColor[1].trim();
+    const varRef = raw.match(/var\(\s*--([a-z0-9-]+)/i);
+    if (varRef && vars[varRef[1].toLowerCase()]) {
+      return { color: vars[varRef[1].toLowerCase()], source: "css:body+var" };
+    }
+    const c = parseAnyColor(raw);
+    if (c) return { color: c, source: "css:body" };
+  }
+  // 3. Frequency neutral that contrasts with bg.
+  if (bg) {
+    const bgLum = relLuminance(bg);
+    for (const [hex] of neutralsByFreq) {
+      const lum = relLuminance(hex);
+      if (lum === null || bgLum === null) continue;
+      if (Math.abs(lum - bgLum) > 0.4) {
+        return { color: hex, source: "freq:contrast" };
+      }
+    }
+  }
+  return { color: null, source: "none" };
+}
+
+function detectAccent(
+  vars: Record<string, string>,
+  themeColor: string | null,
+  scored: Array<{ hex: string; score: number }>,
+): { color: string | null; source: string } {
+  // 1. CSS variable --primary / --accent / --brand.
+  for (const k of ["primary", "accent", "brand", "brand-primary", "color-primary"]) {
+    if (vars[k]) {
+      const lum = relLuminance(vars[k]);
+      const chr = chroma(vars[k]);
+      // Reject if the var is actually just a neutral (some shadcn themes use
+      // --primary as white on black). Fall through to next signal.
+      if (lum !== null && (chr > 0.15 || (lum > 0.04 && lum < 0.95 && chr > 0))) {
+        return { color: vars[k], source: `css-var:--${k}` };
+      }
+    }
+  }
+  // 2. Theme-color meta when saturated.
+  if (themeColor && chroma(themeColor) > 0.15) {
+    return { color: themeColor, source: "meta:theme-color" };
+  }
+  // 3. Frequency-scored accent.
+  if (scored[0]) return { color: scored[0].hex, source: "freq:accent-score" };
+  return { color: null, source: "none" };
+}
+
 export async function extractBrandProfile(
   websiteUrl: string,
 ): Promise<BrandProfile> {
@@ -380,11 +639,16 @@ export async function extractBrandProfile(
 
   const css = [inlineStyles, ...cssTexts].join("\n").slice(0, 600_000);
 
-  // ---- Colors ----
+  // ---- CSS variables (resolve shadcn/Tailwind tokens) ----
+  const vars = extractCssVariables(css);
+
+  // ---- All raw colors, for frequency analysis ----
   const allColors = [...extractAllColors(html), ...extractAllColors(css)];
+  // Inject resolved CSS variable values so frequency reflects "real" usage.
+  for (const v of Object.values(vars)) allColors.push(v);
   const freq = frequency(allColors);
 
-  // Theme/tile colors are high-confidence brand color signals.
+  // Theme/tile color signals.
   const themeColorRaw =
     pickAttr(
       html,
@@ -394,8 +658,7 @@ export async function extractBrandProfile(
       html,
       /<meta[^>]+name=["']msapplication-TileColor["'][^>]+content=["']([^"']+)["']/i,
     );
-
-  const themeColor = themeColorRaw ? normalizeHex(themeColorRaw) : null;
+  const themeColor = themeColorRaw ? parseAnyColor(themeColorRaw) : null;
 
   // Score every color for "accent" likelihood.
   const scored: Array<{ hex: string; score: number; freq: number }> = [];
@@ -405,32 +668,15 @@ export async function extractBrandProfile(
   }
   scored.sort((a, b) => b.score - a.score);
 
-  const accentColor = themeColor ?? (scored[0]?.hex ?? null);
-
-  // Background and text guesses based on most common neutrals.
+  // Neutrals by frequency, for fallbacks.
   const neutrals = [...freq.entries()]
     .filter(([h]) => chroma(h) < 0.15)
     .sort((a, b) => b[1] - a[1]);
 
-  let backgroundColor: string | null = null;
-  let textColor: string | null = null;
-  for (const [hex] of neutrals) {
-    if (!backgroundColor && isLightColor(hex)) backgroundColor = hex;
-    if (!textColor && !isLightColor(hex)) textColor = hex;
-    if (backgroundColor && textColor) break;
-  }
-
-  // CSS body declarations override neutrals if present.
-  const bodyBg = css.match(/body[^{]*\{[^}]*background(?:-color)?\s*:\s*([^;}\n]+)/i);
-  if (bodyBg) {
-    const fromBody = normalizeHex(bodyBg[1]) ?? rgbStringToHex(bodyBg[1]);
-    if (fromBody) backgroundColor = fromBody;
-  }
-  const bodyColor = css.match(/body[^{]*\{[^}]*[^-]color\s*:\s*([^;}\n]+)/i);
-  if (bodyColor) {
-    const fromBody = normalizeHex(bodyColor[1]) ?? rgbStringToHex(bodyColor[1]);
-    if (fromBody) textColor = fromBody;
-  }
+  // ---- Layered detection ----
+  const bg = detectBackground(html, css, vars, themeColor, neutrals);
+  const txt = detectText(css, vars, neutrals, bg.color);
+  const acc = detectAccent(vars, themeColor, scored);
 
   // ---- Logo, font, name ----
   const logoUrl = await findLogoUrl(html, websiteUrl);
@@ -448,16 +694,20 @@ export async function extractBrandProfile(
 
   return {
     logoUrl,
-    brandColor: themeColor ?? accentColor,
-    accentColor,
-    backgroundColor,
-    textColor,
+    brandColor: themeColor ?? acc.color,
+    accentColor: acc.color,
+    backgroundColor: bg.color,
+    textColor: txt.color,
     fontFamily,
     companyName,
     raw: {
       candidateColors: scored.slice(0, 8).map((s) => s.hex),
       sources: {
         theme_color: themeColor,
+        background_source: bg.source,
+        text_source: txt.source,
+        accent_source: acc.source,
+        css_vars_found: String(Object.keys(vars).length),
         css_chars: String(css.length),
       },
     },
