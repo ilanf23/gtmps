@@ -119,11 +119,16 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: "gpt-4o-mini",
         max_tokens: 600,
-        temperature: 0.5,
+        temperature: 0.6,
         stream: true,
         messages: [
           { role: "system", content: BASE_SYSTEM },
           ...trimmed,
+          {
+            role: "system",
+            content:
+              "REMINDER before you reply: Be warm and human. If the user just greeted you (hi, hello, hey, what's up, etc.) or made small talk, greet them back like a real person — do NOT say 'that's outside what the book covers' or any variation of a refusal. Acknowledge them, then warmly invite them into a topic from the book (Five Orbits, Dead Zone, Signal+Proof+Context, the Five Layers, etc.). Always end with a question or invitation that keeps the conversation going. Never be dismissive.",
+          },
         ],
       }),
     });
