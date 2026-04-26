@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useClientTheme } from "@/hooks/useClientTheme";
+import { themeStyle } from "@/lib/clientTheme";
 
 interface MagnetShellProps {
   children: ReactNode;
@@ -8,39 +10,24 @@ interface MagnetShellProps {
   slug?: string;
   /** Optional visitor first name shown on the right */
   firstName?: string | null;
-  /** Subtle co-branding pulled from the client's website during enrichment */
-  clientLogoUrl?: string | null;
-  clientBrandColor?: string | null;
-  clientCompanyName?: string | null;
-}
-
-const GOLD = "#B8933A";
-
-// Defensive guard — only accept a sensible hex color from the DB.
-function safeColor(input?: string | null): string | null {
-  if (!input) return null;
-  const trimmed = input.trim();
-  return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(trimmed)
-    ? trimmed
-    : null;
 }
 
 /**
  * Shared navigation shell for the 4-page magnet microsite.
  * Wraps /m/:slug, /m/:slug/chat, /m/:slug/read, /m/:slug/feedback, and /book.
+ *
+ * Pulls the client theme from the breakdown row so EVERY tab — Map, Talk to
+ * the Book, Read, Feedback — re-skins to the client's branding the moment
+ * enrichment writes it.
  */
 export default function MagnetShell({
   children,
   slug: slugProp,
   firstName,
-  clientLogoUrl,
-  clientBrandColor,
-  clientCompanyName,
 }: MagnetShellProps) {
   const params = useParams<{ slug: string }>();
   const slug = slugProp ?? params.slug;
-
-  const accent = safeColor(clientBrandColor) ?? GOLD;
+  const theme = useClientTheme(slug);
 
   // When no slug is present (e.g. /book), tabs link to base routes that won't
   // resolve — we hide the slug-scoped tabs and show only the base brand strip.
@@ -56,10 +43,17 @@ export default function MagnetShell({
     : [];
 
   return (
-    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008] flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={themeStyle(theme)}
+    >
       {/* Top nav */}
       <header
-        className="sticky top-0 z-40 border-b border-black/10 bg-[#FBF8F4]/95 backdrop-blur"
+        className="sticky top-0 z-40 backdrop-blur"
+        style={{
+          backgroundColor: theme.background,
+          borderBottom: `1px solid ${theme.border}`,
+        }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           {/* Brand */}
@@ -69,26 +63,51 @@ export default function MagnetShell({
             rel="noopener noreferrer"
             className="flex items-center gap-3 shrink-0"
           >
-            <span className="text-[#B8933A] text-xs uppercase tracking-[0.32em] font-semibold">
+            <span
+              className="text-xs uppercase tracking-[0.32em] font-semibold"
+              style={{ color: theme.accent }}
+            >
               Mabbly · GTM
             </span>
 
-            {clientLogoUrl ? (
+            {theme.logoUrl ? (
               <>
                 <span
-                  className="h-4 w-px bg-[#1C1008]/15"
+                  className="h-4 w-px"
+                  style={{ backgroundColor: theme.border }}
                   aria-hidden
                 />
                 <img
-                  src={clientLogoUrl}
-                  alt={clientCompanyName ? `${clientCompanyName} logo` : "Client logo"}
-                  className="h-5 w-auto max-w-[110px] object-contain opacity-80"
+                  src={theme.logoUrl}
+                  alt={theme.companyName ? `${theme.companyName} logo` : "Client logo"}
+                  className="h-6 w-auto max-w-[140px] object-contain"
                   loading="lazy"
                   onError={(e) => {
-                    // Hide the logo (and its divider via the parent tweak) if it fails.
                     (e.currentTarget as HTMLImageElement).style.display = "none";
                   }}
                 />
+                {theme.companyName ? (
+                  <span
+                    className="hidden md:inline text-xs uppercase tracking-[0.28em] font-medium"
+                    style={{ color: theme.text, opacity: 0.7 }}
+                  >
+                    {theme.companyName}
+                  </span>
+                ) : null}
+              </>
+            ) : theme.companyName ? (
+              <>
+                <span
+                  className="h-4 w-px"
+                  style={{ backgroundColor: theme.border }}
+                  aria-hidden
+                />
+                <span
+                  className="text-xs uppercase tracking-[0.32em] font-semibold"
+                  style={{ color: theme.text }}
+                >
+                  {theme.companyName}
+                </span>
               </>
             ) : null}
           </a>
@@ -108,11 +127,11 @@ export default function MagnetShell({
                       className={({ isActive }) =>
                         cn(
                           "relative inline-flex items-center px-3 sm:px-4 h-14 text-xs sm:text-sm uppercase tracking-wider transition-colors whitespace-nowrap",
-                          isActive
-                            ? "text-[#1C1008]"
-                            : "text-[#1C1008]/50 hover:text-[#1C1008]/80",
                         )
                       }
+                      style={({ isActive }) => ({
+                        color: isActive ? theme.text : theme.textMuted,
+                      })}
                     >
                       {({ isActive }) => (
                         <>
@@ -120,7 +139,7 @@ export default function MagnetShell({
                           {isActive && (
                             <span
                               className="absolute left-2 right-2 bottom-0 h-[2px]"
-                              style={{ backgroundColor: accent }}
+                              style={{ backgroundColor: theme.accent }}
                               aria-hidden
                             />
                           )}
@@ -135,7 +154,10 @@ export default function MagnetShell({
 
           {/* Visitor name */}
           {firstName ? (
-            <p className="hidden sm:block text-xs text-[#1C1008]/40 shrink-0">
+            <p
+              className="hidden sm:block text-xs shrink-0"
+              style={{ color: theme.textMuted }}
+            >
               {firstName}
             </p>
           ) : (
