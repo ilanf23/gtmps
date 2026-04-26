@@ -58,7 +58,7 @@ export default function MagnetImpactModel({
           Multiply by your average deal size. Multiply by 3%."
         </p>
         <p className="text-xs opacity-30 mt-1 italic">
-          — from Chapter 1: The Dead Zone
+          From Chapter 1: The Dead Zone
         </p>
       </div>
 
@@ -159,7 +159,7 @@ export default function MagnetImpactModel({
       {/* SECTION 4: The Formula multiplier */}
       <div>
         <p className={labelClass}>
-          THE FORMULA MULTIPLIER — SAME {displayCompany.toUpperCase()} CONTACTS,
+          THE FORMULA MULTIPLIER, SAME {displayCompany.toUpperCase()} CONTACTS,
           DIFFERENT SYSTEM
         </p>
         <p className="text-xs opacity-40 mb-6 leading-relaxed">
@@ -211,16 +211,16 @@ export default function MagnetImpactModel({
             />
           </div>
           <p className="text-xs opacity-30 mb-3">
-            Without — {fmtMoney(pipelineWithout)}
+            Without: {fmtMoney(pipelineWithout)}
           </p>
 
           <div className="h-2 bg-[#B8933A] rounded-full" style={{ width: "100%" }} />
           <div className="flex justify-between mt-2">
             <span className="text-xs opacity-50">
-              With — {fmtMoney(pipelineWith)}
+              With: {fmtMoney(pipelineWith)}
             </span>
             <span className="text-xs opacity-30">
-              Scaled from verified $78K → $486K case
+              Scaled from verified $78K to $486K case
             </span>
           </div>
         </div>
@@ -244,8 +244,8 @@ export default function MagnetImpactModel({
             l: "More expensive to acquire a new client than reactivate one",
           },
           {
-            n: "60–70%",
-            l: "Conversion rate from existing relationships vs. 5–20% new",
+            n: "60 to 70%",
+            l: "Conversion rate from existing relationships vs. 5 to 20% new",
           },
         ].map((s) => (
           <div key={s.n} className="bg-white/5 border border-white/10 p-4">
