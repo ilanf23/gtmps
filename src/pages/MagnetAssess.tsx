@@ -125,7 +125,7 @@ export default function MagnetAssess() {
     '500k_plus': 650000,
   };
   const deadZoneValue =
-    crmSize && dealSize && crmSize !== '' && dealSize !== ''
+    crmSize && dealSize
       ? Math.round(
           ((crmMidpoints[crmSize] ?? 0) *
             0.81 *
