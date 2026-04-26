@@ -8,15 +8,39 @@ interface MagnetShellProps {
   slug?: string;
   /** Optional visitor first name shown on the right */
   firstName?: string | null;
+  /** Subtle co-branding pulled from the client's website during enrichment */
+  clientLogoUrl?: string | null;
+  clientBrandColor?: string | null;
+  clientCompanyName?: string | null;
+}
+
+const GOLD = "#B8933A";
+
+// Defensive guard — only accept a sensible hex color from the DB.
+function safeColor(input?: string | null): string | null {
+  if (!input) return null;
+  const trimmed = input.trim();
+  return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(trimmed)
+    ? trimmed
+    : null;
 }
 
 /**
  * Shared navigation shell for the 4-page magnet microsite.
  * Wraps /m/:slug, /m/:slug/chat, /m/:slug/read, /m/:slug/feedback, and /book.
  */
-export default function MagnetShell({ children, slug: slugProp, firstName }: MagnetShellProps) {
+export default function MagnetShell({
+  children,
+  slug: slugProp,
+  firstName,
+  clientLogoUrl,
+  clientBrandColor,
+  clientCompanyName,
+}: MagnetShellProps) {
   const params = useParams<{ slug: string }>();
   const slug = slugProp ?? params.slug;
+
+  const accent = safeColor(clientBrandColor) ?? GOLD;
 
   // When no slug is present (e.g. /book), tabs link to base routes that won't
   // resolve — we hide the slug-scoped tabs and show only the base brand strip.
@@ -43,11 +67,30 @@ export default function MagnetShell({ children, slug: slugProp, firstName }: Mag
             href="https://mabbly.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 shrink-0"
+            className="flex items-center gap-3 shrink-0"
           >
             <span className="text-[#B8933A] text-xs uppercase tracking-[0.32em] font-semibold">
               Mabbly · GTM
             </span>
+
+            {clientLogoUrl ? (
+              <>
+                <span
+                  className="h-4 w-px bg-[#1C1008]/15"
+                  aria-hidden
+                />
+                <img
+                  src={clientLogoUrl}
+                  alt={clientCompanyName ? `${clientCompanyName} logo` : "Client logo"}
+                  className="h-5 w-auto max-w-[110px] object-contain opacity-80"
+                  loading="lazy"
+                  onError={(e) => {
+                    // Hide the logo (and its divider via the parent tweak) if it fails.
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </>
+            ) : null}
           </a>
 
           {/* Tabs */}
@@ -76,7 +119,8 @@ export default function MagnetShell({ children, slug: slugProp, firstName }: Mag
                           <span>{t.label}</span>
                           {isActive && (
                             <span
-                              className="absolute left-2 right-2 bottom-0 h-[2px] bg-[#B8933A]"
+                              className="absolute left-2 right-2 bottom-0 h-[2px]"
+                              style={{ backgroundColor: accent }}
                               aria-hidden
                             />
                           )}
