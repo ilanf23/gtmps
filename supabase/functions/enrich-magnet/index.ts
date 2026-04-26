@@ -481,6 +481,25 @@ ${JSON.stringify(linkedin_data)}`;
       asString(parsed.closingLine),
     ].filter(Boolean).join(" ") || null;
 
+    // ---- Branding palette: AI-selected, validated, with heuristic fallback ----
+    const isHex6 = (v: unknown): v is string =>
+      typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v.trim());
+    const normHex = (v: unknown): string | null =>
+      isHex6(v) ? (v as string).trim().toLowerCase() : null;
+    const aiBranding = (parsed.branding && typeof parsed.branding === "object"
+      ? parsed.branding
+      : {}) as Record<string, unknown>;
+    const palette = {
+      primary:
+        normHex(aiBranding.primary) ?? normHex(branding?.accentColor) ?? null,
+      background:
+        normHex(aiBranding.background) ?? normHex(branding?.backgroundColor) ?? null,
+      surface: normHex(aiBranding.surface) ?? null,
+      text: normHex(aiBranding.text) ?? normHex(branding?.textColor) ?? null,
+      textMuted: normHex(aiBranding.textMuted) ?? null,
+    };
+    const mergedBrandProfile = { ...(branding ?? {}), palette };
+
     const breakdownRow = {
       slug,
       welcome_message: welcome,
@@ -503,11 +522,11 @@ ${JSON.stringify(linkedin_data)}`;
       client_logo_url: branding?.logoUrl ?? null,
       client_brand_color: branding?.brandColor ?? null,
       client_company_name: branding?.companyName ?? null,
-      client_accent_color: branding?.accentColor ?? null,
-      client_background_color: branding?.backgroundColor ?? null,
-      client_text_color: branding?.textColor ?? null,
+      client_accent_color: palette.primary ?? branding?.accentColor ?? null,
+      client_background_color: palette.background ?? branding?.backgroundColor ?? null,
+      client_text_color: palette.text ?? branding?.textColor ?? null,
       client_font_family: branding?.fontFamily ?? null,
-      client_brand_profile: branding ?? {},
+      client_brand_profile: mergedBrandProfile,
       crm_estimate:
         typeof parsed.crmEstimate === "number" && isFinite(parsed.crmEstimate)
           ? Math.round(parsed.crmEstimate)
