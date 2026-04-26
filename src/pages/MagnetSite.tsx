@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MagnetBreakdown from '@/components/magnet/MagnetBreakdown';
 import MagnetShell from '@/components/magnet/MagnetShell';
+import MagnetLoadingScene from '@/components/magnet/MagnetLoadingScene';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
@@ -164,7 +165,8 @@ export default function MagnetSite() {
     };
   }, [slug]);
 
-  // Cycle processing steps every 4s
+  // Cycle processing steps — slowed to 14s so each step can breathe alongside
+  // the cinematic loading scene's animations.
   useEffect(() => {
     if (status !== 'pending' && status !== 'processing') return;
 
@@ -173,8 +175,8 @@ export default function MagnetSite() {
       window.setTimeout(() => {
         setStepIndex((i) => (i + 1) % STEPS.length);
         setStepVisible(true);
-      }, 300);
-    }, 4000);
+      }, 500);
+    }, 14000);
 
     return () => window.clearInterval(id);
   }, [status]);
@@ -224,42 +226,12 @@ export default function MagnetSite() {
   // Processing UI (pending | processing)
   return (
     <MagnetShell firstName={firstName}>
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
-        <style>{`
-          @keyframes magnet-bar-fill {
-            0% { width: 0%; }
-            100% { width: 100%; }
-          }
-          .magnet-bar-fill {
-            animation: magnet-bar-fill 4s linear infinite;
-          }
-        `}</style>
-
-        <h1 className="text-xl md:text-2xl font-semibold text-center max-w-xl mb-12">
-          {firstName
-            ? `Hey ${firstName} — we're building your map.`
-            : 'Building your GTM breakdown…'}
-        </h1>
-
-        <div className="w-full max-w-md flex flex-col items-center">
-          <p
-            className="text-[#B8933A] text-sm uppercase tracking-widest text-center min-h-[1.5rem] transition-opacity duration-300"
-            style={{ opacity: stepVisible ? 1 : 0 }}
-            key={stepIndex}
-          >
-            {STEPS[stepIndex]}
-          </p>
-
-          <div className="mt-6 w-full h-[2px] bg-black/10 overflow-hidden">
-            <div
-              key={stepIndex}
-              className="h-full bg-[#B8933A] magnet-bar-fill"
-            />
-          </div>
-        </div>
-
-        <div className="mt-16 w-2 h-2 rounded-full bg-[#B8933A] animate-pulse" aria-hidden />
-      </div>
+      <MagnetLoadingScene
+        firstName={firstName}
+        stepIndex={stepIndex}
+        stepVisible={stepVisible}
+        steps={STEPS}
+      />
     </MagnetShell>
   );
 }

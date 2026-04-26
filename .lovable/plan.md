@@ -1,53 +1,83 @@
 ## Goal
 
-Replace the `SYSTEM_PROMPT` in `supabase/functions/enrich-magnet/index.ts` with the new GTM-analyst prompt + JSON shape you provided, and update the OpenAI call params:
+Transform the `/m/:slug` loading state from a flat status bar into an inspirational, cinematic "building your map" sequence that feels worth waiting 60–90s for. Stays inside the locked Mabbly palette (`#FBF8F4`, `#1C1008`, `#B8933A`) and respects `prefers-reduced-motion`.
 
-- `model: "gpt-4o-mini"` (already correct)
-- `temperature: 0.4` (was `0.3`)
-- `max_tokens: 2000` (was `4000` — note: this is a **decrease**, not an increase; flagging in case you meant something else)
+## Where it lives
 
-No other changes to the file.
+`src/pages/MagnetSite.tsx` — replaces the current "Processing UI (pending | processing)" block (lines ~224-263). The `loading`, `complete`, and `error` branches are untouched. No changes to polling logic, `MagnetShell`, or any data flow.
 
-## Single file change
+## The composition (single full-bleed canvas, layered)
 
-**`supabase/functions/enrich-magnet/index.ts`**
+A centered ~640px square stage on desktop, full-width on mobile, with five layers stacked via absolute positioning:
 
-1. Replace the entire `SYSTEM_PROMPT` constant (lines 27–98) with the new prompt verbatim, including:
-   - The "GTM analyst trained on Mabbly's RROS" framing
-   - The 6 non-negotiable rules
-   - The exact output JSON shape (`companyName`, `headline`, `subheadline`, `formulaAnalysis {signal, proof, context, verdict}`, `orbits[5]` with fixed names Inner Circle / Warm Network / Dead Zone / Content Gravity / New Gravity, `deadZone {estimate, description}`, `layerRecommendation {startHere, rationale}`, `quickWins[3]`, `chapterCallouts[3]`, `closingLine`)
+**Layer 1 — Constellation field (back)**
+- ~40 small gold dots (`#B8933A`) scattered on a deterministic seeded grid so it looks intentional, not random.
+- Each dot fades in over the first ~6s in staggered waves (3 waves of ~13 dots), then gently breathes (opacity 0.3 → 0.7) on a 4s loop with per-dot phase offset.
+- Represents "your relationship orbits being discovered."
 
-2. Update the OpenAI call (line 207–208):
-   ```
-   temperature: 0.4,
-   max_tokens: 2000,
-   ```
+**Layer 2 — Orbit rings (middle)**
+- Five concentric SVG rings, hairline (`1px`, `#1C1008` at 8% opacity), drawn with `stroke-dasharray` + `stroke-dashoffset` animating from invisible to fully drawn — each ring takes ~3s, staggered 1.2s apart, so all five complete by ~9s.
+- Once drawn, each ring rotates very slowly (60s, 90s, 120s, 150s, 180s — different speeds for parallax depth).
+- Maps directly to the Five Orbits framework (Inner Circle → New Gravity), reinforcing the brand promise visually.
 
-Everything else (Jina fetch, user message construction, error handling, DB write, status updates) stays untouched.
+**Layer 3 — Tracing arc (middle-front)**
+- A single brighter gold arc (`#B8933A`, 1.5px, opacity 0.6) sweeps continuously around one of the rings (8s loop), like a radar trace finding signals.
+- When it crosses a constellation dot, that dot briefly pulses brighter (100% opacity, 400ms). Achieved with CSS `animation-delay` per dot rather than JS so it stays cheap.
 
-## ⚠️ Critical compatibility issue you should know before approving
+**Layer 4 — Center seal (front)**
+- Small editorial mark in the dead center: hairline gold circle (~64px), with the rotating step number inside in `Cormorant Garamond` italic (`01` → `05`), changing every ~14s in sync with the step copy.
+- Subtle scale pulse (1.0 → 1.04 → 1.0) on a 3s loop — gives the composition a heartbeat.
 
-The new JSON schema **does not match** the existing `magnet_breakdowns` table columns or the rest of the codebase. The persistence step at lines 248–273 reads keys like `parsed.welcome_message`, `parsed.orbit_01`, `parsed.action_1`, `parsed.dead_zone_value` — none of which the new prompt produces. If we ship this prompt change in isolation, here is what will happen on the next submission:
+**Layer 5 — Editorial text block (overlay, below the stage)**
+- Eyebrow: `BUILDING YOUR MAP` in DM Mono caps gold, locked in place.
+- Headline (unchanged copy, restyled): `Hey {firstName} — we're mapping your revenue universe.` Falls back to "Mapping your revenue universe." Cormorant Garamond italic, 28-36px clamp, `#1C1008`.
+- Step line (existing 5 STEPS array, unchanged copy): rotates every 14s (slowed from 4s — the new visual carries the "something is happening" signal, so the words can breathe). Crossfades in/out at 500ms.
+- Below step line: a much thinner progress bar — `1px` gold, with a soft glow (`box-shadow: 0 0 12px rgba(184,147,58,0.6)`), filling 0→100 across each 14s step rather than 4s.
+- Final micro-line in DM Mono caps `#1C1008` at 40%: `THIS USUALLY TAKES 60–90 SECONDS` — sets expectation, reduces abandonment anxiety.
 
-- `welcome_message`, `gtm_profile_observed`, `gtm_profile_assessment`, `dead_zone_reasoning`, `orbit_01`–`orbit_05`, `action_1`–`action_3`, `dead_zone_value` → all written as **null**
-- `chapter_callouts` → written as the new 3-item array, but each item has shape `{chapterNumber, callout}` while the TS type and UI expect `{chapter, callout}` (string, not number) — UI will render blank chapter labels
-- `MagnetBreakdown.tsx`, `magnet-chat/index.ts`, and the `MagnetBreakdown` TypeScript type all reference the old columns — the breakdown page will display empty sections and the chatbot's system prompt will inject mostly-null context
+## Motion timing summary
 
-You explicitly said "Do not change anything else in the file." So I want to confirm before I touch it.
+| Element | Duration | Behavior |
+|---|---|---|
+| Constellation fade-in | 6s | Staggered 3-wave reveal |
+| Constellation breathing | 4s loop | Per-dot phase offset |
+| Orbit rings draw | 9s | Stroke-dashoffset, staggered |
+| Orbit rings rotate | 60–180s | Parallax, perpetual |
+| Tracing arc sweep | 8s loop | Continuous radar |
+| Center seal pulse | 3s loop | Scale 1 → 1.04 |
+| Step copy + bar | 14s per step | Crossfade 500ms |
 
-## Three options
+All loops use `cubic-bezier(0.4, 0, 0.2, 1)`.
 
-**Option A — Prompt-only swap (literal interpretation of your request).**
-Update only the prompt + temperature + max_tokens. Accept that the breakdown page and chatbot will be broken until a follow-up migration + UI refactor lands. Good if you're staging a larger refactor and want the prompt in place first.
+## Reduced motion fallback
 
-**Option B — Prompt swap + minimal mapping shim.**
-Update the prompt, then in the same file map the new shape back to the existing DB columns at write time (e.g. flatten `formulaAnalysis` into `gtm_profile_observed`, join `quickWins` into `action_1/2/3`, transform `chapterCallouts` items to `{chapter: "Ch.N", callout}`). UI keeps working. This technically violates "do not change anything else" but only inside the same file, and only the persistence block.
+When `prefers-reduced-motion: reduce`:
+- Rings render fully drawn, no rotation.
+- Constellation renders at static 50% opacity, no breathing.
+- Tracing arc hidden.
+- Center seal static, no pulse.
+- Step copy still rotates (it's information, not decoration), but bar fills without animation.
 
-**Option C — Full migration.**
-Add new columns to `magnet_breakdowns`, update the TS type, refactor `MagnetBreakdown.tsx` and `magnet-chat` to consume the new shape. Largest blast radius, but the cleanest end state.
+Implemented via the existing `useReducedMotion` hook (already in repo at `src/hooks/useReducedMotion.ts`).
 
-## Recommendation
+## Implementation notes
 
-**Option B.** Honors your prompt change exactly while keeping the live breakdown page and chatbot functional. The mapping is ~20 lines confined to one block in the same file.
+- All animation via CSS keyframes inside a single `<style>` block scoped to the loading screen — no new dependencies, no Framer Motion needed.
+- SVG for rings + arc + dots (single inline SVG, ~3KB), so it scales cleanly and stays crisp at any viewport.
+- Center seal step number derived from the existing `stepIndex` state — no new state needed.
+- Mobile: stage scales to `min(90vw, 480px)`. Constellation count drops to ~28 dots to keep it from looking busy at 375px.
+- Accessibility: stage gets `aria-hidden="true"` (decorative). Live region (`aria-live="polite"`) wraps the step copy so screen readers announce progress.
 
-If you want strict literal Option A, say so and I'll ship just the prompt + params. If you want Option C, I'll prepare a separate plan with the migration and UI changes.
+## What does NOT change
+
+- Polling logic, status states, error UI, complete UI, `MagnetShell`, routing, copy in the `STEPS` array.
+- No new files. Single edit to `src/pages/MagnetSite.tsx`.
+
+## Verification after ship
+
+1. Visit `/m/<any-slug-mid-processing>` — see constellation fade in, rings draw in sequence, arc sweep continuously.
+2. Step copy rotates every ~14s with bar filling underneath.
+3. Center seal shows 01–05 italic numerals in sync with steps.
+4. Toggle OS reduced-motion → all loops freeze, content still reads.
+5. Mobile 375px → stage fills width, no horizontal scroll, dots not crowded.
+6. `complete` and `error` states render exactly as before.
