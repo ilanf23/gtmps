@@ -29,6 +29,9 @@ export default function MagnetSite() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<Status>('loading');
   const [firstName, setFirstName] = useState<string | null>(null);
+  const [clientLogoUrl, setClientLogoUrl] = useState<string | null>(null);
+  const [clientBrandColor, setClientBrandColor] = useState<string | null>(null);
+  const [clientCompanyName, setClientCompanyName] = useState<string | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [stepVisible, setStepVisible] = useState(true);
   const timeoutRef = useRef<number | null>(null);
@@ -102,6 +105,22 @@ export default function MagnetSite() {
 
       if (submissionRow?.first_name) {
         setFirstName(submissionRow.first_name);
+      }
+
+      // Branding data appears on the breakdown row once enrichment writes it.
+      // Capture as soon as it's present so the shell can co-brand even while
+      // the rest of the breakdown is still rendering.
+      if (breakdownRow) {
+        const row = breakdownRow as Record<string, unknown>;
+        if (typeof row.client_logo_url === 'string' && row.client_logo_url) {
+          setClientLogoUrl(row.client_logo_url);
+        }
+        if (typeof row.client_brand_color === 'string' && row.client_brand_color) {
+          setClientBrandColor(row.client_brand_color);
+        }
+        if (typeof row.client_company_name === 'string' && row.client_company_name) {
+          setClientCompanyName(row.client_company_name);
+        }
       }
 
       const breakdownReady =
@@ -183,7 +202,7 @@ export default function MagnetSite() {
 
   if (status === 'loading') {
     return (
-      <MagnetShell firstName={firstName}>
+      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
         <div className="flex-1 flex items-center justify-center">
           <div
             className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
@@ -196,7 +215,7 @@ export default function MagnetSite() {
 
   if (status === 'complete') {
     return (
-      <MagnetShell firstName={firstName}>
+      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
         <MagnetBreakdown slug={slug!} />
       </MagnetShell>
     );
@@ -204,7 +223,7 @@ export default function MagnetSite() {
 
   if (status === 'error') {
     return (
-      <MagnetShell firstName={firstName}>
+      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
           <p className="text-xs uppercase tracking-[0.32em] text-[#B8933A] mb-4">
             SOMETHING WENT WRONG
@@ -225,7 +244,7 @@ export default function MagnetSite() {
 
   // Processing UI (pending | processing)
   return (
-    <MagnetShell firstName={firstName}>
+    <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
       <MagnetLoadingScene
         firstName={firstName}
         stepIndex={stepIndex}
