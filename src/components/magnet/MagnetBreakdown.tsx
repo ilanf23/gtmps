@@ -549,13 +549,30 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 7: THE MANUSCRIPT */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-8">
-            THE MANUSCRIPT — RELATIONSHIP REVENUE OS
+          <div className="flex items-center gap-2 mb-3">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              The Manuscript — Relationship Revenue OS
+            </p>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-3">
+            14 sections. {writtenChapters > 0 ? `${writtenChapters} written for ${customerName}.` : `Written for ${customerName}.`}
+          </h2>
+          <p className="text-sm opacity-60 mb-8 leading-relaxed">
+            Sections marked <span className="text-[#B8933A] font-semibold">✦</span> include callouts written specifically for your firm based on what we observed.
           </p>
-          <p className="text-sm opacity-40 mb-8 leading-relaxed">
-            14 sections. The complete system. Sections marked ✦ are written
-            specifically for your firm.
-          </p>
+
+          {/* Manuscript stat strip */}
+          <div className="grid grid-cols-2 gap-px bg-black/10 border border-black/10 mb-6">
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Custom Callouts</p>
+              <p className="text-lg font-bold text-[#B8933A]">{writtenChapters}<span className="text-sm opacity-40 font-normal"> sections</span></p>
+            </div>
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Total System</p>
+              <p className="text-lg font-bold">14<span className="text-sm opacity-40 font-normal"> sections</span></p>
+            </div>
+          </div>
 
           {CHAPTERS.map((chapter) => {
             const callout = (data.chapter_callouts ?? []).find(
