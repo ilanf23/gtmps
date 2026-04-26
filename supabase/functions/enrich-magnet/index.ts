@@ -401,8 +401,8 @@ ${JSON.stringify(linkedin_data)}`;
     const breakdownRow = {
       slug,
       welcome_message: welcome,
-      dead_zone_value: parseDollarEstimate(deadZone.estimate),
-      dead_zone_reasoning: asString(deadZone.description),
+      dead_zone_value: parseDollarEstimate(deadZoneEstimateSource),
+      dead_zone_reasoning: deadZoneText,
       gtm_profile_observed: observed,
       gtm_profile_assessment: assessment,
       orbit_01: orbitDesc(0),
