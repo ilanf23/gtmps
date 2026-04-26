@@ -3,6 +3,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useClientTheme } from "@/hooks/useClientTheme";
 import { themeStyle } from "@/lib/clientTheme";
+import Footer from "@/components/Footer";
 
 interface MagnetShellProps {
   children: ReactNode;
