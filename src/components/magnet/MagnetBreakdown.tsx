@@ -28,6 +28,8 @@ interface BreakdownRow {
   action_3: string | null;
   chapter_callouts: ChapterCallout[] | null;
   enrichment_error: string | null;
+  client_logo_url?: string | null;
+  client_company_name?: string | null;
 }
 
 interface SubmissionRow {
@@ -177,6 +179,26 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
       <div className="max-w-2xl mx-auto px-6 pb-24">
         {/* SECTION 1: PERSONAL HEADER */}
         <section className="pt-16 pb-12 border-b border-black/10">
+          {data.client_logo_url ? (
+            <div className="mb-8 flex items-center gap-3">
+              <img
+                src={data.client_logo_url}
+                alt={data.client_company_name ? `${data.client_company_name} logo` : "Logo"}
+                className="h-10 w-auto max-w-[200px] object-contain"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              {data.client_company_name ? (
+                <>
+                  <span className="h-5 w-px bg-black/15" aria-hidden />
+                  <span className="text-xs uppercase tracking-[0.28em] opacity-60">
+                    {data.client_company_name}
+                  </span>
+                </>
+              ) : null}
+            </div>
+          ) : null}
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             YOUR PERSONALIZED RROS BREAKDOWN
           </p>
