@@ -1,79 +1,56 @@
-## What's already correct (no change needed)
+# Eliminate microsite theme flash on route change
 
-`MagnetBreakdown.tsx` already uses the correct `ORBIT_NAMES` constant: "Core Proof", "Active", "Dead Zone", "Warm Adjacency", "New Gravity". Part A is already done client-side. The fix is still needed in the edge function (Part E).
+## Root Cause
 
-There is no `BreakdownData` interface in this file — the type is `BreakdownRow`. I'll add the two new optional estimate fields there.
+Each tab navigation inside a microsite (e.g. `/m/:slug` → `/m/:slug/chat`) unmounts and remounts `MagnetShell`. Its `useClientTheme(slug)` hook always initializes state to `MABBLY_DEFAULTS` (orange/beige), then fires an async Supabase RPC to fetch the branding. That ~1s round-trip is exactly the flash the user sees.
 
-## Part B — Replace CHAPTERS in `src/components/magnet/MagnetBreakdown.tsx`
+## Fix: Module-scoped theme cache keyed by slug
 
-Replace lines 39–54 with the full 14-entry list (Preface = 0 through Closing = 13) using the exact titles and summaries provided. The existing `getChapterNumber` helper already supports `chapter_number`, so the lookup keeps working for entries with `chapterNumber` 0–13.
+Update `src/hooks/useClientTheme.ts` so that:
 
-Also update the line "14 chapters. The complete system." → "14 sections. The complete system." (still 14 entries: preface + 12 chapters + closing).
+1. **Cache resolved themes in a module-level `Map<slug, ClientTheme>`.** Once branding has been fetched for a slug, every subsequent mount in the same session reads it synchronously.
+2. **Use a lazy `useState` initializer** that returns the cached theme for the current slug if present, otherwise `MABBLY_DEFAULTS`. The very first render of the next tab already paints with the correct dark theme — no flash.
+3. **Skip the network call when cached.** Only fire the RPC when the slug has no cached entry (first visit).
+4. **Write to cache on success** so the next navigation benefits.
 
-## Part C — Create `src/components/magnet/MagnetImpactModel.tsx`
+### Key snippet
 
-New component built exactly to spec:
-- Props: `crmEstimate?`, `dealSizeEstimate?`, `companyName`
-- Constants: `DORMANCY_RATE 0.81`, `DZ_CONVERSION 0.03`, `ACQ_MULTIPLIER 7`, `BASE_CONTACTS 200`, `BASE_WITHOUT 78000`, `BASE_WITH 486000`, `BASE_DEAL 150000`
-- State: `crm` (default `crmEstimate ?? 1500`), `deal` (default `dealSizeEstimate ?? 150000`)
-- Derived values: `dormant`, `deadZoneValue`, `replaceCost`, `pipelineWithout`, `pipelineWith`, `multiplier`
-- `fmtMoney` helper as specified
-- Sections in order:
-  1. Monday Morning Test header + Ch.1 attribution
-  2. Two sliders (Contacts / Avg engagement size); each shows "Estimated from your website/market" hint when the corresponding prop was passed
-  3. Three metric cards: Dormant Contacts, Dead Zone Value (gold-highlighted), Cost to Replace
-  4. Formula multiplier — Without/With cards side by side + stacked bar visual using `(pipelineWithout / pipelineWith) * 100%` for the gray bar, 100% for the gold bar
-  5. Four stat chips (74%, 8.1%, 7×, 60–70%) with the exact copy
-  6. Three "Verified in Practice" cards (Stephen at Madcraft, SPR, AArete)
-- Uses brand colors: text `#F5EFE0`, accent `#B8933A`, surfaces `bg-white/5 border border-white/10`. `bg-transparent` outer.
+```ts
+const themeCache = new Map<string, ClientTheme>();
 
-## Part D — Wire into `MagnetBreakdown.tsx`
+export function useClientTheme(slug: string | undefined | null): ClientTheme {
+  const [theme, setTheme] = useState<ClientTheme>(() =>
+    slug && themeCache.has(slug) ? themeCache.get(slug)! : MABBLY_DEFAULTS,
+  );
 
-1. Add `crmEstimate?: number` and `dealSizeEstimate?: number` to the `BreakdownRow` interface (the existing equivalent of `BreakdownData`).
-2. Import `MagnetImpactModel` at top.
-3. Insert a new `<section className="py-12 border-t border-white/10">` containing `<MagnetImpactModel companyName={data.client_company_name ?? ""} crmEstimate={data.crmEstimate} dealSizeEstimate={data.dealSizeEstimate} />` AFTER the Five Orbits section (currently lines 257–285) and BEFORE the existing standalone Dead Zone section.
-4. Remove the existing standalone Dead Zone section (lines 287–303) — the one with the `text-5xl` dollar amount. The new impact model replaces it.
+  useEffect(() => {
+    if (!slug) { setTheme(MABBLY_DEFAULTS); return; }
+    if (themeCache.has(slug)) { setTheme(themeCache.get(slug)!); return; }
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc("get_magnet_breakdown_by_slug", { _slug: slug });
+      if (cancelled || error) return;
+      const row = Array.isArray(data) ? data[0] : null;
+      if (!row) return;
+      const next = buildClientTheme(row as unknown as RawBranding);
+      themeCache.set(slug, next);
+      setTheme(next);
+    })();
+    return () => { cancelled = true; };
+  }, [slug]);
 
-Note: the breakdown page uses a light cream theme (`bg-[#FBF8F4]`) but the impact model spec uses dark surface colors (`text-[#F5EFE0]`, `bg-white/5`). I'll wrap the inserted impact-model section in a dark band (`bg-[#120D05]` full-bleed via `-mx-6 px-6` inside the `max-w-2xl` container) so the gold/cream-on-dark surface treatment in the spec reads correctly. This preserves the spec's color tokens exactly while keeping the rest of the page on its cream background.
-
-## Part E — `supabase/functions/enrich-magnet/index.ts`
-
-In the system prompt:
-1. Update line 40–41 rule #2 to: `Orbit names MUST be exactly: Core Proof, Active, Dead Zone, Warm Adjacency, New Gravity (in that order, IDs 01-05).`
-2. Update the JSON schema orbit entries (lines 62–66) to use `Core Proof`, `Active`, `Dead Zone`, `Warm Adjacency`, `New Gravity`.
-3. Add two new fields to the JSON schema, between `deadZone` and `layerRecommendation`:
-   - `"crmEstimate": number` — with the inline comment about LinkedIn headcount × 8 fallback
-   - `"dealSizeEstimate": number` — with the inline comment about engagement size, plain integer
-
-Also update the schema-mapping block (around lines 240–320) to persist the two new estimates so they reach `MagnetBreakdown`. Two paths:
-- Add columns `crm_estimate` and `deal_size_estimate` to `magnet_breakdowns` via a migration.
-- Update the `get_magnet_breakdown_by_slug` SQL function to return them.
-- Add them to the upserted `breakdownRow`.
-- Map them onto `data.crmEstimate` / `data.dealSizeEstimate` in the client.
-
-## Database migration
-
-```sql
-ALTER TABLE public.magnet_breakdowns
-  ADD COLUMN IF NOT EXISTS crm_estimate integer,
-  ADD COLUMN IF NOT EXISTS deal_size_estimate integer;
+  return theme;
+}
 ```
 
-Then `CREATE OR REPLACE FUNCTION public.get_magnet_breakdown_by_slug(...)` to add `b.crm_estimate, b.deal_size_estimate` to the return columns.
+## Why this approach (vs. alternatives)
 
-In the client `useEffect`, map `row.crm_estimate` → `crmEstimate` and `row.deal_size_estimate` → `dealSizeEstimate` when setting state.
+- **Why not a loading spinner?** It would replace one bad UX (flash) with another (blank screen), and the first-ever visit would still show it. The cache eliminates the flash on intra-microsite navigation, which is where the user sees it.
+- **Why not React Query?** Overkill for a single RPC. A 5-line module Map gives the same intra-session caching with zero new dependencies.
+- **First-visit behavior preserved.** First load of a slug still briefly shows defaults then upgrades — same as today. Only repeat tab clicks within the microsite become instant.
 
-## Files
+## Files Modified
 
-CREATE
-- `src/components/magnet/MagnetImpactModel.tsx`
+- `src/hooks/useClientTheme.ts` — add module-scoped cache + lazy state initializer.
 
-MODIFY
-- `src/components/magnet/MagnetBreakdown.tsx` — replace `CHAPTERS`, extend `BreakdownRow`, import + render `MagnetImpactModel`, remove old standalone Dead Zone section, map new fields from RPC row
-- `supabase/functions/enrich-magnet/index.ts` — fix orbit names in prompt rule + JSON schema, add `crmEstimate` / `dealSizeEstimate` to schema, persist them on `breakdownRow`
-
-MIGRATION
-- Add `crm_estimate`, `deal_size_estimate` columns to `magnet_breakdowns`
-- Update `get_magnet_breakdown_by_slug` to return the two new columns
-
-Nothing else changes.
+No other files need to change. `MagnetShell` and `MagnetSite` consume the hook unchanged.
