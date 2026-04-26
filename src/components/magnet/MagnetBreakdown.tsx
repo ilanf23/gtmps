@@ -236,6 +236,12 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
   const recommended = (data.recommended_layer ?? "DISCOVER").toUpperCase();
 
+  const recommendedIndex = Math.max(0, LAYERS.indexOf(recommended));
+  const customerName = data.client_company_name ?? "your firm";
+  const writtenChapters = (data.chapter_callouts ?? []).filter((c) =>
+    Boolean(c.callout && c.callout.trim())
+  ).length;
+
   return (
     <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
       <div className="max-w-2xl mx-auto px-6 pb-24">
@@ -253,9 +259,6 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                   const h = img.naturalHeight;
                   if (!w || !h) return;
                   const ratio = w / h;
-                  // Real logos sit roughly between 1:2 (tall) and 5:1 (wide).
-                  // Anything outside that range is almost certainly a banner
-                  // or social-share photo masquerading as a logo.
                   if (ratio > 5 || ratio < 0.5) {
                     img.style.display = "none";
                   }
@@ -274,162 +277,302 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               ) : null}
             </div>
           ) : null}
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest">
-            YOUR PERSONALIZED RROS BREAKDOWN
-          </p>
-          <h1 className="text-3xl font-bold mt-3 leading-tight">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              Your Personalized RROS Breakdown
+            </p>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold leading-[1.15] tracking-tight">
             {data.welcome_message ?? "Your GTM breakdown."}
           </h1>
-          {data.gtm_profile_observed && (
-            <p className="text-base opacity-60 mt-3 max-w-lg leading-relaxed">
-              {data.gtm_profile_observed}
-            </p>
-          )}
+
+          {/* Snapshot strip */}
+          <div className="mt-8 grid grid-cols-3 gap-px bg-black/10 border border-black/10">
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Firm</p>
+              <p className="text-sm font-semibold truncate">{customerName}</p>
+            </div>
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Starting Layer</p>
+              <p className="text-sm font-semibold text-[#B8933A]">{recommended}</p>
+            </div>
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Custom Sections</p>
+              <p className="text-sm font-semibold">
+                {writtenChapters}<span className="opacity-40"> / 14</span>
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* SECTION 2: THE FORMULA / GTM ASSESSMENT */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
-            THE FORMULA: SIGNAL + PROOF + CONTEXT = RESPONSE, NOT PITCH
-          </p>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              The Formula
+            </p>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-3">
+            Signal <span className="opacity-40">+</span> Proof <span className="opacity-40">+</span> Context <span className="opacity-40">=</span> Response
+          </h2>
           <p className="text-sm opacity-60 mb-6 leading-relaxed">
-            Signal + Proof + Context = Response, Not Pitch — here's how each element lands for {data.client_company_name ?? "your firm"} right now.
+            Not pitch. Here's how each element lands for {customerName} right now.
           </p>
 
-          {data.gtm_profile_observed && (
-            <div className="bg-black/5 border border-black/10 p-5 rounded-sm mb-3">
-              <p className="text-[#B8933A] text-xs uppercase tracking-wider">
-                OBSERVED
-              </p>
-              <p className="text-sm opacity-80 mt-2 leading-relaxed">
-                {data.gtm_profile_observed}
-              </p>
-            </div>
-          )}
+          <div className="grid gap-3">
+            {data.gtm_profile_observed && (
+              <div className="bg-black/[0.04] border border-black/10 p-5 rounded-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[#B8933A] text-[10px] uppercase tracking-[0.25em] font-semibold">
+                    Observed
+                  </p>
+                  <span className="text-[10px] uppercase tracking-wider opacity-40">
+                    What we see
+                  </span>
+                </div>
+                <p className="text-sm opacity-80 leading-relaxed">
+                  {data.gtm_profile_observed}
+                </p>
+              </div>
+            )}
 
-          {data.gtm_profile_assessment && (
-            <div className="bg-[#B8933A]/10 border border-[#B8933A]/30 p-5 rounded-sm">
-              <p className="text-[#B8933A] text-xs uppercase tracking-wider">
-                ASSESSMENT
-              </p>
-              <p className="text-sm mt-2 leading-relaxed">
-                {data.gtm_profile_assessment}
-              </p>
-            </div>
-          )}
+            {data.gtm_profile_assessment && (
+              <div className="bg-[#B8933A]/10 border border-[#B8933A]/30 p-5 rounded-sm relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#B8933A]" aria-hidden />
+                <div className="flex items-center justify-between mb-2 pl-2">
+                  <p className="text-[#B8933A] text-[10px] uppercase tracking-[0.25em] font-semibold">
+                    Assessment
+                  </p>
+                  <span className="text-[10px] uppercase tracking-wider opacity-50">
+                    What it means
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed pl-2">
+                  {data.gtm_profile_assessment}
+                </p>
+              </div>
+            )}
+          </div>
         </section>
 
         {/* SECTION 3: YOUR ORBIT MAP */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
-            YOUR FIVE ORBITS
-          </p>
-          <p className="text-sm text-black/50 mb-6 leading-relaxed">
-            Your next client is already in one of these five orbits. The question is which signal reaches them first.
+          <div className="flex items-center gap-2 mb-3">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              Your Five Orbits
+            </p>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-3">
+            Your next client is already orbiting you.
+          </h2>
+          <p className="text-sm opacity-60 mb-6 leading-relaxed">
+            They sit in one of these five orbits right now. The only question is which signal reaches them first.
           </p>
 
-          {orbits.map((desc, i) => {
-            const id = String(i + 1).padStart(2, "0");
-            const name = ORBIT_NAMES[i];
-            return (
-              <div
-                key={id}
-                className="flex items-start gap-4 py-4 border-b border-black/5 last:border-b-0"
-              >
-                <div className="w-8 h-8 shrink-0 rounded-full bg-[#B8933A]/15 border border-[#B8933A]/40 text-[#B8933A] flex items-center justify-center text-xs font-semibold">
-                  {id}
+          <div className="grid gap-2">
+            {orbits.map((desc, i) => {
+              const id = String(i + 1).padStart(2, "0");
+              const name = ORBIT_NAMES[i];
+              const hasContent = Boolean(desc && desc.trim() && desc.trim() !== "—");
+              return (
+                <div
+                  key={id}
+                  className="bg-[#FBF8F4] border border-black/10 p-5 hover:border-[#B8933A]/40 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-9 h-9 shrink-0 rounded-full bg-[#B8933A]/15 border border-[#B8933A]/40 text-[#B8933A] flex items-center justify-center text-xs font-semibold">
+                      {id}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <p className="text-sm font-semibold">
+                          <span className="text-[#B8933A] mr-1">⊙{id}</span>
+                          {name}
+                        </p>
+                        <span className="text-[10px] uppercase tracking-wider opacity-40 shrink-0">
+                          {hasContent ? "Mapped" : "Pending"}
+                        </span>
+                      </div>
+                      <p className="text-xs opacity-60 mt-1.5 leading-relaxed">
+                        {desc ?? "—"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold">
-                    ⊙{id} {name}
-                  </p>
-                  <p className="text-xs opacity-60 mt-1 leading-relaxed">
-                    {desc ?? "—"}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </section>
 
         {/* SECTION 4: IMPACT MODEL — Dead Zone calc + Formula multiplier */}
         <section className="border-b border-black/10 -mx-6">
-          <div className="bg-[#120D05] px-6 py-12">
+          <div className="px-6 pt-8 pb-2">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+              <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+                Impact Model
+              </p>
+            </div>
+            <h2 className="text-2xl font-bold leading-tight">
+              The cost of leaving the Dead Zone untouched.
+            </h2>
+          </div>
+          <div className="bg-[#120D05] px-6 py-12 mt-6">
             <MagnetImpactModel
               companyName={data.client_company_name ?? ""}
               crmEstimate={data.crm_estimate ?? undefined}
               dealSizeEstimate={data.deal_size_estimate ?? undefined}
             />
           </div>
-          <p className="text-xs italic opacity-50 text-center px-6 py-4">
-            Every month without a system, 3–5 warm contacts cross the Dead Zone threshold permanently.
-          </p>
+          <div className="bg-black/[0.04] border-t border-black/10 px-6 py-5">
+            <p className="text-xs italic opacity-60 text-center leading-relaxed">
+              Every month without a system, 3 to 5 warm contacts cross the Dead Zone threshold permanently.
+            </p>
+          </div>
         </section>
 
         {/* SECTION 5: WHERE TO START */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
-            YOUR STARTING LAYER
+          <div className="flex items-center gap-2 mb-3">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              Your Starting Layer
+            </p>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-3">
+            Start at <span className="text-[#B8933A]">{recommended}</span>. Compound from there.
+          </h2>
+          <p className="text-sm opacity-60 mb-6 leading-relaxed">
+            The five layers run in sequence. Skipping ahead breaks the system. Here's where {customerName} has the most leverage today.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {LAYERS.map((layer) => {
-              const active = layer === recommended;
+
+          {/* Layer progression */}
+          <div className="grid grid-cols-5 gap-1 mb-6">
+            {LAYERS.map((layer, i) => {
+              const active = i === recommendedIndex;
+              const passed = i < recommendedIndex;
               return (
-                <span
+                <div
                   key={layer}
                   className={
                     active
-                      ? "bg-[#B8933A] text-[#120D05] font-semibold px-4 py-2 text-sm"
-                      : "bg-black/5 text-black/30 px-4 py-2 text-sm"
+                      ? "bg-[#B8933A] text-[#120D05] font-semibold px-2 py-3 text-[11px] text-center uppercase tracking-wider"
+                      : passed
+                      ? "bg-[#B8933A]/20 text-[#B8933A] px-2 py-3 text-[11px] text-center uppercase tracking-wider"
+                      : "bg-black/5 text-black/30 px-2 py-3 text-[11px] text-center uppercase tracking-wider"
                   }
                 >
                   {layer}
-                </span>
+                </div>
               );
             })}
+          </div>
+
+          <div className="bg-[#B8933A]/10 border border-[#B8933A]/30 p-5">
+            <p className="text-[#B8933A] text-[10px] uppercase tracking-[0.25em] font-semibold mb-2">
+              Why {recommended} first
+            </p>
+            <p className="text-sm leading-relaxed">
+              {recommended === "DISCOVER"
+                ? "You don't yet have a single source of truth on who you serve, what proof you own, and where the next deal lives. Everything else compounds from this."
+                : recommended === "PROVE"
+                ? "The signals are there. The proof library isn't. Until your last 3 wins are documented in one place, every conversation restarts from zero."
+                : recommended === "DESIGN"
+                ? "You know who you serve and you can prove it. Now the channel architecture and signal matrix decide whether activation scales or stalls."
+                : recommended === "ACTIVATE"
+                ? "The system is ready. The orbits are mapped. What's missing is the signal-triggered outreach cadence that turns warm into closed."
+                : "Discover, Prove, Design, and Activate are operating. The work now is to make the system run on its own and get stronger every quarter."}
+            </p>
           </div>
         </section>
 
         {/* SECTION 6: THREE QUICK WINS */}
         {actions.length > 0 && (
           <section className="py-12 border-b border-black/10">
-            <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-3">
-              FIRST SIGNALS — THIS WEEK
-            </p>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+              <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+                First Signals — This Week
+              </p>
+            </div>
+            <h2 className="text-2xl font-bold leading-tight mb-3">
+              Three moves. Under an hour each.
+            </h2>
             <p className="text-sm opacity-60 mb-6 leading-relaxed">
-              Three actions. Each under an hour. Each designed to trigger a response, not ask for one.
+              Each one designed to trigger a response, not ask for one. Run them in order.
             </p>
-            {actions.map((action, i) => {
-              const { title, description } = splitAction(action);
-              const num = String(i + 1).padStart(2, "0");
-              return (
-                <div key={i} className="flex gap-4 items-start mb-6 last:mb-0">
-                  <span className="text-3xl font-bold text-black/10 w-12 shrink-0 leading-none">
-                    {num}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold">{title}</p>
-                    {description && (
-                      <p className="text-sm opacity-60 mt-1 leading-relaxed">
-                        {description}
-                      </p>
-                    )}
+
+            <div className="grid gap-3">
+              {actions.map((action, i) => {
+                const { title, description } = splitAction(action);
+                const num = String(i + 1).padStart(2, "0");
+                return (
+                  <div
+                    key={i}
+                    className="bg-[#FBF8F4] border border-black/10 p-5 hover:border-[#B8933A]/40 transition-colors"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="shrink-0">
+                        <span className="block text-2xl font-bold text-[#B8933A] leading-none">
+                          {num}
+                        </span>
+                        <span className="block text-[9px] uppercase tracking-widest opacity-40 mt-1">
+                          Move
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0 border-l border-black/10 pl-4">
+                        <p className="text-sm font-semibold leading-snug">{title}</p>
+                        {description && (
+                          <p className="text-sm opacity-65 mt-2 leading-relaxed">
+                            {description}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-black/5">
+                          <span className="text-[10px] uppercase tracking-widest opacity-40">
+                            Time
+                          </span>
+                          <span className="text-[10px] font-semibold opacity-70">
+                            Under 60 min
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </section>
         )}
 
         {/* SECTION 7: THE MANUSCRIPT */}
         <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-8">
-            THE MANUSCRIPT — RELATIONSHIP REVENUE OS
+          <div className="flex items-center gap-2 mb-3">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              The Manuscript — Relationship Revenue OS
+            </p>
+          </div>
+          <h2 className="text-2xl font-bold leading-tight mb-3">
+            14 sections. {writtenChapters > 0 ? `${writtenChapters} written for ${customerName}.` : `Written for ${customerName}.`}
+          </h2>
+          <p className="text-sm opacity-60 mb-8 leading-relaxed">
+            Sections marked <span className="text-[#B8933A] font-semibold">✦</span> include callouts written specifically for your firm based on what we observed.
           </p>
-          <p className="text-sm opacity-40 mb-8 leading-relaxed">
-            14 sections. The complete system. Sections marked ✦ are written
-            specifically for your firm.
-          </p>
+
+          {/* Manuscript stat strip */}
+          <div className="grid grid-cols-2 gap-px bg-black/10 border border-black/10 mb-6">
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Custom Callouts</p>
+              <p className="text-lg font-bold text-[#B8933A]">{writtenChapters}<span className="text-sm opacity-40 font-normal"> sections</span></p>
+            </div>
+            <div className="bg-[#FBF8F4] p-4">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Total System</p>
+              <p className="text-lg font-bold">14<span className="text-sm opacity-40 font-normal"> sections</span></p>
+            </div>
+          </div>
 
           {CHAPTERS.map((chapter) => {
             const callout = (data.chapter_callouts ?? []).find(
@@ -509,23 +652,49 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         </section>
 
         {/* SECTION 8: CTA */}
-        <section className="py-16 text-center">
-          <h2 className="text-2xl font-bold mb-4 leading-tight">
-            The system is mapped. The pipeline exists.
-          </h2>
-          <p className="text-base opacity-70 max-w-md mx-auto mb-8 leading-relaxed">
-            The 90-minute Relationship Revenue session takes the breakdown above and turns it into a 90-day activation sequence — specific to {data.client_company_name ?? "your firm"}, starting from the layer with the most leverage.
-          </p>
-          <button
-            type="button"
-            onClick={() => navigate("/book")}
-            className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
-          >
-            MAP YOUR ACTIVATION SEQUENCE →
-          </button>
-          <p className="text-xs opacity-30 mt-4">
-            90 minutes. No pitch. Just the plan.
-          </p>
+        <section className="py-16">
+          <div className="bg-[#120D05] text-[#FBF8F4] p-8 md:p-10 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#B8933A] to-transparent opacity-60" aria-hidden />
+            <div className="flex items-center gap-2 mb-4">
+              <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+              <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+                Next Step
+              </p>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
+              The system is mapped. The pipeline already exists.
+            </h2>
+            <p className="text-base opacity-70 mb-8 leading-relaxed max-w-lg">
+              The 90-minute Relationship Revenue session turns the breakdown above into a 90-day activation sequence, specific to {customerName}, starting from the layer with the most leverage.
+            </p>
+
+            {/* Session detail strip */}
+            <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10 mb-8">
+              <div className="bg-[#120D05] p-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Length</p>
+                <p className="text-sm font-semibold">90 minutes</p>
+              </div>
+              <div className="bg-[#120D05] p-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Output</p>
+                <p className="text-sm font-semibold">90-day plan</p>
+              </div>
+              <div className="bg-[#120D05] p-4">
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Cost</p>
+                <p className="text-sm font-semibold">No pitch</p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/book")}
+              className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
+            >
+              Map Your Activation Sequence →
+            </button>
+            <p className="text-xs opacity-40 mt-4">
+              90 minutes. No pitch. Just the plan.
+            </p>
+          </div>
         </section>
       </div>
     </div>
