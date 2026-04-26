@@ -11,6 +11,7 @@
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { BOOK_FRAMEWORK_CONTEXT } from "../_shared/book-context.ts";
+import { extractBrandProfile } from "../_shared/extract-branding.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -107,111 +108,7 @@ async function fetchViaJina(url: string, maxChars: number): Promise<string> {
   }
 }
 
-// ── Lightweight branding extraction (no Firecrawl, no API key) ──
-// Fetches the raw HTML of the firm's homepage and pulls out:
-//   - logo URL (og:image → apple-touch-icon → <img alt|src ~ "logo">)
-//   - brand color (theme-color → msapplication-TileColor)
-//   - company name (og:site_name → <title>)
-type ClientBranding = {
-  logoUrl: string | null;
-  brandColor: string | null;
-  companyName: string | null;
-};
-
-function resolveUrl(maybeRelative: string, base: string): string | null {
-  try {
-    return new URL(maybeRelative, base).toString();
-  } catch {
-    return null;
-  }
-}
-
-function pickAttr(html: string, regex: RegExp): string | null {
-  const m = html.match(regex);
-  return m && m[1] ? m[1].trim() : null;
-}
-
-async function extractBranding(websiteUrl: string): Promise<ClientBranding> {
-  const empty: ClientBranding = { logoUrl: null, brandColor: null, companyName: null };
-  if (!websiteUrl) return empty;
-
-  let html = "";
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8_000);
-    const res = await fetch(websiteUrl, {
-      signal: controller.signal,
-      redirect: "follow",
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; MabblyBrandingBot/1.0; +https://mabbly.com)",
-        Accept: "text/html,application/xhtml+xml",
-      },
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return empty;
-    html = (await res.text()).slice(0, 200_000);
-  } catch {
-    return empty;
-  }
-
-  // Logo candidates, in priority order
-  const logoRaw =
-    pickAttr(
-      html,
-      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(
-      html,
-      /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(
-      html,
-      /<link[^>]+rel=["'](?:apple-touch-icon|apple-touch-icon-precomposed)["'][^>]+href=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(
-      html,
-      /<img[^>]+(?:alt|src|class|id)=["'][^"']*logo[^"']*["'][^>]*src=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(
-      html,
-      /<img[^>]+src=["']([^"']+)["'][^>]+(?:alt|class|id)=["'][^"']*logo[^"']*["']/i,
-    );
-
-  const logoUrl = logoRaw ? resolveUrl(logoRaw, websiteUrl) : null;
-
-  // Brand color: prefer theme-color (often the primary), fall back to tile color
-  const brandColorRaw =
-    pickAttr(
-      html,
-      /<meta[^>]+name=["']theme-color["'][^>]+content=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(
-      html,
-      /<meta[^>]+name=["']msapplication-TileColor["'][^>]+content=["']([^"']+)["']/i,
-    );
-
-  const brandColor =
-    brandColorRaw && /^#?[0-9a-fA-F]{3,8}$/.test(brandColorRaw.replace(/^#/, ""))
-      ? brandColorRaw.startsWith("#")
-        ? brandColorRaw
-        : `#${brandColorRaw}`
-      : null;
-
-  // Company name
-  const siteName =
-    pickAttr(
-      html,
-      /<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(html, /<title[^>]*>([^<]+)<\/title>/i);
-
-  const companyName = siteName
-    ? siteName.split(/[|\u2014\u2013\-:]/)[0].trim().slice(0, 80)
-    : null;
-
-  return { logoUrl, brandColor, companyName };
-}
+// Branding is now extracted via the shared extractBrandProfile helper.
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
