@@ -190,6 +190,19 @@ function AwardsNav() {
 export default function Awards() {
   useEffect(() => {
     document.title = 'GTM for Professional Services Awards · Mabbly';
+
+    const params = new URLSearchParams(window.location.search);
+    const shouldAutoScroll =
+      params.get('utm_source') === 'cold' &&
+      params.get('utm_anchor') === 'diagnostic';
+
+    if (shouldAutoScroll) {
+      setTimeout(() => {
+        document.getElementById('diagnostic')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 600);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   return (
