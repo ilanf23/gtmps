@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
         temperature: 0.5,
         stream: true,
         messages: [
-          { role: "system", content: baseSystem },
+          { role: "system", content: BASE_SYSTEM },
           ...trimmed,
         ],
       }),
