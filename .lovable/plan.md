@@ -1,121 +1,151 @@
-# Magnet Microsite — 4-Page Restructure
+## Goal
+Expand `src/pages/About.tsx` from 7 sections into a ~12-section orientation map. Keep existing Hero, Three Rooms, Founders, Origin, and Final CTA. Insert 7 new sections with strong cross-links to deeper destinations. Add a `SectionRail` for scroll navigation since the page becomes long.
 
-Transform the current single-page magnet experience at `/m/:slug` into a 4-page microsite with a shared nav bar that also covers `/book`.
+## Final section order (top to bottom)
 
-## Architecture
+| # | Section | id | Bg | Source |
+|---|---|---|---|---|
+| 01 | Hero — operating system for relationship revenue | `hero` | dark | existing |
+| 02 | The Mission — why we exist | `mission` | cream | NEW |
+| 03 | What is GTM for PS — definition | `definition` | dark | NEW |
+| 04 | The Three Rooms | `rooms` | cream | existing |
+| 05 | The Manuscript — book + Copulsky validation | `manuscript` | dark | NEW |
+| 06 | The Awards — 8 vertical-named awards | `awards` | cream | NEW |
+| 07 | The Agency — mabbly.com | `agency` | dark | NEW |
+| 08 | The Product — mabbly.ai | `product` | cream | NEW |
+| 09 | Built For These Verticals — 8 chip grid | `verticals` | dark | NEW |
+| 10 | The Vision — category becomes inevitable | `vision` | cream | NEW |
+| 11 | The Founders — Adam + Richard | `founders` | dark | existing |
+| 12 | Press + Contact | `press` | cream | NEW (replaces existing press section, slightly retitled) |
+| 13 | Origin / Confession — "We kept making the same mistake" | `origin` | dark | existing (moves below press per spec) |
+| 14 | Foreword — Copulsky | `foreword` | cream | existing (kept, repositioned) |
+| 15 | Final CTA — "Ready to add your firm to the research?" | `cta` | dark | existing |
 
-### New routes (slug-scoped, all share the nav)
-| Route | Purpose | Source |
-|---|---|---|
-| `/m/:slug` | **MAP** — the existing breakdown | Current `MagnetBreakdown.tsx` (untouched content) |
-| `/m/:slug/chat` | **Book Chat** — talk to the GTM book | New, OpenAI gpt-4o-mini |
-| `/m/:slug/read` | **Read the Book** — embedded PDF reader | New, PDF served from `/public` |
-| `/m/:slug/feedback` | **Feedback** — contact form | New, sends email to `adam@mabbly.com` |
+Note: spec says "After Founders, BEFORE the existing Origin / Confession section, insert Press + Contact." That places Press between Founders and Origin. Existing Foreword + existing Press will be consolidated — Foreword stays as a standalone section directly before the Final CTA so Copulsky's voice still anchors validation; the existing Press block is replaced by the new Press + Contact spec wording.
 
-The standalone `/book` route also gets the same nav (linking back to `/m/:slug` for slug-aware tabs when a slug is in storage; otherwise nav points to base routes).
+If you would prefer Foreword removed entirely to hit exactly 12 sections, say so on approval; otherwise it stays as a 13th supporting section since it adds editorial weight without competing with new content.
 
-### New shared layout component
-**`src/components/magnet/MagnetShell.tsx`** — wraps all 4 magnet pages with:
-- Persistent top nav bar (dark theme matching breakdown: `#120D05` bg, `#B8933A` gold accents)
-- Tab-style nav: `MAP · Talk to the Book · Read · Feedback`
-- Active tab indicator (gold underline)
-- Mobile: collapses to a horizontal scroll strip (no hamburger — only 4 items)
-- Logo left ("Mabbly · GTM") · Tabs center · Visitor first name right (fetched once via existing RPC)
+## Files to modify
 
-## Page-by-page implementation
+### 1. `src/pages/About.tsx` — primary edit
+- Add `SectionRail` import from `@/components/discover/SectionRail`.
+- Add `id` to every section wrapper to enable scroll-spy.
+- Reorder existing sections per the table above.
+- Insert 7 new sections using the existing `eyebrowStyle` token, alternating `#1C1008` (dark) and `#FBF8F4` (cream) backgrounds, 96–144px vertical padding.
+- Add `<SectionRail items={...} />` rendered once near the top of `<main>`.
 
-### 1. MAP page (`/m/:slug`)
-- Wrap existing `MagnetSite.tsx` polling/loading flow inside `MagnetShell`
-- Once status === 'complete', render `MagnetBreakdown` (unchanged)
-- The existing `MagnetChat` floating widget on the breakdown is **removed** — chat lives on its own page now
-- Loading and error states stay as-is but get the nav shell
+### 2. New section content specs
 
-### 2. Book Chat page (`/m/:slug/chat`)
-**New component**: `src/components/magnet/BookChat.tsx`
-- Full-page OpenAI-style chat UI (centered column, max-w-3xl)
-- Streaming token-by-token rendering with markdown via `react-markdown` (already a common pattern, will add)
-- Input pinned to bottom, multiline textarea, Enter to send / Shift+Enter for newline
-- Welcome message: "Ask me anything about the GTM book."
-- No persistence — session-scoped messages in component state
+**SECTION 02 — THE MISSION (cream, `id="mission"`)**
+- Eyebrow: `WHY WE EXIST`
+- Headline (Cormorant Garamond, ~48px): "Professional services firms deserve marketing as sophisticated as the work they sell."
+- Body (Inter Tight, 17px, max-w 720): "Most growth playbooks are built for software. They reward speed, scale, and outbound volume. They do not work for relationship-driven firms. Mabbly exists to build the system that does."
 
-**New edge function**: `supabase/functions/book-chat/index.ts`
-- Uses **OpenAI direct (`gpt-4o-mini`)** with streaming SSE
-- System prompt: scoped strictly to the GTM book content
-- Book content injected as a long system message (extracted from PDF — see Reader section below)
-- Reuses existing `OPENAI_API_KEY` secret
-- Returns 402 / 429 with friendly messages
+**SECTION 03 — WHAT IS GTM FOR PS (dark, `id="definition"`)**
+- Eyebrow: `A DEFINITION`
+- Headline: "What is GTM for Professional Services?"
+- Two paragraphs (Cormorant Garamond italic 22px for first paragraph as pull-quote; Inter Tight 17px for second clarifier paragraph) — copy verbatim from spec.
+- No CTA.
 
-**Book content for the LLM**: I'll extract text from the PDF you upload using `pdfplumber` and write it to `supabase/functions/book-chat/_book-content.ts` as an exported string constant. This gives the model the full book as context without runtime PDF parsing.
-- If the book is large (> ~120k tokens), I'll chunk it and include only top-level summaries + chapter excerpts with a note in the welcome message.
-- This file is regenerated whenever you upload a new version of the PDF.
+**SECTION 05 — THE MANUSCRIPT (dark, `id="manuscript"`)**
+- Eyebrow: `THE BOOK`
+- Headline: "GTM for Professional Services: The Relationship Revenue OS."
+- Body: "30 chapters. Three frameworks. Built from 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026."
+- Secondary CTA (gold outline, not pill): "Read the manuscript before publication →" → `<Link to="/discover#beta-reader">` (anchor exists at `BetaReader` component).
 
-### 3. Reader page (`/m/:slug/read`)
-**New component**: `src/components/magnet/BookReader.tsx`
-- Embeds `/relationship-revenue-os.pdf` (placed in `/public`) using a native `<iframe>` with PDF.js viewer fallback
-- Top toolbar: "Download PDF" button (links to file directly)
-- Full-height reader, responsive
-- **Action item for you**: drop the PDF into `/public/relationship-revenue-os.pdf` after this ships. Until then, the page shows a styled placeholder ("Book uploading soon").
+**SECTION 06 — THE AWARDS (cream, `id="awards"`)**
+- Eyebrow: `THE RECOGNITION`
+- Headline: "Awards built for the firms that win unfairly."
+- Body: per spec.
+- Secondary CTA (gold outline): "See the awards →" → `<Link to="/awards">`.
 
-### 4. Feedback page (`/m/:slug/feedback`)
-**New component**: `src/components/magnet/FeedbackForm.tsx`
-- Form fields (zod-validated client + server side):
-  - Name (required, max 100)
-  - Email (required, valid email, max 255)
-  - Feedback (required, max 2000)
-  - Hidden: `slug` from URL params
-- Submit calls new edge function
-- Success state replaces form: "Thanks. Adam reads every one."
-- Loading + error states with toast
+**SECTION 07 — THE AGENCY (dark, `id="agency"`)**
+- Eyebrow: `WHEN YOU NEED HANDS-ON HELP`
+- Headline: "mabbly.com"
+- Body: per spec.
+- Primary-style outline CTA "Visit mabbly.com →" with `target="_blank" rel="noopener noreferrer"`.
 
-**Email delivery**: Uses Lovable's built-in transactional email system (no Resend, no API keys needed).
-1. Call `email_domain--scaffold_transactional_email` to set up infra
-2. New edge function `supabase/functions/submit-feedback/index.ts`:
-   - Validates input with zod
-   - Calls the scaffolded `send-transactional-email` function
-   - Sends to `adam@mabbly.com` with subject `New magnet feedback from {name}` and body containing all fields + the slug
-3. **No database storage** (per your "Email only" choice — no `magnet_feedback` table)
-4. Note: this requires a verified email sending domain. If the project doesn't have one yet, the scaffold tool will prompt for setup. I'll guide you through it when the time comes.
+**SECTION 08 — THE PRODUCT (cream, `id="product"`)**
+- Eyebrow: `WHEN YOU NEED SCALE`
+- Headline: "mabbly.ai"
+- Body: per spec.
+- Outline CTA "Visit mabbly.ai →" with new-tab rels.
 
-## Routing changes (`src/App.tsx`)
+**SECTION 09 — BUILT FOR THESE VERTICALS (dark, `id="verticals"`)**
+- Eyebrow: `WHO THIS IS FOR`
+- Headline: "Eight verticals. One framework."
+- Lead line: "Same Dead Zone. Same Five Orbits. Different vocabulary, different signals, different cadence per industry."
+- 4×2 desktop / 2×4 tablet / 1-col mobile grid. Each chip:
+  - Lucide icon from `INDUSTRY_ICONS` (40px, `#B8933A`, strokeWidth 1.6).
+  - Vertical name from `NAV_VERTICAL_LINKS[i].label` (Inter Tight 16px, `#F5EFE0`).
+  - Native vocabulary tagline (Inter Tight 13px, `rgba(184,147,58,0.6)`):
+    - consulting → "Practice Growth"
+    - law → "Origination Strategy"
+    - accounting → "Client Development"
+    - msp → "GTM"
+    - advisory → "Prospecting Strategy"
+    - ae → "Business Development"
+    - recruiting → "Mandate Origination"
+    - agency → "New Business"
+  - Card: `background: rgba(245,239,224,0.04)`, `border: 1px solid rgba(184,147,58,0.2)`, `padding: 28px`, `borderRadius: 6`, hover lifts and brightens border to `0.55`.
+  - Wrapped in `<Link to="/${slug}">`.
+- Taglines defined in a local `VERTICAL_TAGLINES: Record<VerticalSlug, string>` map at the top of `About.tsx` (no edits to `verticals.ts`).
 
-```tsx
-<Route path="/m/:slug" element={<MagnetSite />} />
-<Route path="/m/:slug/chat" element={<MagnetBookChatPage />} />
-<Route path="/m/:slug/read" element={<MagnetBookReaderPage />} />
-<Route path="/m/:slug/feedback" element={<MagnetFeedbackPage />} />
-<Route path="/book" element={<MagnetBook />} />  {/* gets nav shell too */}
+**SECTION 10 — THE VISION (cream, `id="vision"`)**
+- Eyebrow: `WHERE THIS GOES`
+- Headline: "GTM for Professional Services becomes a category."
+- Two paragraphs per spec (Cormorant Garamond italic 22px first, Inter Tight 17px second).
+- No CTA.
+
+**SECTION 12 — PRESS + CONTACT (cream, `id="press"`)**
+- Eyebrow: `INQUIRIES`
+- Headline (Cormorant 36px): "For press, partnerships, and bookings."
+- Body line: "press@mabbly.com · Based in Chicago, Illinois" — `press@mabbly.com` is a `mailto:` link.
+- No CTA.
+
+### 3. Reusable secondary CTA pattern
+Local helper or inline style for outline gold CTA used by sections 05, 06, 07, 08:
+```css
+display: inline-flex; align-items: center; gap: 8px;
+font: 600 13px 'Inter Tight'; letter-spacing: 0.04em;
+color: #B8933A; padding: 12px 22px; border-radius: 999px;
+border: 1px solid rgba(184,147,58,0.55); background: transparent;
+transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+/* hover */ background: rgba(184,147,58,0.12); color: #D4AE48; border-color: #D4AE48;
 ```
+Primary gold-pill CTA stays exclusive to "Add Your Firm" in nav and final CTA.
 
-Each new page is a thin wrapper that passes the slug into `MagnetShell` and renders its child component.
+### 4. SectionRail integration
+Render once inside `<main>` with these items (matches new section ids):
+```ts
+const railItems = [
+  { id: "hero", label: "01 · Mission" },
+  { id: "mission", label: "02 · Why" },
+  { id: "definition", label: "03 · Definition" },
+  { id: "rooms", label: "04 · Three Rooms" },
+  { id: "manuscript", label: "05 · The Book" },
+  { id: "awards", label: "06 · The Awards" },
+  { id: "agency", label: "07 · The Agency" },
+  { id: "product", label: "08 · The Product" },
+  { id: "verticals", label: "09 · Verticals" },
+  { id: "vision", label: "10 · The Vision" },
+  { id: "founders", label: "11 · Founders" },
+  { id: "press", label: "12 · Press" },
+];
+```
+`SectionRail` already gates visibility on `#hero` and `[data-page-footer="true"]`; existing `Footer` component sets `data-page-footer="true"`, so no Footer edits are needed.
 
-## Files created
-- `src/components/magnet/MagnetShell.tsx` — nav wrapper
-- `src/components/magnet/BookChat.tsx` — chat UI w/ streaming
-- `src/components/magnet/BookReader.tsx` — PDF embed
-- `src/components/magnet/FeedbackForm.tsx` — feedback form
-- `src/pages/MagnetBookChatPage.tsx`, `MagnetBookReaderPage.tsx`, `MagnetFeedbackPage.tsx` — route components
-- `supabase/functions/book-chat/index.ts` — streaming chat function
-- `supabase/functions/book-chat/_book-content.ts` — extracted book text (regenerated when you upload PDF)
-- `supabase/functions/submit-feedback/index.ts` — feedback handler
+## Out of scope / explicitly not changing
+- `src/components/Footer.tsx`, `verticals.ts`, `industryIcons.ts`, top nav layout — none change.
+- No new routes; no Supabase work.
+- No edits to `Discover.tsx` / `Awards.tsx`; cross-links use existing `/discover#beta-reader`, `/awards`, `/${slug}` paths.
 
-## Files modified
-- `src/App.tsx` — register 3 new routes
-- `src/pages/MagnetSite.tsx` — wrap content in `MagnetShell`
-- `src/pages/MagnetBook.tsx` — wrap in `MagnetShell` (slug-less variant)
-- `src/components/magnet/MagnetBreakdown.tsx` — remove the floating `MagnetChat` widget (chat is now its own page)
-- `package.json` — add `react-markdown` for chat rendering
-
-## Open follow-ups (your action)
-1. **Upload the GTM book PDF** — I'll place it in `/public/relationship-revenue-os.pdf` and extract its text for the chatbot
-2. **Verify email domain** in Lovable Cloud → Emails (only required if not already done) so feedback emails can send to `adam@mabbly.com`
-
-## Test plan
-After ship:
-1. Visit `/m/<existing-slug>` → MAP renders with new nav bar at top
-2. Click "Talk to the Book" → routes to `/m/<slug>/chat`, shows empty chat with welcome message
-3. Send a chat message → streams reply token-by-token from gpt-4o-mini
-4. Click "Read" → routes to `/m/<slug>/read`, shows PDF embed (or placeholder if PDF not yet uploaded)
-5. Click "Feedback" → form renders; submit a test → email arrives at `adam@mabbly.com`
-6. Visit `/book` → same nav shell renders; tabs work without a slug (link to base routes)
-7. Active tab indicator follows current route correctly
-8. Mobile (375px wide): nav strip is horizontally scrollable, tabs remain tappable
+## Test plan (post-ship)
+1. `/about` renders Hero → Mission → Definition → Three Rooms → Manuscript → Awards → Agency → Product → Verticals → Vision → Founders → Press → Origin → Foreword → Final CTA in order.
+2. "Visit mabbly.com →" and "Visit mabbly.ai →" open in new tabs with `rel="noopener noreferrer"`.
+3. All 8 vertical chips route to `/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency`.
+4. "See the awards →" routes to `/awards`.
+5. "Read the manuscript before publication →" routes to `/discover#beta-reader` and scrolls to the Beta Reader form (anchor verified at `src/components/discover/BetaReader.tsx:38`).
+6. `SectionRail` is hidden over hero, visible through body sections, hidden over footer (≥1024px).
+7. At 375px width every section stacks cleanly; vertical grid drops to 1 column; type stays inside viewport.
+8. `document.title` remains "About · Mabbly".
