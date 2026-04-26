@@ -10,6 +10,7 @@
 // OpenAI then reads both sources to produce the RROS breakdown.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { BOOK_FRAMEWORK_CONTEXT } from "../_shared/book-context.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,7 +26,8 @@ const json = (body: unknown, status = 200) =>
   });
 
 const SYSTEM_PROMPT = `You are a GTM analyst trained on Mabbly's Relationship Revenue OS (RROS).
-You have scraped the firm's website. Your job is to produce a personalized
+You have read the book "Relationship Revenue OS" (excerpts below) and have
+scraped the firm's website. Your job is to produce a personalized
 GTM breakdown that reads like it was written by someone who spent an hour
 studying this specific firm — not a generic template.
 
@@ -79,7 +81,13 @@ OUTPUT — return valid JSON matching this exact shape, nothing else:
     { "chapterNumber": 0, "callout": "string — 2-3 sentences that name something SPECIFIC about this firm. Must reference their actual situation." }
   ],
   "closingLine": "string — one sentence that names their specific highest-leverage move"
-}`;
+}
+
+BOOK CONTEXT — Use these excerpts from the manuscript to ground your analysis
+in the actual frameworks (Five Truths, Five Orbits, Dead Zone, Five Layers,
+Signal + Proof + Context = Response). Reference chapter language when relevant:
+
+${BOOK_FRAMEWORK_CONTEXT}`;
 
 async function fetchViaJina(url: string, maxChars: number): Promise<string> {
   if (!url) return "";
