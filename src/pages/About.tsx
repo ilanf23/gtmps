@@ -461,6 +461,9 @@ const About = () => {
             <p style={bodyLight}>
               Most growth playbooks are built for software. They reward speed, scale, and outbound volume. They do not work for relationship-driven firms. Mabbly exists to build the system that does.
             </p>
+
+            {/* S6E1 cold-open audio embed */}
+            <S6E1AudioBlock />
           </div>
         </section>
 
