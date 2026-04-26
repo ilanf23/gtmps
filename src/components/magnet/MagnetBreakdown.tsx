@@ -289,8 +289,49 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         backgroundColor: brand.background,
         color: brand.text,
       } as React.CSSProperties}
-      className="min-h-screen"
+      className="min-h-screen magnet-themed"
+      data-magnet-theme
     >
+      <style
+        // Scoped overrides: remap the hardcoded Mabbly palette to the firm's brand palette
+        // wherever it appears as a Tailwind arbitrary-value class, while leaving everything else intact.
+        dangerouslySetInnerHTML={{
+          __html: `
+[data-magnet-theme] .bg-\\[\\#FBF8F4\\] { background-color: ${brand.surface} !important; }
+[data-magnet-theme] .text-\\[\\#1C1008\\] { color: ${brand.text} !important; }
+[data-magnet-theme] .text-\\[\\#FBF8F4\\] { color: ${brand.text} !important; }
+[data-magnet-theme] .text-\\[\\#B8933A\\] { color: ${brand.primary} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\] { background-color: ${brand.primary} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/10 { background-color: ${tint("1A")} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/15 { background-color: ${tint("26")} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/20 { background-color: ${tint("33")} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/5 { background-color: ${tint("0D")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\] { border-color: ${brand.primary} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/30 { border-color: ${tint("4D")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/40 { border-color: ${tint("66")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/30 { border-color: ${tint("4D")} !important; }
+[data-magnet-theme] .hover\\:bg-\\[\\#B8933A\\]\\/10:hover { background-color: ${tint("1A")} !important; }
+[data-magnet-theme] .hover\\:bg-\\[\\#a07c2e\\]:hover { background-color: ${brand.primary} !important; filter: brightness(0.9); }
+[data-magnet-theme] .hover\\:border-\\[\\#B8933A\\]\\/40:hover { border-color: ${tint("66")} !important; }
+[data-magnet-theme] .text-\\[\\#120D05\\] { color: ${isDarkBg ? brand.background : "#FFFFFF"} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
+[data-magnet-theme] .border-black\\/5 { border-color: ${neutralBorderSoft} !important; }
+[data-magnet-theme] .border-black\\/10 { border-color: ${neutralBorder} !important; }
+[data-magnet-theme] .border-t.border-black\\/10 { border-color: ${neutralBorder} !important; }
+[data-magnet-theme] .bg-black\\/\\[0\\.03\\] { background-color: ${isDarkBg ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"} !important; }
+[data-magnet-theme] .bg-black\\/\\[0\\.04\\] { background-color: ${isDarkBg ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)"} !important; }
+[data-magnet-theme] .bg-black\\/10 { background-color: ${isDarkBg ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.10)"} !important; }
+[data-magnet-theme] .bg-black\\/5 { background-color: ${isDarkBg ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)"} !important; }
+[data-magnet-theme] .text-black\\/30 { color: ${brand.textMuted} !important; opacity: 0.6; }
+[data-magnet-theme] .text-black\\/20 { color: ${brand.textMuted} !important; opacity: 0.45; }
+[data-magnet-theme] .bg-white\\/10 { background-color: ${isDarkBg ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)"} !important; }
+[data-magnet-theme] .border-white\\/10 { border-color: ${isDarkBg ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.10)"} !important; }
+[data-magnet-theme] .bg-\\[\\#B8933A\\]\\/40 { background-color: ${tint("66")} !important; }
+[data-magnet-theme] .border-\\[\\#B8933A\\]\\/50 { border-color: ${tint("80")} !important; }
+          `,
+        }}
+      />
       <div className="max-w-2xl mx-auto px-6 pb-24">
         {/* SECTION 1: PERSONAL HEADER */}
         <section className="pt-16 pb-12 border-b border-black/10">
