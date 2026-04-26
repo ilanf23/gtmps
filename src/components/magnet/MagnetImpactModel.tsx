@@ -67,7 +67,7 @@ export default function MagnetImpactModel({
       {/* SECTION 2: Sliders */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label className="text-xs text-[#F5EFE0]/50 mb-2 block">
+          <label className="text-xs text-[#1C1008]/60 mb-2 block">
             Contacts in your CRM
           </label>
           <div className="flex items-center gap-3">
@@ -80,7 +80,7 @@ export default function MagnetImpactModel({
               onChange={(e) => setCrm(Number(e.target.value))}
               className="accent-[#B8933A] w-full"
             />
-            <span className="text-sm font-semibold text-[#F5EFE0] min-w-[60px] text-right">
+            <span className="text-sm font-semibold text-[#1C1008] min-w-[60px] text-right">
               {crm.toLocaleString()}
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function MagnetImpactModel({
         </div>
 
         <div>
-          <label className="text-xs text-[#F5EFE0]/50 mb-2 block">
+          <label className="text-xs text-[#1C1008]/60 mb-2 block">
             Average engagement size
           </label>
           <div className="flex items-center gap-3">
@@ -103,7 +103,7 @@ export default function MagnetImpactModel({
               onChange={(e) => setDeal(Number(e.target.value))}
               className="accent-[#B8933A] w-full"
             />
-            <span className="text-sm font-semibold text-[#F5EFE0] min-w-[60px] text-right">
+            <span className="text-sm font-semibold text-[#1C1008] min-w-[60px] text-right">
               {fmtMoney(deal)}
             </span>
           </div>
@@ -121,7 +121,7 @@ export default function MagnetImpactModel({
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             DORMANT CONTACTS
           </p>
-          <p className="text-3xl font-bold text-[#F5EFE0] mt-3">
+          <p className="text-3xl font-bold text-[#1C1008] mt-3">
             {dormant.toLocaleString()}
           </p>
           <p className="text-xs opacity-50 mt-2 leading-relaxed">
@@ -145,7 +145,7 @@ export default function MagnetImpactModel({
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             COST TO REPLACE THIS PIPELINE
           </p>
-          <p className="text-3xl font-bold text-[#F5EFE0] mt-3">
+          <p className="text-3xl font-bold text-[#1C1008] mt-3">
             {fmtMoney(replaceCost)}
           </p>
           <p className="text-xs opacity-50 mt-2 leading-relaxed">
@@ -168,7 +168,7 @@ export default function MagnetImpactModel({
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white/5 border border-white/10 p-5">
+          <div className="bg-black/[0.03] border border-black/10 p-5">
             <p className="text-xs opacity-40 uppercase tracking-wider mb-3">
               WITHOUT THE FORMULA
             </p>
@@ -196,7 +196,7 @@ export default function MagnetImpactModel({
         </div>
 
         {/* Multiplier bar */}
-        <div className="bg-white/5 p-4 mt-4">
+        <div className="bg-black/[0.03] p-4 mt-4">
           <div className="flex justify-between mb-3">
             <span className="text-xs opacity-40">Pipeline multiplier</span>
             <span className="text-sm font-semibold text-[#B8933A]">
@@ -204,9 +204,9 @@ export default function MagnetImpactModel({
             </span>
           </div>
 
-          <div className="h-2 bg-white/10 rounded-full mb-2 overflow-hidden">
+          <div className="h-2 bg-black/10 rounded-full mb-2 overflow-hidden">
             <div
-              className="h-full bg-white/30 rounded-full"
+              className="h-full bg-black/30 rounded-full"
               style={{ width: grayBarWidth }}
             />
           </div>
@@ -248,8 +248,8 @@ export default function MagnetImpactModel({
             l: "Conversion rate from existing relationships vs. 5 to 20% new",
           },
         ].map((s) => (
-          <div key={s.n} className="bg-white/5 border border-white/10 p-4">
-            <p className="text-2xl font-bold text-[#F5EFE0]">{s.n}</p>
+          <div key={s.n} className="bg-black/[0.03] border border-black/10 p-4">
+            <p className="text-2xl font-bold text-[#1C1008]">{s.n}</p>
             <p className="text-xs opacity-40 mt-1 leading-relaxed">{s.l}</p>
           </div>
         ))}
@@ -262,7 +262,7 @@ export default function MagnetImpactModel({
         <p className={labelClass}>VERIFIED IN PRACTICE</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
-            <p className="text-sm font-semibold text-[#F5EFE0] mb-1">
+            <p className="text-sm font-semibold text-[#1C1008] mb-1">
               Stephen at Madcraft
             </p>
             <p className="text-xs opacity-50 leading-relaxed">
@@ -271,14 +271,14 @@ export default function MagnetImpactModel({
             </p>
           </div>
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
-            <p className="text-sm font-semibold text-[#F5EFE0] mb-1">SPR</p>
+            <p className="text-sm font-semibold text-[#1C1008] mb-1">SPR</p>
             <p className="text-xs opacity-50 leading-relaxed">
               150 dormant enterprise contacts. 43 signal-activated emails. ~7%
               reply rate. Benchmark: less than 1% cold.
             </p>
           </div>
           <div className="border-l-2 border-[#B8933A]/50 pl-4">
-            <p className="text-sm font-semibold text-[#F5EFE0] mb-1">AArete</p>
+            <p className="text-sm font-semibold text-[#1C1008] mb-1">AArete</p>
             <p className="text-xs opacity-50 leading-relaxed">
               160 dormant proposals found in HubSpot. Not a pipeline problem. A
               parking lot full of Ferraris with the keys still in them.
