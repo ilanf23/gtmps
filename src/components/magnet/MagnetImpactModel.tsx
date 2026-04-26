@@ -4,6 +4,7 @@ interface MagnetImpactModelProps {
   crmEstimate?: number;
   dealSizeEstimate?: number;
   companyName: string;
+  primaryColor?: string;
 }
 
 const DORMANCY_RATE = 0.81;
