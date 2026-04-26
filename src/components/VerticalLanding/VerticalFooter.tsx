@@ -183,6 +183,8 @@ export default function VerticalFooter() {
             <div className="vf-bottom-right">
               <span className="vf-copy">© {new Date().getFullYear()} Mabbly LLC</span>
               <span className="vf-legal-row">
+                <Link to="/about" className="vf-legal">About</Link>
+                <span className="vf-sep">·</span>
                 <a href="https://mabbly.com/privacy" target="_blank" rel="noopener noreferrer" className="vf-legal">
                   Privacy Policy
                 </a>

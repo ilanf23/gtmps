@@ -551,7 +551,7 @@ export default function DiscoverHero() {
 
           <div className="dh-copy">
             <p className="dh-industry">
-              <span className="dh-industry-lead">GTM Research for Professional Services Firms</span>
+              <span className="dh-industry-lead">The First Research on How PS Firms Grow</span>
             </p>
             <h1 className="dh-headline">
               Your next client already knows you<em>.</em>

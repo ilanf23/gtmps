@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer
@@ -197,6 +199,14 @@ const Footer = () => {
               © 2026 Mabbly LLC
             </span>
             <span className="font-display" style={{ fontSize: 12 }}>
+              <Link
+                to="/about"
+                className="mf-legal"
+                style={{ color: "rgba(184,147,58,0.7)", textDecoration: "none" }}
+              >
+                About
+              </Link>
+              <span style={{ color: "rgba(245,239,224,0.25)", margin: "0 8px" }}>·</span>
               <a
                 href="https://mabbly.com/privacy"
                 target="_blank"

@@ -1,162 +1,155 @@
-# Why the magnet page silently failed
+# Plan: /about Page + GTM Literacy Fix + Footer About Link
 
-The `/m/:slug` page is **not** failing because of a race condition. It fails because of an RLS configuration that has never worked from the browser.
-
-The four magnet tables all have SELECT policies of the form:
-
-```sql
-USING (slug = current_setting('app.current_slug', true))
-```
-
-That GUC must be set per-request via something like `select set_config('app.current_slug', $1, true)`. **No client code anywhere sets it** (`rg "set_config|current_slug|\.rpc\(" src/` returns zero hits). So for every anon request:
-
-- `current_setting('app.current_slug', true)` returns `NULL`
-- `slug = NULL` is `NULL` (never `true`)
-- PostgREST returns `[]` with no error
-
-In `MagnetSite.tsx` polling, both queries return `data: null, error: null`, the code hits `if (!subRes.data)` → `setStatus('error')` → user sees "Something went wrong" even though the breakdown row is fully populated in the DB (verified for `ilan_6fwi5uylv3`: status `complete`, full data present).
-
-`MagnetBreakdown.tsx` has the same problem — it would show "Breakdown not found." even on the happy path.
-
-This has been broken for every user since the slug-scoped RLS policies were added; nobody has been able to view their own breakdown from the browser.
+Three coordinated additions to discover.mabbly.com.
 
 ---
 
-# The fix (two parts)
+## Part 1 — New `/about` Page
 
-## Part 1 — Replace per-session GUC with a SECURITY DEFINER RPC (migration)
+### Route
+- Add `/about` route in `src/App.tsx`, importing `pages/About.tsx` (placed above the catch-all `*`).
 
-The "set a session GUC from the client" pattern is fragile in PostgREST: connection pooling means the GUC may be cleared between the `set_config` call and the actual `SELECT`, even when wrapped in the same supabase-js call. The reliable, equally-safe pattern is a `SECURITY DEFINER` function that takes the slug as an argument and returns only that slug's row.
+### File: `src/pages/About.tsx`
+A new page following the dark/cream alternating cinematic rhythm of `/discover`. Reuses the existing `TopNav` pattern (lifted from `Discover.tsx`) and the shared `Footer` component. **No** sticky CTA, **no** scroll progress rail. Uses the project's design tokens (`#1C1008` dark, cream vellum, gold `#B8933A`, Cormorant Garamond + Inter Tight + DM Mono).
 
-New migration adds four read functions (one per table) and drops the broken SELECT policies, replacing them with `USING (false)` so the base tables stay locked down and the functions are the only read path.
+To keep the nav consistent with the rest of the site without code duplication, extract the existing `TopNav` from `Discover.tsx` into a new shared component:
 
-```sql
--- magnet_submissions: public read by slug
-CREATE OR REPLACE FUNCTION public.get_magnet_submission(_slug text)
-RETURNS TABLE (
-  slug text,
-  status text,
-  first_name text,
-  created_at timestamptz
-)
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT slug, status, first_name, created_at
-  FROM public.magnet_submissions
-  WHERE slug = _slug
-  LIMIT 1;
-$$;
+### File: `src/components/discover/DiscoverTopNav.tsx` (extracted)
+Move the current `TopNav` component out of `Discover.tsx` into its own file. Then:
+- `Discover.tsx` imports it.
+- `About.tsx` imports the same component so the nav stays identical (logo wordmark "Discover · Mabbly", For Your Firm dropdown, Awards, Podcast, Add Your Firm CTA).
 
--- magnet_breakdowns: public read by slug (excludes raw_* enrichment blobs)
-CREATE OR REPLACE FUNCTION public.get_magnet_breakdown(_slug text)
-RETURNS TABLE (
-  slug text,
-  welcome_message text,
-  dead_zone_value bigint,
-  dead_zone_reasoning text,
-  gtm_profile_observed text,
-  gtm_profile_assessment text,
-  orbit_01 text, orbit_02 text, orbit_03 text, orbit_04 text, orbit_05 text,
-  recommended_layer text,
-  action_1 text, action_2 text, action_3 text,
-  chapter_callouts jsonb,
-  enrichment_error text
-)
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT slug, welcome_message, dead_zone_value, dead_zone_reasoning,
-         gtm_profile_observed, gtm_profile_assessment,
-         orbit_01, orbit_02, orbit_03, orbit_04, orbit_05,
-         recommended_layer, action_1, action_2, action_3,
-         chapter_callouts, enrichment_error
-  FROM public.magnet_breakdowns
-  WHERE slug = _slug
-  LIMIT 1;
-$$;
+### Section A — HERO (dark `#1C1008`)
+- Eyebrow (DM Mono, gold, 0.18em): `ABOUT MABBLY`
+- Headline (Cormorant Garamond, `clamp(40px, 5.5vw, 72px)`, color `#F5EFE0`):
+  > We are building the operating system for relationship revenue.
+- Sub (Cormorant Garamond, 20px, `rgba(245,239,224,0.7)`, max 640px):
+  > Mabbly began with one observation across hundreds of professional services firms: the next client almost always already knew them. The relationships existed. The trust was built. The system to activate them did not.
+- Padded `padding: 144px 24px 96px` to clear the fixed nav.
 
--- (Same pattern for get_magnet_chat_session and get_magnet_call_booking,
---  plus matching upsert/insert RPCs for chat sessions and call bookings
---  so writes don't depend on the GUC either.)
+### Section B — THE THREE ROOMS (cream `#FBF8F4` / vellum)
+- Eyebrow: `HOW WE ARE BUILT`
+- Headline (Cormorant, dark `#0D1117`): "Three rooms. One mission."
+- Three cards in a responsive grid (1col mobile / 3col `md:`):
+  1. **discover.mabbly.com** — `THE RESEARCH` — "The category authority hub. The book, the podcast, the diagnostic, the research cohort, the awards. Where we publish what we are learning."
+  2. **mabbly.com →** (external, new tab) — `THE AGENCY` — "Hands-on GTM consulting and execution for professional services firms. Where we apply the framework end to end with named teams."
+  3. **mabbly.ai →** (external, new tab) — `THE PRODUCT` — "The Lead Nurturing Agent. AI-powered relationship reactivation, signal detection, and human-reviewed outreach. Where the framework runs at scale."
+- Card style: subtle 1px gold border at `rgba(184,147,58,0.25)`, padding 32px, gold eyebrow on top, room name in Inter Tight 18px semibold, body in Inter Tight 14px line-height 1.6.
 
-GRANT EXECUTE ON FUNCTION public.get_magnet_submission(text) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.get_magnet_breakdown(text) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.get_magnet_chat_session(text) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.upsert_magnet_chat_session(text, jsonb) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.insert_magnet_call_booking(text, text, timestamptz) TO anon, authenticated;
+### Section C — THE FOUNDERS (dark)
+- Eyebrow: `WHO IS BUILDING THIS`
+- Headline: "Built by practitioners, not researchers." (Cormorant)
+- Two side-by-side blocks (`md:grid-cols-2`, gap 48px):
+  - **Adam Fridman** — Co-Author + Founder, Mabbly
+    - 140px circular photo from `@/assets/adam-fridman.png` with 3px gold ring.
+    - Bullets (DM Mono, gold dots):
+      - 500 practitioner interviews (Science of Story)
+      - 180 podcast episodes on GTM for Professional Services
+      - 2 yrs Inc. columnist
+    - LinkedIn icon link → `https://linkedin.com/in/adamfridman` (lucide `Linkedin` icon, gold on hover).
+  - **Richard Ashbaugh** — Co-Author + CEO, Mabbly
+    - 140px circular photo from `@/assets/richard-ashbaugh.png`.
+    - Bullets:
+      - 26 years across 9 professional services firms
+      - $125M AArete revenue as CMO
+      - $1.2B A.T. Kearney scaled from $250M
+    - LinkedIn icon link → `https://linkedin.com/in/richardfashbaugh`.
 
--- Lock down direct SELECT on all four tables (RPCs are now the only read path)
-DROP POLICY "View own submission by slug" ON public.magnet_submissions;
-CREATE POLICY "No direct select" ON public.magnet_submissions FOR SELECT USING (false);
+### Section D — THE ORIGIN (cream)
+- Eyebrow: `WHY THIS BOOK EXISTS`
+- Single column, max-width 720px, editorial prose.
+- Pull quote (Cormorant italic, large `clamp(24px, 3vw, 36px)`, gold left border 2px), with proper typographic curly quotes (no em/en dashes per project rule):
+  > "We kept making the same mistake. We would meet with a firm. They had 400 dormant contacts. We would ask 'have you called them?' The answer was always no. Not because they forgot. Because they had no system. No permission. No cadence."
+- Attribution: `ADAM FRIDMAN · CO-AUTHOR` (DM Mono, gold)
+- Closing paragraph below (Inter Tight, 16px, dark):
+  > Mabbly exists to fix that. The book documents what we found. The agency applies it. The product runs it at scale.
 
-DROP POLICY "View own breakdown by slug" ON public.magnet_breakdowns;
-CREATE POLICY "No direct select" ON public.magnet_breakdowns FOR SELECT USING (false);
+### Section E — VALIDATION (dark)
+- Eyebrow: `FOREWORD`
+- Reuse the foreword content already shown in `AuthorityStrip.tsx` (Jonathan Copulsky block). To avoid duplication and keep this page lighter, render a self-contained version inline (since `AuthorityStrip` is a multi-column composite). Content:
+  - Pull quote in Cormorant: a representative line from Copulsky's foreword (mirroring what already appears in `AuthorityStrip`; we will copy the exact quoted lines from that file verbatim during build to keep wording consistent).
+  - Attribution: `JONATHAN COPULSKY` · "Former CMO, Deloitte · Senior Lecturer, Northwestern Kellogg".
 
-DROP POLICY "View chat session by slug" ON public.magnet_chat_sessions;
-DROP POLICY "Insert chat session by slug" ON public.magnet_chat_sessions;
-DROP POLICY "Update chat session by slug" ON public.magnet_chat_sessions;
-CREATE POLICY "No direct access" ON public.magnet_chat_sessions FOR ALL USING (false) WITH CHECK (false);
+### Section F — CONTACT + PRESS (cream)
+- Eyebrow: `PRESS + INQUIRIES`
+- Email line (Inter Tight 18px): `press@mabbly.com` (mailto link, hover gold).
+- Location (Inter Tight 14px, muted): "Based in Chicago, Illinois."
 
-DROP POLICY "View call booking by slug" ON public.magnet_call_bookings;
-DROP POLICY "Insert call booking by slug" ON public.magnet_call_bookings;
-CREATE POLICY "No direct access" ON public.magnet_call_bookings FOR ALL USING (false) WITH CHECK (false);
-```
+### Section G — FINAL CTA (dark)
+- Single line (Cormorant, `clamp(28px, 3.5vw, 44px)`): "Ready to add your firm to the research?"
+- Single CTA button (matches existing `Add Your Firm` gold pill style used in nav/hero): `Add Your Firm →` linking to `/assess`.
+- Centered, generous vertical padding 128px.
 
-Security properties preserved:
-- A visitor with a slug can read only that slug's row (same as before in intent).
-- No slug enumeration: slugs are random suffixes already; functions return empty when slug is unknown.
-- `raw_website_content` and `raw_linkedin_data` enrichment blobs are intentionally excluded from `get_magnet_breakdown` — they were exposed before.
-- Service-role insert/update on `magnet_breakdowns` is unchanged (edge functions still work).
-- INSERT on `magnet_submissions` stays open ("Anyone can submit assessment").
+### Footer
+- Render shared `<Footer />` (the same one used on `/discover`).
 
-## Part 2 — Update client + edge functions to use the RPCs
-
-**`src/pages/MagnetSite.tsx`** — replace the two `.from(...).select(...).eq("slug", slug).maybeSingle()` calls inside `fetchStatus` with:
-
-```ts
-const [subRes, brkRes] = await Promise.all([
-  supabase.rpc('get_magnet_submission', { _slug: slug }),
-  supabase.rpc('get_magnet_breakdown', { _slug: slug }),
-]);
-const submission = subRes.data?.[0] ?? null;
-const breakdown = brkRes.data?.[0] ?? null;
-```
-
-Then keep the existing "breakdown row populated → complete" priority logic (it's already correct), and add three small hardening tweaks:
-
-1. **Tolerate a missing submission row briefly.** Today: `if (!subRes.data) → error`. New: track `consecutiveMissingSub` and only flip to `error` after 5 consecutive empty polls (~15s), matching the existing `consecutiveFailures` pattern. This covers the small window between INSERT and the first poll.
-2. **Hard timeout.** If still in `pending`/`processing` after 90s, stop polling and show error with a "Try again" button (today the loop runs forever).
-3. **Backoff.** Poll every 3s for the first 30s, then every 6s. Reduces request volume on slow enrichment.
-
-**`src/components/magnet/MagnetBreakdown.tsx`** — replace both `.from(...)` reads with `supabase.rpc('get_magnet_breakdown', { _slug: slug })` and `supabase.rpc('get_magnet_submission', { _slug: slug })`. Same shape; existing error/empty handling stays.
-
-**`src/components/magnet/MagnetChat.tsx`** — chat reads/writes go through the existing `magnet-chat` edge function, which uses the service role. Update that function to use `get_magnet_chat_session` / `upsert_magnet_chat_session` (or keep direct table access — service role bypasses RLS so it still works). No client change needed there.
-
-**Edge functions** (`enrich-magnet`, `magnet-chat`) — already use `SUPABASE_SERVICE_ROLE_KEY`, so they bypass RLS entirely. No changes required, just verify by reading the two function files during implementation.
+### Behavior
+- Page mounts at top (the global `ScrollToTop` component already handles this — no extra logic).
+- No sticky bottom CTA, no scroll progress rail.
+- All external links use `target="_blank" rel="noopener noreferrer"`.
+- Mobile-first: cards stack 1-col, founders stack, hero padding compresses on narrow viewports.
+- Respects `prefers-reduced-motion` (no scroll-reveal staggers needed; static fades only).
 
 ---
 
-# Files touched
+## Part 2 — `/discover` Hero Eyebrow Update
 
-1. `supabase/migrations/<new>_magnet_rls_via_rpcs.sql` — new migration (Part 1)
-2. `src/pages/MagnetSite.tsx` — switch to RPCs + hardened polling (Part 2.1, 2.3)
-3. `src/components/magnet/MagnetBreakdown.tsx` — switch to RPCs (Part 2.2)
-4. (verify only) `supabase/functions/enrich-magnet/index.ts`, `supabase/functions/magnet-chat/index.ts`
+### File: `src/components/discover/DiscoverHero.tsx`
+**Line 554** — change the inner text only:
+- From: `GTM Research for Professional Services Firms`
+- To:   `The First Research on How PS Firms Grow`
 
-No changes to: types.ts (auto-regenerates), client.ts, routing, UI/copy, edge function deployment config.
+(Display style stays uppercase via the existing `text-transform: uppercase` rule on `.dh-industry`, so the on-page rendering reads `THE FIRST RESEARCH ON HOW PS FIRMS GROW`.)
+
+Nothing else on `/discover` changes. Body, sub copy, Section 04 "The Relationship Revenue OS", and Section 09 "The GTM Score" remain intact. Vertical pages are untouched (they have native vocabulary already per the brief).
 
 ---
 
-# Verification
+## Part 3 — Footer "About" Link (Bottom Strip)
 
-1. Hit `/m/ilan_6fwi5uylv3` → breakdown renders immediately (data already complete in DB).
-2. Submit a fresh assessment → loading screen cycles steps → flips to breakdown when enrichment finishes.
-3. Hit a non-existent slug like `/m/nope_xxxxx` → after ~15s of empty polls, error screen appears (not instant).
-4. Network tab on `/m/:slug`: should see `POST /rest/v1/rpc/get_magnet_submission` and `…/get_magnet_breakdown` returning the rows (not empty arrays as today).
-5. Direct table reads from anon (`curl /rest/v1/magnet_breakdowns?slug=eq.…`) return `[]` — the RPCs are now the only read path.
-6. `raw_website_content` and `raw_linkedin_data` no longer reachable from the browser.
+Add an internal `About` link into the bottom strip of both footer components. Style matches Privacy/Terms (12px, gold `rgba(184,147,58,0.7)`, hover `#F5EFE0`).
+
+### File: `src/components/Footer.tsx`
+In the bottom-strip legal row (currently `Privacy Policy · Terms of Service`), prepend an `About` link as the first item:
+- `About` (uses `react-router-dom` `<Link to="/about">`, no new tab — internal route)
+- ` · ` separator
+- `Privacy Policy` (existing)
+- ` · ` separator
+- `Terms of Service` (existing)
+
+Note: `Footer.tsx` currently uses bare `<a>` tags with no router import. We will import `Link` from `react-router-dom` for the new About entry so client-side navigation works without a full page reload. The order in the bottom strip per the brief: `© 2026 Mabbly LLC · About · Privacy Policy · Terms of Service` — the `©` line stays on its own row above the legal row (matching current layout); within the legal row the order becomes `About · Privacy · Terms`.
+
+### File: `src/components/VerticalLanding/VerticalFooter.tsx`
+Same change in `.vf-legal-row`: prepend `<Link to="/about" className="vf-legal">About</Link>` followed by the existing `·` separators and Privacy/Terms links. Import `Link` is already present in the file.
+
+### Constraints respected
+- About is **not** added to the top nav (no change to `navItems` in `Discover.tsx` or `VerticalNav.tsx`).
+- About is **not** added to the Across Mabbly grid.
+- Bottom-strip only.
+
+---
+
+## Files Touched
+
+**New**
+- `src/pages/About.tsx`
+- `src/components/discover/DiscoverTopNav.tsx` (extracted from `Discover.tsx` for shared use)
+
+**Edited**
+- `src/App.tsx` — register `/about` route + import.
+- `src/pages/Discover.tsx` — replace inline `TopNav` definition with import from new shared file (no behavior change).
+- `src/components/discover/DiscoverHero.tsx` — line 554 eyebrow text swap.
+- `src/components/Footer.tsx` — add About link in bottom strip + import `Link`.
+- `src/components/VerticalLanding/VerticalFooter.tsx` — add About link in bottom strip.
+
+## QA Checklist (post-build)
+1. `/about` renders all 7 sections top-to-bottom, anchors at top of hero on load.
+2. `/about` shows the same `Footer` (Across Mabbly grid + bottom strip) as `/discover`.
+3. `/about` has no sticky bottom CTA, no scroll progress rail.
+4. `/discover` hero eyebrow now reads `THE FIRST RESEARCH ON HOW PS FIRMS GROW`. Sub copy and all other sections unchanged.
+5. Footer bottom strip on every page (`/discover`, `/awards`, all 8 verticals, `/about`) shows `About · Privacy Policy · Terms of Service`.
+6. `About` link routes via React Router (no full reload) to `/about`.
+7. `About` does **not** appear in top nav or Across Mabbly grid anywhere.
+8. External links (mabbly.com, mabbly.ai, podcast, LinkedIn) open in new tab on `/about`.
+9. Mobile (≤767px): three-rooms cards stack, founders stack, hero padding compresses, footer bottom strip stacks center-aligned.
+10. No hyphens / em-dashes / en-dashes in any new copy (per project memory).
