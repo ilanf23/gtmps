@@ -439,6 +439,9 @@ ${JSON.stringify(linkedin_data)}`;
       chapter_callouts: mappedCallouts,
       raw_website_content: website_content || null,
       raw_linkedin_data: linkedin_data,
+      client_logo_url: branding.logoUrl,
+      client_brand_color: branding.brandColor,
+      client_company_name: branding.companyName,
       enrichment_error: null,
     };
 
