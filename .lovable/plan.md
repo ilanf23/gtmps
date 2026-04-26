@@ -1,55 +1,82 @@
-## Goal
+## Diagnosis
 
-Replace the current abstract "constellation + radar arc" loading scene with a more **professional and recognizable** animation that visually represents what's actually being built for the client: their GTM/Relationship Revenue Map.
+Branding extraction is working correctly. The DB confirms it:
 
-The current scene (`src/components/magnet/MagnetLoadingScene.tsx`) has a generic celestial/radar feel that doesn't tell the story of the product. The new version stays editorial and on-brand, but shows the system *constructing the map* in front of the user — concrete, narrative, and tied to each loading step.
+| Slug | Accent | Background | Text | Font | Logo |
+|---|---|---|---|---|---|
+| Maverich | `#f5a623` orange | `#ffffff` | `#000000` | Inter | ✅ |
+| Idea2Result | `#dc2626` red | `#ffffff` | `#9ca3af` | Inter | ✅ |
 
-## Concept: "Cartographer's Drafting Table"
+The problem is **the microsite components don't actually consume these tokens**. Only ~4 hex strings are remapped via CSS in `microsite-theme.css`, but `MagnetBreakdown.tsx`, `FeedbackForm.tsx`, `BookChat.tsx`, `BookReader.tsx`, and `MagnetChat.tsx` use:
 
-Editorial publishing house meets strategy deck. Feels like watching a cartographer draft a custom market map — line by line, label by label — instead of a sci-fi radar sweep.
+- **Opacity variants** (`bg-[#B8933A]/15`, `border-[#B8933A]/30`, `text-[#B8933A]/40`) — not remapped
+- **Black-based utilities** (`bg-black/5`, `border-black/10`, `text-black/20`) — not remapped, so they stay neutral grey instead of becoming tinted by the client's text color
+- **Their own wrapper bg** (`bg-[#FBF8F4]`) inside the shell that fights the shell's themed wrapper
+- **Font family** is set on the shell's outer div but Tailwind's `font-*` defaults on inner elements override it
+- **Logo** is shown only as a tiny mark next to "Mabbly · GTM" in the nav — not prominently
 
-### Visual layers (built sequentially as steps progress)
+Net result: Maverich's microsite *should* be orange/white/black with Inter, but it still reads as warm cream/gold because most of the inner UI uses unmapped colors.
 
-1. **Step 01 — Reading your website**
-   A horizontal scanning rule sweeps top-to-bottom across a faint document outline (a tall rectangle suggesting a webpage). Small data ticks light up along the rule as it passes. Concrete and recognizable: this is *reading*.
+## The fix: 3 layers
 
-2. **Step 02 — Identifying your relationship orbits**
-   The document fades; five concentric orbit rings draw themselves outward from the center, one per second. As each ring completes, a small labeled node ("Clients", "Partners", "Press", "Talent", "Capital") fades in on the ring at a hand-placed angle.
+### 1. Replace hex literals with CSS variables in microsite components
 
-3. **Step 03 — Mapping your Dead Zone**
-   A soft wedge / sector (15 to 25 degree arc) fills with a translucent accent tint between two orbits, with a thin dashed boundary. A tiny serif italic label "Dead Zone" sets next to it.
+Refactor these files to use `var(--ms-accent)`, `var(--ms-bg)`, `var(--ms-text)`, `var(--ms-surface)`, `var(--ms-border)` directly via inline styles or a small set of utility classes — instead of hardcoded `#B8933A`, `#FBF8F4`, `#1C1008`, `#120D05`, `bg-black/5`, etc.
 
-4. **Step 04 — Calibrating your Five Layers**
-   Five short horizontal calibration bars (mini level meters) appear stacked on the right edge of the stage. Each fills smoothly to a different percentage. Reads instantly as tuning or calibrating.
+Files to refactor:
+- `src/components/magnet/MagnetBreakdown.tsx` (24 hex usages + many `bg-black/*`)
+- `src/components/magnet/FeedbackForm.tsx` (16 hex usages)
+- `src/components/magnet/BookChat.tsx` (10 hex usages)
+- `src/components/magnet/BookReader.tsx` (10 hex usages)
+- `src/components/magnet/MagnetChat.tsx` (14 hex usages)
+- `src/components/magnet/MagnetLoadingScene.tsx` (already uses CSS vars in SVG, but final wrapper text still hardcoded — fix)
 
-5. **Step 05 — Writing your GTM breakdown**
-   A short serif manuscript line types itself out beneath the map (e.g. "Drafting your map..."), with a blinking caret. Optional: a subtle pen nib SVG glides along the line.
+Strategy: introduce a small set of theme-aware utility classes in `microsite-theme.css`:
+```
+.ms-text { color: var(--ms-text); }
+.ms-text-muted { color: var(--ms-text-muted); }
+.ms-text-accent { color: var(--ms-accent); }
+.ms-bg { background-color: var(--ms-bg); }
+.ms-surface { background-color: var(--ms-surface); }
+.ms-accent-bg { background-color: var(--ms-accent); color: var(--ms-accent-fg); }
+.ms-border { border-color: var(--ms-border); }
+.ms-border-accent { border-color: var(--ms-accent); }
+```
+Then replace `text-[#B8933A]` → `ms-text-accent`, `bg-black/5` → `ms-surface`, `border-black/10` → `ms-border`, etc. Reads identical when no theme is set (defaults preserved).
 
-### Persistent elements throughout
-- The center seal becomes a **compass rose**: a thin 4 point star inside a circle, with the rotating italic numeral (01 through 05) in the center.
-- 4 hairline tick marks at N, E, S, W on the center circle. One of the most recognizable mapping cues.
-- Background dots reduced from 40 to about 25; lose the random flare pulse. They become quiet paper texture, not stars.
-- The radar arc is **removed** (the most sci-fi and least professional element).
+### 2. Apply the client font to ALL microsite content
 
-### Motion principles
-- Every motion is purposeful and tied to a step. No looping decoration that runs forever regardless of progress.
-- Durations match the existing `STEP_DURATION_MS = 14_000`.
-- `prefers-reduced-motion` shows the final composed state (all 5 layers visible) with no animation.
+Currently `themeStyle()` sets `fontFamily` on the outer wrapper, but Tailwind's `font-display`/`font-sans` inside resets it. Fix:
 
-### Color and type
-- Reuses CSS variables (`--ms-accent`, `--ms-text`, `--ms-bg`) so it auto re-skins per client. No hardcoded hex.
-- Cormorant Garamond italic for the numeral and inline labels (already used).
-- Hairline 1px strokes throughout. Keeps the editorial feel.
+- In `MagnetShell.tsx`, when `theme.fontFamily` is set, inject a `<style>` tag scoped to the shell wrapper that overrides Tailwind's body/heading fonts to the client font (with a graceful fallback)
+- For Google Fonts, also inject a `<link rel="stylesheet">` to actually load the font — extraction already detects `fonts.googleapis.com` links, so we know the family is hosted there
+- Update extractor to also store the **Google Fonts URL** when found, not just the family name
 
-## Implementation
+### 3. Show the client logo prominently
 
-Single file change: rewrite `src/components/magnet/MagnetLoadingScene.tsx`.
-- Same props signature (`firstName`, `stepIndex`, `stepVisible`, `steps`) so `MagnetSite.tsx` does not change.
-- Keep the editorial text block below the stage exactly as is. It is working well.
-- Replace only the SVG stage contents and the keyframe block.
-- Use `stepIndex` to drive which layers are visible. Each layer mounts when its step starts and remains visible afterward (building, not flickering).
+Currently the logo is a 24px mark in the nav. Change to:
 
-### Files touched
-- `src/components/magnet/MagnetLoadingScene.tsx` — full rewrite of the SVG stage and keyframes. Editorial text block below stays untouched.
+- **Nav**: Replace "Mabbly · GTM" with the client logo at h-7, with a hairline divider, then a small "Powered by Mabbly" mark on the right side of the nav (so it stays Mabbly-credentialed but client-first)
+- **Breakdown hero**: Add the client logo above the welcome message at h-10 to anchor the page in client brand
 
-No schema changes, no routing changes, no other files affected.
+### 4. Backfill existing microsites
+
+After the refactor, no DB change needed for existing microsites — they already have branding stored. They will re-skin automatically on next page load.
+
+### 5. Verify against Maverich and Idea2Result
+
+After the refactor, load `/m/ilan_daqqws4q7l` (Maverich) and confirm:
+- Orange (`#f5a623`) replaces every gold accent (buttons, dividers, callouts, chat bubbles)
+- White bg replaces cream
+- Black text replaces brown
+- Inter font on all headings and body
+- Maverich logo visible in nav and hero
+- Loading scene compass + orbits render in orange-on-white
+
+Then load `/m/ilan_ycumtrcpmh` (Idea2Result) and confirm the same in red/white.
+
+## Out of scope
+
+- Not changing the breakdown content/structure
+- Not changing the loading animation choreography (already redesigned)
+- Not touching the Pepper/SPR/LaunchPad standalone microsites — those have their own fixed designs
