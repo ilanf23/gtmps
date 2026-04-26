@@ -309,7 +309,9 @@ ${JSON.stringify(linkedin_data)}`;
       typeof v === "string" && v.trim() ? v : null;
 
     const formula = (parsed.formulaAnalysis ?? {}) as Record<string, unknown>;
-    const deadZone = (parsed.deadZone ?? {}) as Record<string, unknown>;
+    const deadZone = (parsed.deadZone && typeof parsed.deadZone === "object"
+      ? parsed.deadZone
+      : {}) as Record<string, unknown>;
     const layerRec = (parsed.layerRecommendation ?? {}) as Record<string, unknown>;
     const orbitsArr = Array.isArray(parsed.orbits)
       ? (parsed.orbits as Array<Record<string, unknown>>)
