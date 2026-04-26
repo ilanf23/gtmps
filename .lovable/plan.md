@@ -1,121 +1,179 @@
-# Expand the GTM Assessment Intake
 
-Add 5 new fields to the `/m` assessment form, persist them, and use them to make the AI breakdown sharper and more grounded.
+# Make the GTM Assessment form interactive
 
-## 1. Database migration — add 5 columns to `magnet_submissions`
+Transform `/m` from a static form into a live "build your breakdown" experience. As the user types, a progress bar fills, a phase label updates, insight badges fade in, and a real-time Dead Zone Value estimate appears the moment CRM size and deal size are both selected.
 
-```sql
-ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS crm_size text;
-ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS deal_size text;
-ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS bd_challenge text;
-ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS case_studies_url text;
-ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS team_page_url text;
+All changes are scoped to `src/pages/MagnetAssess.tsx`. **No** changes to validation, submit handler, slug generation, Supabase insert, edge function, or routing.
+
+## 1. Watch all field values reactively
+
+Switch from default react-hook-form usage to using `watch()` so we can react to every keystroke / select change:
+
+```ts
+const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({ ... });
+
+const watched = watch();
+const { name, role, websiteUrl, linkedinUrl, email,
+        crmSize, dealSize, bdChallenge, caseStudiesUrl, teamPageUrl } = watched;
 ```
 
-All nullable so existing rows remain valid. RLS policies are unchanged (insert-by-anon stays open, select still gated by slug).
+## 2. Progress percentage (weighted)
 
-## 2. `src/pages/MagnetAssess.tsx` — form expansion
+```ts
+const fieldWeights = {
+  name: 10, role: 5, websiteUrl: 20, email: 10,
+  crmSize: 15, dealSize: 15, bdChallenge: 10,
+  linkedinUrl: 5, caseStudiesUrl: 5, teamPageUrl: 5,
+};
+const progress = Object.entries(fieldWeights).reduce((sum, [k, w]) => {
+  const v = watched[k as keyof FormValues];
+  return sum + (v && String(v).trim() !== '' ? w : 0);
+}, 0);
+```
 
-**Updated Zod schema:**
-- `name`, `role`, `websiteUrl`, `email` — unchanged (required)
-- `linkedinUrl` — **now optional**: `z.string().trim().url('Enter a valid LinkedIn URL').optional().or(z.literal(''))`
-- `crmSize` — required enum: `under_100 | 100_300 | 300_700 | 700_plus` (with custom message "Please select a range")
-- `dealSize` — required enum: `under_50k | 50k_150k | 150k_500k | 500k_plus`
-- `bdChallenge` — required enum: `finding_new | reengaging_past | converting_warm | consistent_intros | generating_inbound`
-- `caseStudiesUrl`, `teamPageUrl` — optional: `z.string().trim().url().optional().or(z.literal(''))`
+## 3. Dynamic phase label
 
-**Field order (5 existing + 5 new):**
-1. Your name
-2. Your title / role
-3. Company website
-4. Your LinkedIn profile (now optional, no asterisk)
-5. Work email
-6. **CRM contact range** (native `<select>`, styled to match existing inputs — `inputClass` + chevron via `appearance-none` + background SVG)
-7. **Typical engagement / project value** (select)
-8. **Biggest BD challenge right now** (select)
-9. **Link to your case studies or work page** (url, optional) + helper text "Helps us analyze your proof assets" rendered in a small `text-xs opacity-50` line below the input
-10. **Link to your team or about page** (url, optional) + helper text "Helps us understand your firm's background"
+```ts
+const getProgressLabel = (p: number) => {
+  if (p === 0)   return 'Start building your breakdown →';
+  if (p < 20)    return 'Setting up your profile...';
+  if (p < 40)    return 'Mapping your firm context...';
+  if (p < 60)    return 'Identifying your orbits...';
+  if (p < 80)    return 'Calculating your Dead Zone...';
+  if (p < 100)   return 'Almost there, breakdown nearly ready...';
+  return 'Full breakdown unlocked';
+};
+```
 
-Reuse the existing `Field` helper and add a small `helper` prop so the helper line sits between the input and any error message. Selects use the same `inputClass` plus `appearance-none pr-10` and a background chevron, matching the existing visual language (no shadcn Select component — keeps the editorial flat aesthetic identical).
+(No hyphens / em dashes per project memory; uses commas + arrow.)
 
-**Submit handler updates:**
-- Insert into `magnet_submissions` adds:
-  ```ts
-  crm_size: data.crmSize,
-  deal_size: data.dealSize,
-  bd_challenge: data.bdChallenge,
-  case_studies_url: data.caseStudiesUrl || null,
-  team_page_url: data.teamPageUrl || null,
-  linkedin_url: data.linkedinUrl || '',  // keep column non-null safe
-  ```
-- Fire-and-forget `enrich-magnet` invoke body changes to:
-  ```ts
-  { 
-    slug, 
-    crmSize: data.crmSize,
-    dealSize: data.dealSize,
-    bdChallenge: data.bdChallenge,
-    caseStudiesUrl: data.caseStudiesUrl || null,
-    teamPageUrl: data.teamPageUrl || null,
+## 4. Live Dead Zone Value
+
+```ts
+const crmMidpoints = { under_100: 75, '100_300': 200, '300_700': 500, '700_plus': 800 };
+const dealMidpoints = { under_50k: 35000, '50k_150k': 100000, '150k_500k': 325000, '500k_plus': 650000 };
+
+const deadZoneValue = (crmSize && dealSize)
+  ? Math.round((crmMidpoints[crmSize] ?? 0) * 0.81 * (dealMidpoints[dealSize] ?? 0) * 0.03 / 1000)
+  : null; // value in $K
+```
+
+## 5. Insight badges
+
+Four badges that conditionally render as small chips:
+
+| Badge | Trigger | Label |
+|---|---|---|
+| website | `websiteUrl` filled | `⊙ Website: Ready to analyze` |
+| deadzone | `deadZoneValue !== null` | `⊙ Dead Zone estimate: ~$<value>K` |
+| layer | `bdChallenge` filled | `⊙ Starting layer: PROVE / ACTIVATE / DESIGN / COMPOUND` (mapped from challenge) |
+| proof | `caseStudiesUrl` filled | `⊙ Proof assets: Will be analyzed` |
+
+Layer mapping:
+- `finding_new` → PROVE
+- `reengaging_past` → ACTIVATE
+- `converting_warm` → DESIGN
+- `consistent_intros` → ACTIVATE
+- `generating_inbound` → COMPOUND
+
+**Styling note**: Instead of generic blue/amber/green/purple Tailwind utilities (which would clash with the form's editorial cream + gold palette), each badge uses on-brand tints:
+
+- website → `border-[#1C1008]/20 bg-[#1C1008]/5 text-[#1C1008]/80`
+- deadzone → `border-[#B8933A]/40 bg-[#B8933A]/10 text-[#8a6e2b]` (gold, the money moment)
+- layer → `border-[#3D5A4A]/30 bg-[#3D5A4A]/8 text-[#3D5A4A]` (sage)
+- proof → `border-[#8B3A2A]/30 bg-[#8B3A2A]/8 text-[#8B3A2A]` (rust)
+
+## 6. Dead Zone "money moment" pulse
+
+When the Dead Zone badge first appears, pulse it briefly so the user notices:
+
+```ts
+const [deadZonePulsed, setDeadZonePulsed] = useState(false);
+useEffect(() => {
+  if (deadZoneValue !== null && !deadZonePulsed) {
+    const t = setTimeout(() => setDeadZonePulsed(true), 2000);
+    return () => clearTimeout(t);
   }
-  ```
-
-No changes to slug generation, navigation, loading state, or `MagnetSite.tsx`.
-
-## 3. `supabase/functions/enrich-magnet/index.ts` — use the intake data
-
-**Destructure new body fields** (with safe defaults):
-```ts
-const { slug, crmSize, dealSize, bdChallenge, caseStudiesUrl, teamPageUrl } = body;
+}, [deadZoneValue, deadZonePulsed]);
 ```
 
-**Scrape extra pages via Jina** (only if URLs provided), appended to `website_content` before the OpenAI call:
-```ts
-if (caseStudiesUrl) {
-  const cs = await fetchViaJina(caseStudiesUrl, 3000);
-  if (cs) website_content += "\n\n--- CASE STUDIES / WORK PAGE ---\n" + cs;
-}
-if (teamPageUrl) {
-  const tp = await fetchViaJina(teamPageUrl, 2000);
-  if (tp) website_content += "\n\n--- TEAM / ABOUT PAGE ---\n" + tp;
-}
+Apply `animate-pulse` to the deadzone badge while `deadZoneValue !== null && !deadZonePulsed`.
+
+## 7. Progress block (rendered above form fields)
+
+Inserted between the header copy and the `<form>`, styled to match the existing editorial aesthetic (no shadcn tokens, no rounded-xl — keeps the flat, sharp-cornered look):
+
+```tsx
+<div className="mt-8 p-5 border border-black/10 bg-black/[0.02]">
+  <div className="flex justify-between items-center mb-2">
+    <span className="text-xs uppercase tracking-wider font-medium text-[#1C1008]">
+      {getProgressLabel(progress)}
+    </span>
+    <span className="text-xs font-mono text-[#1C1008]/60">{progress}%</span>
+  </div>
+
+  <div className="w-full h-1 bg-black/10 overflow-hidden">
+    <div
+      className="h-full bg-[#B8933A] transition-all duration-500 ease-out"
+      style={{ width: `${progress}%` }}
+    />
+  </div>
+
+  {badges.some(b => b.condition) && (
+    <div className="flex flex-wrap gap-2 mt-4">
+      {badges.filter(b => b.condition && b.label).map(b => (
+        <span
+          key={b.id}
+          className={`text-[11px] px-3 py-1 border font-medium tracking-wide
+                      transition-opacity duration-300 ${b.color}
+                      ${b.id === 'deadzone' && !deadZonePulsed ? 'animate-pulse' : ''}`}
+        >
+          {b.label}
+        </span>
+      ))}
+    </div>
+  )}
+</div>
 ```
-(Reuses the existing `fetchViaJina` helper, which already has a 10s timeout and char cap, so we keep timing predictable.)
 
-**Prepend an INTAKE DATA block to `userMessage`** so the model treats it as ground truth:
+Sharp corners (no `rounded-full` / `rounded-xl`) to match the existing form's flat editorial style.
 
+## 8. Submit button reflects progress state
+
+Replace the existing button label/disabled logic:
+
+```tsx
+<button
+  type="submit"
+  disabled={submitting || progress < 60}
+  className="w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] 
+             font-semibold tracking-wide uppercase text-sm transition-colors 
+             flex items-center justify-center gap-2 
+             disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {submitting ? (
+    <><span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" /> BUILDING…</>
+  ) : progress < 60 ? (
+    `COMPLETE YOUR PROFILE (${progress}%)`
+  ) : progress === 100 ? (
+    'GENERATE FULL BREAKDOWN →'
+  ) : (
+    'GENERATE BREAKDOWN →'
+  )}
+</button>
 ```
-=== INTAKE DATA (what the firm told us directly) ===
-CRM Size: <crmSize>
-Typical Deal Size: <dealSize>
-Biggest BD Challenge: <bdChallenge>
 
-USE THIS DATA:
-- For Dead Zone math: map crmSize → number 
-  (under_100→75, 100_300→200, 300_700→500, 700_plus→800), 
-  multiply by 0.81 for dormant estimate.
-- For Dead Zone Value: dormant contacts × deal size midpoint × 0.03
-- Deal size midpoints: 
-  under_50k→35000, 50k_150k→100000, 150k_500k→325000, 500k_plus→650000
-- For layer recommendation, use bdChallenge as the primary signal:
-  finding_new → start PROVE
-  reengaging_past → start ACTIVATE with ⊙03
-  converting_warm → start DESIGN
-  consistent_intros → start ACTIVATE with ⊙04
-  generating_inbound → start COMPOUND
-=== END INTAKE DATA ===
-```
+Disabled until 60% (name + website + email + at least one dropdown), preventing thin submissions while still allowing skip of optional fields.
 
-This block is inserted **before** the existing `WEBSITE CONTENT:` section in the user message. The system prompt is left intact (typography rule, RROS vocabulary, Hormozi framing all preserved).
+## What does NOT change
 
-If the intake fields are missing on the body (older clients), they fall back to whatever is on the `submission` row from the DB so the function never breaks.
+- Field order, labels, placeholders, helper text
+- Zod schema and validation behavior
+- `onSubmit` handler, slug generation, Supabase insert, `enrich-magnet` invocation
+- Routing / navigation
+- Page heading and intro copy above the form
+- Edge function (`enrich-magnet`) — already consumes the new fields from the previous task
 
 ## Files touched
-- **New migration**: `supabase/migrations/<timestamp>_add_intake_fields_to_magnet_submissions.sql`
-- **Edited**: `src/pages/MagnetAssess.tsx`
-- **Edited**: `supabase/functions/enrich-magnet/index.ts`
 
-## Out of scope
-- No visual redesign of the form — only adds fields in the existing style.
-- No changes to `MagnetSite.tsx`, the breakdown UI, or routing.
-- No changes to the SYSTEM_PROMPT itself; intake is supplied as user-message context (simpler to iterate on, no risk to existing copy formulas).
+- **Edited**: `src/pages/MagnetAssess.tsx` (only file)
