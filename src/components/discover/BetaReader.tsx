@@ -1,0 +1,285 @@
+const BADGES = ['Coda Strategy', 'AArete', 'West Monroe', 'Kearney', 'Accenture'];
+
+const eyebrow: React.CSSProperties = {
+  fontFamily: "'Inter Tight', sans-serif",
+  fontSize: 14,
+  letterSpacing: '0.32em',
+  textTransform: 'uppercase',
+  color: '#B8933A',
+  margin: 0,
+  fontWeight: 500,
+};
+
+const goldRule: React.CSSProperties = {
+  width: 44,
+  height: 2,
+  background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+  margin: '18px 0 28px',
+  animation: 'growRule 0.8s ease both',
+};
+
+const inputStyle: React.CSSProperties = {
+  background: '#fff',
+  border: '1px solid rgba(42,26,8,0.18)',
+  borderRadius: 3,
+  padding: '16px 20px',
+  fontFamily: "'Inter Tight', sans-serif",
+  fontSize: 18,
+  color: '#2A1A08',
+  marginBottom: 14,
+  width: '100%',
+  outline: 'none',
+  fontWeight: 400,
+};
+
+export default function BetaReader() {
+  return (
+    <section
+      id="beta-reader"
+      className="px-6 md:px-10"
+      style={{
+        background: '#F5EFE0',
+        borderTop: '1px solid rgba(184,147,58,0.12)',
+        paddingTop: 144,
+        paddingBottom: 144,
+      }}
+    >
+      <style>{`
+        .br-input::placeholder { color: rgba(42,26,8,0.35); }
+        .br-input:focus { border-color: rgba(184,147,58,0.65); }
+        .br-grid {
+          max-width: 1280px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 56px;
+          align-items: start;
+        }
+        @media (min-width: 1024px) {
+          .br-grid { grid-template-columns: 52% 48%; gap: 72px; }
+        }
+        .br-left { animation: fadeUp 0.7s ease 0.1s both; }
+        .br-right { animation: fadeUp 0.7s ease 0.3s both; }
+        .br-badge {
+          border: 1px solid rgba(184,147,58,0.28);
+          border-radius: 3px;
+          padding: 8px 16px;
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 12.5px;
+          letter-spacing: 0.12em;
+          color: #6A5038;
+          text-transform: uppercase;
+          cursor: default;
+          font-weight: 500;
+          transition: border-color 0.18s, color 0.18s, background 0.18s;
+        }
+        .br-badge:hover {
+          border-color: rgba(184,147,58,0.65);
+          color: #9A7020;
+          background: rgba(184,147,58,0.08);
+        }
+      `}</style>
+
+      <div className="br-grid">
+        <div className="br-left">
+          <p style={eyebrow}>06 · BETA READER PROGRAM</p>
+          <div aria-hidden style={goldRule} />
+          <h2
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 'clamp(48px, 7vw, 84px)',
+              fontWeight: 500,
+              color: '#2A1A08',
+              lineHeight: 1.0,
+              letterSpacing: '-0.035em',
+              margin: '0 0 20px',
+            }}
+          >
+            Get the manuscript before it ships.
+          </h2>
+          <p
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 'clamp(18px, 1.8vw, 22px)',
+              color: 'rgba(42,26,8,0.55)',
+              margin: '0 0 36px',
+              lineHeight: 1.5,
+              fontWeight: 300,
+            }}
+          >
+            25 seats. Peer cohort. First access to the full MAP framework.
+          </p>
+
+          <div style={{ display: 'flex', gap: 56, marginBottom: 36, flexWrap: 'wrap' }}>
+            <div>
+              <div
+                style={{
+                  fontFamily: "'Inter Tight', sans-serif",
+                  fontSize: 'clamp(64px, 8vw, 96px)',
+                  fontWeight: 600,
+                  color: '#2A1A08',
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                }}
+              >
+                30
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Inter Tight', sans-serif",
+                  fontSize: 14,
+                  color: 'rgba(42,26,8,0.5)',
+                  marginTop: 10,
+                  fontWeight: 400,
+                }}
+              >
+                chapters of the manuscript
+              </div>
+            </div>
+            <div>
+              <div
+                style={{
+                  fontFamily: "'Inter Tight', sans-serif",
+                  fontSize: 'clamp(64px, 8vw, 96px)',
+                  fontWeight: 600,
+                  color: '#B8933A',
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                }}
+              >
+                25
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Inter Tight', sans-serif",
+                  fontSize: 14,
+                  color: 'rgba(42,26,8,0.5)',
+                  marginTop: 10,
+                  fontWeight: 400,
+                }}
+              >
+                seats per cohort
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              borderLeft: '4px solid #B8933A',
+              paddingLeft: 24,
+              marginBottom: 32,
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 'clamp(18px, 1.7vw, 22px)',
+                lineHeight: 1.55,
+                color: 'rgba(42,26,8,0.8)',
+                margin: 0,
+                fontWeight: 300,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              "Read Chapter 7 on a flight to a pitch. Walked in and closed a $2.4M engagement the
+              next morning using only the Dead Zone framework."
+            </p>
+            <p
+              style={{
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 13,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: '#B8933A',
+                marginTop: 14,
+                margin: '14px 0 0',
+                fontWeight: 500,
+              }}
+            >
+              Travis Holaway · President, Coda Strategy
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
+            {BADGES.map((b) => (
+              <span key={b} className="br-badge">
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="br-right">
+          <form
+            action="mailto:beta@mabbly.com"
+            style={{
+              background: '#fff',
+              border: '1px solid rgba(184,147,58,0.2)',
+              borderRadius: 6,
+              padding: '40px 36px',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 13,
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: 'rgba(42,26,8,0.5)',
+                marginBottom: 24,
+                fontWeight: 500,
+              }}
+            >
+              Request a Beta Seat
+            </div>
+            <input
+              className="br-input"
+              type="text"
+              name="firm"
+              placeholder="Firm name"
+              style={inputStyle}
+            />
+            <input
+              className="br-input"
+              type="email"
+              name="email"
+              placeholder="Work email"
+              style={inputStyle}
+            />
+            <button
+              type="submit"
+              style={{
+                background: '#B8933A',
+                color: '#fff',
+                borderRadius: 3,
+                padding: '16px',
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 15,
+                letterSpacing: '0.08em',
+                width: '100%',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 500,
+              }}
+            >
+              Request a Seat
+            </button>
+            <p
+              style={{
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 13,
+                color: 'rgba(42,26,8,0.4)',
+                textAlign: 'center',
+                marginTop: 14,
+                margin: '14px 0 0',
+                fontWeight: 400,
+              }}
+            >
+              25 seats per cohort · Priority: active PS BD teams
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}

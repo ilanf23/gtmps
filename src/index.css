@@ -117,6 +117,27 @@
 .stagger-children > .scroll-reveal:nth-child(5) { transition-delay: 240ms; }
 .stagger-children > .scroll-reveal:nth-child(6) { transition-delay: 300ms; }
 
+/* Book section · slow leftward slide of the words when the section reveals */
+.book-words-slide.scroll-reveal {
+  opacity: 1;
+  transform: translateX(0);
+  transition: transform 2.5s ease-out;
+}
+.book-words-slide.scroll-reveal.reveal-pending {
+  opacity: 1;
+  transform: translateX(0);
+}
+.book-words-slide.scroll-reveal.visible {
+  transform: translateX(-0.5in);
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-words-slide.scroll-reveal,
+  .book-words-slide.scroll-reveal.visible {
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Gold pulse for nav button */
 @keyframes goldPulse {
   0%, 100% { box-shadow: none; }
@@ -376,4 +397,17 @@ select.custom-select {
     animation: none !important;
   }
   .word-rise { opacity: 1; transform: none; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes growRule {
+  from { width: 0; }
+  to   { width: 28px; }
+}
+@keyframes barFill {
+  from { width: 0; }
+  to   { width: var(--target-w); }
 }
