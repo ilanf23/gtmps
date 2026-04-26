@@ -253,16 +253,21 @@ Deno.serve(async (req) => {
       .update({ status: "processing" })
       .eq("slug", slug);
 
-    // 3. Parallel fetches — website + LinkedIn (both via Jina Reader)
-    const [websiteResult, linkedinResult] = await Promise.allSettled([
+    // 3. Parallel fetches — website + LinkedIn (Jina Reader) + raw HTML for branding
+    const [websiteResult, linkedinResult, brandingResult] = await Promise.allSettled([
       fetchViaJina(submission.website_url, 6000),
       fetchViaJina(submission.linkedin_url, 4000),
+      extractBranding(submission.website_url),
     ]);
 
     const website_content =
       websiteResult.status === "fulfilled" ? websiteResult.value : "";
     const linkedin_markdown =
       linkedinResult.status === "fulfilled" ? linkedinResult.value : "";
+    const branding: ClientBranding =
+      brandingResult.status === "fulfilled"
+        ? brandingResult.value
+        : { logoUrl: null, brandColor: null, companyName: null };
 
     const linkedin_data: Record<string, unknown> = linkedin_markdown
       ? { source: "jina_reader", markdown: linkedin_markdown }
