@@ -202,7 +202,7 @@ export default function MagnetSite() {
 
   if (status === 'loading') {
     return (
-      <MagnetShell firstName={firstName}>
+      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
         <div className="flex-1 flex items-center justify-center">
           <div
             className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
@@ -215,7 +215,7 @@ export default function MagnetSite() {
 
   if (status === 'complete') {
     return (
-      <MagnetShell firstName={firstName}>
+      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
         <MagnetBreakdown slug={slug!} />
       </MagnetShell>
     );
@@ -223,7 +223,7 @@ export default function MagnetSite() {
 
   if (status === 'error') {
     return (
-      <MagnetShell firstName={firstName}>
+      <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
           <p className="text-xs uppercase tracking-[0.32em] text-[#B8933A] mb-4">
             SOMETHING WENT WRONG
@@ -244,7 +244,7 @@ export default function MagnetSite() {
 
   // Processing UI (pending | processing)
   return (
-    <MagnetShell firstName={firstName}>
+    <MagnetShell firstName={firstName} clientLogoUrl={clientLogoUrl} clientBrandColor={clientBrandColor} clientCompanyName={clientCompanyName}>
       <MagnetLoadingScene
         firstName={firstName}
         stepIndex={stepIndex}
