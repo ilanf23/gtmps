@@ -144,16 +144,6 @@ const ORBIT_NAMES = [
 
 const LAYERS = ["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"];
 
-const formatDeadZone = (n: number | null): string => {
-  if (!n || n <= 0) return "—";
-  if (n >= 1_000_000) {
-    const m = n / 1_000_000;
-    return `$${m >= 10 ? Math.round(m) : m.toFixed(1)}M`;
-  }
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
-  return `$${n.toLocaleString()}`;
-};
-
 const splitAction = (text: string): { title: string; description: string } => {
   const trimmed = text.trim();
   // Try splitting on first sentence-ending punctuation
