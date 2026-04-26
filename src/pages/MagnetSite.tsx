@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MagnetBreakdown from '@/components/magnet/MagnetBreakdown';
+import MagnetShell from '@/components/magnet/MagnetShell';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
@@ -180,75 +181,85 @@ export default function MagnetSite() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-[#120D05] flex items-center justify-center">
-        <div
-          className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
-          aria-label="Loading"
-        />
-      </div>
+      <MagnetShell firstName={firstName}>
+        <div className="flex-1 flex items-center justify-center">
+          <div
+            className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
+            aria-label="Loading"
+          />
+        </div>
+      </MagnetShell>
     );
   }
 
   if (status === 'complete') {
-    return <MagnetBreakdown slug={slug!} />;
+    return (
+      <MagnetShell firstName={firstName}>
+        <MagnetBreakdown slug={slug!} />
+      </MagnetShell>
+    );
   }
 
   if (status === 'error') {
     return (
-      <div className="min-h-screen bg-[#120D05] text-[#F5EFE0] flex flex-col items-center justify-center px-6">
-        <p className="text-xs uppercase tracking-[0.32em] text-[#B8933A] mb-4">
-          SOMETHING WENT WRONG
-        </p>
-        <p className="text-lg text-center max-w-md mb-8 opacity-80">
-          We couldn't generate your breakdown. Please try again.
-        </p>
-        <button
-          onClick={() => navigate('/assess')}
-          className="h-12 px-8 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors"
-        >
-          Try Again
-        </button>
-      </div>
+      <MagnetShell firstName={firstName}>
+        <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
+          <p className="text-xs uppercase tracking-[0.32em] text-[#B8933A] mb-4">
+            SOMETHING WENT WRONG
+          </p>
+          <p className="text-lg text-center max-w-md mb-8 opacity-80">
+            We couldn't generate your breakdown. Please try again.
+          </p>
+          <button
+            onClick={() => navigate('/assess')}
+            className="h-12 px-8 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </MagnetShell>
     );
   }
 
   // Processing UI (pending | processing)
   return (
-    <div className="min-h-screen bg-[#120D05] text-[#F5EFE0] flex flex-col items-center justify-center px-6">
-      <style>{`
-        @keyframes magnet-bar-fill {
-          0% { width: 0%; }
-          100% { width: 100%; }
-        }
-        .magnet-bar-fill {
-          animation: magnet-bar-fill 4s linear infinite;
-        }
-      `}</style>
+    <MagnetShell firstName={firstName}>
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
+        <style>{`
+          @keyframes magnet-bar-fill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+          }
+          .magnet-bar-fill {
+            animation: magnet-bar-fill 4s linear infinite;
+          }
+        `}</style>
 
-      <h1 className="text-xl md:text-2xl font-semibold text-center max-w-xl mb-12">
-        {firstName
-          ? `Hey ${firstName} — we're building your map.`
-          : 'Building your GTM breakdown…'}
-      </h1>
+        <h1 className="text-xl md:text-2xl font-semibold text-center max-w-xl mb-12">
+          {firstName
+            ? `Hey ${firstName} — we're building your map.`
+            : 'Building your GTM breakdown…'}
+        </h1>
 
-      <div className="w-full max-w-md flex flex-col items-center">
-        <p
-          className="text-[#B8933A] text-sm uppercase tracking-widest text-center min-h-[1.5rem] transition-opacity duration-300"
-          style={{ opacity: stepVisible ? 1 : 0 }}
-          key={stepIndex}
-        >
-          {STEPS[stepIndex]}
-        </p>
-
-        <div className="mt-6 w-full h-[2px] bg-white/10 overflow-hidden">
-          <div
+        <div className="w-full max-w-md flex flex-col items-center">
+          <p
+            className="text-[#B8933A] text-sm uppercase tracking-widest text-center min-h-[1.5rem] transition-opacity duration-300"
+            style={{ opacity: stepVisible ? 1 : 0 }}
             key={stepIndex}
-            className="h-full bg-[#B8933A] magnet-bar-fill"
-          />
-        </div>
-      </div>
+          >
+            {STEPS[stepIndex]}
+          </p>
 
-      <div className="mt-16 w-2 h-2 rounded-full bg-[#B8933A] animate-pulse" aria-hidden />
-    </div>
+          <div className="mt-6 w-full h-[2px] bg-white/10 overflow-hidden">
+            <div
+              key={stepIndex}
+              className="h-full bg-[#B8933A] magnet-bar-fill"
+            />
+          </div>
+        </div>
+
+        <div className="mt-16 w-2 h-2 rounded-full bg-[#B8933A] animate-pulse" aria-hidden />
+      </div>
+    </MagnetShell>
   );
 }
