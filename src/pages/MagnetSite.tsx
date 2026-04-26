@@ -226,42 +226,12 @@ export default function MagnetSite() {
   // Processing UI (pending | processing)
   return (
     <MagnetShell firstName={firstName}>
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
-        <style>{`
-          @keyframes magnet-bar-fill {
-            0% { width: 0%; }
-            100% { width: 100%; }
-          }
-          .magnet-bar-fill {
-            animation: magnet-bar-fill 4s linear infinite;
-          }
-        `}</style>
-
-        <h1 className="text-xl md:text-2xl font-semibold text-center max-w-xl mb-12">
-          {firstName
-            ? `Hey ${firstName} — we're building your map.`
-            : 'Building your GTM breakdown…'}
-        </h1>
-
-        <div className="w-full max-w-md flex flex-col items-center">
-          <p
-            className="text-[#B8933A] text-sm uppercase tracking-widest text-center min-h-[1.5rem] transition-opacity duration-300"
-            style={{ opacity: stepVisible ? 1 : 0 }}
-            key={stepIndex}
-          >
-            {STEPS[stepIndex]}
-          </p>
-
-          <div className="mt-6 w-full h-[2px] bg-black/10 overflow-hidden">
-            <div
-              key={stepIndex}
-              className="h-full bg-[#B8933A] magnet-bar-fill"
-            />
-          </div>
-        </div>
-
-        <div className="mt-16 w-2 h-2 rounded-full bg-[#B8933A] animate-pulse" aria-hidden />
-      </div>
+      <MagnetLoadingScene
+        firstName={firstName}
+        stepIndex={stepIndex}
+        stepVisible={stepVisible}
+        steps={STEPS}
+      />
     </MagnetShell>
   );
 }
