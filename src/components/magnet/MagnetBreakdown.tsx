@@ -185,6 +185,19 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                 src={data.client_logo_url}
                 alt={data.client_company_name ? `${data.client_company_name} logo` : "Logo"}
                 className="h-10 w-auto max-w-[200px] object-contain"
+                onLoad={(e) => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  const w = img.naturalWidth;
+                  const h = img.naturalHeight;
+                  if (!w || !h) return;
+                  const ratio = w / h;
+                  // Real logos sit roughly between 1:2 (tall) and 5:1 (wide).
+                  // Anything outside that range is almost certainly a banner
+                  // or social-share photo masquerading as a logo.
+                  if (ratio > 5 || ratio < 0.5) {
+                    img.style.display = "none";
+                  }
+                }}
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}
