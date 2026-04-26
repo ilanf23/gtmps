@@ -228,29 +228,96 @@ ${JSON.stringify(linkedin_data)}`;
       return json({ success: false, error: errMsg }, 500);
     }
 
-    // 6. Insert breakdown
+    // 6. Map new prompt schema → existing DB columns (keeps UI + chatbot working)
+    const asString = (v: unknown): string | null =>
+      typeof v === "string" && v.trim() ? v : null;
+
+    const formula = (parsed.formulaAnalysis ?? {}) as Record<string, unknown>;
+    const deadZone = (parsed.deadZone ?? {}) as Record<string, unknown>;
+    const layerRec = (parsed.layerRecommendation ?? {}) as Record<string, unknown>;
+    const orbitsArr = Array.isArray(parsed.orbits)
+      ? (parsed.orbits as Array<Record<string, unknown>>)
+      : [];
+    const orbitDesc = (idx: number): string | null => {
+      const o = orbitsArr[idx];
+      if (!o) return null;
+      const status = typeof o.status === "string" ? o.status : "";
+      const desc = typeof o.description === "string" ? o.description : "";
+      return [status ? `[${status}]` : "", desc].filter(Boolean).join(" ").trim() || null;
+    };
+
+    const quickWins = Array.isArray(parsed.quickWins)
+      ? (parsed.quickWins as Array<Record<string, unknown>>)
+      : [];
+    const quickWinAt = (idx: number): string | null => {
+      const w = quickWins[idx];
+      if (!w) return null;
+      const title = typeof w.title === "string" ? w.title : "";
+      const desc = typeof w.description === "string" ? w.description : "";
+      return [title, desc].filter(Boolean).join(" — ") || null;
+    };
+
+    // Parse "$1.8M" / "$250,000" → integer dollars
+    const parseDollarEstimate = (s: unknown): number | null => {
+      if (typeof s === "number") return Math.round(s);
+      if (typeof s !== "string") return null;
+      const m = s.replace(/,/g, "").match(/\$?\s*([\d.]+)\s*([kKmMbB])?/);
+      if (!m) return null;
+      const n = parseFloat(m[1]);
+      if (!isFinite(n)) return null;
+      const mult = m[2]?.toLowerCase() === "k" ? 1_000
+        : m[2]?.toLowerCase() === "m" ? 1_000_000
+        : m[2]?.toLowerCase() === "b" ? 1_000_000_000
+        : 1;
+      return Math.round(n * mult);
+    };
+
+    const calloutsRaw = Array.isArray(parsed.chapterCallouts)
+      ? (parsed.chapterCallouts as Array<Record<string, unknown>>)
+      : [];
+    const mappedCallouts = calloutsRaw.slice(0, 3).map((c) => {
+      const num = c.chapterNumber;
+      const chapter = typeof num === "number"
+        ? `Ch.${num}`
+        : (typeof c.chapter === "string" ? c.chapter : "Ch.");
+      return {
+        chapter,
+        callout: typeof c.callout === "string" ? c.callout : "",
+      };
+    });
+
+    // Welcome message: prefer headline + subheadline
+    const welcome = [asString(parsed.headline), asString(parsed.subheadline)]
+      .filter(Boolean)
+      .join(" — ") || null;
+
+    // Observed: signal + context. Assessment: proof + verdict + closing.
+    const observed = [asString(formula.signal), asString(formula.context)]
+      .filter(Boolean)
+      .join(" ") || null;
+    const assessment = [
+      asString(formula.proof),
+      asString(formula.verdict),
+      asString(parsed.closingLine),
+    ].filter(Boolean).join(" ") || null;
+
     const breakdownRow = {
       slug,
-      welcome_message: parsed.welcome_message ?? null,
-      dead_zone_value:
-        typeof parsed.dead_zone_value === "number"
-          ? parsed.dead_zone_value
-          : Number(parsed.dead_zone_value) || null,
-      dead_zone_reasoning: parsed.dead_zone_reasoning ?? null,
-      gtm_profile_observed: parsed.gtm_profile_observed ?? null,
-      gtm_profile_assessment: parsed.gtm_profile_assessment ?? null,
-      orbit_01: parsed.orbit_01 ?? null,
-      orbit_02: parsed.orbit_02 ?? null,
-      orbit_03: parsed.orbit_03 ?? null,
-      orbit_04: parsed.orbit_04 ?? null,
-      orbit_05: parsed.orbit_05 ?? null,
-      recommended_layer: parsed.recommended_layer ?? null,
-      action_1: parsed.action_1 ?? null,
-      action_2: parsed.action_2 ?? null,
-      action_3: parsed.action_3 ?? null,
-      chapter_callouts: Array.isArray(parsed.chapter_callouts)
-        ? parsed.chapter_callouts
-        : [],
+      welcome_message: welcome,
+      dead_zone_value: parseDollarEstimate(deadZone.estimate),
+      dead_zone_reasoning: asString(deadZone.description),
+      gtm_profile_observed: observed,
+      gtm_profile_assessment: assessment,
+      orbit_01: orbitDesc(0),
+      orbit_02: orbitDesc(1),
+      orbit_03: orbitDesc(2),
+      orbit_04: orbitDesc(3),
+      orbit_05: orbitDesc(4),
+      recommended_layer: asString(layerRec.startHere),
+      action_1: quickWinAt(0),
+      action_2: quickWinAt(1),
+      action_3: quickWinAt(2),
+      chapter_callouts: mappedCallouts,
       raw_website_content: website_content || null,
       raw_linkedin_data: linkedin_data,
       enrichment_error: null,
