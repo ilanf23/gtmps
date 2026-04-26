@@ -188,6 +188,20 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json().catch(() => ({}));
     slug = body?.slug;
+    const crmSize: string | null =
+      typeof body?.crmSize === "string" ? body.crmSize : null;
+    const dealSize: string | null =
+      typeof body?.dealSize === "string" ? body.dealSize : null;
+    const bdChallenge: string | null =
+      typeof body?.bdChallenge === "string" ? body.bdChallenge : null;
+    const caseStudiesUrl: string | null =
+      typeof body?.caseStudiesUrl === "string" && body.caseStudiesUrl
+        ? body.caseStudiesUrl
+        : null;
+    const teamPageUrl: string | null =
+      typeof body?.teamPageUrl === "string" && body.teamPageUrl
+        ? body.teamPageUrl
+        : null;
 
     if (!slug || typeof slug !== "string") {
       return json({ success: false, error: "Missing or invalid slug" }, 400);
