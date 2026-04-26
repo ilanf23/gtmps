@@ -145,34 +145,163 @@ function frequency(values: string[]): Map<string, number> {
 
 // ---- Logo extraction --------------------------------------------------------
 
-function findLogoUrl(html: string, baseUrl: string): string | null {
-  // Priority: explicit logo <img> > apple-touch-icon > og:image > svg logo
-  const candidates = [
+/**
+ * Pull a `sizes` attribute (e.g. "96x96" or "any") from a <link> tag's full
+ * match and return the largest dimension found, or 0 when missing.
+ */
+function parseIconSize(tagFragment: string): number {
+  const m = tagFragment.match(/sizes=["']([^"']+)["']/i);
+  if (!m) return 0;
+  const dims = m[1].toLowerCase().match(/(\d+)x(\d+)/g);
+  if (!dims) return m[1].includes("any") ? 9999 : 0;
+  let max = 0;
+  for (const d of dims) {
+    const [w, h] = d.split("x").map((n) => parseInt(n, 10));
+    max = Math.max(max, w, h);
+  }
+  return max;
+}
+
+/**
+ * Look for an inline <svg> inside <header> or <nav>. Returns a data URL when
+ * found and the SVG payload is small enough to embed safely.
+ */
+function findInlineHeaderSvg(html: string): string | null {
+  const headerMatch = html.match(/<(header|nav)[^>]*>([\s\S]{0,15000}?)<\/\1>/i);
+  if (!headerMatch) return null;
+  const svgMatch = headerMatch[2].match(/<svg[\s\S]*?<\/svg>/i);
+  if (!svgMatch) return null;
+  const svg = svgMatch[0];
+  if (svg.length > 25_000) return null;
+  // Skip tiny icon SVGs (likely menu/search icons, not the brand mark).
+  // Heuristic: a real logo svg usually has a viewBox wider than 40 units.
+  const vb = svg.match(/viewBox=["']\s*[\d.\-]+\s+[\d.\-]+\s+([\d.]+)\s+([\d.]+)/i);
+  if (vb) {
+    const w = parseFloat(vb[1]);
+    if (w < 40) return null;
+  }
+  // Encode as data URL.
+  const encoded = encodeURIComponent(svg).replace(/'/g, "%27").replace(/"/g, "%22");
+  return `data:image/svg+xml;charset=utf-8,${encoded}`;
+}
+
+/**
+ * Validate a remote logo URL via HEAD: must be a logo-friendly content type
+ * and small (<500KB). Returns the URL when OK, null when not.
+ */
+async function validateLogoAsset(url: string): Promise<string | null> {
+  // Data URLs are produced by us, no network check needed.
+  if (url.startsWith("data:")) return url;
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4_000);
+    const res = await fetch(url, {
+      method: "HEAD",
+      signal: ctrl.signal,
+      redirect: "follow",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (compatible; MabblyBrandingBot/1.0; +https://mabbly.com)",
+      },
+    });
+    clearTimeout(t);
+    if (!res.ok) return null;
+    const ct = (res.headers.get("content-type") ?? "").toLowerCase();
+    const allowed = [
+      "image/svg+xml",
+      "image/png",
+      "image/webp",
+      "image/x-icon",
+      "image/vnd.microsoft.icon",
+      "image/avif",
+    ];
+    // JPEG is intentionally excluded — real logos virtually never ship as JPEG,
+    // and this is the format used by social-share photos.
+    if (!allowed.some((a) => ct.includes(a))) return null;
+    const len = parseInt(res.headers.get("content-length") ?? "0", 10);
+    if (len && len > 500_000) return null;
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+async function findLogoUrl(html: string, baseUrl: string): Promise<string | null> {
+  // 1. <img> explicitly tagged as a logo (alt/class/id), either attr order.
+  const explicitImg =
     pickAttr(
       html,
       /<img[^>]+(?:alt|class|id)=["'][^"']*\blogo\b[^"']*["'][^>]*src=["']([^"']+)["']/i,
-    ),
+    ) ||
     pickAttr(
       html,
       /<img[^>]+src=["']([^"']+)["'][^>]+(?:alt|class|id)=["'][^"']*\blogo\b[^"']*["']/i,
-    ),
-    pickAttr(
-      html,
-      /<link[^>]+rel=["'](?:apple-touch-icon|apple-touch-icon-precomposed)["'][^>]+href=["']([^"']+)["']/i,
-    ),
-    pickAttr(
-      html,
-      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
-    ),
-    pickAttr(
-      html,
-      /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
-    ),
+    );
+
+  // 2. Inline <svg> inside header/nav — almost always the brand mark.
+  const inlineSvg = findInlineHeaderSvg(html);
+
+  // 3. <img> whose src filename screams "logo".
+  const logoFilenameImg = pickAttr(
+    html,
+    /<img[^>]+src=["']([^"']*\/?[^"'\/]*logo[^"'\/]*\.(?:svg|png|webp))["']/i,
+  );
+
+  // 4. SVG favicon — vector favicons are virtually always the real mark.
+  const svgIconLink = (() => {
+    const m = html.match(
+      /<link[^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]+type=["']image\/svg\+xml["'][^>]+href=["']([^"']+)["']/i,
+    ) || html.match(
+      /<link[^>]+type=["']image\/svg\+xml["'][^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]+href=["']([^"']+)["']/i,
+    );
+    return m?.[1] ?? null;
+  })();
+
+  // 5. Safari mask-icon (always a designed SVG mark).
+  const maskIcon = pickAttr(
+    html,
+    /<link[^>]+rel=["']mask-icon["'][^>]+href=["']([^"']+)["']/i,
+  );
+
+  // 6. apple-touch-icon (square, designed asset).
+  const appleTouch = pickAttr(
+    html,
+    /<link[^>]+rel=["'](?:apple-touch-icon|apple-touch-icon-precomposed)["'][^>]+href=["']([^"']+)["']/i,
+  );
+
+  // 7. <link rel="icon"> only when it carries a usable size (skip 16/32 favicons).
+  const sizedIcon = (() => {
+    const re = /<link[^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]*>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html)) !== null) {
+      const tag = m[0];
+      const size = parseIconSize(tag);
+      if (size >= 96) {
+        const href = pickAttr(tag, /href=["']([^"']+)["']/i);
+        if (href) return href;
+      }
+    }
+    return null;
+  })();
+
+  // og:image / twitter:image are deliberately NOT in this list — they are
+  // landscape marketing photos, not logos.
+  const candidates = [
+    explicitImg,
+    inlineSvg, // already a data URL — bypasses HEAD validation
+    logoFilenameImg,
+    svgIconLink,
+    maskIcon,
+    appleTouch,
+    sizedIcon,
   ].filter((v): v is string => Boolean(v));
 
   for (const c of candidates) {
+    if (c.startsWith("data:")) return c;
     const resolved = resolveUrl(c, baseUrl);
-    if (resolved) return resolved;
+    if (!resolved) continue;
+    const ok = await validateLogoAsset(resolved);
+    if (ok) return ok;
   }
   return null;
 }
@@ -304,7 +433,7 @@ export async function extractBrandProfile(
   }
 
   // ---- Logo, font, name ----
-  const logoUrl = findLogoUrl(html, websiteUrl);
+  const logoUrl = await findLogoUrl(html, websiteUrl);
   const fontFamily = findFontFamily(html, css);
 
   const siteName =

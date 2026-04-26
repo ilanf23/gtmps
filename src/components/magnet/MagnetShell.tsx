@@ -100,6 +100,18 @@ export default function MagnetShell({
                   alt={theme.companyName ? `${theme.companyName} logo` : "Client logo"}
                   className="h-7 w-auto max-w-[160px] object-contain"
                   loading="lazy"
+                  onLoad={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    const w = img.naturalWidth;
+                    const h = img.naturalHeight;
+                    if (!w || !h) return;
+                    const ratio = w / h;
+                    // Hide anything that isn't shaped like a logo —
+                    // banners (>5:1) and tall portraits (<1:2) are out.
+                    if (ratio > 5 || ratio < 0.5) {
+                      img.style.display = "none";
+                    }
+                  }}
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).style.display = "none";
                   }}
