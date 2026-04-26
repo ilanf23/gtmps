@@ -653,7 +653,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 8: CTA */}
         <section className="py-16">
-          <div className="bg-[#120D05] text-[#FBF8F4] p-8 md:p-10 relative overflow-hidden">
+          <div className="bg-transparent text-[#FBF8F4] p-8 md:p-10 relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#B8933A] to-transparent opacity-60" aria-hidden />
             <div className="flex items-center gap-2 mb-4">
               <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
@@ -670,15 +670,15 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
             {/* Session detail strip */}
             <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10 mb-8">
-              <div className="bg-[#120D05] p-4">
+              <div className="bg-transparent p-4">
                 <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Length</p>
                 <p className="text-sm font-semibold">90 minutes</p>
               </div>
-              <div className="bg-[#120D05] p-4">
+              <div className="bg-transparent p-4">
                 <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Output</p>
                 <p className="text-sm font-semibold">90-day plan</p>
               </div>
-              <div className="bg-[#120D05] p-4">
+              <div className="bg-transparent p-4">
                 <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Cost</p>
                 <p className="text-sm font-semibold">No pitch</p>
               </div>
