@@ -1048,6 +1048,7 @@ const About = () => {
                       </li>
                     ))}
                   </ul>
+                  <FounderMarks name={p.name} />
                 </div>
               ))}
             </div>
