@@ -645,32 +645,123 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 06 — THE AWARDS (cream) ── */}
+        {/* ── 06 — THE AWARDS (cream) — text + trophy mini-sculpture ── */}
         <section id="awards" style={{ background: "#FBF8F4", color: "#0D1117", padding: "120px 24px" }}>
-          <div className="max-w-[920px] mx-auto">
-            <p style={eyebrowStyle}>The Recognition</p>
-            <h2 style={h2Light}>Awards built for the firms that win unfairly.</h2>
-            <p style={bodyLight}>
-              Eight awards. One per vertical. Named in your industry's vocabulary. The Origination Award for law. The Practice Growth Award for consulting. The New Business Award for agencies. Inaugural cohort Q3 2026. Your firm is considered by default when you take the diagnostic.
-            </p>
-            <Link
-              to="/awards"
-              style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(184,147,58,0.65)" }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(184,147,58,0.12)";
-                e.currentTarget.style.color = "#5E4810";
-                e.currentTarget.style.borderColor = "#B8933A";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#8A6B1F";
-                e.currentTarget.style.borderColor = "rgba(184,147,58,0.65)";
-              }}
-            >
-              See the awards →
+          <div className="max-w-[1100px] mx-auto awards-grid">
+            <style>{`
+              .awards-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 48px;
+                align-items: center;
+                justify-items: center;
+              }
+              @media (min-width: 768px) {
+                .awards-grid {
+                  grid-template-columns: 1fr 200px;
+                  gap: 64px;
+                  justify-items: start;
+                }
+                .awards-grid > .awards-trophy-link { justify-self: end; }
+              }
+              .awards-trophy-link {
+                display: block;
+                text-decoration: none;
+                transition: transform 400ms ease;
+              }
+              .awards-trophy-link:hover { transform: scale(1.05); }
+              .at-mini {
+                position: relative;
+                width: 140px;
+                height: 140px;
+                filter: drop-shadow(0 24px 48px rgba(184,147,58,0.28));
+              }
+              @media (min-width: 768px) {
+                .at-mini { width: 200px; height: 200px; }
+              }
+              .at-ring {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                border: 1px solid rgba(184,147,58,0.9);
+                animation: atSpin 60s linear infinite;
+              }
+              .at-ring.r2 {
+                inset: 14%;
+                border-color: rgba(184,147,58,0.55);
+                animation-duration: 80s;
+                animation-direction: reverse;
+              }
+              .at-ring.r3 {
+                inset: 30%;
+                border-color: rgba(184,147,58,0.3);
+                animation-duration: 100s;
+              }
+              @keyframes atSpin { to { transform: rotate(360deg); } }
+              .at-dot {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #D4AE48, #B8933A);
+                box-shadow: 0 0 12px rgba(212,174,72,0.6);
+              }
+              .at-dot.d1 { top: -4px; left: 50%; transform: translateX(-50%); }
+              .at-dot.d2 { bottom: 14%; right: 6%; width: 6px; height: 6px; }
+              .at-dot.core {
+                inset: 44%;
+                width: auto;
+                height: auto;
+                background: radial-gradient(circle, #F5EFE0, #B8933A 70%);
+                box-shadow: 0 0 24px rgba(212,174,72,0.75);
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .at-ring { animation: none; }
+                .awards-trophy-link:hover { transform: none; }
+              }
+            `}</style>
+            <div>
+              <p style={eyebrowStyle}>The Recognition</p>
+              <h2 style={h2Light}>Awards built for the firms that win unfairly.</h2>
+              <p style={bodyLight}>
+                Eight awards. One per vertical. Named in your industry's vocabulary. The Origination Award for law. The Practice Growth Award for consulting. The New Business Award for agencies. Inaugural cohort Q3 2026. Your firm is considered by default when you take the diagnostic.
+              </p>
+              <Link
+                to="/awards"
+                style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(184,147,58,0.65)" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(184,147,58,0.12)";
+                  e.currentTarget.style.color = "#5E4810";
+                  e.currentTarget.style.borderColor = "#B8933A";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "#8A6B1F";
+                  e.currentTarget.style.borderColor = "rgba(184,147,58,0.65)";
+                }}
+              >
+                See the awards →
+              </Link>
+            </div>
+            <Link to="/awards" className="awards-trophy-link" aria-label="See the inaugural GTM for Professional Services Awards">
+              <div className="at-mini" aria-hidden>
+                <div className="at-ring r1" />
+                <div className="at-ring r2" />
+                <div className="at-ring r3" />
+                <div className="at-dot core" />
+                <div className="at-dot d1" />
+                <div className="at-dot d2" />
+              </div>
             </Link>
           </div>
         </section>
+
+        {/* Pull quote B — between awards (06) and agency (07) */}
+        <PullQuoteBlock
+          id="pq-b"
+          quote="The Dead Zone is not a CRM problem. It is an avoidance problem. The contacts are there. The trust is there. The only thing missing is the willingness to pick up the phone."
+          attribution="Richard Ashbaugh · Chapter 7"
+        />
 
         {/* ── 07 — THE AGENCY (dark) ── */}
         <section id="agency" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
