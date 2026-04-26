@@ -70,10 +70,23 @@ export default function MagnetShell({
     ...(theme.fontFamily ? { ["--ms-font" as never]: `"${theme.fontFamily}"` } : {}),
   };
 
+  // Detect a dark client background so the override sheet can strengthen
+  // borders, surfaces and prose contrast under [data-ms-themed][data-ms-dark].
+  const isDarkBg = (() => {
+    const m = theme.background.match(/^#([0-9a-f]{6})$/i);
+    if (!m) return false;
+    const r = parseInt(m[1].slice(0, 2), 16);
+    const g = parseInt(m[1].slice(2, 4), 16);
+    const b = parseInt(m[1].slice(4, 6), 16);
+    // Quick perceptual luminance check.
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.5;
+  })();
+
   return (
     <div
       className="min-h-screen flex flex-col"
       data-ms-themed
+      data-ms-dark={isDarkBg ? "" : undefined}
       data-ms-font={theme.fontFamily ? "" : undefined}
       style={wrapperStyle}
     >

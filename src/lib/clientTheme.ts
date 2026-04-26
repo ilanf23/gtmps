@@ -105,6 +105,14 @@ export interface RawBranding {
  * is missing or invalid falls back to the Mabbly default — so existing
  * microsites without extracted branding still look right.
  */
+/** WCAG contrast ratio between two hex colors (1–21). */
+function contrastRatio(a: string, b: string): number {
+  const la = relLuminance(a);
+  const lb = relLuminance(b);
+  const [hi, lo] = la > lb ? [la, lb] : [lb, la];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
 export function buildClientTheme(raw: RawBranding | null | undefined): ClientTheme {
   if (!raw) return MABBLY_DEFAULTS;
 
@@ -115,11 +123,20 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     ? expandHex(raw.client_background_color)
     : MABBLY_DEFAULTS.background;
 
-  const text = isHex(raw.client_text_color)
+  const bgIsDark = relLuminance(background) < 0.5;
+
+  let text = isHex(raw.client_text_color)
     ? expandHex(raw.client_text_color)
-    : relLuminance(background) > 0.55
-      ? MABBLY_DEFAULTS.text
-      : "#F5EFE6";
+    : bgIsDark
+      ? "#FFFFFF"
+      : MABBLY_DEFAULTS.text;
+
+  // Contrast guard: if extracted text doesn't read against the extracted bg,
+  // override with high-contrast white/near-black so the microsite stays
+  // legible. WCAG AA large-text threshold is 3.0; we aim higher (3.5+).
+  if (contrastRatio(text, background) < 3.5) {
+    text = bgIsDark ? "#FFFFFF" : "#0F0F0F";
+  }
 
   const accentForeground = pickForeground(accent);
 
@@ -130,10 +147,12 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     accentHover: darken(accent, 0.14),
     accentForeground,
     background,
-    surface: rgba(text, 0.06),
+    // On dark backgrounds the surface tint needs more presence, otherwise
+    // cards and chat bubbles vanish into the black.
+    surface: rgba(text, bgIsDark ? 0.08 : 0.06),
     text,
     textMuted: rgba(text, 0.6),
-    border: rgba(text, 0.12),
+    border: rgba(text, bgIsDark ? 0.18 : 0.12),
     fontFamily: raw.client_font_family?.trim() || null,
   };
 }

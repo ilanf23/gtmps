@@ -108,3 +108,34 @@
     font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important;
   }
 }
+
+/* ============================================================
+   DARK CLIENT BACKGROUNDS
+   When the extracted client background is dark (e.g. idea2result.com's
+   near-black), the warm-editorial defaults read as washed-out grays.
+   These rules increase surface tints, border opacity, and prose contrast
+   so cards, dividers and chat bubbles stay legible on black.
+   ============================================================ */
+[data-ms-themed][data-ms-dark] {
+  /* Stronger surface tints — the cream-on-dark default is invisible. */
+  & .bg-\[\#F2EBDC\]            { background-color: color-mix(in srgb, var(--ms-text) 8%, transparent) !important; }
+  & .bg-black\/5                { background-color: color-mix(in srgb, var(--ms-text) 10%, transparent) !important; }
+  & .bg-black\/\[0\.03\]        { background-color: color-mix(in srgb, var(--ms-text) 6%, transparent) !important; }
+
+  /* Stronger borders so dividers and card edges remain visible. */
+  & .border-black\/5            { border-color: color-mix(in srgb, var(--ms-text) 12%, transparent) !important; }
+  & .border-black\/10           { border-color: color-mix(in srgb, var(--ms-text) 18%, transparent) !important; }
+
+  /* Body text alphas — bump muted text up so it doesn't disappear. */
+  & .text-\[\#1C1008\]\/60      { color: color-mix(in srgb, var(--ms-text) 75%, transparent) !important; }
+  & .text-\[\#1C1008\]\/70      { color: color-mix(in srgb, var(--ms-text) 80%, transparent) !important; }
+  & .text-\[\#1C1008\]\/40      { color: color-mix(in srgb, var(--ms-text) 60%, transparent) !important; }
+  & .text-black\/30             { color: color-mix(in srgb, var(--ms-text) 50%, transparent) !important; }
+  & .placeholder\:text-black\/30::placeholder { color: color-mix(in srgb, var(--ms-text) 45%, transparent) !important; }
+
+  /* Prose helpers in chat assistant bubbles — keep body text the full client
+     text color, not dimmed, so paragraphs stay readable on black. */
+  & .prose :where(p, li, blockquote):not(:where([class~="not-prose"] *)) {
+    color: var(--ms-text) !important;
+  }
+}
