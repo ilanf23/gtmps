@@ -1,41 +1,110 @@
 /**
  * Microsite client-theme overrides.
  *
- * The microsite shell sets CSS variables (--ms-accent, --ms-bg, --ms-text,
- * etc.) on its root wrapper. Existing components inside the shell still use
- * the original Mabbly hex colors (#B8933A, #FBF8F4, #1C1008, #120D05) — so
- * we map those exact colors to the live theme variables here. This re-skins
- * MagnetBreakdown, BookChat, BookReader, FeedbackForm, and the loading scene
- * without rewriting every className.
+ * The microsite shell sets CSS variables on its root wrapper:
+ *   --ms-accent, --ms-accent-hover, --ms-accent-fg
+ *   --ms-bg, --ms-surface, --ms-text, --ms-text-muted, --ms-border
  *
- * Falls back to the Mabbly defaults when the variables are unset (the value
- * after each var() is the original hex), so non-microsite pages are unchanged.
+ * The microsite components were originally hardcoded to the Mabbly warm
+ * editorial palette: gold #B8933A, cream #FBF8F4, dark text #1C1008,
+ * accent foreground #120D05, surface #F2EBDC — plus generic black-based
+ * utilities (`bg-black/5`, `border-black/10`, `text-black/30`).
+ *
+ * Rather than rewrite every className across MagnetBreakdown, BookChat,
+ * BookReader, FeedbackForm, MagnetChat and MagnetLoadingScene, this file
+ * remaps every one of those concrete utilities to the live theme variables
+ * whenever a parent has `data-ms-themed` set. When the variables are unset
+ * (i.e. outside a microsite shell) the overrides simply don't apply, so the
+ * default Mabbly look is preserved on /discover and elsewhere.
+ *
+ * Color-mix is used for opacity-modified accents/text (e.g. /15, /30, /50).
  */
 
-[style*="--ms-accent"] {
-  /* ACCENT (gold by default) */
-  /* color: */
-  & .text-\[\#B8933A\],
-  & [class*="text-[#B8933A]"] { color: var(--ms-accent, #B8933A) !important; }
+[data-ms-themed] {
+  /* ============================================================
+     PAGE BACKGROUND
+     ============================================================ */
+  & .bg-\[\#FBF8F4\]            { background-color: var(--ms-bg) !important; }
+  & .bg-\[\#FBF8F4\]\/95        { background-color: color-mix(in srgb, var(--ms-bg) 95%, transparent) !important; }
+  & .bg-\[\#FBF8F4\]\/80        { background-color: color-mix(in srgb, var(--ms-bg) 80%, transparent) !important; }
+  & .bg-\[\#F2EBDC\]            { background-color: var(--ms-surface) !important; }
 
-  /* background-color: */
-  & .bg-\[\#B8933A\] { background-color: var(--ms-accent, #B8933A) !important; }
-  & .hover\:bg-\[\#a07c2e\]:hover { background-color: var(--ms-accent-hover, #a07c2e) !important; }
+  /* ============================================================
+     ACCENT (the brand color of the client)
+     ============================================================ */
+  /* Solid accent backgrounds */
+  & .bg-\[\#B8933A\]            { background-color: var(--ms-accent) !important; }
+  & .hover\:bg-\[\#a07c2e\]:hover { background-color: var(--ms-accent-hover) !important; }
 
-  /* border-color: */
-  & .border-\[\#B8933A\] { border-color: var(--ms-accent, #B8933A) !important; }
-  & [class*="border-[#B8933A]"] { border-color: var(--ms-accent, #B8933A) !important; }
+  /* Accent backgrounds with alpha */
+  & .bg-\[\#B8933A\]\/5         { background-color: color-mix(in srgb, var(--ms-accent) 5%, transparent) !important; }
+  & .bg-\[\#B8933A\]\/10        { background-color: color-mix(in srgb, var(--ms-accent) 10%, transparent) !important; }
+  & .bg-\[\#B8933A\]\/15        { background-color: color-mix(in srgb, var(--ms-accent) 15%, transparent) !important; }
+  & .hover\:bg-\[\#B8933A\]\/10:hover { background-color: color-mix(in srgb, var(--ms-accent) 10%, transparent) !important; }
 
-  /* Accent foreground (text on top of accent buttons) */
-  & .text-\[\#120D05\] { color: var(--ms-accent-fg, #120D05) !important; }
+  /* Accent text */
+  & .text-\[\#B8933A\]          { color: var(--ms-accent) !important; }
+  & .text-\[\#B8933A\]\/40      { color: color-mix(in srgb, var(--ms-accent) 40%, transparent) !important; }
+  & .prose-a\:text-\[\#B8933A\] :where(a):not(:where([class~="not-prose"] *)) { color: var(--ms-accent) !important; }
 
-  /* PAGE BACKGROUND */
-  & .bg-\[\#FBF8F4\] { background-color: var(--ms-bg, #FBF8F4) !important; }
-  & .bg-\[\#FBF8F4\]\/95 { background-color: var(--ms-bg, #FBF8F4) !important; opacity: 0.97; }
-  & .bg-\[\#FBF8F4\]\/80 { background-color: var(--ms-bg, #FBF8F4) !important; opacity: 0.85; }
-  & .bg-\[\#F2EBDC\] { background-color: var(--ms-surface, #F2EBDC) !important; }
+  /* Accent borders */
+  & .border-\[\#B8933A\]        { border-color: var(--ms-accent) !important; }
+  & .border-\[\#B8933A\]\/20    { border-color: color-mix(in srgb, var(--ms-accent) 20%, transparent) !important; }
+  & .border-\[\#B8933A\]\/30    { border-color: color-mix(in srgb, var(--ms-accent) 30%, transparent) !important; }
+  & .border-\[\#B8933A\]\/40    { border-color: color-mix(in srgb, var(--ms-accent) 40%, transparent) !important; }
+  & .border-\[\#B8933A\]\/50    { border-color: color-mix(in srgb, var(--ms-accent) 50%, transparent) !important; }
+  & .focus\:border-\[\#B8933A\]\/50:focus { border-color: color-mix(in srgb, var(--ms-accent) 50%, transparent) !important; }
+  & .focus-within\:border-\[\#B8933A\]\/50:focus-within { border-color: color-mix(in srgb, var(--ms-accent) 50%, transparent) !important; }
 
-  /* TEXT */
-  & .text-\[\#1C1008\],
-  & [class*="text-[#1C1008]"] { color: var(--ms-text, #1C1008) !important; }
+  /* ============================================================
+     ACCENT FOREGROUND (text on top of accent buttons)
+     ============================================================ */
+  & .text-\[\#120D05\]          { color: var(--ms-accent-fg) !important; }
+
+  /* ============================================================
+     BODY TEXT
+     ============================================================ */
+  & .text-\[\#1C1008\]          { color: var(--ms-text) !important; }
+  & .text-\[\#1C1008\]\/60      { color: color-mix(in srgb, var(--ms-text) 60%, transparent) !important; }
+  & .text-\[\#1C1008\]\/70      { color: color-mix(in srgb, var(--ms-text) 70%, transparent) !important; }
+  & .text-\[\#1C1008\]\/80      { color: color-mix(in srgb, var(--ms-text) 80%, transparent) !important; }
+  & .text-\[\#1C1008\]\/90      { color: color-mix(in srgb, var(--ms-text) 90%, transparent) !important; }
+  & .text-\[\#1C1008\]\/40      { color: color-mix(in srgb, var(--ms-text) 40%, transparent) !important; }
+  & .text-\[\#1C1008\]\/10      { color: color-mix(in srgb, var(--ms-text) 10%, transparent) !important; }
+
+  /* Prose helpers used in the chat assistant bubble */
+  & .prose-headings\:text-\[\#1C1008\] :where(h1,h2,h3,h4,h5,h6):not(:where([class~="not-prose"] *)) { color: var(--ms-text) !important; }
+  & .prose-strong\:text-\[\#1C1008\] :where(strong):not(:where([class~="not-prose"] *)) { color: var(--ms-text) !important; }
+
+  /* ============================================================
+     GENERIC BLACK UTILITIES — re-tinted with client text color
+     so chat bubbles, form inputs and dividers don't read grey on
+     a non-cream background.
+     ============================================================ */
+  & .bg-black\/5                { background-color: color-mix(in srgb, var(--ms-text) 5%, transparent) !important; }
+  & .bg-black\/\[0\.03\]        { background-color: color-mix(in srgb, var(--ms-text) 3%, transparent) !important; }
+  & .border-black\/5            { border-color: color-mix(in srgb, var(--ms-text) 5%, transparent) !important; }
+  & .border-black\/10           { border-color: color-mix(in srgb, var(--ms-text) 10%, transparent) !important; }
+  & .text-black\/10             { color: color-mix(in srgb, var(--ms-text) 10%, transparent) !important; }
+  & .text-black\/20             { color: color-mix(in srgb, var(--ms-text) 20%, transparent) !important; }
+  & .text-black\/30             { color: color-mix(in srgb, var(--ms-text) 30%, transparent) !important; }
+  & .placeholder\:text-black\/30::placeholder { color: color-mix(in srgb, var(--ms-text) 30%, transparent) !important; }
+
+  /* ============================================================
+     FONT FAMILY — when the shell injects --ms-font, use it
+     for all text inside the microsite (overriding Tailwind's
+     font-* utilities and shadcn defaults). The fallback chain
+     keeps things safe if the client font fails to load.
+     ============================================================ */
+  &[data-ms-font] {
+    font-family: var(--ms-font), system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  &[data-ms-font] :not(svg):not(code):not(pre):not(.font-mono):not([class*="font-mono"]) {
+    font-family: var(--ms-font), system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  /* Keep editorial italic Cormorant in the loading scene + map numerals,
+     because the breakdown design depends on the serif rhythm. */
+  &[data-ms-font] [style*="Cormorant"] {
+    font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important;
+  }
 }
