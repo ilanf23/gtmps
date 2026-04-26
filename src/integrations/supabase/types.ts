@@ -68,6 +68,9 @@ export type Database = {
           action_2: string | null
           action_3: string | null
           chapter_callouts: Json
+          client_brand_color: string | null
+          client_company_name: string | null
+          client_logo_url: string | null
           created_at: string
           dead_zone_reasoning: string | null
           dead_zone_value: number | null
@@ -91,6 +94,9 @@ export type Database = {
           action_2?: string | null
           action_3?: string | null
           chapter_callouts?: Json
+          client_brand_color?: string | null
+          client_company_name?: string | null
+          client_logo_url?: string | null
           created_at?: string
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
@@ -114,6 +120,9 @@ export type Database = {
           action_2?: string | null
           action_3?: string | null
           chapter_callouts?: Json
+          client_brand_color?: string | null
+          client_company_name?: string | null
+          client_logo_url?: string | null
           created_at?: string
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
@@ -254,6 +263,9 @@ export type Database = {
           action_2: string
           action_3: string
           chapter_callouts: Json
+          client_brand_color: string
+          client_company_name: string
+          client_logo_url: string
           dead_zone_reasoning: string
           dead_zone_value: number
           enrichment_error: string
