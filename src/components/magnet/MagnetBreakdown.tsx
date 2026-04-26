@@ -139,7 +139,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#120D05] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FBF8F4] flex items-center justify-center">
         <div
           className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
           aria-label="Loading"
@@ -150,7 +150,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-[#120D05] text-[#F5EFE0] flex items-center justify-center px-6">
+      <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008] flex items-center justify-center px-6">
         <p className="text-sm opacity-60 text-center max-w-md">
           We couldn't load your breakdown. {error ?? ""}
         </p>
@@ -173,10 +173,10 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
   const recommended = (data.recommended_layer ?? "DISCOVER").toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#120D05] text-[#F5EFE0]">
+    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
       <div className="max-w-2xl mx-auto px-6 pb-24">
         {/* SECTION 1: PERSONAL HEADER */}
-        <section className="pt-16 pb-12 border-b border-white/10">
+        <section className="pt-16 pb-12 border-b border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             YOUR PERSONALIZED RROS BREAKDOWN
           </p>
@@ -191,13 +191,13 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         </section>
 
         {/* SECTION 2: THE FORMULA / GTM ASSESSMENT */}
-        <section className="py-12 border-b border-white/10">
+        <section className="py-12 border-b border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
             THE FORMULA: SIGNAL + PROOF + CONTEXT = RESPONSE, NOT PITCH
           </p>
 
           {data.gtm_profile_observed && (
-            <div className="bg-white/5 border border-white/10 p-5 rounded-sm mb-3">
+            <div className="bg-black/5 border border-black/10 p-5 rounded-sm mb-3">
               <p className="text-[#B8933A] text-xs uppercase tracking-wider">
                 OBSERVED
               </p>
@@ -220,7 +220,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         </section>
 
         {/* SECTION 3: YOUR ORBIT MAP */}
-        <section className="py-12 border-b border-white/10">
+        <section className="py-12 border-b border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
             YOUR FIVE ORBITS
           </p>
@@ -231,7 +231,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             return (
               <div
                 key={id}
-                className="flex items-start gap-4 py-4 border-b border-white/5 last:border-b-0"
+                className="flex items-start gap-4 py-4 border-b border-black/5 last:border-b-0"
               >
                 <div className="w-8 h-8 shrink-0 rounded-full bg-[#B8933A]/15 border border-[#B8933A]/40 text-[#B8933A] flex items-center justify-center text-xs font-semibold">
                   {id}
@@ -250,7 +250,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         </section>
 
         {/* SECTION 4: YOUR DEAD ZONE */}
-        <section className="py-12 border-b border-white/10">
+        <section className="py-12 border-b border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             YOUR DEAD ZONE
           </p>
@@ -268,7 +268,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         </section>
 
         {/* SECTION 5: WHERE TO START */}
-        <section className="py-12 border-b border-white/10">
+        <section className="py-12 border-b border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
             YOUR STARTING LAYER
           </p>
@@ -281,7 +281,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                   className={
                     active
                       ? "bg-[#B8933A] text-[#120D05] font-semibold px-4 py-2 text-sm"
-                      : "bg-white/5 text-white/30 px-4 py-2 text-sm"
+                      : "bg-black/5 text-black/30 px-4 py-2 text-sm"
                   }
                 >
                   {layer}
@@ -293,7 +293,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
         {/* SECTION 6: THREE QUICK WINS */}
         {actions.length > 0 && (
-          <section className="py-12 border-b border-white/10">
+          <section className="py-12 border-b border-black/10">
             <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-6">
               THREE QUICK WINS
             </p>
@@ -320,7 +320,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         )}
 
         {/* SECTION 7: THE MANUSCRIPT */}
-        <section className="py-12 border-b border-white/10">
+        <section className="py-12 border-b border-black/10">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-8">
             THE MANUSCRIPT — RELATIONSHIP REVENUE OS
           </p>
@@ -346,7 +346,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                       {num}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#F5EFE0]">
+                      <p className="text-sm font-semibold text-[#1C1008]">
                         <span className="text-[#B8933A]">✦ </span>
                         {chapter.title}
                       </p>
@@ -372,7 +372,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             return (
               <div
                 key={chapter.number}
-                className="border border-white/5 bg-transparent mb-3"
+                className="border border-black/5 bg-transparent mb-3"
               >
                 <div className="flex items-start p-5 gap-4">
                   <span className="text-white/20 text-xs font-mono w-8 pt-0.5 shrink-0">
@@ -391,7 +391,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             );
           })}
 
-          <div className="bg-white/[0.03] border border-white/10 p-6 mt-6 text-center">
+          <div className="bg-white/[0.03] border border-black/10 p-6 mt-6 text-center">
             <p className="text-sm opacity-50 mb-4">
               Want to see how all 14 chapters apply to{" "}
               {submission?.first_name ? `${submission.first_name}'s firm` : "your firm"}?

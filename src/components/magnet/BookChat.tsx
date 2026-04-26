@@ -208,7 +208,7 @@ export default function BookChat() {
                 >
                   ⊙
                 </span>
-                <div className="text-[15px] leading-relaxed text-[#F5EFE0]/90 prose prose-invert prose-sm max-w-none prose-headings:text-[#F5EFE0] prose-strong:text-[#F5EFE0] prose-a:text-[#B8933A]">
+                <div className="text-[15px] leading-relaxed text-[#1C1008]/90 prose prose-sm max-w-none prose-headings:text-[#1C1008] prose-strong:text-[#1C1008] prose-a:text-[#B8933A]">
                   {m.content ? (
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   ) : (
@@ -228,7 +228,7 @@ export default function BookChat() {
               </div>
             ) : (
               <div key={i} className="flex justify-end">
-                <div className="max-w-[85%] bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[15px] leading-relaxed text-[#F5EFE0]/90">
+                <div className="max-w-[85%] bg-black/5 border border-black/10 rounded-lg px-4 py-3 text-[15px] leading-relaxed text-[#1C1008]/90">
                   {m.content}
                 </div>
               </div>
@@ -238,9 +238,9 @@ export default function BookChat() {
       </div>
 
       {/* Input bar */}
-      <div className="border-t border-white/10 bg-[#120D05]/95 backdrop-blur sticky bottom-0">
+      <div className="border-t border-black/10 bg-[#FBF8F4]/95 backdrop-blur sticky bottom-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex gap-2 items-end bg-white/5 border border-white/10 rounded-xl px-3 py-2 focus-within:border-[#B8933A]/50 transition-colors">
+          <div className="flex gap-2 items-end bg-black/5 border border-black/10 rounded-xl px-3 py-2 focus-within:border-[#B8933A]/50 transition-colors">
             <textarea
               ref={textareaRef}
               value={input}
@@ -249,7 +249,7 @@ export default function BookChat() {
               disabled={isLoading}
               placeholder="Ask about the GTM book…"
               rows={1}
-              className="flex-1 bg-transparent text-[15px] text-[#F5EFE0] placeholder:text-white/30 focus:outline-none resize-none py-1.5 max-h-[200px]"
+              className="flex-1 bg-transparent text-[15px] text-[#1C1008] placeholder:text-black/30 focus:outline-none resize-none py-1.5 max-h-[200px]"
             />
             <button
               type="button"
@@ -261,7 +261,7 @@ export default function BookChat() {
               <SendHorizontal className="w-4 h-4" />
             </button>
           </div>
-          <p className="text-[11px] text-white/30 text-center mt-2">
+          <p className="text-[11px] text-black/30 text-center mt-2">
             Scoped to the GTM book content. Press Enter to send · Shift+Enter for newline.
           </p>
         </div>
