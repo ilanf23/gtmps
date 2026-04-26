@@ -1,56 +1,24 @@
-# Eliminate microsite theme flash on route change
+## Goal
+Make every microsite section (`/m/:slug`, `/m/:slug/chat`, `/m/:slug/read`, `/m/:slug/feedback`, and `/book`) render the same footer used on `/discover`.
 
-## Root Cause
+## Current state
+- `/discover` (`src/pages/Discover.tsx`) renders `<Footer />` from `src/components/Footer.tsx` — a self‑contained dark "Across Mabbly" footer with cross‑links and legal row.
+- All microsite pages wrap their content in `MagnetShell` (`src/components/magnet/MagnetShell.tsx`). The shell renders a sticky top nav and `<main>` — but **no footer**.
+- A separate `VerticalLanding/VerticalFooter.tsx` exists for vertical pages — we are **not** touching that one.
 
-Each tab navigation inside a microsite (e.g. `/m/:slug` → `/m/:slug/chat`) unmounts and remounts `MagnetShell`. Its `useClientTheme(slug)` hook always initializes state to `MABBLY_DEFAULTS` (orange/beige), then fires an async Supabase RPC to fetch the branding. That ~1s round-trip is exactly the flash the user sees.
+## Change
+**Single edit** to `src/components/magnet/MagnetShell.tsx`:
+1. Import the existing footer: `import Footer from "@/components/Footer";`
+2. Render `<Footer />` immediately after the closing `</main>` tag (still inside the flex column wrapper, so it sits at the bottom of the page on short content).
 
-## Fix: Module-scoped theme cache keyed by slug
+That's it — because every microsite route already goes through `MagnetShell`, this single change covers MAP, Talk to the Book, Read, Feedback, and the standalone `/book` route in one shot.
 
-Update `src/hooks/useClientTheme.ts` so that:
+## Why no other changes
+- `Footer.tsx` already carries `data-page-footer="true"`, so `useFooterVisible` (used by sticky CTAs in the microsite) will correctly detect it and fade out CTAs at the bottom.
+- The footer is intentionally dark (`bg-soft-navy`) and self‑contained. It will read as a deliberate brand band at the bottom of light‑themed microsites, matching the way it sits at the bottom of `/discover`.
+- No new component, no duplication, no styling fork — one source of truth keeps both surfaces in lockstep going forward.
 
-1. **Cache resolved themes in a module-level `Map<slug, ClientTheme>`.** Once branding has been fetched for a slug, every subsequent mount in the same session reads it synchronously.
-2. **Use a lazy `useState` initializer** that returns the cached theme for the current slug if present, otherwise `MABBLY_DEFAULTS`. The very first render of the next tab already paints with the correct dark theme — no flash.
-3. **Skip the network call when cached.** Only fire the RPC when the slug has no cached entry (first visit).
-4. **Write to cache on success** so the next navigation benefits.
+## Files touched
+- **Edit**: `src/components/magnet/MagnetShell.tsx` (add import + render `<Footer />` after `<main>`)
 
-### Key snippet
-
-```ts
-const themeCache = new Map<string, ClientTheme>();
-
-export function useClientTheme(slug: string | undefined | null): ClientTheme {
-  const [theme, setTheme] = useState<ClientTheme>(() =>
-    slug && themeCache.has(slug) ? themeCache.get(slug)! : MABBLY_DEFAULTS,
-  );
-
-  useEffect(() => {
-    if (!slug) { setTheme(MABBLY_DEFAULTS); return; }
-    if (themeCache.has(slug)) { setTheme(themeCache.get(slug)!); return; }
-    let cancelled = false;
-    (async () => {
-      const { data, error } = await supabase.rpc("get_magnet_breakdown_by_slug", { _slug: slug });
-      if (cancelled || error) return;
-      const row = Array.isArray(data) ? data[0] : null;
-      if (!row) return;
-      const next = buildClientTheme(row as unknown as RawBranding);
-      themeCache.set(slug, next);
-      setTheme(next);
-    })();
-    return () => { cancelled = true; };
-  }, [slug]);
-
-  return theme;
-}
-```
-
-## Why this approach (vs. alternatives)
-
-- **Why not a loading spinner?** It would replace one bad UX (flash) with another (blank screen), and the first-ever visit would still show it. The cache eliminates the flash on intra-microsite navigation, which is where the user sees it.
-- **Why not React Query?** Overkill for a single RPC. A 5-line module Map gives the same intra-session caching with zero new dependencies.
-- **First-visit behavior preserved.** First load of a slug still briefly shows defaults then upgrades — same as today. Only repeat tab clicks within the microsite become instant.
-
-## Files Modified
-
-- `src/hooks/useClientTheme.ts` — add module-scoped cache + lazy state initializer.
-
-No other files need to change. `MagnetShell` and `MagnetSite` consume the hook unchanged.
+No DB, edge function, routing, or content changes required.
