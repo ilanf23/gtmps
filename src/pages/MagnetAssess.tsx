@@ -64,8 +64,7 @@ export default function MagnetAssess() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
-    // @ts-expect-error - zodResolver type mismatch with optional URL refinement
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as never,
     mode: 'onBlur',
     defaultValues: {
       crmSize: '' as unknown as FormValues['crmSize'],

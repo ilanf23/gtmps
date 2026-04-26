@@ -247,13 +247,48 @@ Deno.serve(async (req) => {
       ? { source: "jina_reader", markdown: linkedin_markdown }
       : {};
 
+    // 3b. Append optional case studies + team/about page content if provided
+    let augmented_website = website_content;
+    if (caseStudiesUrl) {
+      const cs = await fetchViaJina(caseStudiesUrl, 3000);
+      if (cs) {
+        augmented_website +=
+          "\n\n--- CASE STUDIES / WORK PAGE ---\n" + cs;
+      }
+    }
+    if (teamPageUrl) {
+      const tp = await fetchViaJina(teamPageUrl, 2000);
+      if (tp) {
+        augmented_website += "\n\n--- TEAM / ABOUT PAGE ---\n" + tp;
+      }
+    }
+
     // 4. Build user message
-    const userMessage = `FIRM: ${submission.first_name}, ${submission.role}
+    const intakeContext = (crmSize || dealSize || bdChallenge)
+      ? `=== INTAKE DATA (what the firm told us directly) ===
+CRM Size: ${crmSize ?? "(not provided)"}
+Typical Deal Size: ${dealSize ?? "(not provided)"}
+Biggest BD Challenge: ${bdChallenge ?? "(not provided)"}
+
+USE THIS DATA:
+- For Dead Zone math: map crmSize to a number (under_100→75, 100_300→200, 300_700→500, 700_plus→800) and multiply by 0.81 for dormant estimate
+- For Dead Zone Value: dormant contacts × deal size midpoint × 0.03
+- Deal size midpoints: under_50k→35000, 50k_150k→100000, 150k_500k→325000, 500k_plus→650000
+- For layer recommendation: use bdChallenge as the primary signal
+  (finding_new → start PROVE, reengaging_past → start ACTIVATE with ⊙03,
+   converting_warm → start DESIGN, consistent_intros → start ACTIVATE with ⊙04,
+   generating_inbound → start COMPOUND)
+=== END INTAKE DATA ===
+
+`
+      : "";
+
+    const userMessage = `${intakeContext}FIRM: ${submission.first_name}, ${submission.role}
 WEBSITE: ${submission.website_url}
 LINKEDIN: ${submission.linkedin_url}
 
 WEBSITE CONTENT:
-${website_content || "(unavailable)"}
+${augmented_website || "(unavailable)"}
 
 LINKEDIN DATA:
 ${JSON.stringify(linkedin_data)}`;
