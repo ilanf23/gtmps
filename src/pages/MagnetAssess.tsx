@@ -427,16 +427,20 @@ export default function MagnetAssess() {
           <div className="pt-2">
             <button
               type="submit"
-              disabled={submitting}
-              className="w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={submitting || progress < 60}
+              className="w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <>
                   <span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" />
                   BUILDING…
                 </>
+              ) : progress < 60 ? (
+                `COMPLETE YOUR PROFILE (${progress}%)`
+              ) : progress === 100 ? (
+                'GENERATE FULL BREAKDOWN →'
               ) : (
-                'BUILD MY GTM BREAKDOWN →'
+                'GENERATE BREAKDOWN →'
               )}
             </button>
             <p className="text-xs opacity-40 text-center mt-3">
