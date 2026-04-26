@@ -575,22 +575,73 @@ const About = () => {
           </div>
         </section>
 
+        {/* Pull quote A — between definition (03) and rooms (04) */}
+        <PullQuoteBlock
+          id="pq-a"
+          quote="The right person at the wrong moment is just another name in your CRM. The right person at the right moment is revenue."
+          attribution="Chapter 4 · Truth II"
+        />
+
         {/* ── 05 — THE MANUSCRIPT (dark) ── */}
         <section id="manuscript" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
-          <div className="max-w-[920px] mx-auto">
-            <p style={eyebrowStyle}>The Book</p>
-            <h2 style={h2Dark}>GTM for Professional Services: The Relationship Revenue OS.</h2>
-            <p style={bodyDark}>
-              30 chapters. Three frameworks. Built from 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026.
-            </p>
-            <Link
-              to="/discover#beta-reader"
-              style={outlineCtaBase}
-              onMouseEnter={outlineHoverIn}
-              onMouseLeave={outlineHoverOut}
-            >
-              Read the manuscript before publication →
-            </Link>
+          <div className="max-w-[1100px] mx-auto manuscript-grid">
+            <style>{`
+              .manuscript-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 48px;
+                align-items: center;
+                justify-items: center;
+              }
+              @media (min-width: 768px) {
+                .manuscript-grid {
+                  grid-template-columns: 240px 1fr;
+                  gap: 64px;
+                  justify-items: start;
+                }
+              }
+              .about-book-wrap { perspective: 1200px; display: block; }
+              .about-book {
+                width: 180px;
+                height: auto;
+                display: block;
+                transform: rotateY(-8deg);
+                transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+                box-shadow:
+                  0 30px 60px -20px rgba(0,0,0,0.4),
+                  0 0 80px -20px rgba(184,147,58,0.25);
+              }
+              @media (min-width: 768px) {
+                .about-book { width: 240px; }
+              }
+              .about-book-wrap:hover .about-book { transform: rotateY(0deg); }
+              @media (prefers-reduced-motion: reduce) {
+                .about-book { transform: none; transition: none; }
+              }
+            `}</style>
+            <div className="about-book-wrap" aria-hidden>
+              <img
+                src={bookCover}
+                alt="GTM for Professional Services manuscript cover"
+                className="about-book"
+                loading="lazy"
+              />
+            </div>
+            <div>
+              <p style={eyebrowStyle}>The Book</p>
+              <h2 style={h2Dark}>GTM for Professional Services: The Relationship Revenue OS.</h2>
+              <p style={bodyDark}>
+                30 chapters. Three frameworks. Built from 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026.
+              </p>
+              <Link
+                to="/discover#beta-reader"
+                style={outlineCtaBase}
+                onMouseEnter={outlineHoverIn}
+                onMouseLeave={outlineHoverOut}
+              >
+                Read the manuscript before publication →
+              </Link>
+            </div>
           </div>
         </section>
 
