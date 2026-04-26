@@ -352,6 +352,14 @@ ${JSON.stringify(linkedin_data)}`;
       client_text_color: branding?.textColor ?? null,
       client_font_family: branding?.fontFamily ?? null,
       client_brand_profile: branding ?? {},
+      crm_estimate:
+        typeof parsed.crmEstimate === "number" && isFinite(parsed.crmEstimate)
+          ? Math.round(parsed.crmEstimate)
+          : null,
+      deal_size_estimate:
+        typeof parsed.dealSizeEstimate === "number" && isFinite(parsed.dealSizeEstimate)
+          ? Math.round(parsed.dealSizeEstimate)
+          : null,
       enrichment_error: null,
     };
 
