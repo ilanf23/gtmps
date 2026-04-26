@@ -916,6 +916,13 @@ const About = () => {
           </div>
         </section>
 
+        {/* Pull quote C — between vision (10) and founders (11) */}
+        <PullQuoteBlock
+          id="pq-c"
+          quote="Your next client already knows you. The relationships exist. The trust is built. The system to activate them did not."
+          attribution="Introduction"
+        />
+
         {/* ── 11 — THE FOUNDERS (dark) ── */}
         <section id="founders" style={{ background: "#0A0807", color: "#F5EFE0", padding: "112px 24px" }}>
           <div className="max-w-[1100px] mx-auto">
