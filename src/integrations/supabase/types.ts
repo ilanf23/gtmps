@@ -238,7 +238,11 @@ export type Database = {
       }
       magnet_submissions: {
         Row: {
+          bd_challenge: string | null
+          case_studies_url: string | null
           created_at: string
+          crm_size: string | null
+          deal_size: string | null
           email: string
           first_name: string
           id: string
@@ -246,10 +250,15 @@ export type Database = {
           role: string
           slug: string
           status: string
+          team_page_url: string | null
           website_url: string
         }
         Insert: {
+          bd_challenge?: string | null
+          case_studies_url?: string | null
           created_at?: string
+          crm_size?: string | null
+          deal_size?: string | null
           email: string
           first_name: string
           id?: string
@@ -257,10 +266,15 @@ export type Database = {
           role: string
           slug: string
           status?: string
+          team_page_url?: string | null
           website_url: string
         }
         Update: {
+          bd_challenge?: string | null
+          case_studies_url?: string | null
           created_at?: string
+          crm_size?: string | null
+          deal_size?: string | null
           email?: string
           first_name?: string
           id?: string
@@ -268,6 +282,7 @@ export type Database = {
           role?: string
           slug?: string
           status?: string
+          team_page_url?: string | null
           website_url?: string
         }
         Relationships: []

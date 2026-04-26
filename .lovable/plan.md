@@ -1,51 +1,121 @@
-## Problem
+# Expand the GTM Assessment Intake
 
-In the Impact Model section of `/m/:slug`, the middle metric card — **YOUR DEAD ZONE VALUE** — currently renders as a light/tinted slab with a colored border (red on Idea2Result, gold on Mabbly default). Surrounded by the near‑black section background, it visually "pops out" of the row of three cards instead of feeling like a cohesive trio.
+Add 5 new fields to the `/m` assessment form, persist them, and use them to make the AI breakdown sharper and more grounded.
 
-The user wants this middle card to share the same background as the surrounding section (i.e. transparent / matching the dark wrapper), so the three metric cards (Dormant Contacts / Dead Zone Value / Cost to Replace) read as a unified set.
+## 1. Database migration — add 5 columns to `magnet_submissions`
 
-## Root cause
-
-`src/components/magnet/MagnetImpactModel.tsx` line 132:
-
-```tsx
-<div className="border-[#B8933A]/40 bg-[#B8933A]/5 border p-5">
+```sql
+ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS crm_size text;
+ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS deal_size text;
+ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS bd_challenge text;
+ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS case_studies_url text;
+ALTER TABLE public.magnet_submissions ADD COLUMN IF NOT EXISTS team_page_url text;
 ```
 
-- `bg-[#B8933A]/5` paints a 5% accent‑tinted fill on top of the dark section. On the Mabbly cream theme this is barely visible; on Idea2Result's `#0a0a0a` background with red accent, it reads as a noticeably lighter rectangle.
-- The other two cards use `bg-white/5 border border-white/10` (line 46, `cardClass`) which is a near‑invisible neutral wash that recedes into the dark section.
+All nullable so existing rows remain valid. RLS policies are unchanged (insert-by-anon stays open, select still gated by slug).
 
-## Fix
+## 2. `src/pages/MagnetAssess.tsx` — form expansion
 
-In `src/components/magnet/MagnetImpactModel.tsx`, change the middle card (line 132) so its background matches the surrounding section while keeping the accent border + accent number that makes it the visual focal point.
+**Updated Zod schema:**
+- `name`, `role`, `websiteUrl`, `email` — unchanged (required)
+- `linkedinUrl` — **now optional**: `z.string().trim().url('Enter a valid LinkedIn URL').optional().or(z.literal(''))`
+- `crmSize` — required enum: `under_100 | 100_300 | 300_700 | 700_plus` (with custom message "Please select a range")
+- `dealSize` — required enum: `under_50k | 50k_150k | 150k_500k | 500k_plus`
+- `bdChallenge` — required enum: `finding_new | reengaging_past | converting_warm | consistent_intros | generating_inbound`
+- `caseStudiesUrl`, `teamPageUrl` — optional: `z.string().trim().url().optional().or(z.literal(''))`
 
-**One‑line change:**
+**Field order (5 existing + 5 new):**
+1. Your name
+2. Your title / role
+3. Company website
+4. Your LinkedIn profile (now optional, no asterisk)
+5. Work email
+6. **CRM contact range** (native `<select>`, styled to match existing inputs — `inputClass` + chevron via `appearance-none` + background SVG)
+7. **Typical engagement / project value** (select)
+8. **Biggest BD challenge right now** (select)
+9. **Link to your case studies or work page** (url, optional) + helper text "Helps us analyze your proof assets" rendered in a small `text-xs opacity-50` line below the input
+10. **Link to your team or about page** (url, optional) + helper text "Helps us understand your firm's background"
 
-```tsx
-// BEFORE (line 132)
-<div className="border-[#B8933A]/40 bg-[#B8933A]/5 border p-5">
+Reuse the existing `Field` helper and add a small `helper` prop so the helper line sits between the input and any error message. Selects use the same `inputClass` plus `appearance-none pr-10` and a background chevron, matching the existing visual language (no shadcn Select component — keeps the editorial flat aesthetic identical).
 
-// AFTER
-<div className="border-[#B8933A]/40 bg-transparent border p-5">
+**Submit handler updates:**
+- Insert into `magnet_submissions` adds:
+  ```ts
+  crm_size: data.crmSize,
+  deal_size: data.dealSize,
+  bd_challenge: data.bdChallenge,
+  case_studies_url: data.caseStudiesUrl || null,
+  team_page_url: data.teamPageUrl || null,
+  linkedin_url: data.linkedinUrl || '',  // keep column non-null safe
+  ```
+- Fire-and-forget `enrich-magnet` invoke body changes to:
+  ```ts
+  { 
+    slug, 
+    crmSize: data.crmSize,
+    dealSize: data.dealSize,
+    bdChallenge: data.bdChallenge,
+    caseStudiesUrl: data.caseStudiesUrl || null,
+    teamPageUrl: data.teamPageUrl || null,
+  }
+  ```
+
+No changes to slug generation, navigation, loading state, or `MagnetSite.tsx`.
+
+## 3. `supabase/functions/enrich-magnet/index.ts` — use the intake data
+
+**Destructure new body fields** (with safe defaults):
+```ts
+const { slug, crmSize, dealSize, bdChallenge, caseStudiesUrl, teamPageUrl } = body;
 ```
 
-Why `bg-transparent` and not `bg-white/5` like the siblings:
+**Scrape extra pages via Jina** (only if URLs provided), appended to `website_content` before the OpenAI call:
+```ts
+if (caseStudiesUrl) {
+  const cs = await fetchViaJina(caseStudiesUrl, 3000);
+  if (cs) website_content += "\n\n--- CASE STUDIES / WORK PAGE ---\n" + cs;
+}
+if (teamPageUrl) {
+  const tp = await fetchViaJina(teamPageUrl, 2000);
+  if (tp) website_content += "\n\n--- TEAM / ABOUT PAGE ---\n" + tp;
+}
+```
+(Reuses the existing `fetchViaJina` helper, which already has a 10s timeout and char cap, so we keep timing predictable.)
 
-- The surrounding wrapper in `MagnetBreakdown.tsx` is `bg-[#120D05]` (which the override sheet remaps to `var(--ms-accent-fg)` per client). Using `bg-transparent` lets that exact section background show through, guaranteeing a perfect match on every brand — Idea2Result's near‑black, SPR's warm cream variant, Mabbly default, etc.
-- We keep the accent border and the accent‑colored dollar amount so the card still reads as the centerpiece of the three; only the fill changes.
+**Prepend an INTAKE DATA block to `userMessage`** so the model treats it as ground truth:
 
-## Files changed
+```
+=== INTAKE DATA (what the firm told us directly) ===
+CRM Size: <crmSize>
+Typical Deal Size: <dealSize>
+Biggest BD Challenge: <bdChallenge>
 
-- **`src/components/magnet/MagnetImpactModel.tsx`** — single class change on line 132 (`bg-[#B8933A]/5` → `bg-transparent`).
+USE THIS DATA:
+- For Dead Zone math: map crmSize → number 
+  (under_100→75, 100_300→200, 300_700→500, 700_plus→800), 
+  multiply by 0.81 for dormant estimate.
+- For Dead Zone Value: dormant contacts × deal size midpoint × 0.03
+- Deal size midpoints: 
+  under_50k→35000, 50k_150k→100000, 150k_500k→325000, 500k_plus→650000
+- For layer recommendation, use bdChallenge as the primary signal:
+  finding_new → start PROVE
+  reengaging_past → start ACTIVATE with ⊙03
+  converting_warm → start DESIGN
+  consistent_intros → start ACTIVATE with ⊙04
+  generating_inbound → start COMPOUND
+=== END INTAKE DATA ===
+```
 
-## What this restores
+This block is inserted **before** the existing `WEBSITE CONTENT:` section in the user message. The system prompt is left intact (typography rule, RROS vocabulary, Hormozi framing all preserved).
 
-- The three metric cards in the Impact Model section now share the same background, with the middle card distinguished only by its accent border + accent‑colored value (clean visual hierarchy without the "popped out" slab effect).
-- Works across every client brand because it inherits the section background rather than layering a tint on top of it.
-- No other changes — sliders, formula multiplier section, stat chips, and case studies are untouched.
+If the intake fields are missing on the body (older clients), they fall back to whatever is on the `submission` row from the DB so the function never breaks.
 
----
+## Files touched
+- **New migration**: `supabase/migrations/<timestamp>_add_intake_fields_to_magnet_submissions.sql`
+- **Edited**: `src/pages/MagnetAssess.tsx`
+- **Edited**: `supabase/functions/enrich-magnet/index.ts`
 
-### Bonus (optional, ask before applying)
-
-If the user later wants the **WITH THE FORMULA** card (line 184) to match the same treatment (it currently uses `bg-[#B8933A]/10`, a stronger version of the same tint), we'd apply the identical fix there. Not changing it for now — that card is in a 2‑up grid with a clearly muted "WITHOUT" sibling, so the contrast reads as intentional rather than out of place. Mention it if you want it changed too.
+## Out of scope
+- No visual redesign of the form — only adds fields in the existing style.
+- No changes to `MagnetSite.tsx`, the breakdown UI, or routing.
+- No changes to the SYSTEM_PROMPT itself; intake is supplied as user-message context (simpler to iterate on, no risk to existing copy formulas).
