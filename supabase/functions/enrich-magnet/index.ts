@@ -10,6 +10,7 @@
 // OpenAI then reads both sources to produce the RROS breakdown.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { BOOK_FRAMEWORK_CONTEXT } from "../_shared/book-context.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Download, ExternalLink } from "lucide-react";
 
-const PDF_URL = "/relationship-revenue-os.pdf";
+const PDF_URL = "/book/relationship-revenue-os.pdf";
 
 export default function BookReader() {
   const [pdfAvailable, setPdfAvailable] = useState<boolean | null>(null);

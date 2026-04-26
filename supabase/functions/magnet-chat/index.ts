@@ -8,6 +8,7 @@
 //   SUPABASE_SERVICE_ROLE_KEY
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { BOOK_FRAMEWORK_CONTEXT } from "../_shared/book-context.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
