@@ -1,70 +1,51 @@
 ## Problem
 
-The Idea2Result microsite at `/m/ilan_920u38vzdk` is rendering with the **Mabbly defaults** (cream `#FBF8F4` background, gold `#B8933A` accent) instead of the client's branding (near‑black `#0a0a0a` background, red `#ff0000` accent).
+In the Impact Model section of `/m/:slug`, the middle metric card — **YOUR DEAD ZONE VALUE** — currently renders as a light/tinted slab with a colored border (red on Idea2Result, gold on Mabbly default). Surrounded by the near‑black section background, it visually "pops out" of the row of three cards instead of feeling like a cohesive trio.
 
-### Root cause
+The user wants this middle card to share the same background as the surrounding section (i.e. transparent / matching the dark wrapper), so the three metric cards (Dormant Contacts / Dead Zone Value / Cost to Replace) read as a unified set.
 
-I confirmed the database has the correct branding stored for this slug:
+## Root cause
 
-| field | value |
-|---|---|
-| `client_company_name` | `Idea2Result` |
-| `client_background_color` | `#0a0a0a` |
-| `client_accent_color` | `#ff0000` |
-| `client_text_color` | `#ffffff` |
-| `client_font_family` | `Inter` |
+`src/components/magnet/MagnetImpactModel.tsx` line 132:
 
-…and `get_magnet_breakdown_by_slug('ilan_920u38vzdk')` returns the row correctly. So the back‑end and the override CSS sheet (`src/styles/microsite-theme.css`) are fine.
-
-The bug lives in the theme cache I added to `src/hooks/useClientTheme.ts` to fix the previous "1‑second flash" issue. The cache is too eager:
-
-```ts
-const next = buildClientTheme(row as unknown as RawBranding);
-themeCache.set(slug, next);   // ← caches *whatever* came back
-setTheme(next);
+```tsx
+<div className="border-[#B8933A]/40 bg-[#B8933A]/5 border p-5">
 ```
 
-`buildClientTheme` falls back silently to `MABBLY_DEFAULTS` for any field that is null. So if the hook fetches the row at a moment when branding columns are still null (e.g. right after submission, or after an AI error path that wrote a partial row without the branding upsert), it stores `MABBLY_DEFAULTS` in the cache — and the cache is keyed by slug and never invalidated for the lifetime of the SPA session. After enrichment finishes and the branding columns are populated, **subsequent visits within the same session keep serving the stale defaults** because of the early `if (themeCache.has(slug)) return;` short‑circuit.
-
-### Secondary cosmetic bug (same component)
-
-`MagnetBreakdown.tsx` line 357 wraps the Impact Model section in `bg-[#120D05]` (Mabbly's near‑black accent foreground). This class is **not** in the override sheet — only the matching `text-[#120D05]` is. On Idea2Result's already‑near‑black page background, this hardcoded slab disappears into the surroundings; on a light brand it would be a jarring dark band.
-
----
+- `bg-[#B8933A]/5` paints a 5% accent‑tinted fill on top of the dark section. On the Mabbly cream theme this is barely visible; on Idea2Result's `#0a0a0a` background with red accent, it reads as a noticeably lighter rectangle.
+- The other two cards use `bg-white/5 border border-white/10` (line 46, `cardClass`) which is a near‑invisible neutral wash that recedes into the dark section.
 
 ## Fix
 
-### 1. Stop caching default themes — `src/hooks/useClientTheme.ts`
+In `src/components/magnet/MagnetImpactModel.tsx`, change the middle card (line 132) so its background matches the surrounding section while keeping the accent border + accent number that makes it the visual focal point.
 
-- Treat the row as "branded" only when at least one of `client_brand_color`, `client_accent_color`, `client_background_color`, `client_text_color`, `client_logo_url`, `client_font_family`, or `client_company_name` is non‑null.
-- Only insert into `themeCache` when that test passes.
-- When a cached entry exists, still apply it synchronously (preserves the no‑flash behaviour) — but if the cached value is the defaults sentinel, do a re‑fetch in the background on every mount so a later‑arriving branding row eventually wins.
-- Always re‑fetch in the background even on a cache hit, but only update state + cache when the new value actually differs from what's already shown (cheap shallow compare on accent + background + companyName + logoUrl). This guarantees that once branding lands in the DB, every navigation reflects it within one round‑trip without ever flashing.
+**One‑line change:**
 
-### 2. Remap the one missing utility — `src/styles/microsite-theme.css`
+```tsx
+// BEFORE (line 132)
+<div className="border-[#B8933A]/40 bg-[#B8933A]/5 border p-5">
 
-Add the bg form of the accent‑foreground token so the Impact Model wrapper and any future use of the same class re‑skins to the client palette:
-
-```css
-& .bg-\[\#120D05\]  { background-color: var(--ms-accent-fg) !important; }
+// AFTER
+<div className="border-[#B8933A]/40 bg-transparent border p-5">
 ```
 
-This is consistent with how `text-[#120D05]` is already remapped to `var(--ms-accent-fg)` and gives the dark slab in Section 4 the right "inverted accent" surface across both warm and dark brands.
+Why `bg-transparent` and not `bg-white/5` like the siblings:
 
-### 3. Drop the now-redundant inline override in `MagnetBreakdown.tsx`
-
-Replace `bg-[#120D05]` on line 357 with a token‑driven utility that the existing override sheet already handles (no further class additions needed). The inner `MagnetImpactModel` already paints itself with `text-[#B8933A]` accents that map correctly.
-
----
+- The surrounding wrapper in `MagnetBreakdown.tsx` is `bg-[#120D05]` (which the override sheet remaps to `var(--ms-accent-fg)` per client). Using `bg-transparent` lets that exact section background show through, guaranteeing a perfect match on every brand — Idea2Result's near‑black, SPR's warm cream variant, Mabbly default, etc.
+- We keep the accent border and the accent‑colored dollar amount so the card still reads as the centerpiece of the three; only the fill changes.
 
 ## Files changed
 
-- **`src/hooks/useClientTheme.ts`** — never cache the defaults; background re‑fetch on every mount with cheap diff.
-- **`src/styles/microsite-theme.css`** — add `bg-[#120D05]` → `var(--ms-accent-fg)` remap.
-- *(no behavioural change to)* `src/components/magnet/MagnetBreakdown.tsx` — same wrapper class, just now properly themed by the override sheet above.
+- **`src/components/magnet/MagnetImpactModel.tsx`** — single class change on line 132 (`bg-[#B8933A]/5` → `bg-transparent`).
 
 ## What this restores
 
-- `/m/ilan_920u38vzdk` and every other branded microsite render with the client's extracted background, text, accent and font on the very first paint (cache hit) **and** correct themselves in‑place if branding lands later in the same session (background refetch).
-- Unbranded slugs still fall back to the Mabbly warm‑editorial defaults (no regression on `/discover`, `/book`, or any pre‑enrichment loading state).
-- No flash of orange/beige before the dark theme reapplies — the original "1 second delay" fix is preserved because cache hits still apply synchronously.
+- The three metric cards in the Impact Model section now share the same background, with the middle card distinguished only by its accent border + accent‑colored value (clean visual hierarchy without the "popped out" slab effect).
+- Works across every client brand because it inherits the section background rather than layering a tint on top of it.
+- No other changes — sliders, formula multiplier section, stat chips, and case studies are untouched.
+
+---
+
+### Bonus (optional, ask before applying)
+
+If the user later wants the **WITH THE FORMULA** card (line 184) to match the same treatment (it currently uses `bg-[#B8933A]/10`, a stronger version of the same tint), we'd apply the identical fix there. Not changing it for now — that card is in a 2‑up grid with a clearly muted "WITHOUT" sibling, so the contrast reads as intentional rather than out of place. Mention it if you want it changed too.

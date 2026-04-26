@@ -129,7 +129,7 @@ export default function MagnetImpactModel({
           </p>
         </div>
 
-        <div className="border-[#B8933A]/40 bg-[#B8933A]/5 border p-5">
+        <div className="border-[#B8933A]/40 bg-transparent border p-5">
           <p className="text-[#B8933A] text-xs uppercase tracking-widest">
             YOUR DEAD ZONE VALUE
           </p>
