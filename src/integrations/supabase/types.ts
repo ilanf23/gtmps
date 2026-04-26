@@ -247,7 +247,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_magnet_breakdown_by_slug: {
+        Args: { _slug: string }
+        Returns: {
+          action_1: string
+          action_2: string
+          action_3: string
+          chapter_callouts: Json
+          dead_zone_reasoning: string
+          dead_zone_value: number
+          enrichment_error: string
+          gtm_profile_assessment: string
+          gtm_profile_observed: string
+          orbit_01: string
+          orbit_02: string
+          orbit_03: string
+          orbit_04: string
+          orbit_05: string
+          recommended_layer: string
+          welcome_message: string
+        }[]
+      }
+      get_magnet_submission_by_slug: {
+        Args: { _slug: string }
+        Returns: {
+          first_name: string
+          status: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
