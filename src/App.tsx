@@ -23,6 +23,7 @@ import MagnetAssess from "./pages/MagnetAssess.tsx";
 import MagnetSite from "./pages/MagnetSite.tsx";
 import MagnetBook from "./pages/MagnetBook.tsx";
 import Awards from "./pages/Awards.tsx";
+import ScrollToTop from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
 
