@@ -29,6 +29,9 @@ export default function MagnetSite() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<Status>('loading');
   const [firstName, setFirstName] = useState<string | null>(null);
+  const [clientLogoUrl, setClientLogoUrl] = useState<string | null>(null);
+  const [clientBrandColor, setClientBrandColor] = useState<string | null>(null);
+  const [clientCompanyName, setClientCompanyName] = useState<string | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [stepVisible, setStepVisible] = useState(true);
   const timeoutRef = useRef<number | null>(null);
