@@ -37,8 +37,8 @@ RULES — non-negotiable:
    content. Quote their actual language, name their actual services, reference
    their actual positioning. Never write a sentence that could apply to
    any other firm.
-2. Orbit names MUST be exactly: Inner Circle, Warm Network, Dead Zone,
-   Content Gravity, New Gravity (in that order, IDs 01-05).
+2. Orbit names MUST be exactly: Core Proof, Active, Dead Zone,
+   Warm Adjacency, New Gravity (in that order, IDs 01-05).
 3. chapterCallouts array must contain EXACTLY 3 entries — the 3 chapters
    most relevant to this firm's specific situation. No more.
 4. The headline must be a sharp, specific observation about this firm's
@@ -59,16 +59,24 @@ OUTPUT — return valid JSON matching this exact shape, nothing else:
     "verdict": "string — one sentence on what to fix first, specific to them"
   },
   "orbits": [
-    { "id": "01", "name": "Inner Circle",    "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "02", "name": "Warm Network",    "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "03", "name": "Dead Zone",       "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "04", "name": "Content Gravity", "status": "strong | weak | untapped", "description": "string — specific to this firm" },
-    { "id": "05", "name": "New Gravity",     "status": "strong | weak | untapped", "description": "string — specific to this firm" }
+    { "id": "01", "name": "Core Proof",     "status": "strong | weak | untapped", "description": "string — specific to this firm" },
+    { "id": "02", "name": "Active",         "status": "strong | weak | untapped", "description": "string — specific to this firm" },
+    { "id": "03", "name": "Dead Zone",      "status": "strong | weak | untapped", "description": "string — specific to this firm" },
+    { "id": "04", "name": "Warm Adjacency", "status": "strong | weak | untapped", "description": "string — specific to this firm" },
+    { "id": "05", "name": "New Gravity",    "status": "strong | weak | untapped", "description": "string — specific to this firm" }
   ],
   "deadZone": {
     "estimate": "string — dollar figure e.g. $1.8M",
     "description": "string — explain the specific math based on what you know about their firm size, deal size, and CRM"
   },
+  "crmEstimate": 0,
+  // ↑ integer — estimate the firm's CRM size based on website + LinkedIn headcount.
+  //   Formula: LinkedIn headcount × 8. If headcount unknown, estimate from
+  //   firm size / revenue signals. Plain integer (e.g. 1500), not a string.
+  "dealSizeEstimate": 0,
+  // ↑ integer — estimate their typical engagement size in dollars based on
+  //   their services, positioning, and visible client signals.
+  //   Plain integer (e.g. 150000), not "$150K".
   "layerRecommendation": {
     "startHere": "DISCOVER | PROVE | DESIGN | ACTIVATE | COMPOUND",
     "rationale": "string — why THIS layer for THIS firm specifically, reference something from their website"
@@ -344,6 +352,14 @@ ${JSON.stringify(linkedin_data)}`;
       client_text_color: branding?.textColor ?? null,
       client_font_family: branding?.fontFamily ?? null,
       client_brand_profile: branding ?? {},
+      crm_estimate:
+        typeof parsed.crmEstimate === "number" && isFinite(parsed.crmEstimate)
+          ? Math.round(parsed.crmEstimate)
+          : null,
+      deal_size_estimate:
+        typeof parsed.dealSizeEstimate === "number" && isFinite(parsed.dealSizeEstimate)
+          ? Math.round(parsed.dealSizeEstimate)
+          : null,
       enrichment_error: null,
     };
 

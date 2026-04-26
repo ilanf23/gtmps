@@ -77,8 +77,10 @@ export type Database = {
           client_logo_url: string | null
           client_text_color: string | null
           created_at: string
+          crm_estimate: number | null
           dead_zone_reasoning: string | null
           dead_zone_value: number | null
+          deal_size_estimate: number | null
           enrichment_error: string | null
           gtm_profile_assessment: string | null
           gtm_profile_observed: string | null
@@ -108,8 +110,10 @@ export type Database = {
           client_logo_url?: string | null
           client_text_color?: string | null
           created_at?: string
+          crm_estimate?: number | null
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
+          deal_size_estimate?: number | null
           enrichment_error?: string | null
           gtm_profile_assessment?: string | null
           gtm_profile_observed?: string | null
@@ -139,8 +143,10 @@ export type Database = {
           client_logo_url?: string | null
           client_text_color?: string | null
           created_at?: string
+          crm_estimate?: number | null
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
+          deal_size_estimate?: number | null
           enrichment_error?: string | null
           gtm_profile_assessment?: string | null
           gtm_profile_observed?: string | null
@@ -286,8 +292,10 @@ export type Database = {
           client_font_family: string
           client_logo_url: string
           client_text_color: string
+          crm_estimate: number
           dead_zone_reasoning: string
           dead_zone_value: number
+          deal_size_estimate: number
           enrichment_error: string
           gtm_profile_assessment: string
           gtm_profile_observed: string

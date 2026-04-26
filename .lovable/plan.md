@@ -1,113 +1,79 @@
-# Why the background extraction is failing for idea2result.com
+## What's already correct (no change needed)
 
-I fetched the live site and its CSS bundle. The site is a SPA with an empty `<body>` — no `theme-color` meta, no inline body styles. All branding lives in this single CSS rule:
+`MagnetBreakdown.tsx` already uses the correct `ORBIT_NAMES` constant: "Core Proof", "Active", "Dead Zone", "Warm Adjacency", "New Gravity". Part A is already done client-side. The fix is still needed in the edge function (Part E).
 
-```css
-:root {
-  --background: 0 0% 4%;       /* near-black */
-  --foreground: 0 0% 100%;     /* white */
-  --primary:    0 100% 50%;    /* red */
-  --accent:     0 100% 50%;    /* red */
-}
-body { background-color: hsl(var(--background)); color: hsl(var(--foreground)); }
-```
+There is no `BreakdownData` interface in this file — the type is `BreakdownRow`. I'll add the two new optional estimate fields there.
 
-This is the standard shadcn/Tailwind pattern: **raw HSL triplets stored as variables, wrapped in `hsl()` at usage**. Our current extractor in `supabase/functions/_shared/extract-branding.ts`:
+## Part B — Replace CHAPTERS in `src/components/magnet/MagnetBreakdown.tsx`
 
-1. **`extractAllColors()` only matches `#hex` and `rgb()/rgba()`** — it never sees `hsl()` values or the bare HSL triplets like `0 0% 4%`. So the brand red, the black background, and the white text are all invisible to the frequency map.
-2. **The `body { background-color: ... }` regex matches the rule but the value is `hsl(var(--background))`** — both `normalizeHex` and `rgbStringToHex` return null. Background stays unset.
-3. With no background found, the loop on lines 417-421 then picks `#ffffff` (the most-frequent neutral) as the fallback background → microsite renders cream.
+Replace lines 39–54 with the full 14-entry list (Preface = 0 through Closing = 13) using the exact titles and summaries provided. The existing `getChapterNumber` helper already supports `chapter_number`, so the lookup keeps working for entries with `chapterNumber` 0–13.
 
-So the visible symptom ("text-only theming, no black background, no red") is one bug: **we cannot read shadcn/Tailwind HSL CSS variables.** Fixing it unlocks dark sites in general.
+Also update the line "14 chapters. The complete system." → "14 sections. The complete system." (still 14 entries: preface + 12 chapters + closing).
 
----
+## Part C — Create `src/components/magnet/MagnetImpactModel.tsx`
 
-# Plan
+New component built exactly to spec:
+- Props: `crmEstimate?`, `dealSizeEstimate?`, `companyName`
+- Constants: `DORMANCY_RATE 0.81`, `DZ_CONVERSION 0.03`, `ACQ_MULTIPLIER 7`, `BASE_CONTACTS 200`, `BASE_WITHOUT 78000`, `BASE_WITH 486000`, `BASE_DEAL 150000`
+- State: `crm` (default `crmEstimate ?? 1500`), `deal` (default `dealSizeEstimate ?? 150000`)
+- Derived values: `dormant`, `deadZoneValue`, `replaceCost`, `pipelineWithout`, `pipelineWith`, `multiplier`
+- `fmtMoney` helper as specified
+- Sections in order:
+  1. Monday Morning Test header + Ch.1 attribution
+  2. Two sliders (Contacts / Avg engagement size); each shows "Estimated from your website/market" hint when the corresponding prop was passed
+  3. Three metric cards: Dormant Contacts, Dead Zone Value (gold-highlighted), Cost to Replace
+  4. Formula multiplier — Without/With cards side by side + stacked bar visual using `(pipelineWithout / pipelineWith) * 100%` for the gray bar, 100% for the gold bar
+  5. Four stat chips (74%, 8.1%, 7×, 60–70%) with the exact copy
+  6. Three "Verified in Practice" cards (Stephen at Madcraft, SPR, AArete)
+- Uses brand colors: text `#F5EFE0`, accent `#B8933A`, surfaces `bg-white/5 border border-white/10`. `bg-transparent` outer.
 
-## 1. Teach `extract-branding.ts` to read HSL and CSS variables
+## Part D — Wire into `MagnetBreakdown.tsx`
 
-In `supabase/functions/_shared/extract-branding.ts`:
+1. Add `crmEstimate?: number` and `dealSizeEstimate?: number` to the `BreakdownRow` interface (the existing equivalent of `BreakdownData`).
+2. Import `MagnetImpactModel` at top.
+3. Insert a new `<section className="py-12 border-t border-white/10">` containing `<MagnetImpactModel companyName={data.client_company_name ?? ""} crmEstimate={data.crmEstimate} dealSizeEstimate={data.dealSizeEstimate} />` AFTER the Five Orbits section (currently lines 257–285) and BEFORE the existing standalone Dead Zone section.
+4. Remove the existing standalone Dead Zone section (lines 287–303) — the one with the `text-5xl` dollar amount. The new impact model replaces it.
 
-- **Add `hslStringToHex(s)`** that accepts both `hsl(0, 100%, 50%)` and the bare triplet form `0 100% 50%` (with optional `/ alpha`), converts via standard HSL→RGB math, and returns hex.
-- **Extend `extractAllColors()`** with a regex pass for `hsl(...)` and `hsla(...)`.
-- **Add a CSS-variables pass `extractCssVariables(css)`** that scans `:root`, `html`, `body`, and `[data-theme="dark"]` blocks for `--name: value;` declarations, normalizing each value through hex / rgb / hsl / bare-HSL parsers. Build a `varMap: Record<string,string>`.
-- **Resolve `var(--name)` references**: when a `body { background-color: ... }` (or `html { ... }`) value contains `hsl(var(--background))` or `var(--background)`, look up the var in `varMap` and substitute before parsing. Same for body color.
-- **Prioritize semantic var names** when picking accent / background / text:
-  - background ← `--background`, `--bg`, `--page-bg`
-  - text ← `--foreground`, `--text`, `--body-text`
-  - accent ← `--primary`, `--accent`, `--brand`
-  These take precedence over frequency-based heuristics.
+Note: the breakdown page uses a light cream theme (`bg-[#FBF8F4]`) but the impact model spec uses dark surface colors (`text-[#F5EFE0]`, `bg-white/5`). I'll wrap the inserted impact-model section in a dark band (`bg-[#120D05]` full-bleed via `-mx-6 px-6` inside the `max-w-2xl` container) so the gold/cream-on-dark surface treatment in the spec reads correctly. This preserves the spec's color tokens exactly while keeping the rest of the page on its cream background.
 
-## 2. Layered, confidence-ranked background detection
+## Part E — `supabase/functions/enrich-magnet/index.ts`
 
-Before the existing frequency loop, try high-confidence signals in order and stop at the first hit:
+In the system prompt:
+1. Update line 40–41 rule #2 to: `Orbit names MUST be exactly: Core Proof, Active, Dead Zone, Warm Adjacency, New Gravity (in that order, IDs 01-05).`
+2. Update the JSON schema orbit entries (lines 62–66) to use `Core Proof`, `Active`, `Dead Zone`, `Warm Adjacency`, `New Gravity`.
+3. Add two new fields to the JSON schema, between `deadZone` and `layerRecommendation`:
+   - `"crmEstimate": number` — with the inline comment about LinkedIn headcount × 8 fallback
+   - `"dealSizeEstimate": number` — with the inline comment about engagement size, plain integer
 
-1. `<meta name="theme-color">` (already used — keep, but only treat as background when it is dark; light theme-colors are usually browser chrome, not page bg).
-2. `<meta name="color-scheme" content="dark">` → set background to `#0a0a0a` if no other signal exists.
-3. Inline `style="background:..."` on `<html>` or `<body>`.
-4. CSS variable `--background` (resolved via step 1).
-5. `body { background-color: ... }` (resolved via step 1).
-6. Class-keyword scan: presence of `dark` / `bg-black` / `theme-dark` on `<html>` or `<body>` → bias toward dark fallback.
-7. Existing neutral-frequency loop (last resort).
+Also update the schema-mapping block (around lines 240–320) to persist the two new estimates so they reach `MagnetBreakdown`. Two paths:
+- Add columns `crm_estimate` and `deal_size_estimate` to `magnet_breakdowns` via a migration.
+- Update the `get_magnet_breakdown_by_slug` SQL function to return them.
+- Add them to the upserted `breakdownRow`.
+- Map them onto `data.crmEstimate` / `data.dealSizeEstimate` in the client.
 
-Mirror the same chain for `textColor` (`--foreground`, body color, then frequency).
-
-## 3. Contrast guard in `src/lib/clientTheme.ts`
-
-After building the theme:
-
-- Compute WCAG contrast ratio between `text` and `background`.
-- If ratio < **3.5**, override `text` to `#FFFFFF` when bg luminance < 0.5, else `#0F0F0F`. This protects against partial extractions (e.g. background found but text not).
-- Pick `accentForeground` the same way against `accent`. (Already done — keep.)
-- Recompute `surface`, `textMuted`, `border` from the corrected `text` so opacities still read on dark backgrounds.
-
-## 4. Dark-mode UI rules in the microsite shell + override sheet
-
-- **`src/components/magnet/MagnetShell.tsx`**: compute `isDark = relLuminance(theme.background) < 0.35` and add `data-ms-dark` on the wrapper alongside the existing `data-ms-themed`.
-- **`src/styles/microsite-theme.css`**: add a small dark-mode block under `[data-ms-themed][data-ms-dark]` that:
-  - Strengthens borders (`color-mix` with text at 18% instead of 10%) so dividers don't disappear on black.
-  - Bumps surface tints (text at 8% instead of 5%) so chat bubbles and cards remain visible.
-  - Forces `prose` link/strong colors to white-tinted variants.
-  - Inverts the `bg-black/5` and `text-black/30` utility remaps to use the white-tinted text token instead (already partially handled by the `var(--ms-text)` remap — verify under a black bg).
-- This reuses the existing override architecture, no component rewrites.
-
-## 5. Re-enrich the affected magnets
-
-A SQL migration to nullify `client_background_color`, `client_text_color`, `client_accent_color`, `client_brand_color` for rows whose extraction looks wrong:
+## Database migration
 
 ```sql
-UPDATE public.magnet_breakdowns
-SET client_background_color = NULL,
-    client_text_color       = NULL,
-    client_accent_color     = NULL,
-    client_brand_color      = NULL
-WHERE client_background_color IS NULL
-   OR client_text_color IS NULL
-   OR client_brand_color IS NULL
-   OR client_brand_color ILIKE '#ffffff'
-   OR client_background_color ILIKE '#ffffff';
+ALTER TABLE public.magnet_breakdowns
+  ADD COLUMN IF NOT EXISTS crm_estimate integer,
+  ADD COLUMN IF NOT EXISTS deal_size_estimate integer;
 ```
 
-Then trigger `enrich-magnet` for the idea2result submission so the new extractor populates correct values.
+Then `CREATE OR REPLACE FUNCTION public.get_magnet_breakdown_by_slug(...)` to add `b.crm_estimate, b.deal_size_estimate` to the return columns.
 
-## 6. Quick sanity test
+In the client `useEffect`, map `row.crm_estimate` → `crmEstimate` and `row.deal_size_estimate` → `dealSizeEstimate` when setting state.
 
-Add a tiny Deno test fixture that feeds the extractor the actual idea2result CSS snippet captured above and asserts:
-- `backgroundColor === "#0a0a0a"` (4% lightness)
-- `textColor === "#ffffff"`
-- `accentColor === "#ff0000"`
+## Files
 
-Catches regressions if anyone simplifies the extractor later.
+CREATE
+- `src/components/magnet/MagnetImpactModel.tsx`
 
----
+MODIFY
+- `src/components/magnet/MagnetBreakdown.tsx` — replace `CHAPTERS`, extend `BreakdownRow`, import + render `MagnetImpactModel`, remove old standalone Dead Zone section, map new fields from RPC row
+- `supabase/functions/enrich-magnet/index.ts` — fix orbit names in prompt rule + JSON schema, add `crmEstimate` / `dealSizeEstimate` to schema, persist them on `breakdownRow`
 
-# Files touched
+MIGRATION
+- Add `crm_estimate`, `deal_size_estimate` columns to `magnet_breakdowns`
+- Update `get_magnet_breakdown_by_slug` to return the two new columns
 
-- `supabase/functions/_shared/extract-branding.ts` — HSL parsing, CSS var resolution, layered background detection.
-- `src/lib/clientTheme.ts` — contrast guard + dark-derivation of muted/border/surface.
-- `src/components/magnet/MagnetShell.tsx` — `data-ms-dark` flag.
-- `src/styles/microsite-theme.css` — dark-mode rule block.
-- New migration: nullify mis-extracted branding rows.
-- New test: `supabase/functions/_shared/extract-branding.test.ts`.
-
-After approval, the idea2result microsite will render with a near-black background, white body text, and red accents — matching their actual brand.
+Nothing else changes.

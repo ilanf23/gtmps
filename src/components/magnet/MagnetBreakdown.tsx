@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import MagnetImpactModel from "./MagnetImpactModel";
 // MagnetChat was replaced by the dedicated /m/:slug/chat page in MagnetShell.
 
 interface ChapterCallout {
@@ -30,6 +31,8 @@ interface BreakdownRow {
   enrichment_error: string | null;
   client_logo_url?: string | null;
   client_company_name?: string | null;
+  crm_estimate?: number | null;
+  deal_size_estimate?: number | null;
 }
 
 interface SubmissionRow {
@@ -37,20 +40,89 @@ interface SubmissionRow {
 }
 
 const CHAPTERS = [
-  { number: 1, title: "The Dead Zone", summary: "Why 60–96% of your best revenue is sitting silent in your CRM." },
-  { number: 2, title: "The Formula", summary: "Signal + Proof + Context = Response, Not Pitch." },
-  { number: 3, title: "The Five Orbits", summary: "Every relationship in your firm lives in one of five orbits." },
-  { number: 4, title: "Orbit ⊙01 — Inner Circle", summary: "The five people who can double your revenue this quarter." },
-  { number: 5, title: "Orbit ⊙02 — Warm Network", summary: "The relationships that are warm but going cold." },
-  { number: 6, title: "Orbit ⊙03 — Dead Zone", summary: "How to reactivate the revenue you already earned." },
-  { number: 7, title: "Orbit ⊙04 — Content Gravity", summary: "Building signal without sending a single cold email." },
-  { number: 8, title: "Orbit ⊙05 — New Gravity", summary: "How to make the right strangers come to you." },
-  { number: 9, title: "The Five Layers", summary: "DISCOVER · PROVE · DESIGN · ACTIVATE · COMPOUND — in that order." },
-  { number: 10, title: "The MAP", summary: "The 12-field artifact that replaces your pitch deck." },
-  { number: 11, title: "Signal Architecture", summary: "How to build a system that surfaces the right moment." },
-  { number: 12, title: "The Proof Library", summary: "Why most firms can't close — and how to fix it in 7 days." },
-  { number: 13, title: "GTM Rocks", summary: "The four quarterly commitments that make everything compound." },
-  { number: 14, title: "The Compounding Firm", summary: "What it looks like when the system is running on its own." },
+  {
+    number: 0,
+    title: "Preface: Start Here",
+    summary: "Why two operators wrote this book, and what it is not.",
+  },
+  {
+    number: 1,
+    title: "Ch1: The Dead Zone",
+    summary:
+      "Why 60–96% of your CRM is sleeping and what it costs you every quarter.",
+  },
+  {
+    number: 2,
+    title: "Ch2: The Wrong Map",
+    summary:
+      "The GTM playbook built for product companies is actively harming PS firms.",
+  },
+  {
+    number: 3,
+    title: "Ch3: The Formula",
+    summary:
+      "Signal + Proof + Context = Response, Not Pitch. The $400K email in 7 minutes.",
+  },
+  {
+    number: 4,
+    title: "Ch4: The Five Truths, The Core, and The Orbit Model",
+    summary:
+      "Your next client already knows you. The system for activating who you already own.",
+  },
+  {
+    number: 5,
+    title: "Ch5: DISCOVER",
+    summary:
+      "The Discovery Session. The MAP artifact. What you must know before any motion starts.",
+  },
+  {
+    number: 6,
+    title: "Ch6: PROVE",
+    summary:
+      "Why most PS firms can't close — and how to fix the proof library in 7 days.",
+  },
+  {
+    number: 7,
+    title: "Ch7: DESIGN",
+    summary:
+      "ICP, signal matrix, channel architecture. The beachhead that makes everything else work.",
+  },
+  {
+    number: 8,
+    title: "Ch8: ACTIVATE",
+    summary:
+      "Signal-activated outreach. When to reach out, what to say, and why it works.",
+  },
+  {
+    number: 9,
+    title: "Ch9: COMPOUND",
+    summary:
+      "What it looks like when the system runs on its own and gets stronger over time.",
+  },
+  {
+    number: 10,
+    title: "Ch10: The Orbit Implementation Playbook",
+    summary:
+      "Orbit by orbit — the exact steps to activate ⊙01 through ⊙05 in sequence.",
+  },
+  {
+    number: 11,
+    title: "Ch11: The MAP Template + Discovery Session Guide",
+    summary:
+      "The 12-field artifact that replaces your pitch deck. Run it yourself.",
+  },
+  {
+    number: 12,
+    title: "Ch12: Tools, Calculators, and Self Assessment",
+    summary:
+      "Every framework, every calculator, every template. Built for Monday morning.",
+  },
+  {
+    number: 13,
+    title: "Closing: The Three Laws (Revisited)",
+    summary:
+      "The three laws every PS firm must respect to make the system compound.",
+  },
 ];
 
 const getChapterNumber = (c: ChapterCallout): number | null => {
@@ -71,16 +143,6 @@ const ORBIT_NAMES = [
 ];
 
 const LAYERS = ["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"];
-
-const formatDeadZone = (n: number | null): string => {
-  if (!n || n <= 0) return "—";
-  if (n >= 1_000_000) {
-    const m = n / 1_000_000;
-    return `$${m >= 10 ? Math.round(m) : m.toFixed(1)}M`;
-  }
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
-  return `$${n.toLocaleString()}`;
-};
 
 const splitAction = (text: string): { title: string; description: string } => {
   const trimmed = text.trim();
@@ -284,22 +346,15 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           })}
         </section>
 
-        {/* SECTION 4: YOUR DEAD ZONE */}
-        <section className="py-12 border-b border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest">
-            YOUR DEAD ZONE
-          </p>
-          <p className="text-5xl font-bold mt-4 tracking-tight">
-            {formatDeadZone(data.dead_zone_value)}
-          </p>
-          {data.dead_zone_reasoning && (
-            <p className="text-sm opacity-60 mt-4 max-w-lg leading-relaxed">
-              {data.dead_zone_reasoning}
-            </p>
-          )}
-          <p className="italic opacity-40 text-xs mt-3">
-            Estimated based on typical conversion rates for firms at your stage and size.
-          </p>
+        {/* SECTION 4: IMPACT MODEL — Dead Zone calc + Formula multiplier */}
+        <section className="border-b border-black/10 -mx-6">
+          <div className="bg-[#120D05] px-6 py-12">
+            <MagnetImpactModel
+              companyName={data.client_company_name ?? ""}
+              crmEstimate={data.crm_estimate ?? undefined}
+              dealSizeEstimate={data.deal_size_estimate ?? undefined}
+            />
+          </div>
         </section>
 
         {/* SECTION 5: WHERE TO START */}
@@ -360,7 +415,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             THE MANUSCRIPT — RELATIONSHIP REVENUE OS
           </p>
           <p className="text-sm opacity-40 mb-8 leading-relaxed">
-            14 chapters. The complete system. Sections marked ✦ are written
+            14 sections. The complete system. Sections marked ✦ are written
             specifically for your firm.
           </p>
 
@@ -428,7 +483,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 
           <div className="bg-black/[0.03] border border-black/10 p-6 mt-6 text-center">
             <p className="text-sm opacity-50 mb-4">
-              Want to see how all 14 chapters apply to{" "}
+              Want to see how all 14 sections apply to{" "}
               {submission?.first_name ? `${submission.first_name}'s firm` : "your firm"}?
             </p>
             <button
