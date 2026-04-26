@@ -318,16 +318,22 @@ ${JSON.stringify(linkedin_data)}`;
       const o = orbitsArr[idx];
       if (!o) return null;
       const status = typeof o.status === "string" ? o.status : "";
-      const desc = typeof o.description === "string" ? o.description : "";
-      return [status ? `[${status}]` : "", desc].filter(Boolean).join(" ").trim() || null;
+      // New schema: observation + opportunity. Legacy: description.
+      const observation = typeof o.observation === "string" ? o.observation : "";
+      const opportunity = typeof o.opportunity === "string" ? o.opportunity : "";
+      const legacyDesc = typeof o.description === "string" ? o.description : "";
+      const body = [observation, opportunity].filter(Boolean).join(" ") || legacyDesc;
+      return [status ? `[${status}]` : "", body].filter(Boolean).join(" ").trim() || null;
     };
 
     const quickWins = Array.isArray(parsed.quickWins)
-      ? (parsed.quickWins as Array<Record<string, unknown>>)
+      ? (parsed.quickWins as Array<Record<string, unknown> | string>)
       : [];
     const quickWinAt = (idx: number): string | null => {
       const w = quickWins[idx];
       if (!w) return null;
+      // New schema: each quick win can be a single formatted string.
+      if (typeof w === "string") return w.trim() || null;
       const title = typeof w.title === "string" ? w.title : "";
       const desc = typeof w.description === "string" ? w.description : "";
       return [title, desc].filter(Boolean).join(" — ") || null;
@@ -348,16 +354,31 @@ ${JSON.stringify(linkedin_data)}`;
       return Math.round(n * mult);
     };
 
+    // deadZone may now be a single string OR the legacy {estimate, description} object
+    const deadZoneIsString = typeof parsed.deadZone === "string";
+    const deadZoneText = deadZoneIsString
+      ? (parsed.deadZone as string)
+      : (typeof deadZone.description === "string" ? deadZone.description : null);
+    const deadZoneEstimateSource = deadZoneIsString
+      ? (parsed.deadZone as string)
+      : deadZone.estimate;
+
     const calloutsRaw = Array.isArray(parsed.chapterCallouts)
       ? (parsed.chapterCallouts as Array<Record<string, unknown>>)
       : [];
     const mappedCallouts = calloutsRaw.slice(0, 3).map((c) => {
-      const num = c.chapterNumber;
-      const chapter = typeof num === "number"
+      // New schema: { chapter: number, title: string, callout: string }
+      // Legacy: { chapterNumber: number, callout: string }
+      const newNum = typeof c.chapter === "number" ? c.chapter : undefined;
+      const legacyNum = typeof c.chapterNumber === "number" ? c.chapterNumber : undefined;
+      const num = newNum ?? legacyNum;
+      const chapterLabel = typeof num === "number"
         ? `Ch.${num}`
         : (typeof c.chapter === "string" ? c.chapter : "Ch.");
       return {
-        chapter,
+        chapter: chapterLabel,
+        chapter_number: typeof num === "number" ? num : null,
+        title: typeof c.title === "string" ? c.title : null,
         callout: typeof c.callout === "string" ? c.callout : "",
       };
     });
