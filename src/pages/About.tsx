@@ -7,6 +7,10 @@ import SectionRail from "@/components/discover/SectionRail";
 import Footer from "@/components/Footer";
 import adamPhoto from "@/assets/adam-fridman.png";
 import richardPhoto from "@/assets/richard-ashbaugh.png";
+import bookCover from "@/assets/book-cover-v2.png";
+import scienceOfStory from "@/assets/science-of-story-cover.png";
+import { useRevealRef, revealStyle } from "@/hooks/useRevealRef";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const ADD_YOUR_FIRM_HREF = "/assess";
 const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
