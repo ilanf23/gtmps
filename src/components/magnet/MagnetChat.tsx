@@ -72,7 +72,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
     <>
       {isOpen && (
         <div
-          className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] sm:w-80 h-[480px] bg-[#F5EFE0] border border-[#B8933A]/30 flex flex-col shadow-2xl"
+          className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] sm:w-80 h-[480px] bg-white border border-[#B8933A]/30 flex flex-col shadow-2xl"
           role="dialog"
           aria-label="GTM advisor chat"
         >
