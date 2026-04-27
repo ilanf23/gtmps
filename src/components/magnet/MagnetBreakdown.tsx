@@ -907,9 +907,15 @@ function CalendlyInlineWidget({
 function SaveAndShareRow({
   slug,
   customerName,
+  verticalSlug,
+  emailSubject,
+  shareTemplate,
 }: {
   slug: string;
   customerName: string;
+  verticalSlug: string;
+  emailSubject: string;
+  shareTemplate: string;
 }) {
   const [emailOpen, setEmailOpen] = useState(false);
   const [emailValue, setEmailValue] = useState("");
@@ -923,7 +929,7 @@ function SaveAndShareRow({
     setEmailSending(true);
     const { error: insertError } = await supabase
       .from("magnet_map_emails")
-      .insert({ slug, email: trimmed });
+      .insert({ slug, email: trimmed, vertical: verticalSlug });
     setEmailSending(false);
     if (insertError) {
       toast.error("Couldn't save your email. Try again.");
@@ -933,9 +939,12 @@ function SaveAndShareRow({
   };
 
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/m/${slug}`;
+    const shareUrl = `${window.location.origin}/m/${slug}${
+      verticalSlug && verticalSlug !== "general" ? `?vertical=${verticalSlug}` : ""
+    }`;
+    const text = `${shareTemplate} ${shareUrl}`;
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(text);
       toast.success("Link copied — share it with your team.");
     } catch {
       toast.error("Couldn't copy. Long-press the URL bar to copy manually.");
@@ -972,9 +981,7 @@ function SaveAndShareRow({
         <DialogContent className="sm:max-w-md bg-[#FBF8F4] text-[#1C1008] border border-black/10 rounded-none">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold leading-tight">
-              {emailSent
-                ? "Sent."
-                : `Email this map to yourself`}
+              {emailSent ? "Sent." : emailSubject}
             </DialogTitle>
             <DialogDescription className="text-[#1C1008]/70">
               {emailSent
