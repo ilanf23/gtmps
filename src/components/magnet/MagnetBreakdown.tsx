@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import MagnetImpactModel from "./MagnetImpactModel";
 // MagnetChat was replaced by the dedicated /m/:slug/chat page in MagnetShell.
