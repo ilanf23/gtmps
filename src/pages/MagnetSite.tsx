@@ -185,7 +185,7 @@ export default function MagnetSite() {
   if (status === 'complete') {
     return (
       <MagnetShell firstName={firstName}>
-        <MagnetBreakdown slug={slug!} />
+        <MagnetBreakdown slug={slug!} vertical={vertical} />
       </MagnetShell>
     );
   }
@@ -225,6 +225,7 @@ export default function MagnetSite() {
         websiteUrl={navState.websiteUrl}
         companyName={companyName}
         enrichmentReady={false}
+        vertical={vertical}
       />
     </MagnetShell>
   );
