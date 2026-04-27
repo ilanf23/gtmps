@@ -185,7 +185,11 @@ export default function MagnetSite() {
   if (status === 'complete') {
     return (
       <MagnetShell firstName={firstName}>
-        <MagnetBreakdown slug={slug!} vertical={vertical} />
+        <MagnetBreakdown
+          slug={slug!}
+          vertical={vertical}
+          shareId={searchParams.get('share_id')}
+        />
       </MagnetShell>
     );
   }

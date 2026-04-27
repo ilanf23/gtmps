@@ -1,0 +1,50 @@
+// SECTION 04 — Your Proof (Observed / Hypothesis / Question)
+
+import OHQ from "./ObservedHypothesisQuestion";
+
+interface Props {
+  observed: string | null;
+  primary: string;
+}
+
+export default function ProofAnalysisSection({ observed, primary }: Props) {
+  const hasObserved = Boolean(observed && observed.trim());
+  return (
+    <section
+      id="v10-section-4"
+      data-v10-section="4"
+      className="py-16 md:py-24 border-b border-black/10"
+    >
+      <div className="flex items-center gap-2 mb-5">
+        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <p
+          className="text-[11px] uppercase tracking-[0.3em] font-semibold"
+          style={{ color: primary }}
+        >
+          04 · Your Proof
+        </p>
+      </div>
+      <h2
+        className="font-bold leading-tight text-2xl md:text-3xl mb-6"
+        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      >
+        What proof you already own — and what's missing.
+      </h2>
+
+      <OHQ
+        observed={
+          hasObserved
+            ? (observed as string)
+            : "We could not surface named proof on your site. That makes your last 3 wins invisible to the next prospect."
+        }
+        hypothesis={
+          hasObserved
+            ? "The proof is real. The library isn't built. A 7-day proof sprint typically converts dormant pipeline like Madcraft did — $400K dormant proposal reactivated in 7 minutes."
+            : "A 7-day proof library (3 wins, 1 page each) is the minimum. Madcraft reactivated a $400K dormant proposal in 7 minutes after building theirs."
+        }
+        question="What proof would you want validated next?"
+        primary={primary}
+      />
+    </section>
+  );
+}
