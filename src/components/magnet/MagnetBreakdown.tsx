@@ -312,7 +312,7 @@ export default function MagnetBreakdown({
         <HighestLeverageMove
           profile={findingProfile}
           customerName={customerName}
-          recommendedAction={data.action_1}
+          recommendedAction={sanitizedAction}
           primary={brand.primary}
         />
 
