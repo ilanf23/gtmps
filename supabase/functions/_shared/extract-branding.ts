@@ -682,15 +682,54 @@ export async function extractBrandProfile(
   const logoUrl = await findLogoUrl(html, websiteUrl);
   const fontFamily = findFontFamily(html, css);
 
-  const siteName =
-    pickAttr(
-      html,
-      /<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i,
-    ) || pickAttr(html, /<title[^>]*>([^<]+)<\/title>/i);
+  // Company name extraction priority:
+  //   1. og:site_name
+  //   2. og:title
+  //   3. <meta name="application-name">
+  //   4. <title>
+  //   5. capitalized domain root (e.g. calliope.com → "Calliope")
+  // Never return null when we can fall back to the host.
+  const ogSiteName = pickAttr(
+    html,
+    /<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i,
+  );
+  const ogTitle = pickAttr(
+    html,
+    /<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i,
+  );
+  const applicationName = pickAttr(
+    html,
+    /<meta[^>]+name=["']application-name["'][^>]+content=["']([^"']+)["']/i,
+  );
+  const docTitle = pickAttr(html, /<title[^>]*>([^<]+)<\/title>/i);
 
-  const companyName = siteName
-    ? siteName.split(/[|\u2014\u2013\-:]/)[0].trim().slice(0, 80)
-    : null;
+  const cleanLabel = (s: string | null): string | null => {
+    if (!s) return null;
+    const head = s.split(/[|\u2014\u2013\-:]/)[0]?.trim();
+    return head ? head.slice(0, 80) : null;
+  };
+
+  let companyName: string | null =
+    cleanLabel(ogSiteName) ||
+    cleanLabel(ogTitle) ||
+    cleanLabel(applicationName) ||
+    cleanLabel(docTitle);
+
+  if (!companyName) {
+    try {
+      const host = new URL(websiteUrl).hostname.replace(/^www\./, "");
+      const root = host.split(".")[0] ?? "";
+      if (root) {
+        companyName = root
+          .split("-")
+          .filter(Boolean)
+          .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+          .join(" ");
+      }
+    } catch {
+      companyName = null;
+    }
+  }
 
   return {
     logoUrl,
