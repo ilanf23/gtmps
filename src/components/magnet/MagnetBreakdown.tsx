@@ -11,6 +11,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import MagnetImpactModel from "./MagnetImpactModel";
+import { useVerticalFlow } from "@/hooks/useVerticalFlow";
 // MagnetChat was replaced by the dedicated /m/:slug/chat page in MagnetShell.
 
 interface ChapterCallout {
@@ -187,8 +188,15 @@ const splitAction = (text: string): { title: string; description: string } => {
   };
 };
 
-export default function MagnetBreakdown({ slug }: { slug: string }) {
+export default function MagnetBreakdown({
+  slug,
+  vertical,
+}: {
+  slug: string;
+  vertical?: string | null;
+}) {
   const navigate = useNavigate();
+  const { flow, slug: verticalSlug } = useVerticalFlow(vertical);
   const [data, setData] = useState<BreakdownRow | null>(null);
   const [submission, setSubmission] = useState<SubmissionRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -372,6 +380,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
                   <span className="h-5 w-px bg-black/15" aria-hidden />
                   <span className="text-xs uppercase tracking-[0.28em] opacity-60">
                     {data.client_company_name}
+                    {flow.resultMapHeaderSuffix ? ` ${flow.resultMapHeaderSuffix}` : ''}
                   </span>
                 </>
               ) : null}
@@ -391,7 +400,10 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           <div className="mt-8 grid grid-cols-3 gap-px bg-black/10 border border-black/10">
             <div className="bg-[#FBF8F4] p-4">
               <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Firm</p>
-              <p className="text-sm font-semibold truncate">{customerName}</p>
+              <p className="text-sm font-semibold truncate">
+                {customerName}
+                {flow.resultMapHeaderSuffix ? ` ${flow.resultMapHeaderSuffix}` : ''}
+              </p>
             </div>
             <div className="bg-[#FBF8F4] p-4">
               <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Starting Layer</p>
@@ -738,6 +750,9 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           })}
 
           <div className="bg-black/[0.03] border border-black/10 p-6 mt-6 text-center">
+            <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[#B8933A] mb-2">
+              {flow.chapterRecommendationLead}
+            </p>
             <p className="text-sm opacity-50 mb-4">
               Want to see how all 14 sections apply to{" "}
               {submission?.first_name ? `${submission.first_name}'s firm` : "your firm"}?
@@ -757,7 +772,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           <div className="flex items-center gap-2 mb-4">
             <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
             <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
-              What's next for {customerName}
+              {flow.calendarCta}
             </p>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
@@ -776,7 +791,13 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           />
 
           {/* Optional save + share row */}
-          <SaveAndShareRow slug={slug} customerName={customerName} />
+          <SaveAndShareRow
+            slug={slug}
+            customerName={customerName}
+            verticalSlug={verticalSlug}
+            emailSubject={flow.emailSubject}
+            shareTemplate={flow.shareTemplate}
+          />
 
           {/* Secondary path — read the manuscript */}
           <div className="mt-6 text-center">
@@ -886,9 +907,15 @@ function CalendlyInlineWidget({
 function SaveAndShareRow({
   slug,
   customerName,
+  verticalSlug,
+  emailSubject,
+  shareTemplate,
 }: {
   slug: string;
   customerName: string;
+  verticalSlug: string;
+  emailSubject: string;
+  shareTemplate: string;
 }) {
   const [emailOpen, setEmailOpen] = useState(false);
   const [emailValue, setEmailValue] = useState("");
@@ -902,7 +929,7 @@ function SaveAndShareRow({
     setEmailSending(true);
     const { error: insertError } = await supabase
       .from("magnet_map_emails")
-      .insert({ slug, email: trimmed });
+      .insert({ slug, email: trimmed, vertical: verticalSlug });
     setEmailSending(false);
     if (insertError) {
       toast.error("Couldn't save your email. Try again.");
@@ -912,9 +939,12 @@ function SaveAndShareRow({
   };
 
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/m/${slug}`;
+    const shareUrl = `${window.location.origin}/m/${slug}${
+      verticalSlug && verticalSlug !== "general" ? `?vertical=${verticalSlug}` : ""
+    }`;
+    const text = `${shareTemplate} ${shareUrl}`;
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(text);
       toast.success("Link copied — share it with your team.");
     } catch {
       toast.error("Couldn't copy. Long-press the URL bar to copy manually.");
@@ -951,9 +981,7 @@ function SaveAndShareRow({
         <DialogContent className="sm:max-w-md bg-[#FBF8F4] text-[#1C1008] border border-black/10 rounded-none">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold leading-tight">
-              {emailSent
-                ? "Sent."
-                : `Email this map to yourself`}
+              {emailSent ? "Sent." : emailSubject}
             </DialogTitle>
             <DialogDescription className="text-[#1C1008]/70">
               {emailSent

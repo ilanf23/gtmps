@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Four-stage cinematic wait theater.
@@ -21,6 +22,8 @@ interface Props {
   companyName?: string | null;
   /** Becomes true the moment the breakdown row is ready in the DB. */
   enrichmentReady?: boolean;
+  /** Optional vertical override; otherwise read from ?vertical=<slug>. */
+  vertical?: string | null;
 }
 
 type Stage = {
@@ -102,9 +105,11 @@ export default function MagnetWaitTheater({
   websiteUrl,
   companyName,
   enrichmentReady = false,
+  vertical,
 }: Props) {
   const reduced = useReducedMotion();
   const [elapsed, setElapsed] = useState(0);
+  const { flow } = useVerticalFlow(vertical);
 
   // ── Tick the elapsed counter every 250ms ────────────────────────────────
   useEffect(() => {
@@ -126,7 +131,15 @@ export default function MagnetWaitTheater({
     return 0;
   }, [elapsed]);
 
-  const currentStage = STAGES[currentStageIdx];
+  // Apply per-vertical title + tick overrides on top of the base STAGES timing.
+  const currentStage: Stage = useMemo(() => {
+    const base = STAGES[currentStageIdx];
+    return {
+      ...base,
+      title: flow.waitStageTitles[currentStageIdx] ?? base.title,
+      ticks: flow.waitStageTicks[currentStageIdx] ?? base.ticks,
+    };
+  }, [currentStageIdx, flow]);
 
   // ── Status ticker: rotate every 6s within the current stage ────────────
   const tickIdx = Math.min(
@@ -196,11 +209,11 @@ export default function MagnetWaitTheater({
         ) : (
           <>
             {currentStageIdx === 0 && (
-              <Stage1Homepage domain={domain} tick={currentTick} />
+              <Stage1Homepage domain={domain} tick={currentTick} title={currentStage.title} />
             )}
-            {currentStageIdx === 1 && <Stage2Services tick={currentTick} />}
-            {currentStageIdx === 2 && <Stage3Orbits tick={currentTick} />}
-            {currentStageIdx === 3 && <Stage4Score tick={currentTick} elapsed={elapsed} />}
+            {currentStageIdx === 1 && <Stage2Services tick={currentTick} title={currentStage.title} />}
+            {currentStageIdx === 2 && <Stage3Orbits tick={currentTick} title={currentStage.title} />}
+            {currentStageIdx === 3 && <Stage4Score tick={currentTick} elapsed={elapsed} title={currentStage.title} />}
           </>
         )}
       </main>
@@ -247,9 +260,11 @@ function ReducedMotionStage({ stage, tick }: { stage: Stage; tick: string }) {
 function Stage1Homepage({
   domain,
   tick,
+  title,
 }: {
   domain: string | null;
   tick: string;
+  title: string;
 }) {
   const favicon = domain
     ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
@@ -261,7 +276,7 @@ function Stage1Homepage({
         Stage 1 of 4
       </p>
       <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
-        Reading your homepage
+        {title}
       </h2>
 
       <div className="mt-8 mx-auto max-w-md border border-black/10 bg-white p-5 text-left animate-in fade-in slide-in-from-bottom-3 duration-700">
@@ -317,7 +332,7 @@ function Stage1Homepage({
 }
 
 // ─── Stage 2: Service cards fade in ────────────────────────────────────────
-function Stage2Services({ tick }: { tick: string }) {
+function Stage2Services({ tick, title }: { tick: string; title: string }) {
   const services = ['Strategy', 'Branding', 'Delivery', 'Growth'];
   return (
     <div className="text-center">
@@ -325,7 +340,7 @@ function Stage2Services({ tick }: { tick: string }) {
         Stage 2 of 4
       </p>
       <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
-        Mapping your services
+        {title}
       </h2>
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-xl mx-auto">
@@ -360,7 +375,7 @@ function Stage2Services({ tick }: { tick: string }) {
 }
 
 // ─── Stage 3: Orbit visualization draws ring-by-ring ───────────────────────
-function Stage3Orbits({ tick }: { tick: string }) {
+function Stage3Orbits({ tick, title }: { tick: string; title: string }) {
   const SIZE = 320;
   const C = SIZE / 2;
   const rings = [44, 78, 112, 146, 180];
@@ -371,7 +386,7 @@ function Stage3Orbits({ tick }: { tick: string }) {
         Stage 3 of 4
       </p>
       <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
-        Mapping your dormant relationships
+        {title}
       </h2>
 
       <svg
@@ -418,7 +433,7 @@ function Stage3Orbits({ tick }: { tick: string }) {
 }
 
 // ─── Stage 4: Score number counts up ───────────────────────────────────────
-function Stage4Score({ tick, elapsed }: { tick: string; elapsed: number }) {
+function Stage4Score({ tick, elapsed, title }: { tick: string; elapsed: number; title: string }) {
   // Smoothly tween a teaser score from 0 → 73 between 70s and 88s.
   const t = Math.max(0, Math.min(1, (elapsed - 70) / 18));
   const eased = 1 - Math.pow(1 - t, 3);
@@ -430,7 +445,7 @@ function Stage4Score({ tick, elapsed }: { tick: string; elapsed: number }) {
         Stage 4 of 4
       </p>
       <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
-        Building your RROS map
+        {title}
       </h2>
 
       <div className="mt-10 mx-auto inline-block">

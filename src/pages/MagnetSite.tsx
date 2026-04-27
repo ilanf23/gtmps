@@ -1,10 +1,11 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MagnetBreakdown from '@/components/magnet/MagnetBreakdown';
 import MagnetShell from '@/components/magnet/MagnetShell';
 import MagnetWaitTheater from '@/components/magnet/MagnetWaitTheater';
 import { useClientTheme } from '@/hooks/useClientTheme';
+import { resolveVerticalSlug } from '@/content/verticalFlow';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
@@ -23,9 +24,12 @@ export default function MagnetSite() {
   const navigate = useNavigate();
   const location = useLocation();
   const navState = (location.state ?? {}) as NavState;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlVertical = searchParams.get('vertical');
   const [status, setStatus] = useState<Status>('loading');
   const [firstName, setFirstName] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
+  const [vertical, setVertical] = useState<string>(() => resolveVerticalSlug(urlVertical));
   const timeoutRef = useRef<number | null>(null);
   // Theme is loaded via the shell, but the loading scene also needs accent.
   const theme = useClientTheme(slug);
@@ -88,6 +92,20 @@ export default function MagnetSite() {
 
       if (submissionRow?.first_name) {
         setFirstName(submissionRow.first_name);
+      }
+      // Hydrate vertical from the persisted row when the URL doesn't carry it,
+      // so a refresh after Calendly redirects (etc.) keeps the right copy.
+      const rowVertical: string | null =
+        (submissionRow as { vertical?: string | null } | null)?.vertical ?? null;
+      if (rowVertical && !urlVertical) {
+        const resolved = resolveVerticalSlug(rowVertical);
+        if (resolved !== 'general' && resolved !== vertical) {
+          setVertical(resolved);
+          // Reflect in URL so deep-share links keep working without losing context.
+          const next = new URLSearchParams(searchParams);
+          next.set('vertical', resolved);
+          setSearchParams(next, { replace: true });
+        }
       }
       if (breakdownRow?.client_company_name) {
         setCompanyName(breakdownRow.client_company_name);
@@ -167,7 +185,7 @@ export default function MagnetSite() {
   if (status === 'complete') {
     return (
       <MagnetShell firstName={firstName}>
-        <MagnetBreakdown slug={slug!} />
+        <MagnetBreakdown slug={slug!} vertical={vertical} />
       </MagnetShell>
     );
   }
@@ -207,6 +225,7 @@ export default function MagnetSite() {
         websiteUrl={navState.websiteUrl}
         companyName={companyName}
         enrichmentReady={false}
+        vertical={vertical}
       />
     </MagnetShell>
   );

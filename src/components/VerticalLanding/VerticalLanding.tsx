@@ -797,7 +797,7 @@ export default function VerticalLanding({ vertical }: Props) {
               {vertical.diagnostic.sub}
             </p>
             <a
-              href="/assess"
+              href={`/assess?vertical=${vertical.slug}`}
               className="vl-cta-primary"
               data-vertical={vertical.slug}
               data-cta="add-your-firm"
@@ -863,7 +863,7 @@ export default function VerticalLanding({ vertical }: Props) {
               {vertical.hero.headline}
             </h2>
             <a
-              href="/assess"
+              href={`/assess?vertical=${vertical.slug}`}
               className="vl-cta-primary"
               data-vertical={vertical.slug}
               data-cta="add-your-firm"
@@ -891,7 +891,7 @@ export default function VerticalLanding({ vertical }: Props) {
       </main>
 
       <VerticalFooter />
-      <VerticalStickyCta label={ctaLabel} />
+      <VerticalStickyCta label={ctaLabel} vertical={vertical.slug} />
     </>
   );
 }
