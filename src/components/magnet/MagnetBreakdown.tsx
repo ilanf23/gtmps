@@ -380,6 +380,7 @@ export default function MagnetBreakdown({
                   <span className="h-5 w-px bg-black/15" aria-hidden />
                   <span className="text-xs uppercase tracking-[0.28em] opacity-60">
                     {data.client_company_name}
+                    {flow.resultMapHeaderSuffix ? ` ${flow.resultMapHeaderSuffix}` : ''}
                   </span>
                 </>
               ) : null}
@@ -399,7 +400,10 @@ export default function MagnetBreakdown({
           <div className="mt-8 grid grid-cols-3 gap-px bg-black/10 border border-black/10">
             <div className="bg-[#FBF8F4] p-4">
               <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Firm</p>
-              <p className="text-sm font-semibold truncate">{customerName}</p>
+              <p className="text-sm font-semibold truncate">
+                {customerName}
+                {flow.resultMapHeaderSuffix ? ` ${flow.resultMapHeaderSuffix}` : ''}
+              </p>
             </div>
             <div className="bg-[#FBF8F4] p-4">
               <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Starting Layer</p>
