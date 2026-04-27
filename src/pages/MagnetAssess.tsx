@@ -1,211 +1,138 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { generateMagnetSlug } from '@/lib/magnetSlug';
 
-const optionalUrl = z
+// ─────────────────────────────────────────────────────────────────────────────
+// Per-step zod schemas — each step validates only its own field.
+// ─────────────────────────────────────────────────────────────────────────────
+const nameSchema = z
+  .string()
+  .trim()
+  .min(2, 'Please enter your name')
+  .max(120, 'That looks too long');
+
+const emailSchema = z
+  .string()
+  .trim()
+  .email('Enter a valid work email')
+  .max(255);
+
+const websiteSchema = z
   .string()
   .trim()
   .url('Enter a valid URL (https://…)')
-  .optional()
-  .or(z.literal(''));
+  .max(255);
 
-const schema = z.object({
-  name: z.string().trim().min(2, 'Please enter your name'),
-  role: z.string().trim().min(2, 'Please enter your role'),
-  websiteUrl: z.string().trim().url('Enter a valid URL (https://…)'),
-  linkedinUrl: optionalUrl,
-  email: z.string().trim().email('Enter a valid email'),
-  crmSize: z.enum(['under_100', '100_300', '300_700', '700_plus'], {
-    errorMap: () => ({ message: 'Please select a range' }),
-  }),
-  dealSize: z.enum(['under_50k', '50k_150k', '150k_500k', '500k_plus'], {
-    errorMap: () => ({ message: 'Please select a range' }),
-  }),
-  bdChallenge: z.enum(
-    [
-      'finding_new',
-      'reengaging_past',
-      'converting_warm',
-      'consistent_intros',
-      'generating_inbound',
-    ],
-    { errorMap: () => ({ message: 'Please select an option' }) },
-  ),
-  caseStudiesUrl: optionalUrl,
-  teamPageUrl: optionalUrl,
-});
-
-type FormValues = z.infer<typeof schema>;
+// ─────────────────────────────────────────────────────────────────────────────
+// Static + dynamic social proof
+// ─────────────────────────────────────────────────────────────────────────────
+const PROOF_FEED = [
+  { name: 'Maria',  firm: 'Northwind Advisory' },
+  { name: 'James',  firm: 'Brightpath Partners' },
+  { name: 'Priya',  firm: 'Cedar & Vale' },
+  { name: 'Marcus', firm: 'Hollis Group' },
+  { name: 'Elena',  firm: 'Westover Strategy' },
+  { name: 'Daniel', firm: 'Ironwood Consulting' },
+  { name: 'Aisha',  firm: 'Meridian Capital Advisors' },
+  { name: 'Tom',    firm: 'Foxbridge Studio' },
+  { name: 'Nora',   firm: 'Larkfield & Co.' },
+  { name: 'Owen',   firm: 'Sutter Strategy' },
+];
 
 const inputClass =
-  'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-12 px-4 transition-colors';
-
-const selectClass =
-  inputClass +
-  ' appearance-none pr-10 bg-no-repeat bg-[length:12px_12px] bg-[right_1rem_center]';
-
-// Inline chevron SVG used as the select arrow
-const selectChevronStyle = {
-  backgroundImage:
-    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%231C1008' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>\")",
-};
+  'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-14 px-4 text-base transition-colors';
 
 export default function MagnetAssess() {
   const navigate = useNavigate();
+
+  // ── Form state ───────────────────────────────────────────────────────────
+  const [step, setStep] = useState<0 | 1 | 2>(0); // 0=name, 1=email, 2=website
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema) as never,
-    mode: 'onBlur',
-    defaultValues: {
-      crmSize: '' as unknown as FormValues['crmSize'],
-      dealSize: '' as unknown as FormValues['dealSize'],
-      bdChallenge: '' as unknown as FormValues['bdChallenge'],
-    },
-  });
-
-  const watched = watch();
-  const {
-    websiteUrl,
-    crmSize,
-    dealSize,
-    bdChallenge,
-    caseStudiesUrl,
-  } = watched;
-
-  // Weighted progress calc
-  const fieldWeights: Record<string, number> = {
-    name: 10,
-    role: 5,
-    websiteUrl: 20,
-    email: 10,
-    crmSize: 15,
-    dealSize: 15,
-    bdChallenge: 10,
-    linkedinUrl: 5,
-    caseStudiesUrl: 5,
-    teamPageUrl: 5,
-  };
-  const progress = Object.entries(fieldWeights).reduce((sum, [k, w]) => {
-    const v = watched[k as keyof FormValues];
-    return sum + (v && String(v).trim() !== '' ? w : 0);
-  }, 0);
-
-  const getProgressLabel = (p: number): string => {
-    if (p === 0) return 'Start building your breakdown →';
-    if (p < 20) return 'Setting up your profile...';
-    if (p < 40) return 'Mapping your firm context...';
-    if (p < 60) return 'Identifying your orbits...';
-    if (p < 80) return 'Calculating your Dead Zone...';
-    if (p < 100) return 'Almost there, breakdown nearly ready...';
-    return 'Full breakdown unlocked';
-  };
-
-  // Live Dead Zone Value (in $K)
-  const crmMidpoints: Record<string, number> = {
-    under_100: 75,
-    '100_300': 200,
-    '300_700': 500,
-    '700_plus': 800,
-  };
-  const dealMidpoints: Record<string, number> = {
-    under_50k: 35000,
-    '50k_150k': 100000,
-    '150k_500k': 325000,
-    '500k_plus': 650000,
-  };
-  const deadZoneValue =
-    crmSize && dealSize
-      ? Math.round(
-          ((crmMidpoints[crmSize] ?? 0) *
-            0.81 *
-            (dealMidpoints[dealSize] ?? 0) *
-            0.03) /
-            1000,
-        )
-      : null;
-
-  // Pulse the Dead Zone badge briefly when it first appears
-  const [deadZonePulsed, setDeadZonePulsed] = useState(false);
+  // Auto-focus input when step changes
   useEffect(() => {
-    if (deadZoneValue !== null && !deadZonePulsed) {
-      const t = setTimeout(() => setDeadZonePulsed(true), 2000);
-      return () => clearTimeout(t);
-    }
-  }, [deadZoneValue, deadZonePulsed]);
+    inputRef.current?.focus();
+  }, [step]);
 
-  const layerMap: Record<string, string> = {
-    finding_new: '⊙ Starting layer: PROVE',
-    reengaging_past: '⊙ Starting layer: ACTIVATE',
-    converting_warm: '⊙ Starting layer: DESIGN',
-    consistent_intros: '⊙ Starting layer: ACTIVATE',
-    generating_inbound: '⊙ Starting layer: COMPOUND',
+  // ── Founder video pause-on-typing ────────────────────────────────────────
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const pauseFounderVideo = () => {
+    const v = videoRef.current;
+    if (v && !v.paused) v.pause();
   };
 
-  const badges = [
-    {
-      id: 'website',
-      condition: Boolean(websiteUrl && String(websiteUrl).trim() !== ''),
-      label: '⊙ Website: Ready to analyze',
-      color:
-        'border-[#1C1008]/20 bg-[#1C1008]/5 text-[#1C1008]/80',
-    },
-    {
-      id: 'deadzone',
-      condition: deadZoneValue !== null,
-      label:
-        deadZoneValue !== null
-          ? `⊙ Dead Zone estimate: ~$${deadZoneValue}K`
-          : '',
-      color:
-        'border-[#B8933A]/40 bg-[#B8933A]/10 text-[#8a6e2b]',
-    },
-    {
-      id: 'layer',
-      condition: Boolean(bdChallenge),
-      label: bdChallenge ? layerMap[bdChallenge] ?? '⊙ Starting layer: Identified' : '',
-      color:
-        'border-[#3D5A4A]/30 bg-[#3D5A4A]/10 text-[#3D5A4A]',
-    },
-    {
-      id: 'proof',
-      condition: Boolean(caseStudiesUrl && String(caseStudiesUrl).trim() !== ''),
-      label: '⊙ Proof assets: Will be analyzed',
-      color:
-        'border-[#8B3A2A]/30 bg-[#8B3A2A]/10 text-[#8B3A2A]',
-    },
-  ];
+  // ── Continue / submit handlers per step ──────────────────────────────────
+  const handleContinue = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setError(null);
 
-  const onSubmit = async (data: FormValues) => {
+    if (step === 0) {
+      const r = nameSchema.safeParse(name);
+      if (!r.success) {
+        setError(r.error.issues[0]?.message ?? 'Invalid name');
+        return;
+      }
+      // Dynamic social proof toast between Step 1 → 2
+      const idx = Math.floor(Math.random() * PROOF_FEED.length);
+      const p = PROOF_FEED[idx];
+      const minsAgo = 2 + Math.floor(Math.random() * 9);
+      toast(
+        `${p.name} from ${p.firm} just completed her analysis · ${minsAgo} min ago`,
+        { duration: 3500 }
+      );
+      setStep(1);
+      return;
+    }
+
+    if (step === 1) {
+      const r = emailSchema.safeParse(email);
+      if (!r.success) {
+        setError(r.error.issues[0]?.message ?? 'Invalid email');
+        return;
+      }
+      setStep(2);
+      return;
+    }
+
+    // Step 2 — final submit
+    const r = websiteSchema.safeParse(website);
+    if (!r.success) {
+      setError(r.error.issues[0]?.message ?? 'Invalid URL');
+      return;
+    }
+    await submit();
+  };
+
+  const submit = async () => {
     setSubmitting(true);
     try {
-      const slug = generateMagnetSlug(data.email);
+      const slug = generateMagnetSlug(email);
 
       const { error: insertError } = await supabase
         .from('magnet_submissions')
         .insert({
           slug,
-          first_name: data.name,
-          role: data.role,
-          website_url: data.websiteUrl,
-          linkedin_url: data.linkedinUrl || '',
-          email: data.email,
+          first_name: name.trim(),
+          // role + linkedin_url are NOT NULL in the schema; insert empty
+          // strings since the new flow no longer collects them.
+          role: '',
+          linkedin_url: '',
+          website_url: website.trim(),
+          email: email.trim(),
           status: 'pending',
-          crm_size: data.crmSize,
-          deal_size: data.dealSize,
-          bd_challenge: data.bdChallenge,
-          case_studies_url: data.caseStudiesUrl || null,
-          team_page_url: data.teamPageUrl || null,
+          crm_size: null,
+          deal_size: null,
+          bd_challenge: null,
+          case_studies_url: null,
+          team_page_url: null,
         });
 
       if (insertError) {
@@ -215,16 +142,16 @@ export default function MagnetAssess() {
         return;
       }
 
-      // Fire and forget — do not await
+      // Fire and forget — enrichment runs in the background.
       void supabase.functions
         .invoke('enrich-magnet', {
           body: {
             slug,
-            crmSize: data.crmSize,
-            dealSize: data.dealSize,
-            bdChallenge: data.bdChallenge,
-            caseStudiesUrl: data.caseStudiesUrl || null,
-            teamPageUrl: data.teamPageUrl || null,
+            crmSize: null,
+            dealSize: null,
+            bdChallenge: null,
+            caseStudiesUrl: null,
+            teamPageUrl: null,
           },
         })
         .catch((err) => console.error('Enrich invoke error:', err));
@@ -237,215 +164,170 @@ export default function MagnetAssess() {
     }
   };
 
+  // ── Progress / step labels ───────────────────────────────────────────────
+  const progressPct = useMemo(() => {
+    // 0 → 33%, 1 → 66%, 2 → 100% (fills as user completes the field)
+    if (step === 0) return name.trim().length >= 2 ? 33 : 11;
+    if (step === 1) return email.trim().length > 5 ? 66 : 44;
+    return website.trim().length > 8 ? 100 : 77;
+  }, [step, name, email, website]);
+
+  const stepLabel = `Step ${step + 1} of 3`;
+
   return (
     <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
-      <div className="max-w-lg mx-auto px-6 py-20 md:py-28">
-        <p className="text-[11px] tracking-[0.18em] font-medium text-[#B8933A]">
-          GET YOUR PERSONALIZED GTM BREAKDOWN
-        </p>
-        <h1 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
-          See exactly where your firm's revenue relationships are leaking.
-        </h1>
-        <p className="text-sm opacity-70 mt-2">
-          Takes 90 seconds. We analyze your website and build a custom RROS map for your firm.
-        </p>
-
-        {/* Live progress block */}
-        <div className="mt-8 p-5 border border-black/10 bg-black/[0.02]">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs uppercase tracking-wider font-medium text-[#1C1008]">
-              {getProgressLabel(progress)}
-            </span>
-            <span className="text-xs font-mono text-[#1C1008]/60">{progress}%</span>
-          </div>
-
-          <div className="w-full h-1 bg-black/10 overflow-hidden">
+      {/* ─── Sticky Top Bar ─────────────────────────────────────────────── */}
+      <div
+        className="sticky top-0 z-40 bg-[#FBF8F4]/95 backdrop-blur-sm border-b border-black/10"
+        style={{ height: 48 }}
+      >
+        <div className="max-w-lg mx-auto h-full px-6 flex items-center gap-4">
+          <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[#1C1008]/70 shrink-0">
+            {stepLabel}
+          </span>
+          <div className="flex-1 h-1 bg-black/10 overflow-hidden">
             <div
               className="h-full bg-[#B8933A] transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${progressPct}%` }}
             />
           </div>
+          <span className="text-[10px] font-mono text-[#1C1008]/50 shrink-0 w-9 text-right">
+            {progressPct}%
+          </span>
+        </div>
+      </div>
 
-          {badges.some((b) => b.condition) && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {badges
-                .filter((b) => b.condition && b.label)
-                .map((b) => (
-                  <span
-                    key={b.id}
-                    className={`text-[11px] px-3 py-1 border font-medium tracking-wide transition-opacity duration-300 ${b.color} ${
-                      b.id === 'deadzone' && !deadZonePulsed ? 'animate-pulse' : ''
-                    }`}
-                  >
-                    {b.label}
-                  </span>
-                ))}
+      <div className="max-w-lg mx-auto px-6 py-10 md:py-16">
+        {/* ─── Persistent intro block (always visible) ──────────────────── */}
+        <p className="text-[11px] tracking-[0.18em] font-medium text-[#B8933A]">
+          GET YOUR PERSONALIZED ANALYSIS
+        </p>
+        <h1 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
+          Understand your firm's revenue potential in 90 seconds.
+        </h1>
+        <p className="text-sm opacity-70 mt-3 leading-relaxed">
+          We analyze your website for gaps in positioning, messaging, and dormant
+          relationship signals. Then we build your custom RROS map.
+        </p>
+        <p className="mt-4 text-[10px] tracking-[0.22em] font-semibold text-[#B8933A]/90 uppercase">
+          Analyzes: Positioning · Messaging · CTAs · Consistency
+        </p>
+
+        {/* ─── Founder video card (placeholder until asset lands) ──────── */}
+        <FounderVideoCard videoRef={videoRef} />
+
+        {/* ─── Static social proof strip ───────────────────────────────── */}
+        <p className="mt-6 text-xs text-[#1C1008]/55 italic leading-relaxed">
+          Trusted by 60+ managing partners at PS firms $5M to $100M.
+        </p>
+
+        {/* ─── Stepper form ────────────────────────────────────────────── */}
+        <form onSubmit={handleContinue} className="mt-10" noValidate>
+          {/* Step 1 — Name */}
+          {step === 0 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
+                Your name
+              </label>
+              <input
+                ref={inputRef}
+                type="text"
+                autoComplete="name"
+                className={inputClass}
+                placeholder="Jane Doe"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (error) setError(null);
+                }}
+                onFocus={pauseFounderVideo}
+              />
             </div>
           )}
-        </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5" noValidate>
-          <Field label="Your name" error={errors.name?.message}>
-            <input
-              type="text"
-              autoComplete="name"
-              className={inputClass}
-              placeholder="Jane Doe"
-              {...register('name')}
-            />
-          </Field>
+          {/* Step 2 — Email */}
+          {step === 1 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
+                Work email
+              </label>
+              <input
+                ref={inputRef}
+                type="email"
+                autoComplete="email"
+                className={inputClass}
+                placeholder="jane@yourfirm.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError(null);
+                }}
+                onFocus={pauseFounderVideo}
+              />
+            </div>
+          )}
 
-          <Field label="Your title / role" error={errors.role?.message}>
-            <input
-              type="text"
-              autoComplete="organization-title"
-              className={inputClass}
-              placeholder="Managing Partner"
-              {...register('role')}
-            />
-          </Field>
+          {/* Step 3 — Website */}
+          {step === 2 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
+                Company website
+              </label>
+              <input
+                ref={inputRef}
+                type="url"
+                autoComplete="url"
+                className={inputClass}
+                placeholder="https://yourfirm.com"
+                value={website}
+                onChange={(e) => {
+                  setWebsite(e.target.value);
+                  if (error) setError(null);
+                }}
+                onFocus={pauseFounderVideo}
+              />
+            </div>
+          )}
 
-          <Field label="Company website" error={errors.websiteUrl?.message}>
-            <input
-              type="url"
-              autoComplete="url"
-              className={inputClass}
-              placeholder="https://yourfirm.com"
-              {...register('websiteUrl')}
-            />
-          </Field>
+          {error && <p className="mt-3 text-xs text-[#8B3A2A]">{error}</p>}
 
-          <Field
-            label="Your LinkedIn profile (optional)"
-            error={errors.linkedinUrl?.message}
-          >
-            <input
-              type="url"
-              className={inputClass}
-              placeholder="https://linkedin.com/in/you"
-              {...register('linkedinUrl')}
-            />
-          </Field>
-
-          <Field label="Work email" error={errors.email?.message}>
-            <input
-              type="email"
-              autoComplete="email"
-              className={inputClass}
-              placeholder="you@yourfirm.com"
-              {...register('email')}
-            />
-          </Field>
-
-          <Field
-            label="How many contacts are in your CRM or contact database?"
-            error={errors.crmSize?.message}
-          >
-            <select
-              className={selectClass}
-              style={selectChevronStyle}
-              defaultValue=""
-              {...register('crmSize')}
-            >
-              <option value="" disabled>
-                Select a range...
-              </option>
-              <option value="under_100">Under 100</option>
-              <option value="100_300">100 – 300</option>
-              <option value="300_700">300 – 700</option>
-              <option value="700_plus">700+</option>
-            </select>
-          </Field>
-
-          <Field
-            label="What's your typical engagement or project value?"
-            error={errors.dealSize?.message}
-          >
-            <select
-              className={selectClass}
-              style={selectChevronStyle}
-              defaultValue=""
-              {...register('dealSize')}
-            >
-              <option value="" disabled>
-                Select a range...
-              </option>
-              <option value="under_50k">Under $50K</option>
-              <option value="50k_150k">$50K – $150K</option>
-              <option value="150k_500k">$150K – $500K</option>
-              <option value="500k_plus">$500K+</option>
-            </select>
-          </Field>
-
-          <Field
-            label="What's your biggest BD challenge right now?"
-            error={errors.bdChallenge?.message}
-          >
-            <select
-              className={selectClass}
-              style={selectChevronStyle}
-              defaultValue=""
-              {...register('bdChallenge')}
-            >
-              <option value="" disabled>
-                Select one...
-              </option>
-              <option value="finding_new">Finding new clients</option>
-              <option value="reengaging_past">Re-engaging past clients</option>
-              <option value="converting_warm">Converting warm referrals</option>
-              <option value="consistent_intros">Getting consistent introductions</option>
-              <option value="generating_inbound">Generating inbound</option>
-            </select>
-          </Field>
-
-          <Field
-            label="Link to your case studies or work page (optional)"
-            helper="Helps us analyze your proof assets"
-            error={errors.caseStudiesUrl?.message}
-          >
-            <input
-              type="url"
-              className={inputClass}
-              placeholder="https://yourfirm.com/case-studies"
-              {...register('caseStudiesUrl')}
-            />
-          </Field>
-
-          <Field
-            label="Link to your team or about page (optional)"
-            helper="Helps us understand your firm's background"
-            error={errors.teamPageUrl?.message}
-          >
-            <input
-              type="url"
-              className={inputClass}
-              placeholder="https://yourfirm.com/about"
-              {...register('teamPageUrl')}
-            />
-          </Field>
-
-          <div className="pt-2">
+          {/* CTA + Back */}
+          <div className="mt-6 flex flex-col gap-3">
             <button
               type="submit"
-              disabled={submitting || progress < 60}
-              className="w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={submitting}
+              className="w-full h-14 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <>
                   <span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" />
-                  BUILDING…
+                  BUILDING YOUR ANALYSIS…
                 </>
-              ) : progress < 60 ? (
-                `COMPLETE YOUR PROFILE (${progress}%)`
-              ) : progress === 100 ? (
-                'GENERATE FULL BREAKDOWN →'
+              ) : step === 2 ? (
+                'BUILD MY ANALYSIS →'
               ) : (
-                'GENERATE BREAKDOWN →'
+                'CONTINUE →'
               )}
             </button>
-            <p className="text-xs opacity-40 text-center mt-3">
-              No spam. No sales pitch. Just your map.
-            </p>
+
+            {step === 2 && !submitting && (
+              <p className="text-xs text-center opacity-50">
+                Free. 90 seconds. No credit card. Confidential.
+              </p>
+            )}
+
+            {step > 0 && !submitting && (
+              <button
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setStep((s) => Math.max(0, s - 1) as 0 | 1 | 2);
+                }}
+                className="text-xs uppercase tracking-wider text-[#1C1008]/50 hover:text-[#1C1008]/80 transition-colors mt-1"
+              >
+                ← Back
+              </button>
+            )}
           </div>
         </form>
       </div>
@@ -453,25 +335,70 @@ export default function MagnetAssess() {
   );
 }
 
-function Field({
-  label,
-  error,
-  helper,
-  children,
+// ─────────────────────────────────────────────────────────────────────────────
+// Founder video card — uses placeholder copy until the real asset is wired up.
+// Shape is final; just drop the .mp4 / poster image into /public/founder/ when
+// they land and update the src/poster paths below.
+// ─────────────────────────────────────────────────────────────────────────────
+function FounderVideoCard({
+  videoRef,
 }: {
-  label: string;
-  error?: string;
-  helper?: string;
-  children: React.ReactNode;
+  videoRef: React.RefObject<HTMLVideoElement>;
 }) {
+  // Real asset paths (drop files here when ready):
+  //   /public/founder/adam-intro.mp4
+  //   /public/founder/adam-intro-poster.jpg
+  //   /public/founder/adam-intro.vtt
+  const VIDEO_SRC = '/founder/adam-intro.mp4';
+  const POSTER_SRC = '/founder/adam-intro-poster.jpg';
+
+  const [hasAsset, setHasAsset] = useState(true);
+  // If the video file 404s, fall back to the static placeholder card.
+  const onError = () => setHasAsset(false);
+
+  if (!hasAsset) {
+    return (
+      <div className="mt-8 border border-black/10 bg-black/[0.02] p-5 flex items-start gap-4">
+        <div
+          className="w-14 h-14 shrink-0 rounded-full border border-[#B8933A]/40 bg-[#B8933A]/10 flex items-center justify-center"
+          aria-hidden
+        >
+          <span className="text-[#B8933A] text-lg font-serif italic">A</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] tracking-[0.22em] uppercase font-semibold text-[#B8933A]/90">
+            20 sec from Adam
+          </p>
+          <p className="mt-1.5 text-sm leading-relaxed text-[#1C1008]/85">
+            "Hi, I'm Adam. We built this for managing partners at firms like
+            yours. 20 seconds. Here's what we look at."
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <label className="block text-xs uppercase tracking-wider opacity-60 mb-2">
-        {label}
-      </label>
-      {children}
-      {helper && <p className="mt-1.5 text-xs opacity-50">{helper}</p>}
-      {error && <p className="mt-1.5 text-xs text-[#B8933A]">{error}</p>}
+    <div className="mt-8 border border-black/10 bg-black overflow-hidden">
+      <video
+        ref={videoRef}
+        className="w-full h-auto block"
+        src={VIDEO_SRC}
+        poster={POSTER_SRC}
+        muted
+        playsInline
+        controls
+        preload="metadata"
+        onError={onError}
+        crossOrigin="anonymous"
+      >
+        <track
+          default
+          kind="captions"
+          srcLang="en"
+          src="/founder/adam-intro.vtt"
+        />
+      </video>
     </div>
   );
 }
