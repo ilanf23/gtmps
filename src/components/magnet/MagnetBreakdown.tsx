@@ -180,10 +180,37 @@ const splitAction = (text: string): { title: string; description: string } => {
 
 export default function MagnetBreakdown({ slug }: { slug: string }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const navState = (location.state ?? {}) as { email?: string };
   const [data, setData] = useState<BreakdownRow | null>(null);
   const [submission, setSubmission] = useState<SubmissionRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Two-phase reveal — unlock state persists across refresh.
+  const unlockKey = `magnet:unlocked:${slug}`;
+  const [unlocked, setUnlocked] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(unlockKey) === "1";
+  });
+  const [confirmEmail, setConfirmEmail] = useState<string>(navState.email ?? "");
+
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!confirmEmail.trim() || !confirmEmail.includes("@")) return;
+    try {
+      window.localStorage.setItem(unlockKey, "1");
+    } catch {
+      // localStorage may be disabled — unlock for this session only.
+    }
+    setUnlocked(true);
+    // Smooth scroll into the now-visible content.
+    requestAnimationFrame(() => {
+      document
+        .getElementById("magnet-full-reveal")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
