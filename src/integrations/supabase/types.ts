@@ -236,6 +236,27 @@ export type Database = {
           },
         ]
       }
+      magnet_map_emails: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       magnet_submissions: {
         Row: {
           bd_challenge: string | null

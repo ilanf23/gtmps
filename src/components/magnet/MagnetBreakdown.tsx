@@ -1,6 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import MagnetImpactModel from "./MagnetImpactModel";
 // MagnetChat was replaced by the dedicated /m/:slug/chat page in MagnetShell.
 
@@ -180,37 +189,10 @@ const splitAction = (text: string): { title: string; description: string } => {
 
 export default function MagnetBreakdown({ slug }: { slug: string }) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const navState = (location.state ?? {}) as { email?: string };
   const [data, setData] = useState<BreakdownRow | null>(null);
   const [submission, setSubmission] = useState<SubmissionRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Two-phase reveal — unlock state persists across refresh.
-  const unlockKey = `magnet:unlocked:${slug}`;
-  const [unlocked, setUnlocked] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.localStorage.getItem(unlockKey) === "1";
-  });
-  const [confirmEmail, setConfirmEmail] = useState<string>(navState.email ?? "");
-
-  const handleUnlock = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!confirmEmail.trim() || !confirmEmail.includes("@")) return;
-    try {
-      window.localStorage.setItem(unlockKey, "1");
-    } catch {
-      // localStorage may be disabled — unlock for this session only.
-    }
-    setUnlocked(true);
-    // Smooth scroll into the now-visible content.
-    requestAnimationFrame(() => {
-      document
-        .getElementById("magnet-full-reveal")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  };
 
   useEffect(() => {
     let cancelled = false;
@@ -361,19 +343,8 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         }}
       />
       <div className="max-w-2xl mx-auto px-6 pb-24">
-        {/* ─── PHASE A: PRE-GATE TEASER ─────────────────────────────────── */}
-        {!unlocked && (
-          <TeaserAndGate
-            data={data}
-            customerName={customerName}
-            confirmEmail={confirmEmail}
-            setConfirmEmail={setConfirmEmail}
-            handleUnlock={handleUnlock}
-          />
-        )}
-
-        {/* ─── PHASE B: FULL REVEAL ─────────────────────────────────────── */}
-        <div id="magnet-full-reveal" hidden={!unlocked}>
+        {/* Full reveal — no gate, no blur. */}
+        <div id="magnet-full-reveal">
         {/* SECTION 1: PERSONAL HEADER */}
         <section className="pt-16 pb-12 border-b border-black/10">
           {data.client_logo_url ? (
@@ -781,7 +752,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           </div>
         </section>
 
-        {/* SECTION 8: NEXT STEPS — three hierarchized CTAs + book mention */}
+        {/* SECTION 8: BOOK A CALL — primary action */}
         <section className="py-16">
           <div className="flex items-center gap-2 mb-4">
             <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
@@ -789,38 +760,32 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               What's next for {customerName}
             </p>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-            The system is mapped. The pipeline already exists.
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+            See how this map applies to {customerName} live with Adam.
           </h2>
           <p className="text-base opacity-70 mb-8 leading-relaxed max-w-lg">
-            Pick the lane that fits where you are right now.
+            20 minutes. No pitch. We walk through your map together and
+            answer the questions you have right now.
           </p>
 
-          <div className="flex flex-col gap-3">
-            {/* Primary — book a walkthrough */}
-            <a
-              href="mailto:adam@mabbly.com?subject=20-min%20RROS%20walkthrough"
-              className="block w-full text-center bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
-            >
-              Book a 20-min walkthrough with Adam →
-            </a>
+          <CalendlyInlineWidget
+            url="https://calendly.com/adam-mabbly/gtm"
+            brandPrimary={brand.primary.replace("#", "")}
+            brandBackground={brand.background.replace("#", "")}
+            brandText={brand.text.replace("#", "")}
+          />
 
-            {/* Secondary — see the framework */}
-            <button
-              type="button"
-              onClick={() => navigate("/discover")}
-              className="w-full text-center border border-[#B8933A]/50 text-[#B8933A] font-semibold px-8 py-4 uppercase tracking-wide text-sm hover:bg-[#B8933A]/10 transition-colors"
-            >
-              See the full GTM framework
-            </button>
+          {/* Optional save + share row */}
+          <SaveAndShareRow slug={slug} customerName={customerName} />
 
-            {/* Tertiary — read the manuscript */}
+          {/* Secondary path — read the manuscript */}
+          <div className="mt-6 text-center">
             <button
               type="button"
               onClick={() => navigate(`/m/${slug}/read`)}
-              className="text-xs text-[#1C1008]/60 hover:text-[#1C1008] underline underline-offset-4 mt-2 self-center"
+              className="text-xs text-[#1C1008]/60 hover:text-[#1C1008] underline underline-offset-4"
             >
-              Read the manuscript first
+              Or read the manuscript first
             </button>
           </div>
 
@@ -865,216 +830,162 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PHASE A — Teaser + email-confirm gate.
-//
-// Shown above the full breakdown until the visitor confirms their email.
-// The "map" preview is rendered as a blurred SVG-driven five-orbits diagram
-// with a centered lock icon. Labels stay readable; values are blurred.
+// CalendlyInlineWidget — lazy-loads the Calendly widget script once and
+// renders an inline scheduler themed to the firm's brand palette.
 // ─────────────────────────────────────────────────────────────────────────────
-function TeaserAndGate({
-  data,
-  customerName,
-  confirmEmail,
-  setConfirmEmail,
-  handleUnlock,
+function CalendlyInlineWidget({
+  url,
+  brandPrimary,
+  brandBackground,
+  brandText,
 }: {
-  data: BreakdownRow;
-  customerName: string;
-  confirmEmail: string;
-  setConfirmEmail: (v: string) => void;
-  handleUnlock: (e: React.FormEvent) => void;
+  url: string;
+  brandPrimary: string;
+  brandBackground: string;
+  brandText: string;
 }) {
-  // Build a simple "leaking $X" hero line from existing breakdown fields.
-  const dz = data.dead_zone_value;
-  const leakSentence = dz
-    ? `${customerName} is leaking ~$${Math.round(dz / 1000)}K in dormant pipeline.`
-    : `${customerName} likely has a dormant-relationship gap. We mapped where it lives.`;
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Strongest / weakest orbit — heuristic on text length as a proxy for the
-  // amount of signal the enrich function found in each orbit.
-  const orbits = [
-    data.orbit_01,
-    data.orbit_02,
-    data.orbit_03,
-    data.orbit_04,
-    data.orbit_05,
-  ];
-  const ORBIT_LABELS = [
-    "⊙01 Core Proof",
-    "⊙02 Active",
-    "⊙03 Dead Zone",
-    "⊙04 Warm Adjacency",
-    "⊙05 New Gravity",
-  ];
-  let strongestIdx = 0;
-  let weakestIdx = 0;
-  let maxLen = -1;
-  let minLen = Number.POSITIVE_INFINITY;
-  orbits.forEach((o, i) => {
-    const len = (o ?? "").trim().length;
-    if (len > maxLen) {
-      maxLen = len;
-      strongestIdx = i;
+  useEffect(() => {
+    const SCRIPT_SRC =
+      "https://assets.calendly.com/assets/external/widget.js";
+    const STYLE_HREF =
+      "https://assets.calendly.com/assets/external/widget.css";
+
+    if (!document.querySelector(`link[href="${STYLE_HREF}"]`)) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = STYLE_HREF;
+      document.head.appendChild(link);
     }
-    if (len > 0 && len < minLen) {
-      minLen = len;
-      weakestIdx = i;
+
+    if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
+      const script = document.createElement("script");
+      script.src = SCRIPT_SRC;
+      script.async = true;
+      document.body.appendChild(script);
     }
-  });
+  }, []);
+
+  const dataUrl = `${url}?hide_gdpr_banner=1&background_color=${brandBackground}&text_color=${brandText}&primary_color=${brandPrimary}`;
 
   return (
-    <section className="pt-10 pb-12">
-      <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
-        Your Revenue Map
-      </p>
-      <h1 className="mt-3 text-3xl md:text-4xl font-bold leading-[1.15] tracking-tight">
-        {leakSentence}
-      </h1>
+    <div
+      ref={containerRef}
+      className="calendly-inline-widget w-full border border-black/10"
+      data-url={dataUrl}
+      style={{ minWidth: "320px", height: "680px" }}
+    />
+  );
+}
 
-      {data.gtm_profile_observed && (
-        <p className="mt-5 text-base leading-relaxed text-[#1C1008]/85">
-          {data.gtm_profile_observed}
-        </p>
-      )}
+// ─────────────────────────────────────────────────────────────────────────────
+// SaveAndShareRow — optional "email me this map" modal + copy-share-link.
+// Map stays fully visible; both actions are non-gating.
+// ─────────────────────────────────────────────────────────────────────────────
+function SaveAndShareRow({
+  slug,
+  customerName,
+}: {
+  slug: string;
+  customerName: string;
+}) {
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
-      <p className="mt-4 text-sm italic text-[#1C1008]/70 leading-relaxed">
-        Your strongest orbit:{" "}
-        <span className="text-[#B8933A] not-italic font-semibold">
-          {ORBIT_LABELS[strongestIdx]}
-        </span>
-        . Your weakest:{" "}
-        <span className="text-[#B8933A] not-italic font-semibold">
-          {ORBIT_LABELS[weakestIdx]}
-        </span>
-        .
-      </p>
+  const submitEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = emailValue.trim();
+    if (!trimmed.includes("@")) return;
+    setEmailSending(true);
+    const { error: insertError } = await supabase
+      .from("magnet_map_emails")
+      .insert({ slug, email: trimmed });
+    setEmailSending(false);
+    if (insertError) {
+      toast.error("Couldn't save your email. Try again.");
+      return;
+    }
+    setEmailSent(true);
+  };
 
-      {/* ─── Blurred orbit map preview ─────────────────────────────── */}
-      <div className="mt-10 relative border border-black/10 bg-black/[0.03] aspect-square max-w-md mx-auto overflow-hidden">
-        <BlurredOrbitPreview />
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(251,248,244,0.55) 0%, rgba(251,248,244,0.85) 100%)",
-            backdropFilter: "blur(6px)",
-            WebkitBackdropFilter: "blur(6px)",
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/m/${slug}`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Link copied — share it with your team.");
+    } catch {
+      toast.error("Couldn't copy. Long-press the URL bar to copy manually.");
+    }
+  };
+
+  return (
+    <>
+      <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center text-sm">
+        <button
+          type="button"
+          onClick={() => {
+            setEmailSent(false);
+            setEmailValue("");
+            setEmailOpen(true);
           }}
+          className="text-[#1C1008]/70 hover:text-[#B8933A] underline underline-offset-4 transition-colors"
         >
-          <div className="w-12 h-12 rounded-full border border-[#B8933A]/40 bg-[#B8933A]/10 flex items-center justify-center mb-3">
-            <LockIcon />
-          </div>
-          <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
-            Map Locked
-          </p>
-          <p className="text-xs text-[#1C1008]/70 mt-1">
-            Confirm your email to unlock
-          </p>
-        </div>
+          Email me this map
+        </button>
+        <span className="hidden sm:inline text-[#1C1008]/30" aria-hidden>
+          ·
+        </span>
+        <button
+          type="button"
+          onClick={handleShare}
+          className="text-[#1C1008]/70 hover:text-[#B8933A] underline underline-offset-4 transition-colors"
+        >
+          Copy share link
+        </button>
       </div>
 
-      {/* ─── Email-confirm gate ────────────────────────────────────── */}
-      <form
-        onSubmit={handleUnlock}
-        className="mt-10 border border-[#B8933A]/40 bg-[#B8933A]/5 p-6"
-      >
-        <p className="text-[#B8933A] text-[10px] uppercase tracking-[0.28em] font-semibold">
-          Unlock your full map
-        </p>
-        <p className="mt-2 text-base font-semibold text-[#1C1008] leading-snug">
-          See your complete RROS map, 3 strategic insights, and your custom
-          90-day plan.
-        </p>
-
-        <label className="block mt-5 text-[10px] uppercase tracking-wider text-[#1C1008]/60">
-          Confirm your work email
-        </label>
-        <input
-          type="email"
-          value={confirmEmail}
-          onChange={(e) => setConfirmEmail(e.target.value)}
-          placeholder="you@yourfirm.com"
-          required
-          className="mt-2 w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-12 px-4 text-base"
-        />
-        <button
-          type="submit"
-          className="mt-4 w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors"
-        >
-          Unlock My Map →
-        </button>
-        <p className="mt-3 text-xs text-[#1C1008]/50 text-center">
-          Free forever. We never sell your data. Unsubscribe in one click.
-        </p>
-      </form>
-    </section>
+      <Dialog open={emailOpen} onOpenChange={setEmailOpen}>
+        <DialogContent className="sm:max-w-md bg-[#FBF8F4] text-[#1C1008] border border-black/10 rounded-none">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold leading-tight">
+              {emailSent
+                ? "Sent."
+                : `Email this map to yourself`}
+            </DialogTitle>
+            <DialogDescription className="text-[#1C1008]/70">
+              {emailSent
+                ? `We'll send the ${customerName} map to ${emailValue.trim()} shortly. The map stays here either way.`
+                : "We'll send a copy to your inbox. No newsletter, no follow-up sequence — just the map."}
+            </DialogDescription>
+          </DialogHeader>
+          {!emailSent && (
+            <form onSubmit={submitEmail} className="space-y-4 pt-2">
+              <input
+                type="email"
+                required
+                autoFocus
+                value={emailValue}
+                onChange={(e) => setEmailValue(e.target.value)}
+                placeholder="you@yourfirm.com"
+                className="w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-12 px-4 text-base"
+              />
+              <DialogFooter>
+                <button
+                  type="submit"
+                  disabled={emailSending}
+                  className="w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors disabled:opacity-50"
+                >
+                  {emailSending ? "Saving…" : "Send map"}
+                </button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
-function LockIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#B8933A"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <rect x="4" y="11" width="16" height="10" rx="2" />
-      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-    </svg>
-  );
-}
-
-function BlurredOrbitPreview() {
-  const SIZE = 320;
-  const C = SIZE / 2;
-  const rings = [40, 72, 104, 136, 168];
-  return (
-    <svg
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
-      className="absolute inset-0 w-full h-full"
-      aria-hidden
-    >
-      <circle cx={C} cy={C} r={5} fill="#B8933A" />
-      {rings.map((r, i) => (
-        <g key={i}>
-          <circle
-            cx={C}
-            cy={C}
-            r={r}
-            fill="none"
-            stroke="#1C1008"
-            strokeOpacity={0.18}
-          />
-          {/* node */}
-          <circle
-            cx={C + r * Math.cos((i * 72 - 30) * (Math.PI / 180))}
-            cy={C + r * Math.sin((i * 72 - 30) * (Math.PI / 180))}
-            r={5}
-            fill="#B8933A"
-            opacity={0.65}
-          />
-        </g>
-      ))}
-      {/* faux numeric labels (these are what the blur obscures) */}
-      {rings.map((r, i) => (
-        <text
-          key={`v-${i}`}
-          x={C + r * Math.cos((i * 72 - 30) * (Math.PI / 180)) + 10}
-          y={C + r * Math.sin((i * 72 - 30) * (Math.PI / 180)) + 4}
-          fontFamily="'Inter Tight', system-ui, sans-serif"
-          fontSize={11}
-          fontWeight={600}
-          fill="#1C1008"
-        >
-          {[78, 64, 32, 56, 41][i]}
-        </text>
-      ))}
-    </svg>
-  );
-}
