@@ -826,6 +826,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
             </p>
           </div>
         </section>
+        </div>{/* /magnet-full-reveal */}
       </div>
     </div>
   );
