@@ -750,6 +750,9 @@ export default function MagnetBreakdown({
           })}
 
           <div className="bg-black/[0.03] border border-black/10 p-6 mt-6 text-center">
+            <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[#B8933A] mb-2">
+              {flow.chapterRecommendationLead}
+            </p>
             <p className="text-sm opacity-50 mb-4">
               Want to see how all 14 sections apply to{" "}
               {submission?.first_name ? `${submission.first_name}'s firm` : "your firm"}?
@@ -769,7 +772,7 @@ export default function MagnetBreakdown({
           <div className="flex items-center gap-2 mb-4">
             <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
             <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
-              What's next for {customerName}
+              {flow.calendarCta}
             </p>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
@@ -788,7 +791,13 @@ export default function MagnetBreakdown({
           />
 
           {/* Optional save + share row */}
-          <SaveAndShareRow slug={slug} customerName={customerName} />
+          <SaveAndShareRow
+            slug={slug}
+            customerName={customerName}
+            verticalSlug={verticalSlug}
+            emailSubject={flow.emailSubject}
+            shareTemplate={flow.shareTemplate}
+          />
 
           {/* Secondary path — read the manuscript */}
           <div className="mt-6 text-center">
