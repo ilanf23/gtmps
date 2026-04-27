@@ -86,22 +86,31 @@ export default function MagnetAssess() {
           .insert({
             slug: candidate,
             website_url: normalizedUrl,
-          // first_name / role / linkedin_url / email are NOT NULL in the schema
-          // but the simplified flow no longer collects them. Insert empty strings;
-          // the enrich function gracefully treats blank values as "(not provided)".
-          first_name: '',
-          role: '',
-          linkedin_url: '',
-          email: '',
-          status: 'pending',
-          crm_size: null,
-          deal_size: null,
-          bd_challenge: null,
-          case_studies_url: null,
-          team_page_url: null,
-          // Vertical context (defaults to "general" when not present in URL).
-          vertical: verticalSlug,
-        });
+            first_name: '',
+            role: '',
+            linkedin_url: '',
+            email: '',
+            status: 'pending',
+            crm_size: null,
+            deal_size: null,
+            bd_challenge: null,
+            case_studies_url: null,
+            team_page_url: null,
+            vertical: verticalSlug,
+          });
+
+        if (!res.error) {
+          slug = candidate;
+          insertError = null;
+          break;
+        }
+        // 23505 = unique_violation. Anything else is fatal.
+        if (res.error.code !== '23505') {
+          insertError = res.error;
+          break;
+        }
+        insertError = res.error;
+      }
 
       if (insertError) {
         console.error('Insert error:', insertError);
@@ -124,14 +133,12 @@ export default function MagnetAssess() {
         })
         .catch((err) => console.error('Enrich invoke error:', err));
 
-      // Pass website forward so the wait theater can show the right domain;
-      // preserve the vertical in the URL so refresh keeps the context.
       const dest =
         verticalSlug === 'general'
           ? `/m/${slug}`
           : `/m/${slug}?vertical=${verticalSlug}`;
       navigate(dest, {
-        state: { websiteUrl: website.trim() },
+        state: { websiteUrl: normalizedUrl },
       });
     } catch (err) {
       console.error('Submit error:', err);
