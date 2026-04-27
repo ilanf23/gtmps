@@ -57,7 +57,11 @@ const SectionRail = ({ items }: { items: Item[] }) => {
     let rafId = 0;
 
     const attachHero = () => {
-      const hero = document.getElementById("hero");
+      // Accept either a literal `#hero` (Discover/About) OR the v10 microsite's
+      // first section so the rail correctly stays hidden across both surfaces.
+      const hero =
+        document.getElementById("hero") ||
+        document.querySelector('[data-v10-section="1"]');
       if (!hero) return;
       heroObs = new IntersectionObserver(
         ([entry]) => {
@@ -70,7 +74,11 @@ const SectionRail = ({ items }: { items: Item[] }) => {
     };
 
     const attachFooter = () => {
-      const footer = document.querySelector('[data-page-footer="true"]');
+      // Page footer OR the v10 final Share+Save section (Section 11) — same
+      // gating intent: hide the rail once the closing share UI is on-screen.
+      const footer =
+        document.querySelector('[data-page-footer="true"]') ||
+        document.querySelector('[data-v10-section="11"]');
       if (!footer) {
         rafId = requestAnimationFrame(attachFooter);
         return;

@@ -3,6 +3,7 @@
 
 import { headerSubheaderFor, type ScoreBand } from "@/lib/magnetScoring";
 import { MANUSCRIPT_OPENING } from "@/content/manuscriptQuotes";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   firmName: string;
@@ -33,10 +34,10 @@ export default function PersonalizedHeader({
       className="pt-14 md:pt-20 pb-16 md:pb-24 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           01 · Your Research Profile
         </p>
@@ -57,7 +58,8 @@ export default function PersonalizedHeader({
       </p>
 
       <figure
-        className="mt-10 pt-6 border-t border-black/10 max-w-xl"
+        className="mt-10 pt-6 max-w-xl"
+        style={{ borderTop: `1px solid ${MABBLY_GOLD}33` }}
       >
         <blockquote
           className="font-serif italic text-lg md:text-xl leading-snug opacity-85"

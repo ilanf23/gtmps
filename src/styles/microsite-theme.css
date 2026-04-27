@@ -140,3 +140,31 @@
     color: var(--ms-text) !important;
   }
 }
+
+/* ============================================================
+   V10 TYPOGRAPHY LOCK
+   ============================================================
+   The post-CTA microsite (sections marked with [data-v10-section])
+   ALWAYS uses Mabbly's editorial type stack regardless of any font
+   the brand-extraction pipeline pulls from the prospect's site.
+   Colors can be re-skinned per firm; fonts cannot.
+   ============================================================ */
+[data-ms-themed] [data-v10-section] h1,
+[data-ms-themed] [data-v10-section] h2,
+[data-ms-themed] [data-v10-section] h3,
+[data-ms-themed] [data-v10-section] blockquote {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+}
+
+[data-ms-themed] [data-v10-section] p,
+[data-ms-themed] [data-v10-section] li,
+[data-ms-themed] [data-v10-section] button,
+[data-ms-themed] [data-v10-section] input,
+[data-ms-themed] [data-v10-section] label {
+  font-family: 'Inter Tight', system-ui, -apple-system, sans-serif !important;
+}
+
+/* Eyebrow tags (uppercase + tracking) → DM Mono */
+[data-ms-themed] [data-v10-section] .uppercase {
+  font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
+}

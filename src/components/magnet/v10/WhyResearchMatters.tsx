@@ -1,11 +1,16 @@
 // SECTION 06 — Why this research matters
 // Credibility anchor: 30 firms, 500 interviews, Copulsky/Kellogg, verified-only logo strip.
 
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+
 interface Props {
   primary: string;
 }
 
-const VERIFIED_CLIENTS = ["Madcraft", "Calliope", "SPR", "AArete"];
+// LOCKED LIST — never mutate, never extend dynamically. Verified cohort firms
+// only. Any "fabricated logo" regression that adds Griffith Foods or other
+// names traces back to a violation of this contract.
+const VERIFIED_CLIENTS = Object.freeze(["Madcraft", "Calliope", "SPR", "AArete"] as const);
 
 export default function WhyResearchMatters({ primary }: Props) {
   return (
@@ -16,10 +21,10 @@ export default function WhyResearchMatters({ primary }: Props) {
       style={{ backgroundColor: "rgba(28,16,8,0.025)" }}
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           06 · Why this research matters
         </p>

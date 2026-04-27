@@ -113,15 +113,49 @@ function contrastRatio(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+/** RGB → HSL saturation 0..1 (used to detect grayscale accents). */
+function saturation(hex: string): number {
+  const { r, g, b } = hexToRgb(hex);
+  const max = Math.max(r, g, b) / 255;
+  const min = Math.min(r, g, b) / 255;
+  if (max === 0) return 0;
+  const l = (max + min) / 2;
+  const d = max - min;
+  if (d === 0) return 0;
+  return l > 0.5 ? d / (2 - max - min) : d / (max + min);
+}
+
 export function buildClientTheme(raw: RawBranding | null | undefined): ClientTheme {
   if (!raw) return MABBLY_DEFAULTS;
 
   const accentRaw = raw.client_accent_color ?? raw.client_brand_color;
-  const accent = isHex(accentRaw) ? expandHex(accentRaw) : MABBLY_DEFAULTS.accent;
+  let accent = isHex(accentRaw) ? expandHex(accentRaw) : MABBLY_DEFAULTS.accent;
 
   const background = isHex(raw.client_background_color)
     ? expandHex(raw.client_background_color)
     : MABBLY_DEFAULTS.background;
+
+  // ── Palette quality threshold ───────────────────────────────────────────
+  // If the extracted accent fails any of these gates, fall back to the
+  // locked Mabbly gold rather than ship an unreadable or near-invisible
+  // accent. We log the reason so QA can spot extraction misfires.
+  const accentVsBgRatio = contrastRatio(accent, background);
+  const sat = saturation(accent);
+  let fallbackReason: string | null = null;
+  if (accentVsBgRatio < 4.5) fallbackReason = `low-contrast-${accentVsBgRatio.toFixed(2)}`;
+  else if (sat < 0.05) fallbackReason = "grayscale-accent";
+  else if (accent.toLowerCase() === background.toLowerCase()) fallbackReason = "accent-equals-bg";
+
+  if (fallbackReason && raw.client_accent_color) {
+    if (typeof console !== "undefined") {
+      console.warn("[brand-fallback]", fallbackReason, {
+        extracted: accent,
+        background,
+        company: raw.client_company_name ?? null,
+      });
+    }
+    accent = MABBLY_DEFAULTS.accent;
+  }
 
   const bgIsDark = relLuminance(background) < 0.5;
 

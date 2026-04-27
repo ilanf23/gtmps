@@ -3,7 +3,32 @@ import { NavLink, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useClientTheme } from "@/hooks/useClientTheme";
 import { themeStyle } from "@/lib/clientTheme";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 import Footer from "@/components/Footer";
+
+/**
+ * Names extracted by the brand pipeline that we KNOW are wrong (third-party
+ * assets, generic fallbacks, the prospect being Mabbly itself, etc.). Any of
+ * these names are dropped — the header falls back to the neutral
+ * "Mabbly · GTM" wordmark instead of pretending the prospect's firm is
+ * something it isn't.
+ */
+const KNOWN_BAD_COMPANY_NAMES = new Set([
+  "griffith foods",
+  "griffith",
+  "untitled",
+  "image",
+  "logo",
+  "home",
+  "mabbly", // never self-pair "Mabbly × Mabbly"
+]);
+
+function isBadName(name: string | null | undefined): boolean {
+  if (!name) return false;
+  const k = name.trim().toLowerCase();
+  if (!k) return true;
+  return KNOWN_BAD_COMPANY_NAMES.has(k);
+}
 
 interface MagnetShellProps {
   children: ReactNode;
@@ -102,78 +127,93 @@ export default function MagnetShell({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           {/* Brand: client logo first (prominent), then a small "by Mabbly" mark */}
           <div className="flex items-center gap-3 shrink-0">
-            {theme.logoUrl ? (
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="flex items-center gap-3"
-                aria-label={theme.companyName ?? "Client"}
-              >
-                <img
-                  src={theme.logoUrl}
-                  alt={theme.companyName ? `${theme.companyName} logo` : "Client logo"}
-                  className="h-7 w-auto max-w-[160px] object-contain"
-                  loading="lazy"
-                  onLoad={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    const w = img.naturalWidth;
-                    const h = img.naturalHeight;
-                    if (!w || !h) return;
-                    const ratio = w / h;
-                    // Hide anything that isn't shaped like a logo —
-                    // banners (>5:1) and tall portraits (<1:2) are out.
-                    if (ratio > 5 || ratio < 0.5) {
-                      img.style.display = "none";
-                    }
-                  }}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = "none";
-                  }}
-                />
-                {theme.companyName ? (
+            {(() => {
+              const safeName = isBadName(theme.companyName) ? null : theme.companyName;
+              const showLogo = Boolean(theme.logoUrl) && !isBadName(theme.companyName);
+              const isSelfMabbly = (theme.companyName ?? "").trim().toLowerCase() === "mabbly";
+
+              if (showLogo) {
+                return (
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="flex items-center gap-3"
+                    aria-label={safeName ?? "Client"}
+                  >
+                    <img
+                      src={theme.logoUrl!}
+                      alt={safeName ? `${safeName} logo` : "Client logo"}
+                      className="h-7 w-auto max-w-[160px] object-contain"
+                      loading="lazy"
+                      onLoad={(e) => {
+                        const img = e.currentTarget as HTMLImageElement;
+                        const w = img.naturalWidth;
+                        const h = img.naturalHeight;
+                        if (!w || !h) return;
+                        const ratio = w / h;
+                        if (ratio > 5 || ratio < 0.5) {
+                          img.style.display = "none";
+                        }
+                      }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                    {safeName ? (
+                      <span
+                        className="hidden md:inline text-xs uppercase tracking-[0.28em] font-semibold"
+                        style={{ color: theme.text }}
+                      >
+                        {safeName}
+                      </span>
+                    ) : null}
+                  </a>
+                );
+              }
+
+              if (safeName) {
+                return (
                   <span
-                    className="hidden md:inline text-xs uppercase tracking-[0.28em] font-semibold"
+                    className="text-xs uppercase tracking-[0.32em] font-semibold"
                     style={{ color: theme.text }}
                   >
-                    {theme.companyName}
+                    {safeName}
                   </span>
-                ) : null}
-              </a>
-            ) : theme.companyName ? (
-              <span
-                className="text-xs uppercase tracking-[0.32em] font-semibold"
-                style={{ color: theme.text }}
-              >
-                {theme.companyName}
-              </span>
-            ) : (
-              <span
-                className="text-xs uppercase tracking-[0.32em] font-semibold"
-                style={{ color: theme.accent }}
-              >
-                Mabbly · GTM
-              </span>
-            )}
+                );
+              }
 
-            {/* "× Mabbly" credential — only show when client branding is present */}
-            {(theme.logoUrl || theme.companyName) && (
-              <>
+              return (
                 <span
-                  className="hidden sm:inline h-4 w-px"
-                  style={{ backgroundColor: theme.border }}
-                  aria-hidden
-                />
-                <a
-                  href="https://mabbly.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hidden sm:inline text-[10px] uppercase tracking-[0.32em]"
-                  style={{ color: theme.textMuted }}
+                  className="text-xs uppercase tracking-[0.32em] font-semibold"
+                  style={{ color: MABBLY_GOLD }}
                 >
-                  × Mabbly
-                </a>
-              </>
-            )}
+                  Mabbly · GTM
+                </span>
+              );
+            })()}
+
+            {/* "× Mabbly" credential — ONLY when we have a verified non-Mabbly,
+                non-blocked client identity AND a logo to pair it with. */}
+            {theme.logoUrl &&
+              !isBadName(theme.companyName) &&
+              (theme.companyName ?? "").trim().toLowerCase() !== "mabbly" && (
+                <>
+                  <span
+                    className="hidden sm:inline h-4 w-px"
+                    style={{ backgroundColor: theme.border }}
+                    aria-hidden
+                  />
+                  <a
+                    href="https://mabbly.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hidden sm:inline text-[10px] uppercase tracking-[0.32em] font-semibold"
+                    style={{ color: MABBLY_GOLD }}
+                  >
+                    × Mabbly
+                  </a>
+                </>
+              )}
           </div>
 
           {/* Tabs */}
