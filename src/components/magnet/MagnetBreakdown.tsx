@@ -11,6 +11,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import MagnetImpactModel from "./MagnetImpactModel";
+import { useVerticalFlow } from "@/hooks/useVerticalFlow";
 // MagnetChat was replaced by the dedicated /m/:slug/chat page in MagnetShell.
 
 interface ChapterCallout {
@@ -187,8 +188,15 @@ const splitAction = (text: string): { title: string; description: string } => {
   };
 };
 
-export default function MagnetBreakdown({ slug }: { slug: string }) {
+export default function MagnetBreakdown({
+  slug,
+  vertical,
+}: {
+  slug: string;
+  vertical?: string | null;
+}) {
   const navigate = useNavigate();
+  const { flow, slug: verticalSlug } = useVerticalFlow(vertical);
   const [data, setData] = useState<BreakdownRow | null>(null);
   const [submission, setSubmission] = useState<SubmissionRow | null>(null);
   const [loading, setLoading] = useState(true);
