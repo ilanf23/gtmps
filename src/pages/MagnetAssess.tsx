@@ -4,18 +4,35 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { Volume2, VolumeX, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { generateMagnetSlug } from '@/lib/magnetSlug';
+import { generateMagnetSlug, magnetSlugSuffix } from '@/lib/magnetSlug';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Single-field validation — only website URL.
+// Single-field validation — only website URL. Bare domains accepted; we
+// auto-prepend `https://` before validating + persisting.
 // ─────────────────────────────────────────────────────────────────────────────
+function normalizeUrl(input: string): string | null {
+  const trimmed = (input ?? '').trim();
+  if (!trimmed) return null;
+  if (/\s/.test(trimmed)) return null;
+  const withProto = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const u = new URL(withProto);
+    if (!u.hostname.includes('.')) return null;
+    return `https://${u.hostname.toLowerCase()}${u.pathname === '/' ? '' : u.pathname}${u.search}${u.hash}`;
+  } catch {
+    return null;
+  }
+}
+
 const websiteSchema = z
   .string()
   .trim()
-  .url('Enter a valid URL (https://…)')
-  .max(255);
+  .max(255)
+  .refine((v) => normalizeUrl(v) !== null, {
+    message: 'Enter a valid URL (e.g. yourfirm.com)',
+  });
 
 const inputClass =
   'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-14 px-4 text-base transition-colors';
@@ -53,14 +70,22 @@ export default function MagnetAssess() {
 
     setSubmitting(true);
     try {
-      // Slug is derived from the website URL since we no longer collect email.
-      const slug = generateMagnetSlug(website.trim());
+      const normalizedUrl = normalizeUrl(website) ?? website.trim();
 
-      const { error: insertError } = await supabase
-        .from('magnet_submissions')
-        .insert({
-          slug,
-          website_url: website.trim(),
+      // Slug is derived from the website's domain root.
+      const baseSlug = generateMagnetSlug(normalizedUrl);
+      let slug = baseSlug;
+      let insertError: { code?: string; message?: string } | null = null;
+
+      // Collision-retry loop: if slug exists for a prior submitter, append
+      // a 3-char suffix and try again, up to 4 attempts total.
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const candidate = attempt === 0 ? baseSlug : `${baseSlug}-${magnetSlugSuffix()}`;
+        const res = await supabase
+          .from('magnet_submissions')
+          .insert({
+            slug: candidate,
+            website_url: normalizedUrl,
           // first_name / role / linkedin_url / email are NOT NULL in the schema
           // but the simplified flow no longer collects them. Insert empty strings;
           // the enrich function gracefully treats blank values as "(not provided)".
