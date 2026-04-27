@@ -8,8 +8,6 @@ import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 interface Props {
   firmName: string;
   buildSecondsAgo: number | null;
-  cohortNumber: number;
-  cohortLabel: string; // "firm" or "law firm"
   bandOverall: ScoreBand;
   primary: string;
 }
@@ -17,15 +15,13 @@ interface Props {
 export default function PersonalizedHeader({
   firmName,
   buildSecondsAgo,
-  cohortNumber,
-  cohortLabel,
   bandOverall,
   primary,
 }: Props) {
   const ageSentence =
     buildSecondsAgo === null
-      ? `You are ${cohortLabel} #${cohortNumber} of 30 in our research cohort.`
-      : `Built ${buildSecondsAgo} seconds ago · You are ${cohortLabel} #${cohortNumber} of 30 in our research cohort.`;
+      ? `You are part of our 30-firm research cohort.`
+      : `Built ${buildSecondsAgo} seconds ago · You are part of our 30-firm research cohort.`;
 
   return (
     <section

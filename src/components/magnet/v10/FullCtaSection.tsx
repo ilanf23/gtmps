@@ -93,6 +93,7 @@ export default function FullCtaSection({
       id="v10-section-8"
       data-v10-section="8"
       data-v10-cta="primary"
+      data-v10-variant={variantId}
       className="py-16 md:py-24 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
@@ -111,9 +112,7 @@ export default function FullCtaSection({
       >
         {scoreAdaptiveHeadline}
       </h2>
-      <p className="text-sm opacity-55 mb-6">
-        For {customerName}. Variant {variant.id} · {variant.label}.
-      </p>
+      <p className="text-sm opacity-55 mb-6">For {customerName}.</p>
 
       <div className="space-y-4 max-w-xl text-sm md:text-base leading-relaxed mb-6">
         {variant.paragraphs.map((p, i) => (
