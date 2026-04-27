@@ -279,6 +279,10 @@ export default function MagnetBreakdown({
           slug={slug}
           vertical={verticalSlug}
           primary={brand.primary}
+          background={brand.background}
+          text={brand.text}
+          customerName={customerName}
+          firstName={submission?.first_name ?? null}
         />
 
         <WhyResearchMatters primary={brand.primary} />
@@ -291,6 +295,7 @@ export default function MagnetBreakdown({
           variantId={variantId}
           scoreAdaptiveHeadline={ctaHeadline}
           customerName={customerName}
+          firstName={submission?.first_name ?? null}
           primary={brand.primary}
           background={brand.background}
           text={brand.text}
