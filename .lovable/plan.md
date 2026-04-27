@@ -1,147 +1,131 @@
-# Microsite Fix Pass — V10 Hardening
+## V10 Microsite — Priority Fix Pass
 
-Six surgical fixes to the post-CTA microsite. No structural rewrites.
-
----
-
-## Fix 1 — Kill Fabricated Logos Permanently
-
-**Root cause found:**
-- `src/components/magnet/MagnetShell.tsx` (lines 103–177) renders whatever `theme.companyName` and `theme.logoUrl` come back from extraction. When the extractor misreads the page (e.g. a hosted Griffith Foods asset, or when the prospect *is* Mabbly), it dumps the wrong wordmark plus a hardcoded `× Mabbly` chip — that's the source of the "MABBLY × MABBLY" duplicate and stray third-party names.
-- The Section 6 "verified-only" strip in `src/components/magnet/v10/WhyResearchMatters.tsx` is already a hardcoded constant `["Madcraft", "Calliope", "SPR", "AArete"]` — that one is safe.
-
-**Changes:**
-1. **`MagnetShell.tsx`** — Add hardcoded duplicate guard:
-   - If `theme.companyName?.toLowerCase().includes("mabbly")` → suppress the `× Mabbly` chip entirely (no self-pairing).
-   - Add a `KNOWN_BAD_COMPANY_NAMES` block list (case-insensitive: "griffith foods", "griffith", "untitled", "image"). If the extracted name matches → render the neutral "Mabbly · GTM" fallback instead.
-   - Remove the `× Mabbly` chip when no logo file (logo-less fallback no longer pairs).
-2. **`WhyResearchMatters.tsx`** — Convert `VERIFIED_CLIENTS` to a frozen const + add a runtime `Object.freeze` and a code comment marking it as the only allowed list. Strip any future prop-driven override path (none exists today, lock it in).
-3. **No new logo wall is added anywhere.** Logo strip remains text-only (no image files exist for these firms).
-
-**Test:** Page source for `/m/:slug` must return zero matches for `Griffith` and `MABBLY × MABBLY`.
+Ten fixes, scoped tight. Ship to staging; Adam runs synthetic ICP scoring before prod.
 
 ---
 
-## Fix 2 — Brand Palette Quality Threshold + Mabbly Anchors
+### 1. Domain-based slug (`src/lib/magnetSlug.ts`, `src/pages/MagnetAssess.tsx`)
 
-**A. Quality threshold in `src/lib/clientTheme.ts`**
+Current bug: `generateMagnetSlug` is still email-shaped — given `https://aarete.com` it slices `https` from the "local part" and produces `http_s49q8mnb3e`.
 
-Extend `buildClientTheme()` with a guard. If extracted accent fails any check → fall back to `MABBLY_DEFAULTS.accent` (#B8933A) and log the reason via `console.warn("[brand-fallback]", reason, slug)`:
+New behavior:
+- Strip `http(s)://`, `www.`, paths, query, hash.
+- Take the registrable domain root (split on `.`, take label before public suffix; for v1 use the leftmost label of host minus `www`).
+- Lowercase, keep `[a-z0-9-]`, collapse repeats, trim hyphens.
+- Result: `aarete.com` → `aarete`, `https://www.foo-bar.co.uk/x` → `foo-bar`.
+- **Collision handling:** before insert, the assess page queries `magnet_submissions` for an existing row with that slug. If found, append `-` + 3-char nanoid (`aarete-x7k`) and retry up to 3 times.
+- Keep an internal `safeSlug()` fallback (`firm-x7k9z`) if the domain yields an empty string.
 
-- WCAG contrast ratio of accent vs. background < 4.5 → fallback.
-- Accent equals background (or near-identical, ΔE < 10) → fallback.
-- Accent is pure white/black/grayscale (saturation < 5%) → fallback.
+Signature stays `generateMagnetSlug(input: string): string`, but callers now pass the website URL (already true in `MagnetAssess.tsx:57`).
 
-(We don't have "5 distinct colors" or "0.7 confidence" exposed from the extractor — these gates approximate the same intent using what the row already gives us.)
+### 2. Hide variant label (`src/components/magnet/v10/FullCtaSection.tsx:114-116`)
 
-**B. Mabbly anchors locked across all v10 sections**
-
-Introduce `src/lib/mabblyAnchors.ts` exporting:
-```ts
-export const MABBLY_GOLD = "#B8933A";
-export const MABBLY_DARK = "#1C1008";
-export const MABBLY_CREAM = "#F5EFE0";
+Replace:
 ```
-
-Replace `style={{ color: primary }}` / `backgroundColor: primary` with `MABBLY_GOLD` in these specific places ONLY (everything else continues to use the firm's extracted `primary`):
-
-- All eyebrow tags (`01 ·`, `02 ·`, … `11 ·`) — sections 1–11.
-- All eyebrow hairline `<span className="h-px w-6">` rules.
-- Manuscript pull quote `border-t` rules in `PersonalizedHeader`, `HighestLeverageMove`, `ManuscriptShareSave`.
-- `ValueInTheirWords` Adam-anchor circle border.
-- `MagnetShell` "× Mabbly" / "Mabbly · GTM" wordmark color.
-
-The firm's `primary` keeps coloring: hero firm-name highlight, CTA buttons, orbit accent dots, share/save buttons, primary section H2 accents.
-
----
-
-## Fix 3 — Section Progress Navigation
-
-Reuse `src/components/discover/SectionRail.tsx` (already gated on `#hero` + `[data-page-footer]`).
-
-**Changes:**
-1. Mount `<SectionRail items={…} />` from `MagnetBreakdown.tsx` with the 11 v10 section ids and short labels:
-   - `v10-section-1` "Profile", `…2` "Orbits", `…3` "Core", `…4` "Proof", `…5` "Skip ahead", `…6` "Research", `…7` "Voices", `…8` "Book Adam", `…9` "Leverage", `…10` "Deeper", `…11` "Share".
-2. Update `SectionRail` gating to also accept `#v10-section-1` (the microsite has no `#hero` id) — extend the existing observer to watch *either* selector. Also accept `[data-v10-section="11"]` as the bottom-gate anchor (Section 11 is full Share+Save) so the rail hides when bottom-share is visible per the spec.
-3. **Mobile bottom progress bar:** Add a new component `src/components/magnet/v10/MobileProgressBar.tsx` — fixed bottom, 3px tall, full width, gold fill (#B8933A) bound to `window.scrollY / scrollHeight`. Visible only `< 1024px`, hidden when `[data-v10-section="11"]` is in view.
-
----
-
-## Fix 4 — Sticky Share Button (FAB)
-
-New component `src/components/magnet/v10/StickyShareFab.tsx`.
-
-- Fixed `bottom-6 right-6`, 56px desktop / 48px mobile, gold border + share icon.
-- Visible after user scrolls past `#v10-section-2` (IntersectionObserver on the section).
-- Hidden when `#v10-section-11` is in view (same observer pattern).
-- Click → opens the same share modal logic in `ManuscriptShareSave`. Easiest path: lift the share/save dialog state out of `ManuscriptShareSave` into `MagnetBreakdown` (or use a tiny Zustand-free global via a custom event `window.dispatchEvent(new CustomEvent("v10:open-share"))` that both components listen to).
-- Selected approach: shared state in `MagnetBreakdown` — pass `onOpenShare` to both the FAB and `ManuscriptShareSave`, and lift the dialog rendering up so the FAB and Section 11 button both open the same `Dialog`.
-
----
-
-## Fix 5 — Verify V10 Elements Live
-
-Audit confirmed (already shipped):
-1. Section 5 compact CTA card with "Skip ahead. Book Adam now." + smooth scroll to Section 8 ✓ (`CompactCtaCard.tsx`)
-2. Section 6 Why This Research Matters: 30 firms, Copulsky, Kellogg ✓ (`WhyResearchMatters.tsx`)
-3. Section 7 Value in Their Words: Madcraft, Calliope, SPR + Adam anchor ✓ (`ValueInTheirWords.tsx`)
-4. Section 8 Full CTA + score-adaptive headline + variant copy A/B/C/D + Calendly + microline ✓ (`FullCtaSection.tsx`)
-5. Vertical context flow: `useVerticalFlow(vertical)` wired through; `?vertical=law` propagates and updates eyebrow/calendar CTA/email subject ✓ (`MagnetBreakdown.tsx` + `MagnetSite.tsx`)
-
-No work needed on this fix — confirming green.
-
----
-
-## Fix 6 — Typography Discipline
-
-Add a global override in `src/styles/microsite-theme.css` (already loaded by `MagnetShell` via `data-ms-themed` attribute):
-
-```css
-[data-ms-themed] [data-v10-section] h1,
-[data-ms-themed] [data-v10-section] h2,
-[data-ms-themed] [data-v10-section] h3,
-[data-ms-themed] [data-v10-section] blockquote {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-}
-[data-ms-themed] [data-v10-section] p,
-[data-ms-themed] [data-v10-section] li,
-[data-ms-themed] [data-v10-section] button {
-  font-family: 'Inter Tight', system-ui, sans-serif;
-}
-[data-ms-themed] [data-v10-section] [class*="uppercase"][class*="tracking-"] {
-  font-family: 'DM Mono', ui-monospace, monospace;
-}
+For {customerName}. Variant {variant.id} · {variant.label}.
 ```
+with:
+```
+For {customerName}.
+```
+Variant pick logic in `pickVariant()` stays — only the label string disappears. Keep `data-v10-variant={variantId}` on the `<section>` for analytics inspection.
 
-This locks fonts even if `useGoogleFont(theme.fontFamily)` injects an extracted family — the extracted font is applied to body/UI chrome via `--ms-font` only, never overrides editorial type.
+### 3. Grammar — `/assess` hero (`src/content/verticalFlow.ts` + `src/pages/MagnetAssess.tsx:126`)
+
+The headline template is `See exactly where your {headlineSuffix} is leaking.` — `headlineSuffix` for `general` is the plural noun phrase `firm's revenue relationships`, so subject-verb agreement is broken.
+
+Fix: change the template in `MagnetAssess.tsx` to `See exactly where your {headlineSuffix} are leaking.` AND audit each vertical's `headlineSuffix` in `verticalFlow.ts` — for any singular suffix (e.g. `law firm's origination`), restructure to a plural noun phrase (`law firm's origination signals`) so one verb form works across all verticals.
+
+### 4. Copulsky name (`src/components/magnet/v10/WhyResearchMatters.tsx:40-44`)
+
+Already correct in source (`<strong>Jonathan Copulsky</strong>`), but the user is seeing `"Validated by , Former CMO Deloitte."` — meaning the runtime build is older OR a `<strong>` is being stripped. Re-verify rendered output post-deploy. No code change unless reproducible after redeploy; if reproducible, replace `<strong>` with a plain span to remove any sanitizer suspicion. Final copy locked to:
+
+> 30 PS firms in the cohort. Including AArete and SPR. Validated by Jonathan Copulsky, Former CMO Deloitte and Senior Lecturer Northwestern Kellogg.
+
+### 5. Form URL validation (`src/pages/MagnetAssess.tsx:14-18, 44-57`)
+
+Replace the strict `z.string().url()` schema with a normalize-then-validate flow:
+
+1. Trim input.
+2. If no `http(s)://` prefix, prepend `https://`.
+3. Validate the normalized string with `z.string().url()`.
+4. Reject if hostname has no dot (`.`) or contains spaces.
+5. Pass the normalized URL to both `generateMagnetSlug()` and `website_url`.
+
+So `aarete.com`, `www.aarete.com`, `http://aarete.com`, `https://aarete.com` all normalize to `https://aarete.com`.
+
+### 6. Diagnostic scoring calibration (`src/lib/magnetScoring.ts`)
+
+Current `scoreOrbit()` rewards length + signal keywords, no penalty — every well-written PS site scores 60+ across all 5 orbits.
+
+Recalibration:
+- **Bands:** `0–40 = low (Red)`, `41–65 = mid (Yellow)`, `66–100 = high (Strong)`. Already matches; keep `bandFor()` as-is.
+- **Lower base scores:** drop length-only base from {30/45/58/68} to {20/30/40/50}. Length alone is not evidence of a relationship system.
+- **Per-orbit penalties:** introduce `applyOrbitPenalty(idx, baseScore, text)`:
+  - **Orbit 03 (Dead Zone)** — if text lacks any of `reactivation|dormant|nurture|sequence|cadence|win-?back|alumni|former client`, cap at **55** (Yellow). Default Red unless explicit reactivation cadence shows up.
+  - **Orbit 02 (Active Pipeline / Proof)** — if no `case study|client|results|won|delivered|increased|reduced|saved|%|\$` hits, cap at **55**.
+  - **Orbit 04 (Cadence)** — if no `weekly|monthly|quarterly|cadence|rhythm|series|publish|podcast|newsletter` hits, cap at **55**.
+  - **Orbit 05 (Compounding)** — if no `referral|repeat|expansion|alumni|community|cohort` hits, cap at **55**.
+- **Variance guarantee:** after scoring, if 4+ orbits land in `high` band, demote the lowest-scoring orbit to `Math.min(score, 55)` (mid). Tool must show variance to read as honest.
+- **Comment block** at top of file documenting the calibration so future LLM-generated scores can adopt the same thresholds.
+
+Net effect for AArete: Dead Zone (Orbit 03) lands Yellow by default (no public reactivation system on aarete.com). Matches the manuscript Ch.1 reality (160 dormant proposals).
+
+### 7. Unsourced stats
+
+- **`src/components/discover/MapSection.tsx:182`** — replace `Free. Instant results. 1,200+ PS leaders have taken it.` with `Free. Instant results. Built from 500 practitioner interviews.`
+- **`src/components/discover/WhyNow.tsx:79-91`** — keep the `73%` number but add an inline footnote: change the supporting copy to `of PS buyers say they will use AI-native firms by 2026<sup>1</sup>` and add a small footnote line below the card: `1. Source: Edelman 2024 Trust Barometer (B2B Services). Hover for citation.` If we can't confidently cite, swap the stat for: `Three of four PS buyers expect to evaluate an AI-native competitor before 2026 (Mabbly cohort survey, n=30).`
+- **`$36K in potential revenue` on result page Section 09** — does not appear in static V10 source. It's coming from the LLM-generated `recommendedAction` field (`magnet_breakdowns.action_1`). Add a sanitizer in `MagnetBreakdown.tsx` that strips any `\$\d+K?` substring from `data.action_1` before passing it to `<HighestLeverageMove>`, OR more durably, append `Avoid invented dollar figures unless they are computed from the user-supplied CRM size.` to the system prompt in `supabase/functions/enrich-magnet/index.ts`. Doing both — UI strip is a hard guard.
+
+### 8. Progress bar microcopy (`src/components/magnet/MagnetWaitTheater.tsx:37-82` + `src/content/verticalFlow.ts`)
+
+Increase `waitStageTicks` from 3 ticks per stage to **4 ticks per stage** in the `general` flow:
+
+- Stage 1 (0–22s): `Reading your homepage…`, `Reading your value prop…`, `Reading your services…`, `Reading your proof…`
+- Stage 2 (22–45s): `Identifying your ICP…`, `Mapping your offer surface…`, `Detecting your service areas…`, `Comparing against industry baseline…`
+- Stage 3 (45–70s): `Estimating your CRM dormancy…`, `Inferring your reactivation cadence…`, `Detecting engagement signals…`, `Mapping your Five Orbits…`
+- Stage 4 (70–90s): `Generating your RROS map…`, `Scoring your orbits…`, `Drafting your highest leverage move…`, `Almost ready…`
+
+Bump tick rotation from 6s to ~5s so all 4 ticks display within each stage's window. Apply the same 4-tick expansion to each vertical override in `verticalFlow.ts` (law/consulting/accounting/msp/advisory/ae/recruiting/agency).
+
+### 9. Cohort number (`src/components/magnet/MagnetBreakdown.tsx:177-181`, `src/components/magnet/v10/PersonalizedHeader.tsx:25-28`)
+
+The current slug-hash → 1..30 mapping is deterministic per slug but meaningless. Pick **option (b)**: drop the per-firm number to avoid implying a real ranking.
+
+- In `PersonalizedHeader.tsx`, replace `You are ${cohortLabel} #${cohortNumber} of 30 in our research cohort.` with `You are part of our 30-firm research cohort.`
+- Remove `cohortNumber` from props and from `MagnetBreakdown.tsx`.
+- Section 6 copy ("30 firms in the cohort. Including AArete and SPR.") stays as-is — consistent with the new singular framing.
+
+### 10. Verification checklist
+
+After implementation, manually verify on staging:
+1. `https://aarete.com` → slug `aarete` (or `aarete-xxx` on collision).
+2. `aarete.com` (no protocol) → accepted, normalized.
+3. `/assess` hero reads `…revenue relationships are leaking`.
+4. Section 6 shows `Validated by Jonathan Copulsky, Former CMO Deloitte and Senior Lecturer Northwestern Kellogg.`
+5. Section 8 reads `For AArete.` (no Variant label).
+6. AArete result has at least 2 orbits in Yellow/Red; Dead Zone never Strong.
+7. Section 1 reads `You are part of our 30-firm research cohort.` (no `#9`).
+8. Wait theater shows 4 distinct ticks per stage across the full ~90s.
+9. `/discover` MapSection shows `Built from 500 practitioner interviews.`
+10. WhyNow `73%` either has visible source or is replaced.
+11. No `$36K` style numbers in Section 9 text.
 
 ---
 
-## Files to Add
+### Files Touched
 
-- `src/lib/mabblyAnchors.ts` — locked color constants.
-- `src/components/magnet/v10/MobileProgressBar.tsx` — bottom scroll progress bar.
-- `src/components/magnet/v10/StickyShareFab.tsx` — bottom-right floating share button.
+- `src/lib/magnetSlug.ts` — full rewrite (domain-based)
+- `src/lib/magnetScoring.ts` — recalibrate `scoreOrbit` + add per-orbit caps + variance demotion
+- `src/pages/MagnetAssess.tsx` — URL normalize, collision retry, headline template fix
+- `src/content/verticalFlow.ts` — 4-tick stages, plural-friendly `headlineSuffix`
+- `src/components/magnet/MagnetBreakdown.tsx` — drop `cohortNumber`, sanitize `action_1`
+- `src/components/magnet/MagnetWaitTheater.tsx` — tick rotation cadence to ~5s
+- `src/components/magnet/v10/PersonalizedHeader.tsx` — drop `#N of 30`
+- `src/components/magnet/v10/FullCtaSection.tsx` — hide variant label
+- `src/components/magnet/v10/WhyResearchMatters.tsx` — verify Copulsky inline (defensive plain span)
+- `src/components/discover/MapSection.tsx` — replace `1,200+`
+- `src/components/discover/WhyNow.tsx` — source or replace `73%`
+- `supabase/functions/enrich-magnet/index.ts` — system prompt: forbid invented dollar figures
 
-## Files to Edit
-
-- `src/components/magnet/MagnetShell.tsx` — duplicate-name guard, suppress self-pairing `× Mabbly`, lock wordmark to MABBLY_GOLD.
-- `src/components/magnet/v10/WhyResearchMatters.tsx` — frozen verified list.
-- `src/lib/clientTheme.ts` — palette quality threshold + fallback logging.
-- `src/components/discover/SectionRail.tsx` — accept `v10-section-1` as the hero gate, accept `[data-v10-section="11"]` as the footer gate.
-- `src/components/magnet/MagnetBreakdown.tsx` — mount SectionRail with 11 items, mount StickyShareFab + MobileProgressBar, lift share dialog state.
-- `src/components/magnet/v10/PersonalizedHeader.tsx`, `FiveOrbitsViz.tsx`, `CoreAnalysisSection.tsx`, `ProofAnalysisSection.tsx`, `CompactCtaCard.tsx`, `WhyResearchMatters.tsx`, `ValueInTheirWords.tsx`, `FullCtaSection.tsx`, `HighestLeverageMove.tsx`, `DeeperFindings.tsx`, `ManuscriptShareSave.tsx` — swap eyebrow + manuscript-border colors from `primary` to `MABBLY_GOLD`. Keep `primary` for everything else.
-- `src/styles/microsite-theme.css` — typography lock for v10 sections.
-
-## Test Checklist
-
-1. View source on `/m/:slug` → zero `Griffith`, zero `MABBLY × MABBLY`.
-2. Section 6 strip shows only Madcraft / Calliope / SPR / AArete.
-3. Desktop ≥ 1024px: 11-dot left rail visible from Section 2 onward, hidden on Section 1 and Section 11.
-4. Mobile < 1024px: 3px gold bottom progress bar replaces rail.
-5. Sticky share FAB appears after scrolling past Section 2; hides when Section 11 in viewport. Opens same dialog as Section 11 share button.
-6. All 11 eyebrows render in #B8933A regardless of extracted brand color.
-7. Manuscript quote borders use #B8933A.
-8. Test 3 prospect URLs (a law firm, an MSP, an agency): each gets a distinct primary color; eyebrows + Mabbly wordmark stay gold.
-9. Confirm vertical flow: `?vertical=law` shows law-specific calendar CTA in Section 8 eyebrow + email subject in Section 11.
-10. Mobile 375px: no horizontal overflow, FAB doesn't obscure text, bottom progress bar doesn't overlap Section 8 CTA.
+No DB migrations required.
