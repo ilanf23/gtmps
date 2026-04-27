@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useFooterVisible } from '@/hooks/useFooterVisible';
 import { useInlineCtaVisible } from '@/hooks/useInlineCtaVisible';
 
-type Props = { label?: string };
+type Props = { label?: string; vertical?: string };
 
-export default function VerticalStickyCta({ label = 'Add Your Firm →' }: Props) {
+export default function VerticalStickyCta({ label = 'Add Your Firm →', vertical }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const footerVisible = useFooterVisible(0.05);
   const inlineVisible = useInlineCtaVisible(0.5);
@@ -30,7 +30,7 @@ export default function VerticalStickyCta({ label = 'Add Your Firm →' }: Props
       }}
     >
       <a
-        href="/assess"
+        href={vertical ? `/assess?vertical=${vertical}` : '/assess'}
         className="pointer-events-auto"
         style={{
           background: 'rgba(28,16,8,0.92)',
