@@ -91,6 +91,9 @@ export default function MagnetSite() {
       if (submissionRow?.first_name) {
         setFirstName(submissionRow.first_name);
       }
+      if (breakdownRow?.client_company_name) {
+        setCompanyName(breakdownRow.client_company_name);
+      }
 
       const breakdownReady =
         breakdownRow &&
@@ -144,17 +147,7 @@ export default function MagnetSite() {
     };
   }, [slug]);
 
-  useEffect(() => {
-    if (status !== 'pending' && status !== 'processing') return;
-    const id = window.setInterval(() => {
-      setStepVisible(false);
-      window.setTimeout(() => {
-        setStepIndex((i) => (i + 1) % STEPS.length);
-        setStepVisible(true);
-      }, 500);
-    }, 14000);
-    return () => window.clearInterval(id);
-  }, [status]);
+  // (Step rotation is now handled internally by MagnetWaitTheater.)
 
   if (status === 'loading') {
     return (
