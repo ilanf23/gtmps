@@ -221,6 +221,26 @@ export default function MagnetBreakdown({
     Boolean(submission?.share_token) &&
     shareId === submission?.share_token;
 
+  // Section progress nav rail items (11 v10 sections).
+  const railItems = [
+    { id: "v10-section-1", label: "Profile" },
+    { id: "v10-section-2", label: "Orbits" },
+    { id: "v10-section-3", label: "Core" },
+    { id: "v10-section-4", label: "Proof" },
+    { id: "v10-section-5", label: "Skip ahead" },
+    { id: "v10-section-6", label: "Research" },
+    { id: "v10-section-7", label: "Voices" },
+    { id: "v10-section-8", label: "Book Adam" },
+    { id: "v10-section-9", label: "Leverage" },
+    { id: "v10-section-10", label: "Deeper" },
+    { id: "v10-section-11", label: "Share" },
+  ];
+
+  const handleStickyShare = () => {
+    trackMagnetEvent(slug, "share_click", { channel: "fab", vertical: verticalSlug });
+    window.dispatchEvent(new CustomEvent("v10:share-copy"));
+  };
+
   return (
     <div
       style={{
@@ -236,6 +256,10 @@ export default function MagnetBreakdown({
           primary={brand.primary}
         />
       )}
+
+      <SectionRail items={railItems} />
+      <MobileProgressBar />
+      <StickyShareFab onClick={handleStickyShare} />
 
       <div className="max-w-2xl mx-auto px-6 pb-24">
         <PersonalizedHeader
