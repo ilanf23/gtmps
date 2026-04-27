@@ -3,7 +3,32 @@ import { NavLink, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useClientTheme } from "@/hooks/useClientTheme";
 import { themeStyle } from "@/lib/clientTheme";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 import Footer from "@/components/Footer";
+
+/**
+ * Names extracted by the brand pipeline that we KNOW are wrong (third-party
+ * assets, generic fallbacks, the prospect being Mabbly itself, etc.). Any of
+ * these names are dropped — the header falls back to the neutral
+ * "Mabbly · GTM" wordmark instead of pretending the prospect's firm is
+ * something it isn't.
+ */
+const KNOWN_BAD_COMPANY_NAMES = new Set([
+  "griffith foods",
+  "griffith",
+  "untitled",
+  "image",
+  "logo",
+  "home",
+  "mabbly", // never self-pair "Mabbly × Mabbly"
+]);
+
+function isBadName(name: string | null | undefined): boolean {
+  if (!name) return false;
+  const k = name.trim().toLowerCase();
+  if (!k) return true;
+  return KNOWN_BAD_COMPANY_NAMES.has(k);
+}
 
 interface MagnetShellProps {
   children: ReactNode;
