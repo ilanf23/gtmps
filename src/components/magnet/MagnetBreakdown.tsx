@@ -26,6 +26,9 @@ import HighestLeverageMove from "./v10/HighestLeverageMove";
 import DeeperFindings from "./v10/DeeperFindings";
 import ManuscriptShareSave from "./v10/ManuscriptShareSave";
 import ShareAttributionBanner from "./v10/ShareAttributionBanner";
+import MobileProgressBar from "./v10/MobileProgressBar";
+import StickyShareFab from "./v10/StickyShareFab";
+import SectionRail from "@/components/discover/SectionRail";
 
 interface BreakdownRow {
   welcome_message: string | null;
