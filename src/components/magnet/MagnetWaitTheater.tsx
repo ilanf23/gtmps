@@ -41,9 +41,10 @@ const STAGES: Stage[] = [
     endSec: 22,
     title: 'Reading your homepage',
     ticks: [
-      'Found your headline…',
+      'Reading your homepage…',
       'Reading your value prop…',
-      'Identifying your services…',
+      'Reading your services…',
+      'Reading your proof…',
     ],
   },
   {
@@ -52,8 +53,9 @@ const STAGES: Stage[] = [
     endSec: 45,
     title: 'Mapping your services',
     ticks: [
+      'Identifying your ICP…',
+      'Mapping your offer surface…',
       'Detecting your service areas…',
-      'Checking call-to-action clarity…',
       'Comparing against industry baseline…',
     ],
   },
@@ -63,8 +65,9 @@ const STAGES: Stage[] = [
     endSec: 70,
     title: 'Mapping your dormant relationships',
     ticks: [
-      'Estimating your CRM size…',
-      'Detecting your engagement signals…',
+      'Estimating your CRM dormancy…',
+      'Inferring your reactivation cadence…',
+      'Detecting engagement signals…',
       'Mapping your Five Orbits…',
     ],
   },
@@ -74,9 +77,10 @@ const STAGES: Stage[] = [
     endSec: 90,
     title: 'Building your RROS map',
     ticks: [
-      'Calculating your Relationship Revenue Score…',
-      'Compiling your custom callouts…',
-      'Almost ready. Your map is generating…',
+      'Generating your RROS map…',
+      'Scoring your orbits…',
+      'Drafting your highest leverage move…',
+      'Almost ready…',
     ],
   },
 ];
