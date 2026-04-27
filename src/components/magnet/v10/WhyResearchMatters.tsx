@@ -5,7 +5,10 @@ interface Props {
   primary: string;
 }
 
-const VERIFIED_CLIENTS = ["Madcraft", "Calliope", "SPR", "AArete"];
+// LOCKED LIST — never mutate, never extend dynamically. Verified cohort firms
+// only. Any "fabricated logo" regression that adds Griffith Foods or other
+// names traces back to a violation of this contract.
+const VERIFIED_CLIENTS = Object.freeze(["Madcraft", "Calliope", "SPR", "AArete"] as const);
 
 export default function WhyResearchMatters({ primary }: Props) {
   return (
