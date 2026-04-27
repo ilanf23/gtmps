@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { MANUSCRIPT_INTRODUCTION } from "@/content/manuscriptQuotes";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   slug: string;
@@ -104,16 +105,19 @@ export default function ManuscriptShareSave({
     >
       {/* Manuscript anchor */}
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           11 · Manuscript anchor
         </p>
       </div>
 
-      <figure className="max-w-2xl mb-12 md:mb-16">
+      <figure
+        className="max-w-2xl mb-12 md:mb-16 pl-5"
+        style={{ borderLeft: `2px solid ${MABBLY_GOLD}` }}
+      >
         <blockquote
           className="text-xl md:text-2xl leading-snug italic"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
