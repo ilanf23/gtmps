@@ -204,11 +204,11 @@ export default function MagnetSite() {
 
   return (
     <MagnetShell firstName={firstName}>
-      <MagnetLoadingScene
+      <MagnetWaitTheater
         firstName={firstName}
-        stepIndex={stepIndex}
-        stepVisible={stepVisible}
-        steps={STEPS}
+        websiteUrl={navState.websiteUrl}
+        companyName={companyName}
+        enrichmentReady={false}
       />
     </MagnetShell>
   );
