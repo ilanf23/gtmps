@@ -17,7 +17,7 @@ export type VerticalFlowSlug = VerticalSlug | 'general';
 export type VerticalFlow = {
   /** Form eyebrow above the headline. */
   eyebrow: string;
-  /** Used in: "See exactly where your {headlineSuffix} is leaking." */
+  /** Used in: "See exactly where your {headlineSuffix} are leaking." */
   headlineSuffix: string;
   /** Sub-line on the form, replaces the "positioning, messaging, CTAs…" line. */
   methodologyLine: string;
@@ -70,7 +70,7 @@ const general: VerticalFlow = {
 // ─── law ─────────────────────────────────────────────────────────────────────
 const law: VerticalFlow = {
   eyebrow: 'ORIGINATION STRATEGY ANALYSIS',
-  headlineSuffix: "law firm's origination",
+  headlineSuffix: "law firm's origination signals",
   methodologyLine: 'Analyzes practice positioning, partner origination signals, lateral retention patterns, and dormant client cadence.',
   waitStageTitles: [
     'Reading your practice areas',
@@ -96,7 +96,7 @@ const law: VerticalFlow = {
 // ─── consulting ──────────────────────────────────────────────────────────────
 const consulting: VerticalFlow = {
   eyebrow: 'PRACTICE GROWTH ANALYSIS',
-  headlineSuffix: "consulting practice's growth",
+  headlineSuffix: "consulting practice's growth levers",
   methodologyLine: 'Analyzes practice positioning, partner-led BD signals, alumni cadence, and dormant account reactivation patterns.',
   waitStageTitles: [
     'Reading your practice positioning',
@@ -122,7 +122,7 @@ const consulting: VerticalFlow = {
 // ─── accounting ──────────────────────────────────────────────────────────────
 const accounting: VerticalFlow = {
   eyebrow: 'CLIENT DEVELOPMENT ANALYSIS',
-  headlineSuffix: "firm's client development",
+  headlineSuffix: "firm's client development signals",
   methodologyLine: 'Analyzes service-line positioning, partner-led client development signals, advisory cross-sell paths, and dormant client cadence.',
   waitStageTitles: [
     'Reading your service lines',
@@ -174,7 +174,7 @@ const msp: VerticalFlow = {
 // ─── advisory ────────────────────────────────────────────────────────────────
 const advisory: VerticalFlow = {
   eyebrow: 'PROSPECTING & AUM GROWTH ANALYSIS',
-  headlineSuffix: "advisory practice's prospecting and AUM growth",
+  headlineSuffix: "advisory practice's prospecting and AUM channels",
   methodologyLine: 'Analyzes positioning, advisor-led prospecting signals, referral cadence, and dormant prospect & client reactivation patterns.',
   waitStageTitles: [
     'Reading your advisory positioning',
@@ -226,7 +226,7 @@ const ae: VerticalFlow = {
 // ─── recruiting (executive search) ──────────────────────────────────────────
 const recruiting: VerticalFlow = {
   eyebrow: 'MANDATE ORIGINATION ANALYSIS',
-  headlineSuffix: "search practice's mandate origination",
+  headlineSuffix: "search practice's mandate origination signals",
   methodologyLine: 'Analyzes practice positioning, partner-led mandate origination signals, candidate-to-client conversion paths, and dormant client cadence.',
   waitStageTitles: [
     'Reading your practice positioning',
@@ -252,7 +252,7 @@ const recruiting: VerticalFlow = {
 // ─── agency (marketing & creative) ──────────────────────────────────────────
 const agency: VerticalFlow = {
   eyebrow: 'NEW BUSINESS ANALYSIS',
-  headlineSuffix: "agency's new business and pitch process",
+  headlineSuffix: "agency's new business and pitch channels",
   methodologyLine: 'Analyzes positioning, partner-led new business signals, pitch conversion patterns, and dormant client reactivation cadence.',
   waitStageTitles: [
     'Reading your agency positioning',
