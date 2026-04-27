@@ -4,6 +4,7 @@
 import { useEffect, useRef } from "react";
 import { CTA_VARIANTS, type CtaVariantId } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   slug: string;
@@ -95,10 +96,10 @@ export default function FullCtaSection({
       className="py-16 md:py-24 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           08 · {calendarCta || "Your 30-minute conversation"}
         </p>

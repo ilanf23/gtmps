@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import OHQ from "./ObservedHypothesisQuestion";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   customerName: string;
@@ -54,10 +55,10 @@ export default function DeeperFindings({
       className="py-16 md:py-24 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           10 · Deeper findings
         </p>
@@ -82,7 +83,7 @@ export default function DeeperFindings({
               >
                 <span
                   className="text-[11px] uppercase tracking-[0.25em] font-semibold"
-                  style={{ color: primary }}
+                  style={{ color: MABBLY_GOLD }}
                 >
                   {b.eyebrow}
                 </span>

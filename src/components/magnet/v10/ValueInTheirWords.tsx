@@ -39,10 +39,10 @@ export default function ValueInTheirWords({ primary }: Props) {
       className="py-16 md:py-24 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           07 · The value (in their words)
         </p>
@@ -79,14 +79,17 @@ export default function ValueInTheirWords({ primary }: Props) {
         ))}
       </div>
 
-      {/* Adam anchor */}
-      <div className="mt-10 pt-8 border-t border-black/10 flex items-start gap-4">
+      {/* Adam anchor — Mabbly-locked identity, never re-skinned by client extraction */}
+      <div
+        className="mt-10 pt-8 flex items-start gap-4"
+        style={{ borderTop: `1px solid ${MABBLY_GOLD}33` }}
+      >
         <div
           className="w-20 h-20 rounded-full shrink-0 flex items-center justify-center text-base font-bold border-2"
           style={{
-            backgroundColor: "#1C1008",
-            color: primary,
-            borderColor: primary,
+            backgroundColor: MABBLY_DARK,
+            color: MABBLY_GOLD,
+            borderColor: MABBLY_GOLD,
             fontFamily: "'Cormorant Garamond', Georgia, serif",
           }}
           aria-label="Adam Fridman"

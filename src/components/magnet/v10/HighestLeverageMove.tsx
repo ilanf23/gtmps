@@ -2,6 +2,7 @@
 
 import { MANUSCRIPT_FORMULA } from "@/content/manuscriptQuotes";
 import type { FindingProfile } from "@/lib/magnetScoring";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   profile: FindingProfile;
@@ -38,10 +39,10 @@ export default function HighestLeverageMove({
       className="py-16 md:py-24 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           09 · Your highest leverage move
         </p>
@@ -63,7 +64,10 @@ export default function HighestLeverageMove({
         </p>
       </div>
 
-      <figure className="mt-8 pt-6 border-t border-black/10 max-w-xl">
+      <figure
+        className="mt-8 pt-6 max-w-xl"
+        style={{ borderTop: `1px solid ${MABBLY_GOLD}33` }}
+      >
         <blockquote
           className="font-serif italic text-lg leading-snug opacity-85"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
