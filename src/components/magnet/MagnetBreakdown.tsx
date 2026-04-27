@@ -361,6 +361,19 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
         }}
       />
       <div className="max-w-2xl mx-auto px-6 pb-24">
+        {/* ─── PHASE A: PRE-GATE TEASER ─────────────────────────────────── */}
+        {!unlocked && (
+          <TeaserAndGate
+            data={data}
+            customerName={customerName}
+            confirmEmail={confirmEmail}
+            setConfirmEmail={setConfirmEmail}
+            handleUnlock={handleUnlock}
+          />
+        )}
+
+        {/* ─── PHASE B: FULL REVEAL ─────────────────────────────────────── */}
+        <div id="magnet-full-reveal" hidden={!unlocked}>
         {/* SECTION 1: PERSONAL HEADER */}
         <section className="pt-16 pb-12 border-b border-black/10">
           {data.client_logo_url ? (
