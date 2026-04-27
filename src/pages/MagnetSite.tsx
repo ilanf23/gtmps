@@ -183,8 +183,23 @@ export default function MagnetSite() {
   }
 
   if (status === 'complete') {
+    const booked = searchParams.get('booked') === 'true';
     return (
       <MagnetShell firstName={firstName}>
+        {booked && (
+          <div
+            role="status"
+            className="sticky top-0 z-40 px-4 py-3 text-center text-sm font-semibold border-b"
+            style={{
+              backgroundColor: '#1B5E20',
+              color: '#FBF8F4',
+              borderColor: 'rgba(0,0,0,0.15)',
+            }}
+          >
+            Booked. Adam will see you on the call. Check your email for the
+            confirmation.
+          </div>
+        )}
         <MagnetBreakdown
           slug={slug!}
           vertical={vertical}
