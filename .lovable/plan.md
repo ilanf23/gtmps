@@ -1,119 +1,142 @@
-## Goal
-Make every `/m/[slug]` microsite visually feel like it was designed for that specific firm by applying a 5-color brand palette (primary, background, surface, text, textMuted) extracted from the firm's website and refined by GPT.
+## Post-CTA Flow Rebuild
 
-## Current state
-- `supabase/functions/_shared/extract-branding.ts` already extracts hex/rgb/hsl color candidates, ranks them, and returns `accentColor`, `backgroundColor`, `textColor`, `fontFamily`, plus `raw.candidateColors[]`. This runs in `enrich-magnet/index.ts` and is stored in `magnet_breakdowns` columns (`client_brand_color`, `client_accent_color`, `client_background_color`, `client_text_color`, `client_font_family`, `client_brand_profile`).
-- The breakdown RPC `get_magnet_breakdown_by_slug` already returns these columns.
-- However, `MagnetBreakdown.tsx` only reads `client_logo_url` and `client_company_name` — it ignores all color fields and renders with the hardcoded cream/gold Mabbly palette (`#FBF8F4`, `#1C1008`, `#B8933A`).
-- `MagnetImpactModel.tsx` is also fully hardcoded.
+Rebuild the `/assess → /m/:slug` flow into three connected experiences: a 3-step micro-form, a 4-stage cinematic wait, and a two-phase reveal with an inline email confirm gate.
 
-## Plan
+---
 
-### Part 1 — Edge function: have GPT refine candidates into a 5-key palette
+## Open questions before build
 
-`supabase/functions/enrich-magnet/index.ts`
+A few decisions need confirmation — flagging now so we don't ship the wrong thing:
 
-1. We already have `branding.raw.candidateColors` (top scored candidates) from the existing `extractBrandProfile()` call. **Reuse those** rather than re-fetching raw HTML — this avoids a duplicate fetch, respects the careful HSL/CSS-var parsing already in `extract-branding.ts`, and keeps the rate-limiting friendly to firms' sites.
-2. Inject the candidates into the user message so the AI can pick:
-   ```
-   === COLOR CANDIDATES EXTRACTED FROM WEBSITE ===
-   <comma-separated hexes from branding.raw.candidateColors, or "none found">
-   Heuristic primary so far: <branding.accentColor or "none">
-   Heuristic background: <branding.backgroundColor or "none">
-   === END COLOR CANDIDATES ===
-   ```
-3. Append a `BRANDING EXTRACTION` block to `SYSTEM_PROMPT` (after the COPY FORMULAS section, before "Return ONLY valid JSON") spelling out the selection rules and per-vertical inference fallback (consulting=navy, creative=vibrant, legal=dark gold, tech=blue, financial=green) exactly as the user specified.
-4. Update the JSON schema instruction to require a `branding` object with the 5 hex keys: `primary`, `background`, `surface`, `text`, `textMuted`.
-5. After parsing the AI response, validate each branding hex with `/^#[0-9a-fA-F]{6}$/`. Drop any malformed value (so the frontend default kicks in). Merge AI palette over the heuristic palette as fallback per-key:
-   - `primary` ← AI.primary || branding.accentColor
-   - `background` ← AI.background || branding.backgroundColor
-   - `surface` ← AI.surface (no heuristic equivalent today)
-   - `text` ← AI.text || branding.textColor
-   - `textMuted` ← AI.textMuted
-6. Persist the resulting palette inside the existing `client_brand_profile` JSONB column under a new `palette` key (e.g. `client_brand_profile.palette = { primary, background, surface, text, textMuted }`). No DB migration needed — `client_brand_profile` is already `jsonb`.
+1. **Dropped form fields.** The new spec collects only `name`, `email`, `websiteUrl`. The current form also collects `role`, `linkedinUrl`, `crmSize`, `dealSize`, `bdChallenge`, `caseStudiesUrl`, `teamPageUrl`. The enrich edge function uses `crmSize`, `dealSize`, `bdChallenge`, `caseStudiesUrl`, `teamPageUrl` to compute the Dead Zone value and pick a starting layer.
+   - **Recommended:** drop them from the form and have `enrich-magnet` infer everything from the website scrape (it already does most of this). Dead Zone falls back to industry defaults when not provided.
+   - **Alternative:** keep them as a hidden Step 4 or as optional advanced disclosure.
+2. **Adam founder video.** Spec says "20 sec, Adam, inline embedded with custom thumbnail." We don't have this asset in the repo. Options: (a) you provide MP4 + thumbnail, (b) ship a styled placeholder card with a "Play intro" button that opens a modal once the asset arrives, (c) skip the video for v1.
+3. **Adam voiceover for wait stages.** Same question — do we have audio files, or ship the optional audio button as disabled/hidden until provided?
+4. **Booking link.** Primary CTA is "Book a 20-min walkthrough with Adam" — what calendar URL?
 
-### Part 2 — Surface palette to the frontend
+I'll proceed assuming: (1) drop fields, (2) placeholder video card, (3) hide audio button until assets land, (4) use `mailto:adam@mabbly.com` until a Calendly link is supplied. Tell me if any of those should change.
 
-`get_magnet_breakdown_by_slug` already returns `client_brand_profile` — no migration needed. The frontend will read `data.client_brand_profile?.palette`.
+---
 
-`src/components/magnet/MagnetBreakdown.tsx`
-1. Extend `BreakdownRow`:
-   ```ts
-   client_brand_profile?: {
-     palette?: {
-       primary?: string;
-       background?: string;
-       surface?: string;
-       text?: string;
-       textMuted?: string;
-     } | null;
-   } | null;
-   ```
-2. At the top of the render, derive a `brand` object with safe defaults that match today's look (so untouched / older submissions don't change visually):
-   ```ts
-   const p = data.client_brand_profile?.palette ?? {};
-   const brand = {
-     primary:    isHex(p.primary)    ? p.primary    : '#B8933A',  // current gold
-     background: isHex(p.background) ? p.background : '#FBF8F4',  // current cream
-     surface:    isHex(p.surface)    ? p.surface    : '#FFFFFF',
-     text:       isHex(p.text)       ? p.text       : '#1C1008',
-     textMuted:  isHex(p.textMuted)  ? p.textMuted  : '#1C1008',  // used at opacity
-   };
-   ```
-   Use a small `isHex(v)` regex guard so malformed values fall through.
+## Stage 1 — `/assess` 3-step micro-form
 
-### Part 3 — Apply colors in `MagnetBreakdown.tsx`
+Rewrite `src/pages/MagnetAssess.tsx` as a stepper.
 
-3a. Move the outermost wrapper from `bg-[#FBF8F4] text-[#1C1008]` to inline style + CSS variables on the root div:
-```tsx
-<div
-  style={{
-    '--brand-primary': brand.primary,
-    '--brand-bg': brand.background,
-    '--brand-surface': brand.surface,
-    '--brand-text': brand.text,
-    '--brand-text-muted': brand.textMuted,
-    backgroundColor: brand.background,
-    color: brand.text,
-  } as React.CSSProperties}
-  className="min-h-screen"
->
-```
+**Sticky top bar (fixed, h-12):** progress bar + "Step N of 3" label, gold fill animates on step change.
 
-3b. Targeted inline-style additions (keep existing Tailwind classes for layout/spacing — only override colors):
-- **All gold accent rules / labels** (`bg-[#B8933A]` rule, `text-[#B8933A]` labels): add `style={{ backgroundColor: brand.primary }}` / `style={{ color: brand.primary }}`.
-- **Section headings (`h1`, `h2`)**: add `style={{ color: brand.primary }}` for the firm-name H1 and the orange-accent H2 within sections (currently relying on inherited `text-[#1C1008]`). Per spec, brand primary on headings.
-- **Snapshot strip cards** (the 3-column firm/layer/sections block) and other `bg-[#FBF8F4]` panels (orbit cards, action cards, manuscript stat strip): inline `style={{ backgroundColor: brand.surface }}` so they sit slightly above `brand.background`.
-- **Formula "Observed" card** (`bg-black/[0.04]`): inline `style={{ backgroundColor: brand.primary + '0D' }}` (~5% tint) so it stays subtle but takes the brand hue.
-- **Formula "Assessment" card** (`bg-[#B8933A]/10 border-[#B8933A]/30`): `style={{ backgroundColor: brand.primary + '1A', borderColor: brand.primary + '4D' }}` and the inner left bar `style={{ backgroundColor: brand.primary }}`.
-- **Orbit symbol badges** (the `⊙01`–`⊙05` chips): `style={{ backgroundColor: brand.primary + '26', color: brand.primary, borderColor: brand.primary + '4D' }}`.
-- **Layer progression** active pill, "Why X first" callout box, "WALK THROUGH IT" outline button, manuscript callout cards (border + ✦ icon + left rule): all switch from `#B8933A` references to `brand.primary` via inline style.
-- **Section dividers** (`border-b border-black/10`): unchanged — they read fine on light or dark backgrounds.
-- **Primary CTA** ("Map Your Activation Sequence →") at the bottom: `style={{ backgroundColor: brand.primary, color: '#FFFFFF' }}` and remove the hardcoded `bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05]` color classes (keep layout classes).
-- **Section 8 wrapper**: currently uses `text-[#FBF8F4]` against transparent (broken in light mode but pre-existing). Switch to `style={{ color: brand.text }}` so it reads against the brand background.
-- **Loading + error fallback states** (lines 204–223): also switch from hardcoded cream/ink to `brand.background` / `brand.text` — but only when `data` is loaded. Pre-load they default to the current cream palette since `brand` isn't computed yet.
+**Persistent above-form block (always visible):**
+- Eyebrow: `GET YOUR PERSONALIZED ANALYSIS`
+- H1: "Understand your firm's revenue potential in 90 seconds."
+- Sub: positioning / messaging / dormant relationship signal copy
+- Methodology line in gold caps: `ANALYZES: POSITIONING · MESSAGING · CTAs · CONSISTENCY`
+- Founder video card (placeholder until asset lands): muted-by-default `<video>` with custom poster, captions on, auto-pauses on first form input via shared focus listener
+- Static social proof strip: "Trusted by 60+ managing partners at PS firms $5M to $100M"
 
-### Part 4 — `MagnetImpactModel.tsx`
+**Steps:** one input per screen, slide-in transitions, Enter advances, "Continue →" button, Back chevron after Step 1.
+- Step 1: `name` → after submit, fire dynamic toast "Maria from Northwind just completed her analysis · 4 min ago" (rotates from a 10-name array of plausible firms; deterministic per session)
+- Step 2: `email`
+- Step 3: `websiteUrl` → CTA "Build My Analysis →" (gold pill) + trust microline "Free. 90 seconds. No credit card. Confidential."
 
-1. Add `primaryColor?: string` to `MagnetImpactModelProps` (default `'#B8933A'`).
-2. Replace the hardcoded `#B8933A` references with `primaryColor` via inline styles for: section labels, dormant card label, Dead Zone card border + value, Formula multiplier "WITH" card border + value + label, multiplier text, and the gold `h-2 bg-[#B8933A]` bar fill.
-3. The neutral cards (`bg-black/[0.03]`, `border-black/10`) stay as they are — they read against any background that has enough contrast. 
-4. From `MagnetBreakdown.tsx`, pass `primaryColor={brand.primary}` to `<MagnetImpactModel ... />`.
+**Validation:** zod per step; can't continue until current field passes.
 
-### Part 5 — Defensive guards
+**Submit:** insert into `magnet_submissions` with the three collected fields plus nulls for the dropped columns (DB columns stay; just pass nulls), then `void supabase.functions.invoke('enrich-magnet', ...)` and `navigate('/m/:slug')`.
 
-- `isHex()` validator drops any malformed AI output silently.
-- All `?? defaults` keep the existing Mabbly palette intact when `branding.palette` is absent (every existing `/m/[slug]` row continues to render unchanged).
-- The accent-opacity tints use 8-digit hex (`brand.primary + '1A'`) so any browser ignores them gracefully if `brand.primary` is malformed.
+**Mobile (375px):** full-width 48px tap targets; sticky bar collapses to thin progress only.
+
+---
+
+## Stage 2 — `/m/:slug` cinematic wait
+
+Rewrite `MagnetLoadingScene` (or add a new `MagnetWaitTheater`) and update `MagnetSite.tsx` to drive it.
+
+**Persistent header:** "Building your RROS map for {Company}" + live `MM:SS / 01:30` timer + top progress bar synced to elapsed time (cap at 88% until enrichment actually completes).
+
+**Four scripted stages (timed by elapsed seconds, not poll state):**
+
+| Stage | Window | Visual | Status ticker |
+|---|---|---|---|
+| 1 | 0–22s | Domain card slides in (favicon via `https://www.google.com/s2/favicons?domain=…&sz=64`, page title pulled from submission) | "Found your headline…" → "Reading your value prop…" → "Identifying your services…" |
+| 2 | 22–45s | Service cards fade in one-by-one (4 generic chips: Strategy / Branding / Delivery / Growth) | "Detecting service areas…" → "Checking CTA clarity…" |
+| 3 | 45–70s | Five Orbits SVG draws ring-by-ring around a center node | "Estimating CRM size…" → "Detecting engagement signals…" → "Mapping your Five Orbits…" + mid-stage trust callout card |
+| 4 | 70–90s | Score number counts up from 0 to a teaser value (use `useCountUp`) | "Calculating your Relationship Revenue Score…" then at 85s "Almost ready…" |
+
+Optional audio button (top-right, ghost) — hidden until voiceover assets exist.
+
+**Reduced motion:** `useReducedMotion()` collapses all SVG animation to a static stage label list with the top progress bar only.
+
+**Mobile:** vertical stack, animations clipped to viewport width, controls 48px.
+
+---
+
+## Stage 3 — two-phase reveal in `MagnetBreakdown.tsx`
+
+Add a gate between the existing teaser content and the full breakdown. Reuse `client_brand_profile` palette logic already in place.
+
+### Phase A — pre-gate teaser (no email re-ask required to view this phase)
+
+Render at top of breakdown:
+- H1: "Your Revenue Map for {Company}"
+- Subline: "Built {n} seconds ago" (computed from `created_at`)
+- Hero insight block:
+  - Big sentence: "{Company} is leaking ~${dead_zone_value}K in dormant pipeline."
+  - Specific finding paragraph (use `gtm_profile_observed` + `gtm_profile_assessment`)
+  - One Five Orbits sentence: derive strongest/weakest from `orbit_01..05` content length / explicit scoring already produced by enrich
+- Five Orbits map — render the existing orbit visualization but wrap in a `relative` container with a sibling overlay `<div>` applying `backdrop-filter: blur(8px)` + dark gradient + centered lock icon. Labels rendered above the blur layer; numeric values inside the blur.
+- Inline gate card (no full-screen modal):
+  - Eyebrow: `UNLOCK YOUR FULL MAP`
+  - Pull quote
+  - Email input pre-filled from `magnet_submissions.email`
+  - CTA "Unlock My Map →" — single click confirms (no new request needed; just unlocks UI state)
+  - Trust microline
+
+### Phase B — post-gate full reveal (state toggled in component)
+
+Persist unlock state in `localStorage[`magnet:unlocked:${slug}`]` so refresh keeps it open. On unlock:
+- Remove blur overlay; show numeric scores + benchmarks per orbit
+- 3 insight cards (top opportunity / strength / what firms like yours do next) — derive from existing `action_1..3` and orbit fields
+- Three CTAs in clear hierarchy:
+  - Primary gold pill: "Book a 20-min walkthrough with Adam" → calendar link (placeholder `mailto:` until provided)
+  - Secondary gold outline: "See the full GTM framework" → `/discover`
+  - Tertiary text link: "Read the manuscript first" → `/m/:slug/read`
+- Editorial italic book mention + 140px cover thumbnail linking to `/about`
+
+### Backend
+
+Optional but recommended migration: add `unlocked_at TIMESTAMPTZ` to `magnet_submissions` so we can track conversion. On unlock click, fire-and-forget `update` via RPC. Not blocking — UI works without it.
+
+---
+
+## Stage 4 — copy alignment
+
+Update only the eyebrow on the new `/assess` page to `GET YOUR PERSONALIZED ANALYSIS` (drops "GTM Breakdown"). The homepage CTA "Add Your Firm →" stays unchanged. Headline already updated above.
+
+---
 
 ## Files touched
-- `supabase/functions/enrich-magnet/index.ts` — add color candidates to user message, BRANDING block in system prompt, parse + validate `branding` object, persist into `client_brand_profile.palette`.
-- `src/components/magnet/MagnetBreakdown.tsx` — extend `BreakdownRow`, derive `brand`, apply CSS variables + targeted inline styles, pass `primaryColor` to impact model.
-- `src/components/magnet/MagnetImpactModel.tsx` — accept and apply `primaryColor` prop.
 
-## What is NOT changed
-- No DB migration (palette piggybacks on existing `client_brand_profile` jsonb).
-- No change to logo, font extraction, or company-name handling — already working.
-- No change to `MagnetChat` (the chat now lives on a dedicated `/m/:slug/chat` page per the existing comment, not as a floating bubble in this component).
-- No change to scoring or extraction in `extract-branding.ts` — only consumed.
-- No change to validation or routing of the `/m/[slug]` page itself.
+- **Edit:** `src/pages/MagnetAssess.tsx` (full rewrite to stepper)
+- **New:** `src/components/magnet/MagnetWaitTheater.tsx` (replaces `MagnetLoadingScene` for the new four-stage timeline; old file kept until cutover then deleted)
+- **Edit:** `src/pages/MagnetSite.tsx` (swap loading component, pass elapsed timer + company name)
+- **Edit:** `src/components/magnet/MagnetBreakdown.tsx` (add phase A teaser, blur overlay, gate card, unlock state, restructured phase B layout, 3 CTAs + book mention)
+- **New (optional):** `supabase/migrations/<ts>_add_unlocked_at.sql` if we track unlocks
+- **Edit (light):** `supabase/functions/enrich-magnet/index.ts` only if we need it to gracefully handle null `crmSize/dealSize/bdChallenge/caseStudiesUrl/teamPageUrl` (it likely already does — verify on build)
+
+## Out of scope
+
+- Real founder video / voiceover audio (placeholder until assets provided)
+- Real "Maria from Northwind" feed (static rotating array)
+- Calendar booking integration (link only)
+
+## Test checklist (375px first)
+
+1. Form: 3 steps, sticky bar, single field per screen, Enter advances
+2. Methodology line + static social proof visible on Step 1
+3. Dynamic social proof toast fires between Step 1→2
+4. Wait: 4 stages with status ticker, timer, top progress
+5. Reduced motion: stages collapse to text + bar
+6. Result: teaser + blurred map render before unlock
+7. Email pre-filled in gate; unlock reveals full map + 3 insights + 3 CTAs
+8. Book mention + cover only in result footer
+9. localStorage keeps post-gate state across refresh
+10. All tap targets ≥ 48px on 375px width
