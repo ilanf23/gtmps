@@ -781,48 +781,80 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           </div>
         </section>
 
-        {/* SECTION 8: CTA */}
+        {/* SECTION 8: NEXT STEPS — three hierarchized CTAs + book mention */}
         <section className="py-16">
-          <div className="bg-transparent text-[#FBF8F4] p-8 md:p-10 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#B8933A] to-transparent opacity-60" aria-hidden />
-            <div className="flex items-center gap-2 mb-4">
-              <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
-              <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
-                Next Step
-              </p>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-              The system is mapped. The pipeline already exists.
-            </h2>
-            <p className="text-base opacity-70 mb-8 leading-relaxed max-w-lg">
-              The 90-minute Relationship Revenue session turns the breakdown above into a 90-day activation sequence, specific to {customerName}, starting from the layer with the most leverage.
+          <div className="flex items-center gap-2 mb-4">
+            <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
+            <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+              What's next for {customerName}
             </p>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
+            The system is mapped. The pipeline already exists.
+          </h2>
+          <p className="text-base opacity-70 mb-8 leading-relaxed max-w-lg">
+            Pick the lane that fits where you are right now.
+          </p>
 
-            {/* Session detail strip */}
-            <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10 mb-8">
-              <div className="bg-transparent p-4">
-                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Length</p>
-                <p className="text-sm font-semibold">90 minutes</p>
-              </div>
-              <div className="bg-transparent p-4">
-                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Output</p>
-                <p className="text-sm font-semibold">90-day plan</p>
-              </div>
-              <div className="bg-transparent p-4">
-                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1.5">Cost</p>
-                <p className="text-sm font-semibold">No pitch</p>
-              </div>
-            </div>
+          <div className="flex flex-col gap-3">
+            {/* Primary — book a walkthrough */}
+            <a
+              href="mailto:adam@mabbly.com?subject=20-min%20RROS%20walkthrough"
+              className="block w-full text-center bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
+            >
+              Book a 20-min walkthrough with Adam →
+            </a>
 
+            {/* Secondary — see the framework */}
             <button
               type="button"
-              onClick={() => navigate("/book")}
-              className="inline-block bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
+              onClick={() => navigate("/discover")}
+              className="w-full text-center border border-[#B8933A]/50 text-[#B8933A] font-semibold px-8 py-4 uppercase tracking-wide text-sm hover:bg-[#B8933A]/10 transition-colors"
             >
-              Map Your Activation Sequence →
+              See the full GTM framework
             </button>
-            <p className="text-xs opacity-40 mt-4">
-              90 minutes. No pitch. Just the plan.
+
+            {/* Tertiary — read the manuscript */}
+            <button
+              type="button"
+              onClick={() => navigate(`/m/${slug}/read`)}
+              className="text-xs text-[#1C1008]/60 hover:text-[#1C1008] underline underline-offset-4 mt-2 self-center"
+            >
+              Read the manuscript first
+            </button>
+          </div>
+
+          {/* Book mention — editorial italic + cover thumbnail */}
+          <div className="mt-12 pt-8 border-t border-black/10 flex items-start gap-5">
+            <button
+              type="button"
+              onClick={() => navigate("/about")}
+              className="shrink-0 block"
+              aria-label="About the authors"
+            >
+              <div
+                className="w-[100px] h-[140px] bg-[#1C1008] flex items-center justify-center text-[10px] uppercase tracking-[0.18em] text-[#B8933A] text-center px-2 leading-snug"
+                style={{
+                  boxShadow: "0 8px 24px -8px rgba(28,16,8,0.35)",
+                }}
+              >
+                Relationship<br />Revenue<br />OS
+              </div>
+            </button>
+            <p className="text-xs italic opacity-70 leading-relaxed">
+              This analysis comes from the methodology in{" "}
+              <em className="not-italic font-semibold opacity-90">
+                "GTM for Professional Services: The Relationship Revenue OS,"
+              </em>{" "}
+              launching Q3 2026 — co-authored by{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/about")}
+                className="underline underline-offset-2 hover:text-[#B8933A] transition-colors"
+              >
+                Adam Fridman and Richard Ashbaugh
+              </button>
+              , foreword by Jonathan Copulsky.
             </p>
           </div>
         </section>
