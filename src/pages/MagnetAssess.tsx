@@ -156,7 +156,15 @@ export default function MagnetAssess() {
         })
         .catch((err) => console.error('Enrich invoke error:', err));
 
-      navigate(`/m/${slug}`);
+      // Pass form state forward so the wait theater can show the right domain
+      // and the breakdown gate can pre-fill the email without a re-fetch.
+      navigate(`/m/${slug}`, {
+        state: {
+          websiteUrl: website.trim(),
+          email: email.trim(),
+          firstName: name.trim(),
+        },
+      });
     } catch (err) {
       console.error('Submit error:', err);
       toast.error('Something went wrong — please try again.');
