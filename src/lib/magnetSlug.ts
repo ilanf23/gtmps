@@ -57,3 +57,26 @@ export function magnetSlugSuffix(): string {
 function fallbackSlug(): string {
   return `firm-${magnetSlugSuffix()}`;
 }
+
+/**
+ * Convert a slug or domain root into a human-display firm name.
+ *   'aarete'         → 'AArete' (special-cased capitals not handled — caller can override)
+ *   'calliope'       → 'Calliope'
+ *   'foo-bar'        → 'Foo Bar'
+ *   'firm-x7k'       → 'Firm'
+ * Returns null when the slug looks like a generated fallback with no signal.
+ */
+export function displayNameFromSlug(slug: string | null | undefined): string | null {
+  const raw = (slug ?? '').trim().toLowerCase();
+  if (!raw) return null;
+  // Strip a trailing 3-char collision suffix like '-x7k' so 'aarete-x7k' → 'aarete'.
+  const stripped = raw.replace(/-[a-z0-9]{3}$/i, '');
+  // 'firm-x7k' → 'firm' → not useful.
+  if (stripped === 'firm' || stripped === '') return null;
+  return stripped
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+

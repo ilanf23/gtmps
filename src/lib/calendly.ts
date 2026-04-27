@@ -7,6 +7,8 @@
 //  - Confirmation redirect back to /m/<slug>?booked=true
 
 const BASE_URL = "https://calendly.com/adam-fridman/30min";
+const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
+const STYLE_HREF = "https://assets.calendly.com/assets/external/widget.css";
 
 export interface CalendlyContext {
   slug: string;
@@ -16,6 +18,9 @@ export interface CalendlyContext {
   background: string;
   text: string;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyWindow = Window & { Calendly?: any };
 
 /** Build the Calendly URL for inline embedding. */
 export function buildCalendlyEmbedUrl(ctx: CalendlyContext): string {
@@ -37,52 +42,84 @@ export function buildCalendlyEmbedUrl(ctx: CalendlyContext): string {
   return `${BASE_URL}?${params.toString()}`;
 }
 
-/** Build the Calendly URL for the popup widget (separate API but same params). */
+/** Same builder for popup. */
 export function buildCalendlyPopupUrl(ctx: CalendlyContext): string {
-  // Same builder; Calendly popup respects the same query string.
   return buildCalendlyEmbedUrl(ctx);
 }
 
-/** Lazy-load the Calendly widget assets (script + stylesheet). */
-export function ensureCalendlyAssets(): void {
-  const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
-  const STYLE_HREF = "https://assets.calendly.com/assets/external/widget.css";
-  if (typeof document === "undefined") return;
+/** Lazy-load the Calendly widget assets and resolve when ready. */
+export function ensureCalendlyAssets(): Promise<void> {
+  if (typeof document === "undefined") return Promise.resolve();
+  const w = window as AnyWindow;
+
   if (!document.querySelector(`link[href="${STYLE_HREF}"]`)) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = STYLE_HREF;
     document.head.appendChild(link);
   }
-  if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
-    const script = document.createElement("script");
+
+  let script = document.querySelector<HTMLScriptElement>(
+    `script[src="${SCRIPT_SRC}"]`,
+  );
+  if (!script) {
+    script = document.createElement("script");
     script.src = SCRIPT_SRC;
     script.async = true;
     document.body.appendChild(script);
   }
+
+  return new Promise((resolve) => {
+    if (w.Calendly?.initInlineWidget) {
+      resolve();
+      return;
+    }
+    const start = Date.now();
+    const timer = window.setInterval(() => {
+      if (w.Calendly?.initInlineWidget) {
+        window.clearInterval(timer);
+        resolve();
+      } else if (Date.now() - start > 5000) {
+        window.clearInterval(timer);
+        resolve(); // resolve anyway; caller can fall back
+      }
+    }, 80);
+  });
 }
 
-/** Open Calendly's popup widget. Falls back to opening in a new tab if the
- *  global isn't loaded yet (very first click before the script resolves). */
-export function openCalendlyPopup(ctx: CalendlyContext): void {
-  ensureCalendlyAssets();
-  const url = buildCalendlyPopupUrl(ctx);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const w = window as any;
-  if (w.Calendly?.initPopupWidget) {
-    w.Calendly.initPopupWidget({ url });
-    return;
+/** Initialize the inline widget in `parent`. Clears any prior render. */
+export function initCalendlyInline(
+  parent: HTMLElement,
+  ctx: CalendlyContext,
+): void {
+  const url = buildCalendlyEmbedUrl(ctx);
+  const w = window as AnyWindow;
+  // Clear any prior placeholder text or previously-mounted iframe.
+  parent.innerHTML = "";
+  if (w.Calendly?.initInlineWidget) {
+    w.Calendly.initInlineWidget({ url, parentElement: parent });
+  } else {
+    // Fallback: raw iframe so users still see the booker even if the JS fails.
+    const iframe = document.createElement("iframe");
+    iframe.src = url;
+    iframe.title = "Book a call with Adam";
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "0";
+    iframe.allow = "fullscreen";
+    parent.appendChild(iframe);
   }
-  // Script not ready — poll for up to 2s, then fallback to new tab.
-  let tries = 0;
-  const timer = window.setInterval(() => {
-    tries += 1;
+}
+
+/** Open Calendly's popup widget. Falls back to a new tab if JS isn't ready. */
+export function openCalendlyPopup(ctx: CalendlyContext): void {
+  const url = buildCalendlyPopupUrl(ctx);
+  void ensureCalendlyAssets().then(() => {
+    const w = window as AnyWindow;
     if (w.Calendly?.initPopupWidget) {
-      window.clearInterval(timer);
       w.Calendly.initPopupWidget({ url });
-    } else if (tries > 20) {
-      window.clearInterval(timer);
+    } else {
       window.open(url, "_blank", "noopener,noreferrer");
     }
-  }, 100);
+  });
 }

@@ -57,11 +57,11 @@ const ApplySection = () => {
           className="font-display font-black text-white mt-5 scroll-reveal"
           style={{ fontSize: "clamp(40px, 5vw, 60px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}
         >
-          We Are Selecting 50 Firms.
+          We Are Selecting 30 Firms.
         </h2>
 
         <p className="font-serif italic text-gold mt-3 scroll-reveal" style={{ fontSize: 28 }}>
-          Applications close when sessions are full.
+          Participation is confidential by default.
         </p>
 
         <p className="font-sans mt-5 scroll-reveal" style={{ fontSize: 16, lineHeight: 1.75, maxWidth: 560, color: "rgba(255,255,255,0.7)" }}>
@@ -73,7 +73,7 @@ const ApplySection = () => {
         </p>
 
         <p className="font-mono text-gold mt-4 mb-10 scroll-reveal" style={{ fontSize: 11, letterSpacing: "0.12em" }}>
-          46 of 50 sessions remaining · Research open March 2026 · Manuscript enters final draft Q3 2026
+          Confidential by default · Named examples opt-in only · Manuscript enters final draft Q3 2026
         </p>
 
         <div className="flex flex-col gap-5 scroll-reveal">

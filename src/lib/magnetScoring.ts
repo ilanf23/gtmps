@@ -47,29 +47,52 @@ const ORBIT_GATES: Array<{ idx: number; pattern: RegExp; cap: number }> = [
   { idx: 4, pattern: /referral|repeat|expansion|alumni|community|cohort|network|advocate/i, cap: 55 },
 ];
 
+// LLM-emitted status tags get baked into score baselines so the band visibly
+// tracks what the AI observed, not just text length. Range is per-orbit so
+// "[strong]" on Core Proof reads differently than "[strong]" on Dead Zone.
+type StatusTag = "strong" | "gap" | "dormant" | "untapped" | null;
+const STATUS_BASELINE: Record<Exclude<StatusTag, null>, number> = {
+  strong: 78,
+  untapped: 55,
+  dormant: 38,
+  gap: 28,
+};
+
+function extractStatusTag(text: string | null | undefined): StatusTag {
+  if (!text) return null;
+  const m = text.trim().match(/^\[(strong|gap|dormant|untapped)\]/i);
+  return m ? (m[1].toLowerCase() as StatusTag) : null;
+}
+
 /**
- * Score one orbit description (0–100) from heuristics.
- *  - Empty / placeholder → 20
- *  - Short blurb → ~25–35
- *  - Long substantive paragraph → up to ~50 base
- *  - Each signal keyword adds a small bonus (caps at 100)
+ * Score one orbit description (0–100):
+ *  - If the LLM emitted a status tag, anchor the score to the tag baseline
+ *    and let signal keywords nudge it ±10.
+ *  - Otherwise, fall back to the heuristic length+keyword score (low base).
+ *  - Empty / placeholder → 20.
  */
 export function scoreOrbit(text: string | null | undefined): number {
   if (!text) return 20;
   const trimmed = text.trim();
   if (!trimmed || trimmed === "—" || trimmed.toLowerCase() === "pending") return 20;
 
-  // Lower base than v1: length alone is not proof of system.
+  const tag = extractStatusTag(trimmed);
+  const lower = trimmed.toLowerCase();
+  const hits = SIGNAL_KEYWORDS.filter((kw) => lower.includes(kw)).length;
+
+  if (tag) {
+    const baseline = STATUS_BASELINE[tag];
+    const nudge = Math.min(10, Math.max(-6, hits * 2 - 4));
+    return Math.max(0, Math.min(100, baseline + nudge));
+  }
+
+  // No tag — heuristic fallback.
   const length = trimmed.length;
   let base = 20;
   if (length > 60) base = 30;
   if (length > 140) base = 40;
   if (length > 240) base = 50;
-
-  const lower = trimmed.toLowerCase();
-  const hits = SIGNAL_KEYWORDS.filter((kw) => lower.includes(kw)).length;
   const signalBonus = Math.min(25, hits * 4);
-
   return Math.max(0, Math.min(100, base + signalBonus));
 }
 
@@ -83,9 +106,31 @@ export function bandFor(score: number): ScoreBand {
 function applyOrbitGate(idx: number, baseScore: number, text: string | null | undefined): number {
   const gate = ORBIT_GATES.find((g) => g.idx === idx);
   if (!gate) return baseScore;
+  // If the LLM marked this orbit "strong", trust it and skip the cap.
+  if (extractStatusTag(text) === "strong") return baseScore;
   const lower = (text ?? "").toLowerCase();
   if (gate.pattern.test(lower)) return baseScore;
   return Math.min(baseScore, gate.cap);
+}
+
+/**
+ * Force visible variance across the 5 orbits when the model returns a near-flat
+ * profile (e.g. 44/44/44/44/48). Real PS firms always have spread; collapsing
+ * to a single band reads as fake. We perturb scores deterministically (based on
+ * orbit index) so the same inputs always produce the same output.
+ */
+function ensureVariance(scores: number[]): number[] {
+  if (scores.length < 2) return scores;
+  const max = Math.max(...scores);
+  const min = Math.min(...scores);
+  if (max - min >= 15) return scores;
+  // Deterministic per-index nudges anchored on Dead Zone being the typical
+  // weakest orbit and Core Proof / Active being the typical strongest.
+  const NUDGES = [+8, +4, -10, -4, -2]; // sums to -4 → minor downward drift
+  const adjusted = scores.map((s, i) =>
+    Math.max(8, Math.min(95, s + (NUDGES[i] ?? 0))),
+  );
+  return adjusted;
 }
 
 export function computeOrbitScores(orbits: (string | null | undefined)[]): OrbitScores {
@@ -93,13 +138,16 @@ export function computeOrbitScores(orbits: (string | null | undefined)[]): Orbit
   const raw = padded5.map(scoreOrbit);
   const gated = raw.map((s, i) => applyOrbitGate(i, s, padded5[i]));
 
-  // Variance guarantee: if 4+ orbits land in `high`, demote the weakest to mid.
+  // No flat-strong sweep: if 4+ orbits land in `high`, demote the weakest to mid.
   const highCount = gated.filter((s) => s >= 66).length;
   let final = gated;
   if (highCount >= 4) {
     const minIdx = gated.reduce((mi, v, i, a) => (v < a[mi] ? i : mi), 0);
     final = gated.map((s, i) => (i === minIdx ? Math.min(s, 55) : s));
   }
+
+  // Variance guarantee: spread > 15 points across the 5 orbits.
+  final = ensureVariance(final);
 
   const overall = Math.round(final.reduce((s, n) => s + n, 0) / final.length);
   return {

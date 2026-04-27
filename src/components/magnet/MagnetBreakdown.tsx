@@ -13,6 +13,7 @@ import {
 } from "@/lib/magnetScoring";
 import { pickVariant } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { displayNameFromSlug } from "@/lib/magnetSlug";
 
 import PersonalizedHeader from "./v10/PersonalizedHeader";
 import FiveOrbitsViz from "./v10/FiveOrbitsViz";
@@ -170,7 +171,11 @@ export default function MagnetBreakdown({
     data.orbit_05,
   ];
 
-  const customerName = data.client_company_name ?? "your firm";
+  // Firm-name fallback: never surface "your firm" — fall back to a name
+  // derived from the slug (calliope → Calliope) so every result page reads
+  // as personalized to the visitor's firm.
+  const customerName =
+    data.client_company_name ?? displayNameFromSlug(slug) ?? "your firm";
 
   // Strip any LLM-invented dollar figures from the recommended action — never
   // surface a $ number unless it ties to a real CRM-size × deal-size calc.
