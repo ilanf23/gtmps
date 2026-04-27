@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { CTA_VARIANTS, type CtaVariantId } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
-import { buildCalendlyEmbedUrl, ensureCalendlyAssets } from "@/lib/calendly";
+import { ensureCalendlyAssets, initCalendlyInline } from "@/lib/calendly";
 
 interface Props {
   slug: string;
@@ -35,6 +35,7 @@ export default function FullCtaSection({
 }: Props) {
   const variant = CTA_VARIANTS[variantId];
   const sectionRef = useRef<HTMLElement>(null);
+  const calendlyRef = useRef<HTMLDivElement>(null);
   const viewedRef = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,10 +58,27 @@ export default function FullCtaSection({
     return () => obs.disconnect();
   }, [slug, vertical, variantId]);
 
-  // Lazy-load Calendly script + capture booking events (and route to ?booked=true).
+  // Lazy-load Calendly script + initialize the inline widget when ready.
   useEffect(() => {
-    ensureCalendlyAssets();
+    let cancelled = false;
+    void ensureCalendlyAssets().then(() => {
+      if (cancelled || !calendlyRef.current) return;
+      initCalendlyInline(calendlyRef.current, {
+        slug,
+        firmName: customerName,
+        firstName,
+        primary,
+        background,
+        text,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, customerName, firstName, primary, background, text]);
 
+  // Capture booking events (and route to ?booked=true).
+  useEffect(() => {
     const onMessage = (e: MessageEvent) => {
       const data = e?.data as { event?: string } | undefined;
       if (data?.event === "calendly.event_scheduled") {
@@ -69,7 +87,6 @@ export default function FullCtaSection({
           variant: variantId,
           outcome: "scheduled",
         });
-        // Append ?booked=true to surface the thank-you state without unmounting.
         const params = new URLSearchParams(location.search);
         if (params.get("booked") !== "true") {
           params.set("booked", "true");
@@ -80,15 +97,6 @@ export default function FullCtaSection({
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [slug, vertical, variantId, navigate, location.pathname, location.search]);
-
-  const dataUrl = buildCalendlyEmbedUrl({
-    slug,
-    firmName: customerName,
-    firstName,
-    primary,
-    background,
-    text,
-  });
 
   return (
     <section
