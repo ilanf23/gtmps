@@ -2,6 +2,7 @@
 // Smooth-scrolls to #v10-section-8 (full inline calendar).
 
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   slug: string;
@@ -34,12 +35,12 @@ export default function CompactCtaCard({ slug, vertical, primary }: Props) {
         <div className="flex items-center gap-2 mb-3">
           <span
             className="h-px w-6"
-            style={{ backgroundColor: primary }}
+            style={{ backgroundColor: MABBLY_GOLD }}
             aria-hidden
           />
           <p
             className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-            style={{ color: primary }}
+            style={{ color: MABBLY_GOLD }}
           >
             05 · Want to discuss what you're seeing?
           </p>

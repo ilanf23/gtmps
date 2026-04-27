@@ -1,6 +1,8 @@
 // SECTION 07 — The Value (in their words)
 // 3 verified case mini-cards + Adam anchor.
 
+import { MABBLY_GOLD, MABBLY_DARK } from "@/lib/mabblyAnchors";
+
 interface Props {
   primary: string;
 }

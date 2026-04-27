@@ -1,6 +1,8 @@
 // SECTION 06 — Why this research matters
 // Credibility anchor: 30 firms, 500 interviews, Copulsky/Kellogg, verified-only logo strip.
 
+import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+
 interface Props {
   primary: string;
 }
@@ -19,10 +21,10 @@ export default function WhyResearchMatters({ primary }: Props) {
       style={{ backgroundColor: "rgba(28,16,8,0.025)" }}
     >
       <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: primary }} aria-hidden />
+        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
           className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: primary }}
+          style={{ color: MABBLY_GOLD }}
         >
           06 · Why this research matters
         </p>
