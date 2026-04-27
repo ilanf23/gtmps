@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Four-stage cinematic wait theater.
@@ -21,6 +22,8 @@ interface Props {
   companyName?: string | null;
   /** Becomes true the moment the breakdown row is ready in the DB. */
   enrichmentReady?: boolean;
+  /** Optional vertical override; otherwise read from ?vertical=<slug>. */
+  vertical?: string | null;
 }
 
 type Stage = {
@@ -102,9 +105,11 @@ export default function MagnetWaitTheater({
   websiteUrl,
   companyName,
   enrichmentReady = false,
+  vertical,
 }: Props) {
   const reduced = useReducedMotion();
   const [elapsed, setElapsed] = useState(0);
+  const { flow } = useVerticalFlow(vertical);
 
   // ── Tick the elapsed counter every 250ms ────────────────────────────────
   useEffect(() => {
@@ -126,7 +131,15 @@ export default function MagnetWaitTheater({
     return 0;
   }, [elapsed]);
 
-  const currentStage = STAGES[currentStageIdx];
+  // Apply per-vertical title + tick overrides on top of the base STAGES timing.
+  const currentStage: Stage = useMemo(() => {
+    const base = STAGES[currentStageIdx];
+    return {
+      ...base,
+      title: flow.waitStageTitles[currentStageIdx] ?? base.title,
+      ticks: flow.waitStageTicks[currentStageIdx] ?? base.ticks,
+    };
+  }, [currentStageIdx, flow]);
 
   // ── Status ticker: rotate every 6s within the current stage ────────────
   const tickIdx = Math.min(
