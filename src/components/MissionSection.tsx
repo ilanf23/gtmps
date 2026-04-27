@@ -79,8 +79,8 @@ const pillars = [
     num: "03",
     icon: Users,
     title: "The Research Is Happening Now.",
-    body: "Every managing partner who participates shapes a chapter. The first 50 sessions define the book. 46 spots remain. Applications close when sessions are full.",
-    stat: { value: 46, suffix: "", label: "sessions remaining" },
+    body: "Every managing partner who participates shapes a chapter. Participation defaults to confidential benchmarking. Named examples are opt-in only — most contributing firms remain unnamed in the manuscript.",
+    stat: { value: 30, suffix: "", label: "firms in cohort" },
   },
 ];
 

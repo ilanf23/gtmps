@@ -192,7 +192,7 @@ const HeroSection = () => {
                 color: "#6b6560",
               }}
             >
-              46 of 50 sessions remaining
+              Confidential by default. Named cases opt-in only.
             </span>
           </div>
 
