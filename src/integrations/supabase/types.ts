@@ -242,18 +242,21 @@ export type Database = {
           email: string
           id: string
           slug: string
+          vertical: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
           slug: string
+          vertical?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
           slug?: string
+          vertical?: string | null
         }
         Relationships: []
       }
@@ -272,6 +275,7 @@ export type Database = {
           slug: string
           status: string
           team_page_url: string | null
+          vertical: string
           website_url: string
         }
         Insert: {
@@ -288,6 +292,7 @@ export type Database = {
           slug: string
           status?: string
           team_page_url?: string | null
+          vertical?: string
           website_url: string
         }
         Update: {
@@ -304,6 +309,7 @@ export type Database = {
           slug?: string
           status?: string
           team_page_url?: string | null
+          vertical?: string
           website_url?: string
         }
         Relationships: []
@@ -349,6 +355,7 @@ export type Database = {
         Returns: {
           first_name: string
           status: string
+          vertical: string
         }[]
       }
     }
