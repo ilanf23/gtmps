@@ -1,90 +1,137 @@
-## Two strategic fixes to the post-CTA flow
+## Vertical context flow-through
 
-### Audit result (Fix 1 — fabricated logos)
+Propagate vertical context (`law`, `consulting`, `accounting`, `msp`, `advisory`, `ae`, `recruiting`, `agency`) from vertical landing pages → form → wait → result, plus persist it for analytics.
 
-- Searched the entire codebase for `Griffith`, `Mabbly × Mabbly`, `Mabbly x Mabbly` → **zero matches**.
-- The post-CTA flow (`/assess`, `/m/[slug]` wait, `/m/[slug]` result) **has no logo wall at all**. The only "logo" code in the flow is `client_logo_url` — that's the **visiting firm's own scraped logo**, not a third-party proof claim. It stays.
-- The only third-party social-proof element in the flow is the single line `Trusted by 60+ managing partners at PS firms $5M to $100M.` on `MagnetAssess.tsx`. That's an **unverified stat claim**, no logos. Per "verified or absent," it gets removed.
-- **No verified-firm logo files** (Madcraft, Calliope, SPR, AArete) exist in `/public`. Per the rule, no logo wall gets added.
+### Route name
 
-→ **Net change for Fix 1: delete one line** ("Trusted by 60+ …"). Nothing else to remove.
+Spec mentions `/diagnostic`, but the actual route in this codebase is **`/assess`** (every vertical CTA, sitemap entry, and analytics tag already points there). Keeping `/assess` to avoid breaking existing CTAs and tracking. The vertical query param works the same either way.
 
 ---
 
-### Fix 2 — Simplify entry + remove email gate
+### 1. Vertical config (single source of truth)
 
-#### Stage 1: Form (`src/pages/MagnetAssess.tsx`)
+Extend `src/content/verticals.ts` with a new optional `flow` block on each `VerticalContent`:
 
-Reduce to **one field: website URL**. Same single-page layout the file already uses, just stripped down.
-
-Final structure (top to bottom):
-- Sticky top bar — **removed** (no progress needed for one field)
-- Eyebrow gold mono caps: `GET YOUR PERSONALIZED ANALYSIS`
-- Headline (serif): `See exactly where your firm's revenue relationships are leaking.`
-- Sub: `90 seconds. We analyze your website and build your custom RROS map. No call required to see it.`
-- Founder video card (S6E1 placeholder) — **kept as is**
-- Methodology line: `Analyzes positioning, messaging, CTAs, consistency.` — kept
-- Single input: `Your firm's website URL` / placeholder `https://yourfirm.com`
-- Submit pill: `Build My Map →`
-- Trust microline below button: `Free. 90 seconds. Full map shown — no email required to see it.`
-
-Form logic changes:
-- Drop multi-step state (`step`, `name`, `email`), the social-proof toast, and the per-step zod schemas. Keep just `websiteSchema`.
-- Insert into `magnet_submissions` with empty strings for the NOT-NULL columns the schema still requires (`first_name`, `role`, `linkedin_url`, `email`) — same pattern already used for `role` and `linkedin_url`.
-- `enrich-magnet` already gracefully handles `(not provided)` for these fields (verified in the function).
-- Navigate to `/m/${slug}` with state `{ websiteUrl }` only (no email/firstName).
-
-#### Stage 2: Wait (`MagnetWaitTheater.tsx`)
-
-**No changes.** Already cinematic, no logo wall, no fabricated proof.
-
-#### Stage 3: Result (`src/components/magnet/MagnetBreakdown.tsx`) — full reveal, no gate
-
-Strip the entire two-phase reveal:
-- Delete the `unlocked` / `localStorage` state + `handleUnlock` + `confirmEmail` state + `unlockKey`.
-- Delete the `<TeaserAndGate />` render branch and its component definition.
-- Delete `BlurredOrbitPreview` and `LockIcon` helpers.
-- Delete the `hidden={!unlocked}` wrapper around `#magnet-full-reveal` — content renders unconditionally.
-
-Replace the existing CTA cluster (Section 8) with the new three-tier structure:
-- **Primary — Book Call**: inline Calendly widget embedded directly on the page using the same loader pattern already used in `src/pages/MagnetBook.tsx` (`https://calendly.com/adam-mabbly/gtm` with the firm's brand colors). Loaded lazily on first paint of the section. Above it: an eyebrow + one-line headline ("Book a 20-min walkthrough" / "See how this map applies to {customerName} live with Adam.").
-- **Secondary — "Email me this map"**: a small text button below the calendar that opens a lightweight modal (existing shadcn `Dialog`). Modal contains a single email input + send button. On submit, write a row to a new `magnet_map_emails` table (slug + email + sent_at) and show inline confirmation. Map stays fully visible in the background.
-- **Tertiary — "Share with team"**: a simple `Copy share link` button that copies `${origin}/m/${slug}` and toasts confirmation. (No new token URL pattern needed — the slug URL already works as a shareable read-only link.)
-
-The book-mention block at the bottom of Section 8 stays unchanged.
-
----
-
-### Database
-
-New table `magnet_map_emails` for the optional save:
-```sql
-CREATE TABLE public.magnet_map_emails (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  slug text NOT NULL,
-  email text NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now()
-);
-ALTER TABLE public.magnet_map_emails ENABLE ROW LEVEL SECURITY;
--- Public insert (anyone visiting a map can ask for a copy); no select/update/delete from client.
-CREATE POLICY "anyone_can_request_map_email"
-  ON public.magnet_map_emails FOR INSERT
-  TO anon, authenticated WITH CHECK (true);
+```ts
+flow?: {
+  eyebrow: string;                  // form eyebrow
+  headlineSuffix: string;           // "law firm's origination"
+  methodologyLine: string;
+  waitStageTitles: [string, string, string, string]; // overrides 4 stage titles
+  waitStageTicks: [string[], string[], string[], string[]];
+  resultMapHeaderSuffix: string;    // "· Law Firm"
+  insightNativeTerm: string;        // "origination"
+  calendarCta: string;
+  peerBenchmarkPhrase: string;
+  chapterRecommendationLead: string;
+  emailSubject: string;             // "Your law firm origination map"
+  shareTemplate: string;            // for the Copy Share Link toast / native share
+};
 ```
 
-Wiring: client calls `supabase.from('magnet_map_emails').insert({ slug, email })`. (No edge function — the actual email send is out of scope; the row is the capture record. Mention this in chat after the migration so you can wire a `send-map-email` function next if desired.)
+Add a sibling `general` preset (the current generic copy) used as the fallback. Each existing vertical gets a populated `flow` block using its native vocabulary (origination, practice growth, client development, GTM/renewals/churn, prospecting/AUM, BD/RFPs, mandate origination, new business/pitch).
+
+### 2. Vertical resolver hook
+
+New file `src/hooks/useVerticalFlow.ts`:
+- Reads `?vertical=<slug>` from `useSearchParams` (or, on `/m/[slug]`, from a column persisted in `magnet_submissions`).
+- Returns `{ slug: VerticalSlug | 'general', flow: FlowConfig }` — always returns a complete config (falls back to `general`).
+- Validates the slug against the known list; unknown values silently fall back to `general`.
+
+### 3. CTA wiring on vertical pages
+
+Append `?vertical=<slug>` to all `/assess` links **only** on vertical landing pages:
+- `src/components/VerticalLanding/VerticalLanding.tsx` (2 inline `<a href="/assess">` and the sticky CTA prop)
+- `src/components/VerticalLanding/VerticalNav.tsx` (2 inline links)
+- `src/components/VerticalLanding/VerticalStickyCta.tsx` — accept `vertical` prop and render the right href.
+
+Other entry points stay generic (no param):
+- `/discover` "Add Your Firm" → `/assess` (general)
+- `/about`, `/awards`, MagnetSite "Try Again" → `/assess` (general)
+
+### 4. Form (`MagnetAssess.tsx`)
+
+- Read vertical via `useVerticalFlow()`.
+- Eyebrow = `flow.eyebrow`.
+- Headline = `See exactly where your ${flow.headlineSuffix} is leaking.`
+- Methodology line = `flow.methodologyLine`.
+- Submit handler writes the vertical slug into `magnet_submissions.vertical` (new column; defaults to `general`).
+- Navigate forward preserving the param: `/m/${slug}?vertical=${slug}` so the wait + result stages can read it without needing to fetch the row first.
+
+### 5. Wait stage (`MagnetWaitTheater.tsx`)
+
+- Accept new optional `vertical` prop from `MagnetSite`.
+- Use `flow.waitStageTitles[i]` to override each `STAGES[i].title`.
+- Use `flow.waitStageTicks[i]` to override the rotating ticks per stage.
+- Visual structure, timing, progress bar — unchanged.
+
+### 6. Result (`MagnetBreakdown.tsx`)
+
+- Read vertical via `useVerticalFlow()`. If the URL param is missing (e.g., refresh after the email-share path), fall back to the persisted `vertical` column on the breakdown's submission row (already fetched in `MagnetSite`).
+- Map header line: append `flow.resultMapHeaderSuffix` after company name.
+- "What's next for {customerName}" headline: use `flow.calendarCta` for the booking CTA button label.
+- Adaptive insight cards: where the existing copy says "Firms in your size band", swap with `flow.peerBenchmarkPhrase`.
+- Manuscript chapter recommendation block: use `flow.chapterRecommendationLead` as the heading.
+- Email-save modal: subject/title uses `flow.emailSubject`. The new column on `magnet_map_emails.vertical` records which vertical the recipient came from.
+- Copy-share-link toast: optionally include `flow.shareTemplate` as a clipboard-copied template (skipping for now to avoid clipboard surprise; toast just says "Link copied").
+
+### 7. MagnetSite plumbing
+
+- Read `?vertical` from URL.
+- Pass it down to `MagnetWaitTheater` and to `MagnetBreakdown`.
+- When polling fetches the submission row, if the URL doesn't have `?vertical` but the row does, push it into the URL with `navigate(..., { replace: true })` so refresh keeps the context.
+
+### 8. Database (one migration)
+
+Two new nullable columns + an index:
+
+```sql
+ALTER TABLE public.magnet_submissions
+  ADD COLUMN vertical text NOT NULL DEFAULT 'general';
+
+ALTER TABLE public.magnet_map_emails
+  ADD COLUMN vertical text;
+
+CREATE INDEX idx_magnet_submissions_vertical
+  ON public.magnet_submissions (vertical);
+```
+
+Update `get_magnet_submission_by_slug` SQL function to return `vertical` so `MagnetSite` can read it without a second query.
+
+### 9. Analytics
+
+- The vertical column on `magnet_submissions` is the canonical attribution record (one row per assessment). Conversion funnels, vertical splits, and vertical-level booking rates can all be computed off it.
+- `magnet_map_emails.vertical` records the share recipient's context.
+- The existing CTAs already carry `data-vertical` and `data-cta` attributes — analytics dashboards can already group on those for click-side data.
+- A dedicated dashboard surface is **out of scope** for this change (no admin UI exists yet; we'll just ensure the data is captured cleanly so it's queryable later).
 
 ---
 
 ### Files changed
 
-- `src/pages/MagnetAssess.tsx` — strip to single-field form, drop sticky progress bar + social-proof line + multi-step state.
-- `src/components/magnet/MagnetBreakdown.tsx` — delete teaser/gate/blur/lock; render full reveal unconditionally; replace Section 8 CTAs with Calendly inline widget + "Email me this map" modal + "Copy share link".
-- `src/pages/MagnetSite.tsx` — drop `firstName` / `email` references in `NavState` (websiteUrl only).
-- New migration creating `magnet_map_emails`.
+- `src/content/verticals.ts` — add `flow` block on each vertical + `general` preset.
+- `src/hooks/useVerticalFlow.ts` — new resolver hook.
+- `src/components/VerticalLanding/VerticalLanding.tsx`, `VerticalStickyCta.tsx`, `VerticalNav.tsx` — append `?vertical=<slug>`.
+- `src/pages/MagnetAssess.tsx` — apply `flow.eyebrow / headlineSuffix / methodologyLine`; persist `vertical` on insert; forward param.
+- `src/pages/MagnetSite.tsx` — read/forward `?vertical`; rehydrate from row on refresh.
+- `src/components/magnet/MagnetWaitTheater.tsx` — accept `vertical` prop; apply per-stage titles and ticks.
+- `src/components/magnet/MagnetBreakdown.tsx` — apply header suffix, insight terms, peer phrase, chapter lead, calendar CTA, email subject.
+- One migration adding the two columns + updating the submission-by-slug RPC.
 
-### Out of scope (called out for follow-up)
+### Out of scope
 
-- Actual email-sending edge function for the optional save (just captures the request row for now).
-- Adding a `share_token` separate from the slug. The slug is already an unguessable identifier; team-share by slug URL is sufficient until an explicit access-control story is needed.
-- Visual logo wall — blocked on logo files for Madcraft / Calliope / SPR / AArete. When you drop SVG/PNG files into `/public/clients/`, I can add a verified-only logo strip to the form page.
+- "Cross-vertical share-recipient analytics" beyond the `magnet_map_emails.vertical` column. We're capturing the data; visualizing it needs an admin dashboard that doesn't exist yet.
+- Renaming the route to `/diagnostic` — would break every existing CTA with no upside since `?vertical=` works on any path.
+- Per-vertical Five Orbits bodies (the spec mentions these "vary per vertical" but they're already produced dynamically by the GPT-4o `enrich-magnet` function, which now receives the vertical via the submission row).
+
+### Acceptance test mapping (from spec)
+
+1. `/law` CTA → form eyebrow `ORIGINATION STRATEGY ANALYSIS` ✓
+2. `/agency` CTA → form eyebrow `NEW BUSINESS ANALYSIS` ✓
+3. `/discover` CTA → form eyebrow `GET YOUR PERSONALIZED ANALYSIS` (general) ✓
+4. Wait stage titles + ticks adapt ✓
+5. Result header includes vertical suffix ✓
+6. Calendar CTA copy adapts ✓
+7. Email-save subject adapts ✓
+8. Refresh on `/m/[slug]?vertical=law` preserves; refresh on `/m/[slug]` re-hydrates from `vertical` column ✓
+9. Mobile layout untouched ✓
