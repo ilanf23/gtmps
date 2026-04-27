@@ -6,6 +6,7 @@ import { Volume2, VolumeX, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateMagnetSlug } from '@/lib/magnetSlug';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Single-field validation — only website URL.
@@ -21,6 +22,7 @@ const inputClass =
 
 export default function MagnetAssess() {
   const navigate = useNavigate();
+  const { slug: verticalSlug, flow } = useVerticalFlow();
 
   const [website, setWebsite] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -72,6 +74,8 @@ export default function MagnetAssess() {
           bd_challenge: null,
           case_studies_url: null,
           team_page_url: null,
+          // Vertical context (defaults to "general" when not present in URL).
+          vertical: verticalSlug,
         });
 
       if (insertError) {
@@ -95,8 +99,13 @@ export default function MagnetAssess() {
         })
         .catch((err) => console.error('Enrich invoke error:', err));
 
-      // Pass website forward so the wait theater can show the right domain.
-      navigate(`/m/${slug}`, {
+      // Pass website forward so the wait theater can show the right domain;
+      // preserve the vertical in the URL so refresh keeps the context.
+      const dest =
+        verticalSlug === 'general'
+          ? `/m/${slug}`
+          : `/m/${slug}?vertical=${verticalSlug}`;
+      navigate(dest, {
         state: { websiteUrl: website.trim() },
       });
     } catch (err) {
@@ -111,17 +120,17 @@ export default function MagnetAssess() {
       <div className="max-w-lg mx-auto px-6 py-10 md:py-16">
         {/* ─── Eyebrow + headline ────────────────────────────────────────── */}
         <p className="text-[11px] tracking-[0.18em] font-medium text-[#B8933A]">
-          GET YOUR PERSONALIZED ANALYSIS
+          {flow.eyebrow}
         </p>
         <h1 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
-          See exactly where your firm's revenue relationships are leaking.
+          See exactly where your {flow.headlineSuffix} is leaking.
         </h1>
         <p className="text-sm opacity-70 mt-3 leading-relaxed">
           90 seconds. We analyze your website and build your custom RROS map.
           No call required to see it.
         </p>
         <p className="mt-4 text-[10px] tracking-[0.22em] font-semibold text-[#B8933A]/90 uppercase">
-          Analyzes positioning, messaging, CTAs, consistency.
+          {flow.methodologyLine}
         </p>
 
         {/* ─── Founder video card (S6E1 placeholder) ────────────────────── */}
