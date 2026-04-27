@@ -1,12 +1,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Heuristic scoring for the V10 microsite.
+// Heuristic scoring for the V10 microsite. CALIBRATED v2 (post Apr 2026).
 //
-// We don't yet generate numeric per-orbit scores in the enrichment edge function,
-// so V10's "high/mid/low" UX (orbit colors, score-adaptive headlines, CTA variant
-// selection) is derived client-side from the existing breakdown text.
+// Bands: 0–40 = low (Red), 41–65 = mid (Yellow), 66–100 = high (Strong).
 //
-// Swap this for LLM-generated scores in `enrich-magnet/index.ts` later by
-// returning the same shape from the RPC and dropping the `compute*` helpers.
+// Key change vs v1: length alone is no longer evidence of a relationship system.
+// Each of the five orbits has its own qualitative signal gate. If the orbit
+// description doesn't mention the system that orbit measures, the score is
+// capped at 55 (Yellow). Plus a "no flat strong sweep" guarantee — if every
+// orbit lands in `high`, the lowest is demoted to mid so the tool never reads
+// as fake validation.
+//
+// Real-world calibration target (from manuscript Ch.1): a firm like AArete
+// with 160 dormant proposals must surface Yellow on Dead Zone (Orbit 03)
+// unless their public site shows an explicit reactivation cadence.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type ScoreBand = "low" | "mid" | "high";
@@ -26,25 +32,40 @@ const SIGNAL_KEYWORDS = [
   "$", "million", "growth", "won", "selected", "ranked",
 ];
 
+// Per-orbit signal gates. If NONE of the regex patterns fire for an orbit's
+// text, the score is capped at 55 (mid/Yellow). These represent the minimum
+// public evidence we'd expect from a firm that genuinely runs that orbit.
+const ORBIT_GATES: Array<{ idx: number; pattern: RegExp; cap: number }> = [
+  // Orbit 01 (Core Identity / Positioning) — open: a positioning paragraph is enough.
+  // Orbit 02 (Active Proof / Pipeline)
+  { idx: 1, pattern: /case stud|client work|results|won|delivered|increased|reduced|saved|%|\$|million|billion/i, cap: 55 },
+  // Orbit 03 (Dead Zone / Reactivation) — strict: most firms have no public reactivation system.
+  { idx: 2, pattern: /reactiv|dormant|nurture|sequence|cadence|win[\s-]?back|alumni|former client|re[-\s]?engage/i, cap: 55 },
+  // Orbit 04 (Cadence / Publishing rhythm)
+  { idx: 3, pattern: /weekly|monthly|quarterly|cadence|rhythm|series|publish|podcast|newsletter|cohort/i, cap: 55 },
+  // Orbit 05 (Compounding / Community)
+  { idx: 4, pattern: /referral|repeat|expansion|alumni|community|cohort|network|advocate/i, cap: 55 },
+];
+
 /**
- * Score one orbit description (0–100) from heuristics on the existing text.
- *  - Empty / placeholder → 20 (low but not zero, reflects "we couldn't read this")
- *  - Long substantive description → up to 70 base
- *  - Each signal keyword adds confidence (caps at 100)
+ * Score one orbit description (0–100) from heuristics.
+ *  - Empty / placeholder → 20
+ *  - Short blurb → ~25–35
+ *  - Long substantive paragraph → up to ~50 base
+ *  - Each signal keyword adds a small bonus (caps at 100)
  */
 export function scoreOrbit(text: string | null | undefined): number {
   if (!text) return 20;
   const trimmed = text.trim();
   if (!trimmed || trimmed === "—" || trimmed.toLowerCase() === "pending") return 20;
 
-  // Base score from length: short blurb ~35, full paragraph ~70
+  // Lower base than v1: length alone is not proof of system.
   const length = trimmed.length;
-  let base = 30;
-  if (length > 60) base = 45;
-  if (length > 140) base = 58;
-  if (length > 240) base = 68;
+  let base = 20;
+  if (length > 60) base = 30;
+  if (length > 140) base = 40;
+  if (length > 240) base = 50;
 
-  // Signal keywords — each unique hit nudges the score up
   const lower = trimmed.toLowerCase();
   const hits = SIGNAL_KEYWORDS.filter((kw) => lower.includes(kw)).length;
   const signalBonus = Math.min(25, hits * 4);
@@ -53,21 +74,38 @@ export function scoreOrbit(text: string | null | undefined): number {
 }
 
 export function bandFor(score: number): ScoreBand {
-  if (score >= 60) return "high";
-  if (score >= 40) return "mid";
+  if (score >= 66) return "high";
+  if (score >= 41) return "mid";
   return "low";
 }
 
+/** Apply orbit-specific signal gates; returns a possibly-capped score. */
+function applyOrbitGate(idx: number, baseScore: number, text: string | null | undefined): number {
+  const gate = ORBIT_GATES.find((g) => g.idx === idx);
+  if (!gate) return baseScore;
+  const lower = (text ?? "").toLowerCase();
+  if (gate.pattern.test(lower)) return baseScore;
+  return Math.min(baseScore, gate.cap);
+}
+
 export function computeOrbitScores(orbits: (string | null | undefined)[]): OrbitScores {
-  const perOrbit = orbits.slice(0, 5).map(scoreOrbit);
-  const padded = [...perOrbit, ...Array(5 - perOrbit.length).fill(20)].slice(0, 5);
-  const overall = Math.round(
-    padded.reduce((s, n) => s + n, 0) / padded.length
-  );
+  const padded5 = [...orbits.slice(0, 5), ...Array(5 - orbits.length).fill(null)].slice(0, 5);
+  const raw = padded5.map(scoreOrbit);
+  const gated = raw.map((s, i) => applyOrbitGate(i, s, padded5[i]));
+
+  // Variance guarantee: if 4+ orbits land in `high`, demote the weakest to mid.
+  const highCount = gated.filter((s) => s >= 66).length;
+  let final = gated;
+  if (highCount >= 4) {
+    const minIdx = gated.reduce((mi, v, i, a) => (v < a[mi] ? i : mi), 0);
+    final = gated.map((s, i) => (i === minIdx ? Math.min(s, 55) : s));
+  }
+
+  const overall = Math.round(final.reduce((s, n) => s + n, 0) / final.length);
   return {
-    perOrbit: padded,
+    perOrbit: final,
     overall,
-    bandPerOrbit: padded.map(bandFor),
+    bandPerOrbit: final.map(bandFor),
     bandOverall: bandFor(overall),
   };
 }

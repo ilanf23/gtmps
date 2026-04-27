@@ -168,6 +168,9 @@ Return ONLY valid JSON matching the schema, including all content fields plus a 
 ═══ TYPOGRAPHY RULE (HARD CONSTRAINT) ═══
 NEVER use any of these characters in the output text: em dash (—), en dash (–), or hyphen (-). Use commas, periods, colons, or "to" for ranges (e.g. "60 to 96%" not "60-96%" or "60–96%"). This applies to every string field in the JSON: vindicationLine, observation, deadZoneOpening, sequencedActivation, chapterCallouts, closingLine, etc. If you would naturally write a dash, rewrite the sentence without one.
 
+═══ NUMBERS RULE (HARD CONSTRAINT) ═══
+NEVER invent dollar figures, headcounts, percentages, or any quantitative claim that is not directly supported by the user-provided crmEstimate / dealSizeEstimate or the source website content. Phrases like "$36K in potential revenue" or "5 contacts × $7,200" are FORBIDDEN unless built from the user-provided numbers. When in doubt, omit the figure and describe the leverage qualitatively ("a handful of dormant contacts", "a measurable lift inside 90 days"). This applies to every string field, especially action_1, action_2, action_3, recommendedLayer, and observation.
+
 ═══ BOOK CONTEXT — ground your analysis in the actual frameworks ═══
 
 ${BOOK_FRAMEWORK_CONTEXT}`;

@@ -66,18 +66,6 @@ const isHex = (v: unknown): v is string =>
 const pick = (v: unknown, fallback: string): string =>
   isHex(v) ? (v as string).trim() : fallback;
 
-const COHORT_LABEL_BY_VERTICAL: Record<string, string> = {
-  law: "law firm",
-  consulting: "consulting firm",
-  accounting: "accounting firm",
-  msp: "MSP",
-  advisory: "advisory practice",
-  ae: "A/E firm",
-  recruiting: "search firm",
-  agency: "agency",
-  general: "firm",
-};
-
 export default function MagnetBreakdown({
   slug,
   vertical,
@@ -183,12 +171,13 @@ export default function MagnetBreakdown({
   ];
 
   const customerName = data.client_company_name ?? "your firm";
-  const cohortLabel = COHORT_LABEL_BY_VERTICAL[verticalSlug] ?? "firm";
-  // Stable cohort number from slug hash (1..30) so it doesn't shift on refresh.
-  const cohortNumber =
-    Math.abs(
-      Array.from(slug).reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)
-    ) % 30 + 1;
+
+  // Strip any LLM-invented dollar figures from the recommended action — never
+  // surface a $ number unless it ties to a real CRM-size × deal-size calc.
+  const sanitizedAction = (data.action_1 ?? "").replace(
+    /\s*\$\s*[\d,.]+\s*[KkMm]?\b(?: in (?:potential )?revenue)?/g,
+    "",
+  ).replace(/\s{2,}/g, " ").trim() || null;
 
   // Derive brand palette
   const p = data.client_brand_profile?.palette ?? {};
@@ -265,8 +254,6 @@ export default function MagnetBreakdown({
         <PersonalizedHeader
           firmName={customerName}
           buildSecondsAgo={buildSecondsAgo}
-          cohortNumber={cohortNumber}
-          cohortLabel={cohortLabel}
           bandOverall={scores.bandOverall}
           primary={brand.primary}
         />
@@ -313,7 +300,7 @@ export default function MagnetBreakdown({
         <HighestLeverageMove
           profile={findingProfile}
           customerName={customerName}
-          recommendedAction={data.action_1}
+          recommendedAction={sanitizedAction}
           primary={brand.primary}
         />
 

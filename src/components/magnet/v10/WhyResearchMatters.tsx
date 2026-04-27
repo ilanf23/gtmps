@@ -39,12 +39,12 @@ export default function WhyResearchMatters({ primary }: Props) {
       <div className="space-y-5 max-w-xl text-sm md:text-base leading-relaxed opacity-85">
         <p>
           30 PS firms in the cohort. Including AArete and SPR. Validated by{" "}
-          <strong className="font-semibold">Jonathan Copulsky</strong>, Former CMO Deloitte and
-          Senior Lecturer at Northwestern Kellogg, who wrote the foreword.
+          <span className="font-semibold">Jonathan Copulsky</span>, Former CMO Deloitte and
+          Senior Lecturer Northwestern Kellogg, who wrote the foreword.
         </p>
         <p>
           500 practitioner interviews. 26 years of PS firm leadership.{" "}
-          <strong className="font-semibold">Richard Ashbaugh</strong> scaled A.T. Kearney from
+          <span className="font-semibold">Richard Ashbaugh</span> scaled A.T. Kearney from
           $250M to $1.2B as CMO. The methodology is real. Validated. Documented.
         </p>
         <p>

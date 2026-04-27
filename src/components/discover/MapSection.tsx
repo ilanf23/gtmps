@@ -179,7 +179,7 @@ export default function MapSection() {
                 fontWeight: 400,
               }}
             >
-              Free. Instant results. 1,200+ PS leaders have taken it.
+              Free. Instant results. Built from 500 practitioner interviews.
             </p>
           </div>
         </div>

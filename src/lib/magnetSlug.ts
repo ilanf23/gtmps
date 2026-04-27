@@ -1,34 +1,59 @@
 import { customAlphabet } from 'nanoid';
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const RANDOM_LENGTH = 10;
+const SUFFIX_LEN = 3;
 
-const nanoid = customAlphabet(ALPHABET, RANDOM_LENGTH);
+const suffixNano = customAlphabet(ALPHABET, SUFFIX_LEN);
 
 /**
- * Generate a URL-safe, collision-resistant slug from an email address.
+ * Convert a website URL into a clean, human-friendly slug:
+ *   https://aarete.com               → 'aarete'
+ *   www.foo-bar.co.uk/path?x=1       → 'foo-bar'
+ *   acme.io                          → 'acme'
  *
- * Format: `<first 4 alphanumeric chars of email local part>_<10 random chars>`
+ * Strips protocol, `www.`, paths, queries, hashes; keeps only the leftmost
+ * label of the host minus `www`. Lowercased, `[a-z0-9-]` only, hyphen-collapsed.
  *
- * @example
- *   generateMagnetSlug('richard@mabbly.com') // 'rich_a1b2c3d4e5'
- *   generateMagnetSlug('adam@mabbly.com')    // 'adam_x9y8z7w6v5'
+ * If extraction yields nothing usable, falls back to `firm-<3char>`.
  */
-export function generateMagnetSlug(email: string): string {
-  const localPart = (email.split('@')[0] ?? '').toLowerCase();
-  const cleaned = localPart.replace(/[^a-z0-9]/g, '');
-  const prefix = (cleaned.slice(0, 4) || 'user').padEnd(1, 'u');
+export function generateMagnetSlug(input: string): string {
+  const cleaned = (input ?? '').trim();
+  if (!cleaned) return fallbackSlug();
 
-  let randomSuffix: string;
+  // Normalize: prepend protocol so URL() can parse bare domains.
+  const withProto = /^https?:\/\//i.test(cleaned) ? cleaned : `https://${cleaned}`;
+
+  let host = '';
   try {
-    randomSuffix = nanoid();
+    host = new URL(withProto).hostname;
   } catch {
-    randomSuffix = (
-      typeof crypto !== 'undefined' && 'randomUUID' in crypto
-        ? crypto.randomUUID().replace(/-/g, '')
-        : Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
-    ).slice(0, RANDOM_LENGTH);
+    // Fallback parse: strip protocol + path manually.
+    host = cleaned
+      .replace(/^https?:\/\//i, '')
+      .replace(/[/?#].*$/, '');
   }
 
-  return `${prefix}_${randomSuffix}`;
+  host = host.toLowerCase().replace(/^www\./, '');
+  // Take leftmost label (root domain). For `foo-bar.co.uk` → `foo-bar`.
+  const root = host.split('.')[0] ?? '';
+  const sanitized = root
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  if (!sanitized) return fallbackSlug();
+  return sanitized;
+}
+
+/** Generate a short collision suffix (`-x7k`). */
+export function magnetSlugSuffix(): string {
+  try {
+    return suffixNano();
+  } catch {
+    return Math.random().toString(36).slice(2, 2 + SUFFIX_LEN);
+  }
+}
+
+function fallbackSlug(): string {
+  return `firm-${magnetSlugSuffix()}`;
 }
