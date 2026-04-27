@@ -10,8 +10,6 @@ type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
 interface NavState {
   websiteUrl?: string;
-  email?: string;
-  firstName?: string;
 }
 
 const POLL_BASE_MS = 3000;
@@ -26,7 +24,7 @@ export default function MagnetSite() {
   const location = useLocation();
   const navState = (location.state ?? {}) as NavState;
   const [status, setStatus] = useState<Status>('loading');
-  const [firstName, setFirstName] = useState<string | null>(navState.firstName ?? null);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
   // Theme is loaded via the shell, but the loading scene also needs accent.
