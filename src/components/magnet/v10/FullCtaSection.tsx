@@ -147,10 +147,10 @@ export default function FullCtaSection({
         </p>
       </div>
 
-      {/* Inline Calendly */}
+      {/* Inline Calendly — initialized via initCalendlyInline() in the effect above. */}
       <div
-        className="calendly-inline-widget w-full border border-black/10"
-        data-url={dataUrl}
+        ref={calendlyRef}
+        className="w-full border border-black/10"
         style={{ minWidth: "320px", height: "720px" }}
       />
 
