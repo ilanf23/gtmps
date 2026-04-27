@@ -831,3 +831,218 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
     </div>
   );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE A — Teaser + email-confirm gate.
+//
+// Shown above the full breakdown until the visitor confirms their email.
+// The "map" preview is rendered as a blurred SVG-driven five-orbits diagram
+// with a centered lock icon. Labels stay readable; values are blurred.
+// ─────────────────────────────────────────────────────────────────────────────
+function TeaserAndGate({
+  data,
+  customerName,
+  confirmEmail,
+  setConfirmEmail,
+  handleUnlock,
+}: {
+  data: BreakdownRow;
+  customerName: string;
+  confirmEmail: string;
+  setConfirmEmail: (v: string) => void;
+  handleUnlock: (e: React.FormEvent) => void;
+}) {
+  // Build a simple "leaking $X" hero line from existing breakdown fields.
+  const dz = data.dead_zone_value;
+  const leakSentence = dz
+    ? `${customerName} is leaking ~$${Math.round(dz / 1000)}K in dormant pipeline.`
+    : `${customerName} likely has a dormant-relationship gap. We mapped where it lives.`;
+
+  // Strongest / weakest orbit — heuristic on text length as a proxy for the
+  // amount of signal the enrich function found in each orbit.
+  const orbits = [
+    data.orbit_01,
+    data.orbit_02,
+    data.orbit_03,
+    data.orbit_04,
+    data.orbit_05,
+  ];
+  const ORBIT_LABELS = [
+    "⊙01 Core Proof",
+    "⊙02 Active",
+    "⊙03 Dead Zone",
+    "⊙04 Warm Adjacency",
+    "⊙05 New Gravity",
+  ];
+  let strongestIdx = 0;
+  let weakestIdx = 0;
+  let maxLen = -1;
+  let minLen = Number.POSITIVE_INFINITY;
+  orbits.forEach((o, i) => {
+    const len = (o ?? "").trim().length;
+    if (len > maxLen) {
+      maxLen = len;
+      strongestIdx = i;
+    }
+    if (len > 0 && len < minLen) {
+      minLen = len;
+      weakestIdx = i;
+    }
+  });
+
+  return (
+    <section className="pt-10 pb-12">
+      <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.3em] font-semibold">
+        Your Revenue Map
+      </p>
+      <h1 className="mt-3 text-3xl md:text-4xl font-bold leading-[1.15] tracking-tight">
+        {leakSentence}
+      </h1>
+
+      {data.gtm_profile_observed && (
+        <p className="mt-5 text-base leading-relaxed text-[#1C1008]/85">
+          {data.gtm_profile_observed}
+        </p>
+      )}
+
+      <p className="mt-4 text-sm italic text-[#1C1008]/70 leading-relaxed">
+        Your strongest orbit:{" "}
+        <span className="text-[#B8933A] not-italic font-semibold">
+          {ORBIT_LABELS[strongestIdx]}
+        </span>
+        . Your weakest:{" "}
+        <span className="text-[#B8933A] not-italic font-semibold">
+          {ORBIT_LABELS[weakestIdx]}
+        </span>
+        .
+      </p>
+
+      {/* ─── Blurred orbit map preview ─────────────────────────────── */}
+      <div className="mt-10 relative border border-black/10 bg-black/[0.03] aspect-square max-w-md mx-auto overflow-hidden">
+        <BlurredOrbitPreview />
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(251,248,244,0.55) 0%, rgba(251,248,244,0.85) 100%)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+          }}
+        >
+          <div className="w-12 h-12 rounded-full border border-[#B8933A]/40 bg-[#B8933A]/10 flex items-center justify-center mb-3">
+            <LockIcon />
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
+            Map Locked
+          </p>
+          <p className="text-xs text-[#1C1008]/70 mt-1">
+            Confirm your email to unlock
+          </p>
+        </div>
+      </div>
+
+      {/* ─── Email-confirm gate ────────────────────────────────────── */}
+      <form
+        onSubmit={handleUnlock}
+        className="mt-10 border border-[#B8933A]/40 bg-[#B8933A]/5 p-6"
+      >
+        <p className="text-[#B8933A] text-[10px] uppercase tracking-[0.28em] font-semibold">
+          Unlock your full map
+        </p>
+        <p className="mt-2 text-base font-semibold text-[#1C1008] leading-snug">
+          See your complete RROS map, 3 strategic insights, and your custom
+          90-day plan.
+        </p>
+
+        <label className="block mt-5 text-[10px] uppercase tracking-wider text-[#1C1008]/60">
+          Confirm your work email
+        </label>
+        <input
+          type="email"
+          value={confirmEmail}
+          onChange={(e) => setConfirmEmail(e.target.value)}
+          placeholder="you@yourfirm.com"
+          required
+          className="mt-2 w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-12 px-4 text-base"
+        />
+        <button
+          type="submit"
+          className="mt-4 w-full h-12 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors"
+        >
+          Unlock My Map →
+        </button>
+        <p className="mt-3 text-xs text-[#1C1008]/50 text-center">
+          Free forever. We never sell your data. Unsubscribe in one click.
+        </p>
+      </form>
+    </section>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#B8933A"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+
+function BlurredOrbitPreview() {
+  const SIZE = 320;
+  const C = SIZE / 2;
+  const rings = [40, 72, 104, 136, 168];
+  return (
+    <svg
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      className="absolute inset-0 w-full h-full"
+      aria-hidden
+    >
+      <circle cx={C} cy={C} r={5} fill="#B8933A" />
+      {rings.map((r, i) => (
+        <g key={i}>
+          <circle
+            cx={C}
+            cy={C}
+            r={r}
+            fill="none"
+            stroke="#1C1008"
+            strokeOpacity={0.18}
+          />
+          {/* node */}
+          <circle
+            cx={C + r * Math.cos((i * 72 - 30) * (Math.PI / 180))}
+            cy={C + r * Math.sin((i * 72 - 30) * (Math.PI / 180))}
+            r={5}
+            fill="#B8933A"
+            opacity={0.65}
+          />
+        </g>
+      ))}
+      {/* faux numeric labels (these are what the blur obscures) */}
+      {rings.map((r, i) => (
+        <text
+          key={`v-${i}`}
+          x={C + r * Math.cos((i * 72 - 30) * (Math.PI / 180)) + 10}
+          y={C + r * Math.sin((i * 72 - 30) * (Math.PI / 180)) + 4}
+          fontFamily="'Inter Tight', system-ui, sans-serif"
+          fontSize={11}
+          fontWeight={600}
+          fill="#1C1008"
+        >
+          {[78, 64, 32, 56, 41][i]}
+        </text>
+      ))}
+    </svg>
+  );
+}
