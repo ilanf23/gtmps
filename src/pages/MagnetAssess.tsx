@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { Volume2, VolumeX, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { generateMagnetSlug } from '@/lib/magnetSlug';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Per-step zod schemas — each step validates only its own field.
@@ -344,69 +346,203 @@ export default function MagnetAssess() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Founder video card — uses placeholder copy until the real asset is wired up.
-// Shape is final; just drop the .mp4 / poster image into /public/founder/ when
-// they land and update the src/poster paths below.
+// Founder video card — vertical phone-frame mockup using the existing S6E1
+// clip as a placeholder for Adam's purpose statement. When the bespoke
+// 20-second intro lands, swap VIDEO_SRC / POSTER_SRC and update CAPTION below.
 // ─────────────────────────────────────────────────────────────────────────────
 function FounderVideoCard({
   videoRef,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>;
 }) {
-  // Real asset paths (drop files here when ready):
-  //   /public/founder/adam-intro.mp4
-  //   /public/founder/adam-intro-poster.jpg
-  //   /public/founder/adam-intro.vtt
-  const VIDEO_SRC = '/founder/adam-intro.mp4';
-  const POSTER_SRC = '/founder/adam-intro-poster.jpg';
+  // Placeholder assets (swap when the bespoke 20-sec intro is recorded):
+  //   /public/s6e1-hero-vertical.mp4   →  /public/founder/adam-intro.mp4
+  //   /public/s6e1-poster.jpg          →  /public/founder/adam-intro-poster.jpg
+  const VIDEO_SRC = '/s6e1-hero-vertical.mp4';
+  const POSTER_SRC = '/s6e1-poster.jpg';
+  const CAPTION = 'ADAM FRIDMAN · WHY THIS RESEARCH EXISTS';
 
-  const [hasAsset, setHasAsset] = useState(true);
-  // If the video file 404s, fall back to the static placeholder card.
-  const onError = () => setHasAsset(false);
+  const reducedMotion = useReducedMotion();
+  const [muted, setMuted] = useState(true);
+  const [started, setStarted] = useState(false); // tracks first user-initiated play (reduced-motion path)
 
-  if (!hasAsset) {
-    return (
-      <div className="mt-8 border border-black/10 bg-black/[0.02] p-5 flex items-start gap-4">
-        <div
-          className="w-14 h-14 shrink-0 rounded-full border border-[#B8933A]/40 bg-[#B8933A]/10 flex items-center justify-center"
-          aria-hidden
-        >
-          <span className="text-[#B8933A] text-lg font-serif italic">A</span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] tracking-[0.22em] uppercase font-semibold text-[#B8933A]/90">
-            20 sec from Adam
-          </p>
-          <p className="mt-1.5 text-sm leading-relaxed text-[#1C1008]/85">
-            "Hi, I'm Adam. We built this for managing partners at firms like
-            yours. 20 seconds. Here's what we look at."
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const toggleSound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    const next = !muted;
+    v.muted = next;
+    setMuted(next);
+    // First unmute may need an explicit play() if autoplay was deferred.
+    if (!next) v.play().catch(() => {});
+  };
+
+  const handlePosterPlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = false;
+    setMuted(false);
+    v.play().then(() => setStarted(true)).catch(() => {
+      v.muted = true;
+      setMuted(true);
+      v.play().then(() => setStarted(true)).catch(() => {});
+    });
+  };
 
   return (
-    <div className="mt-8 border border-black/10 bg-black overflow-hidden">
-      <video
-        ref={videoRef}
-        className="w-full h-auto block"
-        src={VIDEO_SRC}
-        poster={POSTER_SRC}
-        muted
-        playsInline
-        controls
-        preload="metadata"
-        onError={onError}
-        crossOrigin="anonymous"
+    <div className="mt-8 flex flex-col items-center">
+      <style>{`
+        .fvc-frame {
+          position: relative;
+          width: 200px;
+          aspect-ratio: 9 / 16;
+          border-radius: 28px;
+          background: linear-gradient(155deg, #2A2A2E 0%, #0A0A0C 100%);
+          padding: 4px;
+          box-shadow:
+            0 12px 32px -10px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba(184, 147, 58, 0.18);
+        }
+        @media (max-width: 640px) {
+          .fvc-frame { width: min(60vw, 220px); }
+        }
+        .fvc-screen {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          border-radius: 22px;
+          overflow: hidden;
+          background: #000;
+        }
+        .fvc-island {
+          position: absolute;
+          top: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 56px;
+          height: 16px;
+          background: #000;
+          border-radius: 9px;
+          z-index: 2;
+          pointer-events: none;
+        }
+        .fvc-video, .fvc-poster {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .fvc-sound-btn {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: rgba(184, 147, 58, 0.95);
+          color: #120D05;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 3;
+          border: none;
+          padding: 0;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+          transition: transform 180ms ease, background 180ms ease;
+        }
+        .fvc-sound-btn:hover {
+          background: #B8933A;
+          transform: scale(1.06);
+        }
+        .fvc-sound-btn:focus-visible {
+          outline: 2px solid #B8933A;
+          outline-offset: 2px;
+        }
+        .fvc-poster-play {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.25);
+          cursor: pointer;
+          border: none;
+          padding: 0;
+          z-index: 3;
+        }
+        .fvc-poster-play-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: rgba(184, 147, 58, 0.95);
+          color: #120D05;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+      `}</style>
+
+      <div className="fvc-frame">
+        <div className="fvc-screen">
+          <div className="fvc-island" />
+
+          {reducedMotion && !started ? (
+            <>
+              <img
+                src={POSTER_SRC}
+                alt="Adam Fridman intro"
+                className="fvc-poster"
+              />
+              <button
+                type="button"
+                className="fvc-poster-play"
+                onClick={handlePosterPlay}
+                aria-label="Play Adam's intro"
+              >
+                <span className="fvc-poster-play-icon">
+                  <Play size={20} fill="#120D05" strokeWidth={0} />
+                </span>
+              </button>
+            </>
+          ) : (
+            <>
+              <video
+                ref={videoRef}
+                className="fvc-video"
+                src={VIDEO_SRC}
+                poster={POSTER_SRC}
+                muted={muted}
+                loop
+                playsInline
+                autoPlay={!reducedMotion}
+                preload="metadata"
+              />
+              <button
+                type="button"
+                className="fvc-sound-btn"
+                onClick={toggleSound}
+                aria-label={muted ? 'Unmute video' : 'Mute video'}
+                aria-pressed={!muted}
+              >
+                {muted ? (
+                  <VolumeX size={16} strokeWidth={2.25} />
+                ) : (
+                  <Volume2 size={16} strokeWidth={2.25} />
+                )}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      <p
+        className="mt-3 text-[10px] font-mono uppercase text-[#B8933A]"
+        style={{ letterSpacing: '0.22em' }}
       >
-        <track
-          default
-          kind="captions"
-          srcLang="en"
-          src="/founder/adam-intro.vtt"
-        />
-      </video>
+        {CAPTION}
+      </p>
     </div>
   );
 }
