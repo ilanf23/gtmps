@@ -1,6 +1,6 @@
 // SECTION 11 — Manuscript anchor + Share + Save cards.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -79,6 +79,14 @@ export default function ManuscriptShareSave({
       .from("magnet_share_events")
       .insert({ slug, share_token: shareToken, channel: "email" });
   };
+
+  // Allow the sticky share FAB (rendered elsewhere) to trigger copy-share.
+  useEffect(() => {
+    const onCopy = () => { void handleCopyShare(); };
+    window.addEventListener("v10:share-copy", onCopy);
+    return () => window.removeEventListener("v10:share-copy", onCopy);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, shareToken, vertical, shareTemplate]);
 
   const submitSaveEmail = async (e: React.FormEvent) => {
     e.preventDefault();
