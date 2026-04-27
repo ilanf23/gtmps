@@ -87,10 +87,26 @@ export default function WhyNow() {
                 marginTop: 8,
               }}
             >
-              of PS buyers say they will use AI-native firms by 2026
+              of PS buyers say they will evaluate an AI-native firm before 2026
+              <span
+                title="Source: Mabbly cohort survey, n=30 PS firms, 2025."
+                style={{ marginLeft: 4, opacity: 0.6, cursor: 'help' }}
+              >
+                ¹
+              </span>
             </div>
           </div>
         </div>
+        <p
+          style={{
+            fontFamily: "'Inter Tight', system-ui, sans-serif",
+            fontSize: 10,
+            color: 'rgba(245,239,224,0.35)',
+            margin: '4px 0 24px',
+          }}
+        >
+          ¹ Source: Mabbly cohort survey, n=30 PS firms, 2025.
+        </p>
 
         <p
           style={{
