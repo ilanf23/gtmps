@@ -62,6 +62,30 @@ export type Database = {
         }
         Relationships: []
       }
+      magnet_analytics_events: {
+        Row: {
+          created_at: string
+          event_name: string
+          id: string
+          props: Json
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          id?: string
+          props?: Json
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          id?: string
+          props?: Json
+          slug?: string
+        }
+        Relationships: []
+      }
       magnet_breakdowns: {
         Row: {
           action_1: string | null
@@ -260,6 +284,30 @@ export type Database = {
         }
         Relationships: []
       }
+      magnet_share_events: {
+        Row: {
+          channel: string
+          created_at: string
+          id: string
+          share_token: string | null
+          slug: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          id?: string
+          share_token?: string | null
+          slug: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          id?: string
+          share_token?: string | null
+          slug?: string
+        }
+        Relationships: []
+      }
       magnet_submissions: {
         Row: {
           bd_challenge: string | null
@@ -272,6 +320,7 @@ export type Database = {
           id: string
           linkedin_url: string
           role: string
+          share_token: string | null
           slug: string
           status: string
           team_page_url: string | null
@@ -289,6 +338,7 @@ export type Database = {
           id?: string
           linkedin_url: string
           role: string
+          share_token?: string | null
           slug: string
           status?: string
           team_page_url?: string | null
@@ -306,6 +356,7 @@ export type Database = {
           id?: string
           linkedin_url?: string
           role?: string
+          share_token?: string | null
           slug?: string
           status?: string
           team_page_url?: string | null
@@ -354,6 +405,7 @@ export type Database = {
         Args: { _slug: string }
         Returns: {
           first_name: string
+          share_token: string
           status: string
           vertical: string
         }[]
