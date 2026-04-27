@@ -752,7 +752,7 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
           </div>
         </section>
 
-        {/* SECTION 8: NEXT STEPS — three hierarchized CTAs + book mention */}
+        {/* SECTION 8: BOOK A CALL — primary action */}
         <section className="py-16">
           <div className="flex items-center gap-2 mb-4">
             <span className="h-px w-6 bg-[#B8933A]" aria-hidden />
@@ -760,38 +760,32 @@ export default function MagnetBreakdown({ slug }: { slug: string }) {
               What's next for {customerName}
             </p>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-            The system is mapped. The pipeline already exists.
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+            See how this map applies to {customerName} live with Adam.
           </h2>
           <p className="text-base opacity-70 mb-8 leading-relaxed max-w-lg">
-            Pick the lane that fits where you are right now.
+            20 minutes. No pitch. We walk through your map together and
+            answer the questions you have right now.
           </p>
 
-          <div className="flex flex-col gap-3">
-            {/* Primary — book a walkthrough */}
-            <a
-              href="mailto:adam@mabbly.com?subject=20-min%20RROS%20walkthrough"
-              className="block w-full text-center bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold px-8 py-4 uppercase tracking-wide text-sm transition-colors"
-            >
-              Book a 20-min walkthrough with Adam →
-            </a>
+          <CalendlyInlineWidget
+            url="https://calendly.com/adam-mabbly/gtm"
+            brandPrimary={brand.primary.replace("#", "")}
+            brandBackground={brand.background.replace("#", "")}
+            brandText={brand.text.replace("#", "")}
+          />
 
-            {/* Secondary — see the framework */}
-            <button
-              type="button"
-              onClick={() => navigate("/discover")}
-              className="w-full text-center border border-[#B8933A]/50 text-[#B8933A] font-semibold px-8 py-4 uppercase tracking-wide text-sm hover:bg-[#B8933A]/10 transition-colors"
-            >
-              See the full GTM framework
-            </button>
+          {/* Optional save + share row */}
+          <SaveAndShareRow slug={slug} customerName={customerName} />
 
-            {/* Tertiary — read the manuscript */}
+          {/* Secondary path — read the manuscript */}
+          <div className="mt-6 text-center">
             <button
               type="button"
               onClick={() => navigate(`/m/${slug}/read`)}
-              className="text-xs text-[#1C1008]/60 hover:text-[#1C1008] underline underline-offset-4 mt-2 self-center"
+              className="text-xs text-[#1C1008]/60 hover:text-[#1C1008] underline underline-offset-4"
             >
-              Read the manuscript first
+              Or read the manuscript first
             </button>
           </div>
 
