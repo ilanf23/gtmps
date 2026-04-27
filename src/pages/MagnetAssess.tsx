@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -8,41 +8,13 @@ import { generateMagnetSlug } from '@/lib/magnetSlug';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Per-step zod schemas — each step validates only its own field.
+// Single-field validation — only website URL.
 // ─────────────────────────────────────────────────────────────────────────────
-const nameSchema = z
-  .string()
-  .trim()
-  .min(2, 'Please enter your name')
-  .max(120, 'That looks too long');
-
-const emailSchema = z
-  .string()
-  .trim()
-  .email('Enter a valid work email')
-  .max(255);
-
 const websiteSchema = z
   .string()
   .trim()
   .url('Enter a valid URL (https://…)')
   .max(255);
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Static + dynamic social proof
-// ─────────────────────────────────────────────────────────────────────────────
-const PROOF_FEED = [
-  { name: 'Maria',  firm: 'Northwind Advisory' },
-  { name: 'James',  firm: 'Brightpath Partners' },
-  { name: 'Priya',  firm: 'Cedar & Vale' },
-  { name: 'Marcus', firm: 'Hollis Group' },
-  { name: 'Elena',  firm: 'Westover Strategy' },
-  { name: 'Daniel', firm: 'Ironwood Consulting' },
-  { name: 'Aisha',  firm: 'Meridian Capital Advisors' },
-  { name: 'Tom',    firm: 'Foxbridge Studio' },
-  { name: 'Nora',   firm: 'Larkfield & Co.' },
-  { name: 'Owen',   firm: 'Sutter Strategy' },
-];
 
 const inputClass =
   'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-14 px-4 text-base transition-colors';
@@ -50,19 +22,15 @@ const inputClass =
 export default function MagnetAssess() {
   const navigate = useNavigate();
 
-  // ── Form state ───────────────────────────────────────────────────────────
-  const [step, setStep] = useState<0 | 1 | 2>(0); // 0=name, 1=email, 2=website
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-focus input when step changes
+  // Auto-focus the URL input on mount.
   useEffect(() => {
     inputRef.current?.focus();
-  }, [step]);
+  }, []);
 
   // ── Founder video pause-on-typing ────────────────────────────────────────
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -71,64 +39,33 @@ export default function MagnetAssess() {
     if (v && !v.paused) v.pause();
   };
 
-  // ── Continue / submit handlers per step ──────────────────────────────────
-  const handleContinue = async (e?: React.FormEvent) => {
-    e?.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(null);
 
-    if (step === 0) {
-      const r = nameSchema.safeParse(name);
-      if (!r.success) {
-        setError(r.error.issues[0]?.message ?? 'Invalid name');
-        return;
-      }
-      // Dynamic social proof toast between Step 1 → 2
-      const idx = Math.floor(Math.random() * PROOF_FEED.length);
-      const p = PROOF_FEED[idx];
-      const minsAgo = 2 + Math.floor(Math.random() * 9);
-      toast(
-        `${p.name} from ${p.firm} just completed her analysis · ${minsAgo} min ago`,
-        { duration: 3500 }
-      );
-      setStep(1);
-      return;
-    }
-
-    if (step === 1) {
-      const r = emailSchema.safeParse(email);
-      if (!r.success) {
-        setError(r.error.issues[0]?.message ?? 'Invalid email');
-        return;
-      }
-      setStep(2);
-      return;
-    }
-
-    // Step 2 — final submit
     const r = websiteSchema.safeParse(website);
     if (!r.success) {
       setError(r.error.issues[0]?.message ?? 'Invalid URL');
       return;
     }
-    await submit();
-  };
 
-  const submit = async () => {
     setSubmitting(true);
     try {
-      const slug = generateMagnetSlug(email);
+      // Slug is derived from the website URL since we no longer collect email.
+      const slug = generateMagnetSlug(website.trim());
 
       const { error: insertError } = await supabase
         .from('magnet_submissions')
         .insert({
           slug,
-          first_name: name.trim(),
-          // role + linkedin_url are NOT NULL in the schema; insert empty
-          // strings since the new flow no longer collects them.
+          website_url: website.trim(),
+          // first_name / role / linkedin_url / email are NOT NULL in the schema
+          // but the simplified flow no longer collects them. Insert empty strings;
+          // the enrich function gracefully treats blank values as "(not provided)".
+          first_name: '',
           role: '',
           linkedin_url: '',
-          website_url: website.trim(),
-          email: email.trim(),
+          email: '',
           status: 'pending',
           crm_size: null,
           deal_size: null,
@@ -158,14 +95,9 @@ export default function MagnetAssess() {
         })
         .catch((err) => console.error('Enrich invoke error:', err));
 
-      // Pass form state forward so the wait theater can show the right domain
-      // and the breakdown gate can pre-fill the email without a re-fetch.
+      // Pass website forward so the wait theater can show the right domain.
       navigate(`/m/${slug}`, {
-        state: {
-          websiteUrl: website.trim(),
-          email: email.trim(),
-          firstName: name.trim(),
-        },
+        state: { websiteUrl: website.trim() },
       });
     } catch (err) {
       console.error('Submit error:', err);
@@ -174,171 +106,66 @@ export default function MagnetAssess() {
     }
   };
 
-  // ── Progress / step labels ───────────────────────────────────────────────
-  const progressPct = useMemo(() => {
-    // 0 → 33%, 1 → 66%, 2 → 100% (fills as user completes the field)
-    if (step === 0) return name.trim().length >= 2 ? 33 : 11;
-    if (step === 1) return email.trim().length > 5 ? 66 : 44;
-    return website.trim().length > 8 ? 100 : 77;
-  }, [step, name, email, website]);
-
-  const stepLabel = `Step ${step + 1} of 3`;
-
   return (
     <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
-      {/* ─── Sticky Top Bar ─────────────────────────────────────────────── */}
-      <div
-        className="sticky top-0 z-40 bg-[#FBF8F4]/95 backdrop-blur-sm border-b border-black/10"
-        style={{ height: 48 }}
-      >
-        <div className="max-w-lg mx-auto h-full px-6 flex items-center gap-4">
-          <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[#1C1008]/70 shrink-0">
-            {stepLabel}
-          </span>
-          <div className="flex-1 h-1 bg-black/10 overflow-hidden">
-            <div
-              className="h-full bg-[#B8933A] transition-all duration-500 ease-out"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          <span className="text-[10px] font-mono text-[#1C1008]/50 shrink-0 w-9 text-right">
-            {progressPct}%
-          </span>
-        </div>
-      </div>
-
       <div className="max-w-lg mx-auto px-6 py-10 md:py-16">
-        {/* ─── Persistent intro block (always visible) ──────────────────── */}
+        {/* ─── Eyebrow + headline ────────────────────────────────────────── */}
         <p className="text-[11px] tracking-[0.18em] font-medium text-[#B8933A]">
           GET YOUR PERSONALIZED ANALYSIS
         </p>
         <h1 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
-          Understand your firm's revenue potential in 90 seconds.
+          See exactly where your firm's revenue relationships are leaking.
         </h1>
         <p className="text-sm opacity-70 mt-3 leading-relaxed">
-          We analyze your website for gaps in positioning, messaging, and dormant
-          relationship signals. Then we build your custom RROS map.
+          90 seconds. We analyze your website and build your custom RROS map.
+          No call required to see it.
         </p>
         <p className="mt-4 text-[10px] tracking-[0.22em] font-semibold text-[#B8933A]/90 uppercase">
-          Analyzes: Positioning · Messaging · CTAs · Consistency
+          Analyzes positioning, messaging, CTAs, consistency.
         </p>
 
-        {/* ─── Founder video card (placeholder until asset lands) ──────── */}
+        {/* ─── Founder video card (S6E1 placeholder) ────────────────────── */}
         <FounderVideoCard videoRef={videoRef} />
 
-        {/* ─── Static social proof strip ───────────────────────────────── */}
-        <p className="mt-6 text-xs text-[#1C1008]/55 italic leading-relaxed">
-          Trusted by 60+ managing partners at PS firms $5M to $100M.
-        </p>
-
-        {/* ─── Stepper form ────────────────────────────────────────────── */}
-        <form onSubmit={handleContinue} className="mt-10" noValidate>
-          {/* Step 1 — Name */}
-          {step === 0 && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
-                Your name
-              </label>
-              <input
-                ref={inputRef}
-                type="text"
-                autoComplete="name"
-                className={inputClass}
-                placeholder="Jane Doe"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (error) setError(null);
-                }}
-                onFocus={pauseFounderVideo}
-              />
-            </div>
-          )}
-
-          {/* Step 2 — Email */}
-          {step === 1 && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
-                Work email
-              </label>
-              <input
-                ref={inputRef}
-                type="email"
-                autoComplete="email"
-                className={inputClass}
-                placeholder="jane@yourfirm.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (error) setError(null);
-                }}
-                onFocus={pauseFounderVideo}
-              />
-            </div>
-          )}
-
-          {/* Step 3 — Website */}
-          {step === 2 && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
-                Company website
-              </label>
-              <input
-                ref={inputRef}
-                type="url"
-                autoComplete="url"
-                className={inputClass}
-                placeholder="https://yourfirm.com"
-                value={website}
-                onChange={(e) => {
-                  setWebsite(e.target.value);
-                  if (error) setError(null);
-                }}
-                onFocus={pauseFounderVideo}
-              />
-            </div>
-          )}
+        {/* ─── Single-field form ────────────────────────────────────────── */}
+        <form onSubmit={handleSubmit} className="mt-10" noValidate>
+          <label className="block text-xs uppercase tracking-wider opacity-60 mb-3">
+            Your firm's website URL
+          </label>
+          <input
+            ref={inputRef}
+            type="url"
+            autoComplete="url"
+            className={inputClass}
+            placeholder="https://yourfirm.com"
+            value={website}
+            onChange={(e) => {
+              setWebsite(e.target.value);
+              if (error) setError(null);
+            }}
+            onFocus={pauseFounderVideo}
+          />
 
           {error && <p className="mt-3 text-xs text-[#8B3A2A]">{error}</p>}
 
-          {/* CTA + Back */}
-          <div className="mt-6 flex flex-col gap-3">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full h-14 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {submitting ? (
-                <>
-                  <span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" />
-                  BUILDING YOUR ANALYSIS…
-                </>
-              ) : step === 2 ? (
-                'BUILD MY ANALYSIS →'
-              ) : (
-                'CONTINUE →'
-              )}
-            </button>
-
-            {step === 2 && !submitting && (
-              <p className="text-xs text-center opacity-50">
-                Free. 90 seconds. No credit card. Confidential.
-              </p>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="mt-6 w-full h-14 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {submitting ? (
+              <>
+                <span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" />
+                BUILDING YOUR MAP…
+              </>
+            ) : (
+              'Build My Map →'
             )}
+          </button>
 
-            {step > 0 && !submitting && (
-              <button
-                type="button"
-                onClick={() => {
-                  setError(null);
-                  setStep((s) => Math.max(0, s - 1) as 0 | 1 | 2);
-                }}
-                className="text-xs uppercase tracking-wider text-[#1C1008]/50 hover:text-[#1C1008]/80 transition-colors mt-1"
-              >
-                ← Back
-              </button>
-            )}
-          </div>
+          <p className="mt-3 text-xs text-center opacity-60">
+            Free. 90 seconds. Full map shown — no email required to see it.
+          </p>
         </form>
       </div>
     </div>
@@ -373,7 +200,6 @@ function FounderVideoCard({
     const next = !muted;
     v.muted = next;
     setMuted(next);
-    // First unmute may need an explicit play() if autoplay was deferred.
     if (!next) v.play().catch(() => {});
   };
 
