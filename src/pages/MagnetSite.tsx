@@ -1,34 +1,33 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MagnetBreakdown from '@/components/magnet/MagnetBreakdown';
 import MagnetShell from '@/components/magnet/MagnetShell';
-import MagnetLoadingScene from '@/components/magnet/MagnetLoadingScene';
+import MagnetWaitTheater from '@/components/magnet/MagnetWaitTheater';
 import { useClientTheme } from '@/hooks/useClientTheme';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
-const STEPS = [
-  'Reading your website…',
-  'Identifying your relationship orbits…',
-  'Mapping your Dead Zone…',
-  'Calibrating your Five Layers…',
-  'Writing your GTM breakdown…',
-];
+interface NavState {
+  websiteUrl?: string;
+  email?: string;
+  firstName?: string;
+}
 
 const POLL_BASE_MS = 3000;
 const POLL_MAX_MS = 8000;
-const HARD_TIMEOUT_MS = 90_000;
+const HARD_TIMEOUT_MS = 120_000;
 const MAX_FAILURES = 5;
 const MISSING_ROW_GRACE_MS = 12_000;
 
 export default function MagnetSite() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const navState = (location.state ?? {}) as NavState;
   const [status, setStatus] = useState<Status>('loading');
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [stepIndex, setStepIndex] = useState(0);
-  const [stepVisible, setStepVisible] = useState(true);
+  const [firstName, setFirstName] = useState<string | null>(navState.firstName ?? null);
+  const [companyName, setCompanyName] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
   // Theme is loaded via the shell, but the loading scene also needs accent.
   const theme = useClientTheme(slug);
@@ -92,6 +91,9 @@ export default function MagnetSite() {
       if (submissionRow?.first_name) {
         setFirstName(submissionRow.first_name);
       }
+      if (breakdownRow?.client_company_name) {
+        setCompanyName(breakdownRow.client_company_name);
+      }
 
       const breakdownReady =
         breakdownRow &&
@@ -145,17 +147,7 @@ export default function MagnetSite() {
     };
   }, [slug]);
 
-  useEffect(() => {
-    if (status !== 'pending' && status !== 'processing') return;
-    const id = window.setInterval(() => {
-      setStepVisible(false);
-      window.setTimeout(() => {
-        setStepIndex((i) => (i + 1) % STEPS.length);
-        setStepVisible(true);
-      }, 500);
-    }, 14000);
-    return () => window.clearInterval(id);
-  }, [status]);
+  // (Step rotation is now handled internally by MagnetWaitTheater.)
 
   if (status === 'loading') {
     return (
@@ -212,11 +204,11 @@ export default function MagnetSite() {
 
   return (
     <MagnetShell firstName={firstName}>
-      <MagnetLoadingScene
+      <MagnetWaitTheater
         firstName={firstName}
-        stepIndex={stepIndex}
-        stepVisible={stepVisible}
-        steps={STEPS}
+        websiteUrl={navState.websiteUrl}
+        companyName={companyName}
+        enrichmentReady={false}
       />
     </MagnetShell>
   );
