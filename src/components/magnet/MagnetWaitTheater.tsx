@@ -141,10 +141,10 @@ export default function MagnetWaitTheater({
     };
   }, [currentStageIdx, flow]);
 
-  // ── Status ticker: rotate every 6s within the current stage ────────────
+  // ── Status ticker: rotate every ~5s within the current stage ──────────
   const tickIdx = Math.min(
     currentStage.ticks.length - 1,
-    Math.floor((elapsed - currentStage.startSec) / 6)
+    Math.floor((elapsed - currentStage.startSec) / 5)
   );
   const currentTick = currentStage.ticks[Math.max(0, tickIdx)];
 
