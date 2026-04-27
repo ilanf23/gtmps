@@ -155,7 +155,7 @@ export default function MagnetAssess() {
           {flow.eyebrow}
         </p>
         <h1 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
-          See exactly where your {flow.headlineSuffix} is leaking.
+          See exactly where your {flow.headlineSuffix} are leaking.
         </h1>
         <p className="text-sm opacity-70 mt-3 leading-relaxed">
           90 seconds. We analyze your website and build your custom RROS map.
