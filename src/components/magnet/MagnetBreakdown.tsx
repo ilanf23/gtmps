@@ -66,18 +66,6 @@ const isHex = (v: unknown): v is string =>
 const pick = (v: unknown, fallback: string): string =>
   isHex(v) ? (v as string).trim() : fallback;
 
-const COHORT_LABEL_BY_VERTICAL: Record<string, string> = {
-  law: "law firm",
-  consulting: "consulting firm",
-  accounting: "accounting firm",
-  msp: "MSP",
-  advisory: "advisory practice",
-  ae: "A/E firm",
-  recruiting: "search firm",
-  agency: "agency",
-  general: "firm",
-};
-
 export default function MagnetBreakdown({
   slug,
   vertical,
