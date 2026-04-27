@@ -1,22 +1,39 @@
 // SECTION 05 — Compact CTA card (FIRST CTA).
-// Smooth-scrolls to #v10-section-8 (full inline calendar).
+// Opens Calendly popup directly so visitors can book without scrolling.
 
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import { openCalendlyPopup } from "@/lib/calendly";
 
 interface Props {
   slug: string;
   vertical: string;
   primary: string;
+  background: string;
+  text: string;
+  customerName: string;
+  firstName?: string | null;
 }
 
-export default function CompactCtaCard({ slug, vertical, primary }: Props) {
+export default function CompactCtaCard({
+  slug,
+  vertical,
+  primary,
+  background,
+  text,
+  customerName,
+  firstName,
+}: Props) {
   const handleClick = () => {
     trackMagnetEvent(slug, "cta_section5_click", { vertical });
-    const target = document.getElementById("v10-section-8");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    openCalendlyPopup({
+      slug,
+      firmName: customerName,
+      firstName,
+      primary,
+      background,
+      text,
+    });
   };
 
   return (

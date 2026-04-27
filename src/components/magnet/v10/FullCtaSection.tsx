@@ -2,9 +2,11 @@
 // Score-adaptive headline + variant copy + inline Calendly widget + microlines.
 
 import { useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CTA_VARIANTS, type CtaVariantId } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import { buildCalendlyEmbedUrl, ensureCalendlyAssets } from "@/lib/calendly";
 
 interface Props {
   slug: string;
@@ -12,6 +14,7 @@ interface Props {
   variantId: CtaVariantId;
   scoreAdaptiveHeadline: string;
   customerName: string;
+  firstName?: string | null;
   primary: string;
   background: string;
   text: string;
@@ -24,6 +27,7 @@ export default function FullCtaSection({
   variantId,
   scoreAdaptiveHeadline,
   customerName,
+  firstName,
   primary,
   background,
   text,
@@ -32,6 +36,8 @@ export default function FullCtaSection({
   const variant = CTA_VARIANTS[variantId];
   const sectionRef = useRef<HTMLElement>(null);
   const viewedRef = useRef(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Track section view once
   useEffect(() => {
@@ -51,22 +57,9 @@ export default function FullCtaSection({
     return () => obs.disconnect();
   }, [slug, vertical, variantId]);
 
-  // Lazy-load Calendly script + capture booking events
+  // Lazy-load Calendly script + capture booking events (and route to ?booked=true).
   useEffect(() => {
-    const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
-    const STYLE_HREF = "https://assets.calendly.com/assets/external/widget.css";
-    if (!document.querySelector(`link[href="${STYLE_HREF}"]`)) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = STYLE_HREF;
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
-      const script = document.createElement("script");
-      script.src = SCRIPT_SRC;
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    ensureCalendlyAssets();
 
     const onMessage = (e: MessageEvent) => {
       const data = e?.data as { event?: string } | undefined;
@@ -76,16 +69,26 @@ export default function FullCtaSection({
           variant: variantId,
           outcome: "scheduled",
         });
+        // Append ?booked=true to surface the thank-you state without unmounting.
+        const params = new URLSearchParams(location.search);
+        if (params.get("booked") !== "true") {
+          params.set("booked", "true");
+          navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+        }
       }
     };
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [slug, vertical, variantId]);
+  }, [slug, vertical, variantId, navigate, location.pathname, location.search]);
 
-  const dataUrl = `https://calendly.com/adam-mabbly/gtm?hide_gdpr_banner=1&background_color=${background.replace(
-    "#",
-    ""
-  )}&text_color=${text.replace("#", "")}&primary_color=${primary.replace("#", "")}`;
+  const dataUrl = buildCalendlyEmbedUrl({
+    slug,
+    firmName: customerName,
+    firstName,
+    primary,
+    background,
+    text,
+  });
 
   return (
     <section
