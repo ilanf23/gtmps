@@ -47,14 +47,14 @@ const AletheiaChapters = () => {
           </p>
         </AletheiaSectionReveal>
 
-        <div className="space-y-6">
+        <div className="space-y-2">
           {chapters.map((ch, i) => (
             <AletheiaSectionReveal key={ch.n} delay={i * 70}>
               <div
-                className="grid grid-cols-1 md:grid-cols-12 gap-6 border-l-2 pl-8 py-6"
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 border-l-2 pl-6 py-4"
                 style={{ borderColor: GOLD }}
               >
-                <div className="md:col-span-3">
+                <div className="md:col-span-2">
                   <div
                     className="text-[11px] tracking-[0.3em] mb-1"
                     style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
@@ -62,7 +62,7 @@ const AletheiaChapters = () => {
                     {ch.n}
                   </div>
                 </div>
-                <div className="md:col-span-9">
+                <div className="md:col-span-10">
                   <h3
                     className="font-bold mb-3"
                     style={{
