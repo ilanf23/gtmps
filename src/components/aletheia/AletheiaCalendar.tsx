@@ -5,26 +5,26 @@ const GOLD = "#C8963E";
 const OFFWHITE = "#F5F1E8";
 const SLATE = "#7A8AA0";
 
-const blocks = [
+const cards = [
   {
+    range: "DAY 0 TO 14",
     label: "CLARITY",
-    quarter: "Q2 2026",
-    body: "Doctrine locked. Language frozen. Guild rhythm published. Every member knows the ask.",
+    body: "Diagnostic complete. Truth session delivered. The founder sees the 445 nodes for the first time.",
   },
   {
+    range: "DAY 15 TO 45",
     label: "FOCUS",
-    quarter: "Q3 2026",
-    body: "Three engagements running concurrently. Each surface read aloud to the founder inside seventy two hours.",
+    body: "The top 3 failure nodes are under active repair. Operator is embedded. Standard is set.",
   },
   {
+    range: "DAY 46 TO 75",
     label: "PRESSURE",
-    quarter: "Q4 2026",
-    body: "First Compound retainer renewed. Guild Pulse reports a closed loop. No silent members.",
+    body: "The system holds under load. Pace increases. Accountability is non negotiable.",
   },
   {
+    range: "DAY 76 TO 90",
     label: "STANDARD",
-    quarter: "Q1 2027",
-    body: "Aletheia is the name founders use when the company they built starts hiding from them. Category defined.",
+    body: "Coherence verified. Founder has capacity back. Guild of Honor referral triggered.",
   },
 ];
 
@@ -34,65 +34,62 @@ const AletheiaCalendar = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <AletheiaSectionReveal>
           <div
-            className="text-xs tracking-[0.32em] mb-16"
+            className="text-xs tracking-[0.32em] mb-4"
             style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
           >
-            FIELD 06 · CALENDAR
+            FIELD 06 · 90 DAY CALENDAR
           </div>
+          <p
+            className="mb-16 text-lg"
+            style={{ color: SLATE, fontFamily: "'EB Garamond', serif", fontStyle: "italic" }}
+          >
+            In the language of the Doctrine.
+          </p>
         </AletheiaSectionReveal>
 
-        <div className="space-y-px">
-          {blocks.map((b, i) => (
-            <AletheiaSectionReveal key={b.label} delay={i * 70}>
-              <div
-                className="grid grid-cols-1 md:grid-cols-12 gap-6 p-8 md:p-10 border"
-                style={{ borderColor: `${GOLD}40`, backgroundColor: "rgba(245,241,232,0.02)" }}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {cards.map((c, i) => (
+            <AletheiaSectionReveal key={c.label} delay={i * 70}>
+              <article
+                className="h-full border p-8"
+                style={{
+                  borderColor: `${GOLD}40`,
+                  backgroundColor: "rgba(245,241,232,0.02)",
+                }}
               >
-                <div className="md:col-span-3">
-                  <div
-                    className="text-[11px] tracking-[0.3em] mb-2"
-                    style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
-                  >
-                    {b.quarter}
-                  </div>
-                  <div
-                    className="font-bold"
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: "1.7rem",
-                      color: OFFWHITE,
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    {b.label}
-                  </div>
+                <div
+                  className="text-[11px] tracking-[0.3em] mb-5 font-semibold"
+                  style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
+                >
+                  {c.range}
                 </div>
-                <div className="md:col-span-9">
-                  <p
-                    className="leading-relaxed"
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: "1.2rem",
-                      color: OFFWHITE,
-                      opacity: 0.92,
-                    }}
-                  >
-                    {b.body}
-                  </p>
-                </div>
-              </div>
+                <h3
+                  className="font-bold mb-6"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: "2rem",
+                    color: OFFWHITE,
+                    letterSpacing: "0.04em",
+                    lineHeight: 1.05,
+                  }}
+                >
+                  {c.label}
+                </h3>
+                <p
+                  className="leading-relaxed"
+                  style={{
+                    fontFamily: "'EB Garamond', serif",
+                    fontSize: "1.05rem",
+                    color: OFFWHITE,
+                    opacity: 0.88,
+                  }}
+                >
+                  {c.body}
+                </p>
+              </article>
             </AletheiaSectionReveal>
           ))}
         </div>
-
-        <AletheiaSectionReveal delay={300}>
-          <p
-            className="mt-12 text-sm"
-            style={{ color: SLATE, fontFamily: "'EB Garamond', serif", fontStyle: "italic" }}
-          >
-            Four quarters. One arc. Doctrine to standard.
-          </p>
-        </AletheiaSectionReveal>
       </div>
     </section>
   );
