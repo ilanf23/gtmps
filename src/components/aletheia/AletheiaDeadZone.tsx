@@ -5,21 +5,21 @@ const GOLD = "#C8963E";
 const OFFWHITE = "#F5F1E8";
 const SLATE = "#7A8AA0";
 
-const stats = [
+const cards = [
   {
-    n: "445",
-    label: "FAILURE NODES",
-    body: "The map every Aletheia engagement runs against. No founder has seen all of them. Every founder is hit by some.",
+    label: "CORE DIAGNOSIS STATUS",
+    title: "GREEN ACROSS EVERY ORBIT · EXCEPT ONE",
+    body: "Per Joe Pung, April 21 2026",
   },
   {
-    n: "48 HOURS",
-    label: "TO DIAGNOSIS",
-    body: "Most firms take six weeks. Aletheia takes two days and reads the result aloud to the founder.",
+    label: "THE NAMED GAP",
+    title: "90 DAY DECAY WINDOW · ORBIT 02 ACTIVE",
+    body: "The single failure mode. Now owned by Guild Pulse.",
   },
   {
-    n: "9 WORDS",
-    label: "THE STANDARD",
-    body: "It gets fixed. Or we're not done. The line every operator inside Aletheia answers to.",
+    label: "ORBIT 03 DEAD ZONE",
+    title: "UNKNOWN PENDING GUILD AUDIT",
+    body: "Recommended first action: full Guild of Honor audit, map every member to orbit, surface dormant 90+ day contacts for targeted reactivate.",
   },
 ];
 
@@ -29,58 +29,65 @@ const AletheiaDeadZone = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <AletheiaSectionReveal>
           <div
-            className="text-xs tracking-[0.32em] mb-4"
+            className="text-xs tracking-[0.32em] mb-16"
             style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
           >
-            FIELD 11 · DEAD ZONE
+            FIELD 11 · DEAD ZONE ESTIMATE
           </div>
-          <p
-            className="mb-16 text-lg max-w-2xl"
-            style={{ color: SLATE, fontFamily: "'EB Garamond', serif", fontStyle: "italic" }}
-          >
-            What every founder loses by waiting another quarter.
-          </p>
         </AletheiaSectionReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {stats.map((s, i) => (
-            <AletheiaSectionReveal key={s.label} delay={i * 80}>
-              <div
+          {cards.map((c, i) => (
+            <AletheiaSectionReveal key={c.label} delay={i * 80}>
+              <article
                 className="border p-10 h-full"
-                style={{ borderColor: `${GOLD}55`, backgroundColor: "rgba(245,241,232,0.02)" }}
+                style={{
+                  borderColor: `${GOLD}40`,
+                  backgroundColor: "rgba(245,241,232,0.02)",
+                }}
               >
                 <div
-                  className="font-bold mb-4"
+                  className="text-[11px] tracking-[0.3em] mb-6 font-semibold"
+                  style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
+                >
+                  {c.label}
+                </div>
+                <h3
+                  className="font-bold mb-8"
                   style={{
                     fontFamily: "'Playfair Display', serif",
-                    fontSize: "3rem",
-                    color: GOLD,
-                    lineHeight: 1.05,
+                    fontSize: "1.85rem",
+                    color: OFFWHITE,
+                    letterSpacing: "0.02em",
+                    lineHeight: 1.1,
                   }}
                 >
-                  {s.n}
-                </div>
-                <div
-                  className="text-[11px] tracking-[0.3em] mb-5"
-                  style={{ color: OFFWHITE, opacity: 0.7, fontFamily: "'Inter Tight', sans-serif" }}
-                >
-                  {s.label}
-                </div>
+                  {c.title}
+                </h3>
                 <p
                   className="leading-relaxed"
                   style={{
                     fontFamily: "'EB Garamond', serif",
                     fontSize: "1.05rem",
                     color: OFFWHITE,
-                    opacity: 0.88,
+                    opacity: 0.7,
                   }}
                 >
-                  {s.body}
+                  {c.body}
                 </p>
-              </div>
+              </article>
             </AletheiaSectionReveal>
           ))}
         </div>
+
+        <AletheiaSectionReveal delay={280}>
+          <p
+            className="mt-12 text-[11px] tracking-[0.28em]"
+            style={{ color: SLATE, fontFamily: "'Inter Tight', sans-serif" }}
+          >
+            DIAGNOSIS BUILT ON JOE PUNG'S ALETHEIA CORE DIAGNOSIS FRAMEWORK, APRIL 20 2026.
+          </p>
+        </AletheiaSectionReveal>
       </div>
     </section>
   );
