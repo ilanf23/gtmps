@@ -44,11 +44,17 @@ const AletheiaProvenProcess = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <AletheiaSectionReveal>
           <div
-            className="text-xs tracking-[0.32em] mb-16"
+            className="text-xs tracking-[0.32em] mb-4"
             style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
           >
             FIELD 05 · PROVEN PROCESS
           </div>
+          <p
+            className="mb-16 text-lg"
+            style={{ color: SLATE, fontFamily: "'EB Garamond', serif", fontStyle: "italic" }}
+          >
+            Six verbs. One parallel motion.
+          </p>
         </AletheiaSectionReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
