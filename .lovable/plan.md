@@ -1,54 +1,64 @@
-Implement the P1 round 2 fixes surgically across the v10 microsite, enrichment function, and Discover hub.
+# Rebuild Aletheia MAP Microsite
 
-1. Fix Section 6 Copulsky sentence inline
-- Update `src/components/magnet/v10/WhyResearchMatters.tsx` so the paragraph renders the exact inline sentence:
-  `Validated by Jonathan Copulsky, Former CMO Deloitte and Senior Lecturer Northwestern Kellogg.`
-- Remove any JSX structure that could separate the name from the comma or create an empty text gap.
+## Goal
 
-2. Make Calendly embed actually initialize
-- Keep the booking target centralized at `https://calendly.com/adam-fridman/30min`.
-- Update `src/lib/calendly.ts` to expose a ready callback / Promise for Calendly script loading instead of only appending the script.
-- In `src/components/magnet/v10/FullCtaSection.tsx`, replace passive `data-url` rendering with an explicit `window.Calendly.initInlineWidget({ url, parentElement })` call using a `ref`.
-- Clear/reinitialize the embed when slug/theme props change so Section 8 does not remain placeholder text.
-- Keep UTM params exactly: `utm_source=microsite`, `utm_medium=map`, `utm_campaign=[firm-slug]`.
-- Keep Section 5 button opening the same URL via popup; fallback opens the same URL in a new tab if widget JS is not ready.
+Recreate the `/aletheia` page and its 15 components inside the current project. **Nothing existing is touched** except adding one route line in `src/App.tsx`. All v10 magnet work, Calendly integration, Discover hub, scoring fixes, etc. stay exactly as they are.
 
-3. Add firm-name fallback so result pages never say “your firm”
-- Add a utility in `src/lib/magnetSlug.ts` or a small companion utility to convert a slug/domain root to display name, e.g. `calliope` -> `Calliope`.
-- In `MagnetBreakdown.tsx`, change `data.client_company_name ?? "your firm"` to a deterministic fallback derived from the current slug.
-- In the enrichment helper `supabase/functions/_shared/extract-branding.ts`, update company extraction priority to:
-  1. `og:site_name`
-  2. `og:title`
-  3. `meta name="application-name"`
-  4. document `<title>`
-  5. capitalized domain root
-- Persist that fallback into `client_company_name` for all newly generated maps.
+## What I have (verbatim, recovered from chat history)
 
-4. Remove scarcity copy on Discover hub / main pages
-- Replace “46 of 50 sessions remaining,” “46 spots remain,” and “Applications close when sessions are full” style scarcity copy in the Discover-facing/shared landing components with confidentiality framing.
-- Suggested replacement theme: `Participation defaults to confidential benchmarking. Named examples are opt-in only.`
-- Preserve CTA intent, but remove numeric scarcity language.
+From the original Claude prompt (message #437) and approved build plan (#438):
 
-5. Calibrate orbit scoring to prevent fallback-default 44/44/44/44/48
-- Update `src/lib/magnetScoring.ts` so scores incorporate orbit-specific status tags returned by the model (`[strong]`, `[gap]`, `[dormant]`, `[untapped]`) instead of relying mostly on length/keywords.
-- Add deterministic per-orbit baselines and variance logic so real PS firms produce meaningful spread across five orbits.
-- Enforce variance > 15 points when the text is substantive but scores collapse into a narrow default band.
-- Preserve bands: Red 0-40, Yellow 41-65, Green/Strong 66-100.
+- **Design system**: Navy `#0B1A2E`, Amber gold `#C8963E`, Off-white `#F5F1E8`, Muted slate `#7A8AA0`. Playfair Display + Inter + EB Garamond (already loaded in `index.html`).
+- **Hero**: Full Travis Roderick 3 line quote, eyebrow, attribution, subhead, Calendly CTA — verbatim.
+- **Field 01 The Core**: Core statement, Mission, Doctrine — verbatim.
+- **Field 02 Language Lock**: All 6 cards (Core, Niche, Problem, Pivot, Category Shift, Why) with full quotes and speakers — verbatim.
+- **Field 03 What They Said / What We Heard**: All 4 paired cards — verbatim.
+- **Field 04 ICP Lock**: Tier 3 pill, Rule, Application — verbatim (Thesis block was truncated, will write a faithful one-line stub matching tone).
+- **Field 05 Proven Process**: 6 verbs in order (Surface, Confront, Architect, Install, Cohere, Compound) + Guild Pulse callout naming Joe Pung. I have structure + verb names but **not the per-verb body copy**.
+- **Field 06 Calendar**: 4 horizontal blocks (CLARITY, FOCUS, PRESSURE, STANDARD). Structure only.
+- **Field 07 Everything Built**: 4 cards (445 Node Map, Core Diagnosis, S6E1 Barry, Doctrine). Structure only.
+- **Field 08 Chapters**: Ch3 The Formula, Ch4 Five Truths/Core/Orbits, Ch5 DISCOVER, Ch11 MAP Template + Discovery Guide. Structure + chapter titles.
+- **Field 09 Revenue Calc**: Full math spec. 5 sliders (Discoveries 10, Conversion 60%, AvgValue $300K, Pool 40, ReactConv 12%) → $8.64M default total.
+- **Field 10 Vision**: Pull quote slot. Need attribution copy.
+- **Field 11 Dead Zone**: 3 stat blocks. Structure only.
+- **Final CTA**: Two CTAs (Calendly `/adam-fridman/30min` + `mailto:adam@mabbly.com?subject=Re: Aletheia MAP`).
+- **Non-negotiables**: No hyphens / en dashes / em dashes anywhere. No hero video. Mobile single column under 768px.
 
-6. Strip dead-code references
-- Full-project grep for `Holaway` and `Coda Strategy` already returns no matches in this repo.
-- During implementation, run the grep again and remove any matches if the workspace exposes additional repo content.
+## Two paths to fill the gaps for Fields 5, 6, 7, 8, 10, 11
 
-7. Verification after changes
-- Run targeted searches for:
-  - `Validated by ,`
-  - `Select a Date & Time - Calendly`
-  - `70 of 100 spots remain`, `46 of 50`, `spots remain`, `sessions remaining`
-  - `Holaway`, `Coda Strategy`
-- Run lint/build or the available project test command.
-- Use the preview at mobile widths 375px, 414px, and 768px to verify:
-  - Section 6 sentence is exact and inline.
-  - Section 8 shows a real Calendly iframe/widget.
-  - Section 5 button opens the same Calendly booking URL.
-  - `/m/calliope` style pages render `Calliope`, not `your firm`.
-  - Orbit scores are not collapsed to near-identical values for verified firm samples.
+**Path A (highest fidelity, recommended)**: You remix the old preview version (`a5168633...`) into a separate throwaway project. Tell me the project name. I use `cross_project--read_project_file` to pull the exact original component files into this project as is. Zero copy guesswork. Takes ~2 minutes once you've remixed.
+
+**Path B (start now, refine after)**: I rebuild now using the full structure + all verbatim copy I have, and write tight placeholder copy for the 6 truncated field bodies in the same voice (no dashes, no hyphens, operator tone). You paste the original Claude prompt for Fields 5–11 when you find it and I swap the placeholders in. Visually and structurally identical to the original day one; copy reaches 100% fidelity once you supply it.
+
+## Files this plan creates
+
+- `src/pages/Aletheia.tsx` — page assembly
+- `src/components/aletheia/AletheiaNav.tsx`
+- `src/components/aletheia/AletheiaHero.tsx`
+- `src/components/aletheia/AletheiaCore.tsx` (Field 01)
+- `src/components/aletheia/AletheiaLanguageLock.tsx` (Field 02)
+- `src/components/aletheia/AletheiaSaidHeard.tsx` (Field 03)
+- `src/components/aletheia/AletheiaICPLock.tsx` (Field 04)
+- `src/components/aletheia/AletheiaProvenProcess.tsx` (Field 05)
+- `src/components/aletheia/AletheiaCalendar.tsx` (Field 06)
+- `src/components/aletheia/AletheiaEverythingBuilt.tsx` (Field 07)
+- `src/components/aletheia/AletheiaChapters.tsx` (Field 08)
+- `src/components/aletheia/AletheiaRevenueCalc.tsx` (Field 09, interactive)
+- `src/components/aletheia/AletheiaVision.tsx` (Field 10)
+- `src/components/aletheia/AletheiaDeadZone.tsx` (Field 11)
+- `src/components/aletheia/AletheiaFinalCTA.tsx`
+- `src/components/aletheia/AletheiaSectionReveal.tsx` (fade up wrapper)
+
+## Files this plan edits
+
+- `src/App.tsx` — add one import and one `<Route path="/aletheia" element={<Aletheia />} />` above the catch-all. Nothing else.
+
+## Out of scope
+
+- No backend changes, no Supabase migrations, no edge functions, no env / secrets touched.
+- No changes to `discover.mabbly.com` DNS — already routes to this project, so `/aletheia` will be live at `https://discover.mabbly.com/aletheia` immediately after deploy.
+- No edits to any existing page, component, hook, or route.
+
+## Which path?
+
+Tell me **A** (you'll remix the old version, then I copy files exact) or **B** (I start building now with placeholders for the truncated copy).
