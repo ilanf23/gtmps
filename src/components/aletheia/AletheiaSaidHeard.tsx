@@ -80,12 +80,12 @@ const AletheiaSaidHeard = () => {
                 <div
                   className="p-8 md:p-10 border md:border-l-0"
                   style={{
-                    backgroundColor: `${GOLD}1F`,
-                    borderColor: `${GOLD}55`,
+                    backgroundColor: GOLD,
+                    borderColor: GOLD,
                   }}
                 >
                   <div
-                    className="text-[11px] tracking-[0.3em] mb-5"
+                    className="text-[11px] tracking-[0.3em] mb-5 font-semibold"
                     style={{ color: NAVY, fontFamily: "'Inter Tight', sans-serif" }}
                   >
                     WHAT WE HEARD
