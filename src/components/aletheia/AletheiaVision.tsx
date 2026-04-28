@@ -10,13 +10,13 @@ const AletheiaVision = () => {
       className="py-32 md:py-56"
       style={{ backgroundColor: NAVY }}
     >
-      <div className="max-w-5xl mx-auto px-6 md:px-12">
+      <div className="max-w-6xl mx-auto px-6 md:px-12 text-center">
         <AletheiaSectionReveal>
           <div
             className="text-xs tracking-[0.32em] mb-16"
             style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
           >
-            FIELD 10 · VISION
+            FIELD 10 · VISION STATE
           </div>
         </AletheiaSectionReveal>
 
@@ -25,21 +25,20 @@ const AletheiaVision = () => {
             className="font-bold leading-[1.15]"
             style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(1.85rem, 4.2vw, 3.4rem)",
+              fontSize: "clamp(2rem, 5.4vw, 4.4rem)",
               color: OFFWHITE,
             }}
           >
-            "In five years Aletheia is the name founders use when the company they built starts
-            hiding from them. Not a consultancy. Not a fractional. A standard."
+            "$15M to $20M year one. Category ownership by month 24. Divinity driven. Not for sale."
           </blockquote>
         </AletheiaSectionReveal>
 
         <AletheiaSectionReveal delay={160}>
           <div
-            className="mt-12 text-xs tracking-[0.28em]"
+            className="mt-16 text-xs tracking-[0.28em] font-semibold"
             style={{ color: GOLD, fontFamily: "'Inter Tight', sans-serif" }}
           >
-            TRAVIS RODERICK · FOUNDER, ALETHEIA
+            TRAVIS RODERICK · APRIL 20, 2026
           </div>
         </AletheiaSectionReveal>
       </div>
