@@ -7,7 +7,7 @@ const SLATE = "#7A8AA0";
 
 const AletheiaICPLock = () => {
   return (
-    <section className="py-32 md:py-48" style={{ backgroundColor: NAVY }}>
+    <section className="py-16 md:py-24" style={{ backgroundColor: NAVY }}>
       <div className="max-w-5xl mx-auto px-6 md:px-12">
         <AletheiaSectionReveal>
           <div

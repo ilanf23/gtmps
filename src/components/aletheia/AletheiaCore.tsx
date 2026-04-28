@@ -8,7 +8,7 @@ const SLATE = "#7A8AA0";
 const AletheiaCore = () => {
   return (
     <section
-      className="py-32 md:py-48"
+      className="py-16 md:py-24"
       style={{ backgroundColor: NAVY, color: OFFWHITE }}
     >
       <div className="max-w-5xl mx-auto px-6 md:px-12">

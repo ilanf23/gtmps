@@ -7,7 +7,7 @@ const OFFWHITE = "#F5F1E8";
 const AletheiaVision = () => {
   return (
     <section
-      className="py-32 md:py-56"
+      className="py-20 md:py-28"
       style={{ backgroundColor: NAVY }}
     >
       <div className="max-w-6xl mx-auto px-6 md:px-12 text-center">
