@@ -45,17 +45,18 @@ const AletheiaNav = () => {
           rel="noopener noreferrer"
           className="text-xs tracking-[0.18em] font-semibold px-4 py-2 border transition-colors"
           style={{
-            color: GOLD,
+            color: NAVY,
+            backgroundColor: GOLD,
             borderColor: GOLD,
             fontFamily: "'Inter Tight', sans-serif",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.backgroundColor = GOLD;
-            (e.currentTarget as HTMLAnchorElement).style.color = NAVY;
-          }}
-          onMouseLeave={(e) => {
             (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "transparent";
             (e.currentTarget as HTMLAnchorElement).style.color = GOLD;
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.backgroundColor = GOLD;
+            (e.currentTarget as HTMLAnchorElement).style.color = NAVY;
           }}
         >
           BOOK WORKING SESSION
