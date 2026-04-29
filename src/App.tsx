@@ -40,6 +40,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
+          <Route path="/" element={<Discover />} />
           <Route path="/v1" element={<Index />} />
           <Route path="/1" element={<IndexV1 />} />
           <Route path="/discover" element={<Discover />} />
