@@ -40,7 +40,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/v1" element={<Index />} />
           <Route path="/1" element={<IndexV1 />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/pepper-group" element={<PepperGroup />} />
