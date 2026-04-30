@@ -6,9 +6,10 @@ import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 interface Props {
   observed: string | null;
   primary: string;
+  slug?: string;
 }
 
-export default function ProofAnalysisSection({ observed, primary }: Props) {
+export default function ProofAnalysisSection({ observed, primary, slug }: Props) {
   const hasObserved = Boolean(observed && observed.trim());
   return (
     <section
