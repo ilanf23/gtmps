@@ -28,7 +28,7 @@ export default function CoreAnalysisSection({ observed, primary, slug }: Props) 
       </div>
       <h2
         className="font-bold leading-tight text-2xl md:text-3xl mb-6"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         How clearly your purpose lands on the page.
       </h2>

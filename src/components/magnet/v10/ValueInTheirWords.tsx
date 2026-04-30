@@ -49,7 +49,7 @@ export default function ValueInTheirWords({ primary }: Props) {
       </div>
       <h2
         className="font-bold leading-tight text-2xl md:text-3xl mb-8"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         What firms in the research found.
       </h2>
@@ -68,7 +68,7 @@ export default function ValueInTheirWords({ primary }: Props) {
             </p>
             <blockquote
               className="text-base font-medium leading-snug flex-1"
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+              style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
             >
               "{c.quote}"
             </blockquote>
@@ -90,7 +90,7 @@ export default function ValueInTheirWords({ primary }: Props) {
             backgroundColor: MABBLY_DARK,
             color: MABBLY_GOLD,
             borderColor: MABBLY_GOLD,
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
           }}
           aria-label="Adam Fridman"
         >

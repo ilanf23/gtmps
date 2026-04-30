@@ -64,7 +64,7 @@ export default function CompactCtaCard({
         </div>
         <h2
           className="font-bold leading-tight text-xl md:text-2xl mb-2"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
         >
           Skip ahead. Book Adam now.
         </h2>

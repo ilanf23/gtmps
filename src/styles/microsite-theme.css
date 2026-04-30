@@ -103,10 +103,12 @@
   &[data-ms-font] :not(svg):not(code):not(pre):not(.font-mono):not([class*="font-mono"]) {
     font-family: var(--ms-font), system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-  /* Keep editorial italic Cormorant in the loading scene + map numerals,
-     because the breakdown design depends on the serif rhythm. */
+  /* Inline Cormorant references inside the V10 microsite are remapped to
+     Source Serif 4 — the editorial workhorse used by research publications.
+     Outside the microsite (e.g. MagnetLoadingScene) the rule does not apply
+     because [data-ms-font] is only set on the MagnetShell wrapper. */
   &[data-ms-font] [style*="Cormorant"] {
-    font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important;
+    font-family: "Source Serif 4", "IBM Plex Serif", Georgia, serif !important;
   }
 }
 
@@ -153,7 +155,7 @@
 [data-ms-themed] [data-v10-section] h2,
 [data-ms-themed] [data-v10-section] h3,
 [data-ms-themed] [data-v10-section] blockquote {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-family: 'Source Serif 4', 'IBM Plex Serif', Georgia, serif !important;
 }
 
 [data-ms-themed] [data-v10-section] p,
@@ -161,10 +163,24 @@
 [data-ms-themed] [data-v10-section] button,
 [data-ms-themed] [data-v10-section] input,
 [data-ms-themed] [data-v10-section] label {
-  font-family: 'Inter Tight', system-ui, -apple-system, sans-serif !important;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif !important;
 }
 
-/* Eyebrow tags (uppercase + tracking) → DM Mono */
+/* Eyebrow tags (uppercase + tracking) → IBM Plex Sans, weight 500, tracking 0.12em */
 [data-ms-themed] [data-v10-section] .uppercase {
-  font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif !important;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+/* Apply the same type stack to the MagnetShell chrome and the chat / read /
+   feedback sub-pages so the entire microsite reads as one publication. */
+[data-ms-themed] {
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+}
+[data-ms-themed] h1,
+[data-ms-themed] h2,
+[data-ms-themed] h3,
+[data-ms-themed] blockquote {
+  font-family: 'Source Serif 4', 'IBM Plex Serif', Georgia, serif;
 }

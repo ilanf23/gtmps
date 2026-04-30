@@ -90,7 +90,7 @@ export default function FiveOrbitsViz({
       </div>
       <h2
         className="font-bold leading-tight text-2xl md:text-3xl mb-3"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         Where your next client already orbits you.
       </h2>

@@ -128,7 +128,7 @@ export default function ManuscriptShareSave({
       >
         <blockquote
           className="text-xl md:text-2xl leading-snug italic"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
         >
           "{MANUSCRIPT_INTRODUCTION.text}"
         </blockquote>
@@ -149,7 +149,7 @@ export default function ManuscriptShareSave({
           </p>
           <h3
             className="font-bold leading-tight text-xl mb-2"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
           >
             Send this to your partner.
           </h3>
@@ -195,7 +195,7 @@ export default function ManuscriptShareSave({
           </p>
           <h3
             className="font-bold leading-tight text-xl mb-2"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
           >
             Email me this map.
           </h3>
