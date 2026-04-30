@@ -57,9 +57,9 @@ export default function CompactCtaCard({
           />
           <p
             className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-            style={{ color: MABBLY_GOLD }}
+            style={{ color: `var(--brand-accent, ${MABBLY_GOLD})` }}
           >
-            05 · Want to discuss what you're seeing?
+            05 · Seen enough?
           </p>
         </div>
         <h2
@@ -69,7 +69,7 @@ export default function CompactCtaCard({
           Skip ahead. Book Adam now.
         </h2>
         <p className="text-sm opacity-75 mb-5">
-          30 minutes. Free. No pitch. No obligation.
+          30 minutes. No pitch. We walk through your map together.
         </p>
         <button
           type="button"
@@ -80,7 +80,7 @@ export default function CompactCtaCard({
             color: `var(--brand-bg-fg, #fff)`,
           }}
         >
-          See Available Times <span aria-hidden>→</span>
+          Book a Research Walkthrough <span aria-hidden>→</span>
         </button>
       </div>
     </section>
