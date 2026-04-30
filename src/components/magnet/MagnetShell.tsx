@@ -215,57 +215,31 @@ export default function MagnetShell({
               )}
           </div>
 
-          {/* Tabs */}
-          {tabs.length > 0 && (
-            <nav
-              className="flex-1 overflow-x-auto no-scrollbar"
-              aria-label="Magnet sections"
-            >
-              <ul className="flex items-center gap-1 sm:gap-2 justify-start sm:justify-center min-w-max sm:min-w-0">
-                {tabs.map((t) => (
-                  <li key={t.to}>
-                    <NavLink
-                      to={t.to}
-                      end={t.end}
-                      className={({ isActive }) =>
-                        cn(
-                          "relative inline-flex items-center px-3 sm:px-4 h-14 text-xs sm:text-sm uppercase tracking-wider transition-colors whitespace-nowrap",
-                        )
-                      }
-                      style={({ isActive }) => ({
-                        color: isActive ? theme.text : theme.textMuted,
-                      })}
-                    >
-                      {({ isActive }) => (
-                        <>
-                          <span>{t.label}</span>
-                          {isActive && (
-                            <span
-                              className="absolute left-2 right-2 bottom-0 h-[2px]"
-                              style={{ backgroundColor: theme.accent }}
-                              aria-hidden
-                            />
-                          )}
-                        </>
-                      )}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
+          {/* Spacer pushes CTA to the right */}
+          <div className="flex-1" />
 
-          {/* Visitor name */}
+          {/* Single conversion CTA */}
+          <button
+            type="button"
+            onClick={handleBookClick}
+            className="inline-flex items-center gap-2 h-9 sm:h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold tracking-wide uppercase transition-opacity hover:opacity-90 shrink-0"
+            style={{
+              backgroundColor: `var(--brand-bg, ${theme.background})`,
+              color: `var(--brand-bg-fg, #fff)`,
+              border: `1px solid var(--brand-bg-fg, rgba(255,255,255,0.25))`,
+            }}
+          >
+            Book a Walkthrough <span aria-hidden>→</span>
+          </button>
+
           {firstName ? (
             <p
-              className="hidden sm:block text-xs shrink-0"
-              style={{ color: theme.textMuted }}
+              className="hidden md:block text-xs shrink-0"
+              style={{ color: `var(--brand-bg-fg, ${theme.textMuted})`, opacity: 0.75 }}
             >
               {firstName}
             </p>
-          ) : (
-            <span className="hidden sm:block w-12 shrink-0" aria-hidden />
-          )}
+          ) : null}
         </div>
       </header>
 
