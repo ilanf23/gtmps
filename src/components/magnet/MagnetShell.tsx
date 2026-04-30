@@ -222,14 +222,16 @@ export default function MagnetShell({
           <button
             type="button"
             onClick={handleBookClick}
-            className="inline-flex items-center gap-2 h-9 sm:h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold tracking-wide uppercase transition-opacity hover:opacity-90 shrink-0"
+            className="inline-flex items-center gap-1.5 sm:gap-2 h-11 sm:h-10 min-h-[44px] sm:min-h-[40px] px-3 sm:px-5 text-[11px] sm:text-sm font-semibold tracking-wide uppercase transition-opacity hover:opacity-90 shrink-0 whitespace-nowrap"
             style={{
               backgroundColor: `var(--brand-bg, ${theme.background})`,
               color: `var(--brand-bg-fg, #fff)`,
               border: `1px solid var(--brand-bg-fg, rgba(255,255,255,0.25))`,
             }}
           >
-            Book a Walkthrough <span aria-hidden>→</span>
+            <span className="hidden sm:inline">Book a Walkthrough</span>
+            <span className="sm:hidden">Book</span>
+            <span aria-hidden>→</span>
           </button>
 
           {firstName ? (
