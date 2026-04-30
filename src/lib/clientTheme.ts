@@ -138,15 +138,14 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     : MABBLY_DEFAULTS.background;
 
   // ── Palette quality threshold ───────────────────────────────────────────
-  // If the extracted accent fails any of these gates, fall back to the
-  // locked Mabbly gold rather than ship an unreadable or near-invisible
-  // accent. We log the reason so QA can spot extraction misfires.
-  const accentVsBgRatio = contrastRatio(accent, background);
+  // Valid extracted hex must take priority over Mabbly defaults. We only
+  // fall back when the accent is structurally broken (grayscale or equal to
+  // the background) — NOT just because contrast is below 4.5. Brand colors
+  // are often softer than Mabbly gold and we still want them to ship.
   const sat = saturation(accent);
   let fallbackReason: string | null = null;
-  if (accentVsBgRatio < 4.5) fallbackReason = `low-contrast-${accentVsBgRatio.toFixed(2)}`;
+  if (accent.toLowerCase() === background.toLowerCase()) fallbackReason = "accent-equals-bg";
   else if (sat < 0.05) fallbackReason = "grayscale-accent";
-  else if (accent.toLowerCase() === background.toLowerCase()) fallbackReason = "accent-equals-bg";
 
   if (fallbackReason && raw.client_accent_color) {
     if (typeof console !== "undefined") {
@@ -176,6 +175,16 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
 
   const accentForeground = pickForeground(accent);
 
+  // Honor explicitly-extracted surface / textMuted hex when present;
+  // otherwise derive a tinted surface and a 60%-opacity muted variant.
+  const surface = isHex(raw.client_surface_color)
+    ? expandHex(raw.client_surface_color)
+    : rgba(text, bgIsDark ? 0.08 : 0.06);
+
+  const textMuted = isHex(raw.client_text_muted_color)
+    ? expandHex(raw.client_text_muted_color)
+    : rgba(text, 0.6);
+
   return {
     logoUrl: raw.client_logo_url ?? null,
     companyName: raw.client_company_name ?? null,
@@ -183,11 +192,9 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     accentHover: darken(accent, 0.14),
     accentForeground,
     background,
-    // On dark backgrounds the surface tint needs more presence, otherwise
-    // cards and chat bubbles vanish into the black.
-    surface: rgba(text, bgIsDark ? 0.08 : 0.06),
+    surface,
     text,
-    textMuted: rgba(text, 0.6),
+    textMuted,
     border: rgba(text, bgIsDark ? 0.18 : 0.12),
     fontFamily: raw.client_font_family?.trim() || null,
   };
@@ -196,6 +203,11 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
 /**
  * Convert a theme into CSS variables that any microsite component can read.
  * Use these on a wrapper element via `style={themeStyle(theme)}`.
+ *
+ * Emits both the legacy `--ms-*` tokens (consumed by the older microsite
+ * override stylesheet) and the newer `--client-*` aliases that the V10
+ * sections read directly from CSS so each component can re-skin without
+ * needing the theme object as a prop.
  */
 export function themeStyle(theme: ClientTheme): React.CSSProperties {
   return {
@@ -207,8 +219,16 @@ export function themeStyle(theme: ClientTheme): React.CSSProperties {
     "--ms-text": theme.text,
     "--ms-text-muted": theme.textMuted,
     "--ms-border": theme.border,
+    "--client-primary": theme.accent,
+    "--client-primary-fg": theme.accentForeground,
+    "--client-background": theme.background,
+    "--client-surface": theme.surface,
+    "--client-text": theme.text,
+    "--client-text-muted": theme.textMuted,
+    "--client-border": theme.border,
     backgroundColor: theme.background,
     color: theme.text,
     ...(theme.fontFamily ? { fontFamily: `${theme.fontFamily}, system-ui, sans-serif` } : {}),
   } as React.CSSProperties;
 }
+
