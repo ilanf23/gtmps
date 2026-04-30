@@ -114,6 +114,9 @@ export interface RawBranding {
   client_text_color?: string | null;
   client_text_muted_color?: string | null;
   client_font_family?: string | null;
+  /** Dual-color pair sourced from palette.primary / palette.background. */
+  brand_accent?: string | null;
+  brand_background?: string | null;
 }
 
 /**
