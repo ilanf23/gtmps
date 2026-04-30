@@ -41,10 +41,13 @@ export default function PersonalizedHeader({
 
       <h1
         className="font-bold leading-[1.1] tracking-tight text-3xl md:text-5xl mb-4"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          color: "var(--client-text, currentColor)",
+        }}
       >
         Your Revenue Map for{" "}
-        <span style={{ color: primary }}>{firmName}</span>
+        <span style={{ color: `var(--client-primary, ${primary})` }}>{firmName}</span>
       </h1>
 
       <p className="text-sm md:text-base opacity-60 mb-3">{ageSentence}</p>

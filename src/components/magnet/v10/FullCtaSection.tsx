@@ -107,58 +107,66 @@ export default function FullCtaSection({
       data-v10-variant={variantId}
       className="py-16 md:py-24 border-b border-black/10"
     >
-      <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
-        <p
-          className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: MABBLY_GOLD }}
-        >
-          08 · {calendarCta || "Your 30-minute conversation"}
-        </p>
-      </div>
-
-      <h2
-        className="font-bold leading-tight text-2xl md:text-3xl mb-2 max-w-2xl"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-      >
-        {scoreAdaptiveHeadline}
-      </h2>
-      <p className="text-sm opacity-55 mb-6">For {customerName}.</p>
-
-      <div className="space-y-4 max-w-xl text-sm md:text-base leading-relaxed mb-6">
-        {variant.paragraphs.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-        {variant.bullets && (
-          <>
-            <p className="font-semibold mt-2">What we'll discuss:</p>
-            <ul className="space-y-1.5 pl-1">
-              {variant.bullets.map((b, i) => (
-                <li key={i} className="flex gap-3">
-                  <span style={{ color: primary }} aria-hidden>·</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-        <p className="font-semibold" style={{ color: primary }}>
-          {variant.closer}
-        </p>
-      </div>
-
-      {/* Inline Calendly — initialized via initCalendlyInline() in the effect above. */}
       <div
-        ref={calendlyRef}
-        className="w-full border border-black/10"
-        style={{ minWidth: "320px", height: "720px" }}
-      />
+        className="p-6 md:p-8 border-2"
+        style={{
+          backgroundColor: `var(--client-surface, transparent)`,
+          borderColor: `var(--client-primary, ${primary})`,
+        }}
+      >
+        <div className="flex items-center gap-2 mb-5">
+          <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
+          <p
+            className="text-[11px] uppercase tracking-[0.3em] font-semibold"
+            style={{ color: MABBLY_GOLD }}
+          >
+            08 · {calendarCta || "Your 30-minute conversation"}
+          </p>
+        </div>
 
-      {/* Microlines */}
-      <div className="mt-4 flex flex-col sm:flex-row gap-1 sm:gap-3 text-xs opacity-65">
-        <span>Adam typically has 4–6 slots open this week.</span>
-        <span className="hidden sm:inline opacity-40" aria-hidden>·</span>
-        <span>30 minutes. No pitch. No commitment.</span>
+        <h2
+          className="font-bold leading-tight text-2xl md:text-3xl mb-2 max-w-2xl"
+          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        >
+          {scoreAdaptiveHeadline}
+        </h2>
+        <p className="text-sm opacity-55 mb-6">For {customerName}.</p>
+
+        <div className="space-y-4 max-w-xl text-sm md:text-base leading-relaxed mb-6">
+          {variant.paragraphs.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+          {variant.bullets && (
+            <>
+              <p className="font-semibold mt-2">What we'll discuss:</p>
+              <ul className="space-y-1.5 pl-1">
+                {variant.bullets.map((b, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span style={{ color: `var(--client-primary, ${primary})` }} aria-hidden>·</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          <p className="font-semibold" style={{ color: `var(--client-primary, ${primary})` }}>
+            {variant.closer}
+          </p>
+        </div>
+
+        {/* Inline Calendly — initialized via initCalendlyInline() in the effect above. */}
+        <div
+          ref={calendlyRef}
+          className="w-full border border-black/10"
+          style={{ minWidth: "320px", height: "720px" }}
+        />
+
+        {/* Microlines */}
+        <div className="mt-4 flex flex-col sm:flex-row gap-1 sm:gap-3 text-xs opacity-65">
+          <span>Adam typically has 4–6 slots open this week.</span>
+          <span className="hidden sm:inline opacity-40" aria-hidden>·</span>
+          <span>30 minutes. No pitch. No commitment.</span>
+        </div>
       </div>
     </section>
   );
