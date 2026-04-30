@@ -184,3 +184,110 @@
 [data-ms-themed] blockquote {
   font-family: 'Source Serif 4', 'IBM Plex Serif', Georgia, serif;
 }
+
+/* ============================================================
+   V10 TYPOGRAPHIC SCALE (size + weight + line-height floors)
+   ============================================================
+   Mobile floors: body/card/CTA text ≥ 16px (accessibility).
+   Desktop ceilings: nothing below 14px except eyebrow labels.
+   Defined here (not per-component) so future copy edits inherit
+   the scale automatically.
+   ============================================================ */
+
+/* H1 — main page headline */
+[data-ms-themed] [data-v10-section] h1 {
+  font-size: clamp(26px, 7vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+/* H2 — section headlines */
+[data-ms-themed] [data-v10-section] h2 {
+  font-size: clamp(22px, 5.5vw, 32px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+
+/* H3 — sub-headlines */
+[data-ms-themed] [data-v10-section] h3 {
+  font-size: clamp(20px, 3.5vw, 24px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Body text floor — paragraphs, list items, labels.
+   Selector excludes any element that opted into the eyebrow scale
+   via .uppercase (those get the smaller editorial label size). */
+[data-ms-themed] [data-v10-section] p:not(.uppercase),
+[data-ms-themed] [data-v10-section] li:not(.uppercase),
+[data-ms-themed] [data-v10-section] label:not(.uppercase) {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Buttons inside V10 sections — readable CTA size */
+[data-ms-themed] [data-v10-section] button:not(.uppercase) {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Blockquotes — editorial pull quotes */
+[data-ms-themed] [data-v10-section] blockquote {
+  font-size: clamp(18px, 2.4vw, 20px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Eyebrow / uppercase labels — decorative, smaller scale allowed.
+   Mobile floor 12px, desktop ceiling 13px. */
+[data-ms-themed] [data-v10-section] .uppercase {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  [data-ms-themed] [data-v10-section] .uppercase {
+    font-size: 13px;
+  }
+}
+
+/* MagnetShell chrome + sub-pages (chat / read / feedback) — same
+   floors but relaxed since they sit outside [data-v10-section]. */
+[data-ms-themed] main p:not(.uppercase),
+[data-ms-themed] main li:not(.uppercase),
+[data-ms-themed] main label:not(.uppercase) {
+  font-size: 16px;
+  line-height: 1.6;
+}
+[data-ms-themed] main .uppercase {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+@media (min-width: 768px) {
+  [data-ms-themed] main .uppercase {
+    font-size: 13px;
+  }
+}
+
+/* Tailwind size utilities that drop below the floor get clamped
+   inside V10 sections. Eyebrows opt out via .uppercase. */
+[data-ms-themed] [data-v10-section] .text-xs:not(.uppercase),
+[data-ms-themed] [data-v10-section] .text-sm:not(.uppercase),
+[data-ms-themed] [data-v10-section] .text-\[10px\]:not(.uppercase),
+[data-ms-themed] [data-v10-section] .text-\[11px\]:not(.uppercase),
+[data-ms-themed] [data-v10-section] .text-\[12px\]:not(.uppercase),
+[data-ms-themed] [data-v10-section] .text-\[13px\]:not(.uppercase) {
+  font-size: 16px !important;
+}
+
+/* Calendly iframe is its own document — exclude it from the size lock. */
+[data-ms-themed] .calendly-inline-widget,
+[data-ms-themed] .calendly-inline-widget * {
+  font-size: revert !important;
+}
