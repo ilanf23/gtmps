@@ -19,7 +19,19 @@ export type ClientTheme = {
   textMuted: string;
   border: string;
   fontFamily: string | null;
+  /**
+   * Dual-color brand pair, distinct from `accent`/`background` which control
+   * the page chrome. `brandAccent` is the highlight/text color (links, CTAs,
+   * orbit bars). `brandBackground` is the dark container color (CTA buttons,
+   * orbit number badges, sticky header). Always present — defaults to a
+   * sensible industry fallback when extraction fails or returns near-white.
+   */
+  brandAccent: string;
+  brandBackground: string;
 };
+
+/** Default dark container when extracted background is near-white. */
+export const INDUSTRY_FALLBACK_BG = "#1B3A6B"; // consulting navy
 
 export const MABBLY_DEFAULTS: ClientTheme = {
   logoUrl: null,
@@ -33,6 +45,8 @@ export const MABBLY_DEFAULTS: ClientTheme = {
   textMuted: "rgba(28,16,8,0.6)",
   border: "rgba(28,16,8,0.1)",
   fontFamily: null,
+  brandAccent: "#B8933A",
+  brandBackground: INDUSTRY_FALLBACK_BG,
 };
 
 const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
