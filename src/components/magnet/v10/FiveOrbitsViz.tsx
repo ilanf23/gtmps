@@ -14,30 +14,32 @@ const ORBIT_NAMES = [
   "New Gravity",
 ];
 
-// Color tokens by band — Red (low), Yellow (mid), Green (high).
+// Band-relative tokens: every color is now driven off `--client-primary`,
+// so the orbit visualization re-skins to the prospect's brand. Intensity
+// (opacity / label) still signals high vs mid vs low.
 const BAND_TOKENS: Record<
   ScoreBand,
   { fg: string; meter: string; bg: string; border: string; label: string }
 > = {
   high: {
-    fg: "#1B5E20",
-    meter: "#2E7D32",
-    bg: "rgba(76,175,80,0.08)",
-    border: "rgba(76,175,80,0.45)",
+    fg: "var(--client-primary, #2E7D32)",
+    meter: "var(--client-primary, #2E7D32)",
+    bg: "color-mix(in srgb, var(--client-primary, #2E7D32) 12%, transparent)",
+    border: "color-mix(in srgb, var(--client-primary, #2E7D32) 55%, transparent)",
     label: "Strong",
   },
   mid: {
-    fg: "#7A5B00",
-    meter: "#B8933A",
-    bg: "rgba(184,147,58,0.08)",
-    border: "rgba(184,147,58,0.45)",
+    fg: "var(--client-primary, #B8933A)",
+    meter: "var(--client-primary, #B8933A)",
+    bg: "color-mix(in srgb, var(--client-primary, #B8933A) 8%, transparent)",
+    border: "color-mix(in srgb, var(--client-primary, #B8933A) 40%, transparent)",
     label: "Mixed",
   },
   low: {
-    fg: "#7A1F1F",
-    meter: "#B43C32",
-    bg: "rgba(180,60,50,0.08)",
-    border: "rgba(180,60,50,0.45)",
+    fg: "var(--client-primary, #B43C32)",
+    meter: "var(--client-primary, #B43C32)",
+    bg: "color-mix(in srgb, var(--client-primary, #B43C32) 5%, transparent)",
+    border: "color-mix(in srgb, var(--client-primary, #B43C32) 25%, transparent)",
     label: "Gap",
   },
 };
