@@ -6,11 +6,11 @@ export default function FinalCta() {
       style={{
         background: '#0D0905',
         borderTop: '1px solid rgba(184,147,58,0.1)',
-        padding: '112px 24px',
+        padding: 'clamp(64px, 11vw, 112px) 24px',
       }}
     >
       <style>{`
-        .fc-section { padding: 112px 24px; }
+        .fc-section { padding: clamp(64px, 11vw, 112px) 24px; }
         @media (min-width: 768px) {
           .fc-section { padding: 160px 40px; }
         }
