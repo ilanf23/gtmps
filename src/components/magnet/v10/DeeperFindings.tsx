@@ -65,7 +65,7 @@ export default function DeeperFindings({
       </div>
       <h2
         className="font-bold leading-tight text-2xl md:text-3xl mb-6"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         Three more reads we'd like your feedback on.
       </h2>

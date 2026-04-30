@@ -31,7 +31,7 @@ export default function WhyResearchMatters({ primary }: Props) {
       </div>
       <h2
         className="font-bold leading-tight text-2xl md:text-3xl mb-8 max-w-2xl"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         30 firms. 500 practitioner interviews. Validated by Copulsky.
       </h2>

@@ -50,7 +50,7 @@ export default function HighestLeverageMove({
 
       <h2
         className="font-bold leading-tight text-2xl md:text-3xl mb-5 max-w-2xl"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         {HEADLINES[profile]}
       </h2>
@@ -70,7 +70,7 @@ export default function HighestLeverageMove({
       >
         <blockquote
           className="font-serif italic text-lg leading-snug opacity-85"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
         >
           "{MANUSCRIPT_FORMULA.text}"
         </blockquote>

@@ -42,7 +42,7 @@ export default function PersonalizedHeader({
       <h1
         className="font-bold leading-[1.1] tracking-tight mb-4"
         style={{
-          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
           color: "var(--client-text, currentColor)",
           fontSize: "clamp(26px, 7vw, 48px)",
           wordBreak: "break-word",
@@ -71,7 +71,7 @@ export default function PersonalizedHeader({
       >
         <blockquote
           className="font-serif italic text-lg md:text-xl leading-snug opacity-85"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
         >
           "{MANUSCRIPT_OPENING.text}"
         </blockquote>
