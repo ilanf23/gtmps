@@ -202,6 +202,24 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     ? expandHex(raw.client_text_muted_color)
     : rgba(text, 0.6);
 
+  // ── Dual-color brand pair ───────────────────────────────────────────────
+  // brandAccent = the highlight color used for text, links, CTA borders,
+  // orbit bars. brandBackground = the dark container color used for CTA
+  // button backgrounds, orbit number badges, sticky header bar.
+  // Sourced from palette.primary / palette.background (passed into raw via
+  // useClientTheme). When the extracted background is near-white, we fall
+  // back to the industry default so we always have a usable dark color.
+  const brandAccent = isHex(raw.brand_accent)
+    ? expandHex(raw.brand_accent)
+    : accent;
+
+  let brandBackground = isHex(raw.brand_background)
+    ? expandHex(raw.brand_background)
+    : INDUSTRY_FALLBACK_BG;
+  if (relLuminance(brandBackground) > 0.9) {
+    brandBackground = INDUSTRY_FALLBACK_BG;
+  }
+
   return {
     logoUrl: raw.client_logo_url ?? null,
     companyName: raw.client_company_name ?? null,
@@ -214,6 +232,8 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     textMuted,
     border: rgba(text, bgIsDark ? 0.18 : 0.12),
     fontFamily: raw.client_font_family?.trim() || null,
+    brandAccent,
+    brandBackground,
   };
 }
 
