@@ -26,7 +26,7 @@ export default function ObservedHypothesisQuestion({
 
   return (
     <div>
-      <div className={`grid ${gridCols} gap-px bg-black/10 border border-black/10`}>
+      <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10`}>
         <div className="bg-[#FBF8F4] p-5">
           <p
             className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-2"
@@ -34,7 +34,7 @@ export default function ObservedHypothesisQuestion({
           >
             Observed
           </p>
-          <p className="text-sm opacity-85 leading-relaxed">{observed}</p>
+          <p className="text-base md:text-sm opacity-85 leading-relaxed">{observed}</p>
         </div>
         <div className="bg-[#FBF8F4] p-5 relative">
           <span
@@ -48,7 +48,7 @@ export default function ObservedHypothesisQuestion({
           >
             Hypothesis
           </p>
-          <p className="text-sm leading-relaxed pl-2">{hypothesis}</p>
+          <p className="text-base md:text-sm leading-relaxed pl-2">{hypothesis}</p>
         </div>
         {hasQuestion && (
           <div className="bg-[#FBF8F4] p-5 relative">
@@ -63,7 +63,7 @@ export default function ObservedHypothesisQuestion({
             >
               Question
             </p>
-            <p className="text-sm italic leading-relaxed pl-2">{question}</p>
+            <p className="text-base md:text-sm italic leading-relaxed pl-2">{question}</p>
           </div>
         )}
       </div>
