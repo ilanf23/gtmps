@@ -120,7 +120,8 @@ export default function MagnetShell({
       <header
         className="sticky top-0 z-40 backdrop-blur"
         style={{
-          backgroundColor: theme.background,
+          backgroundColor: `var(--brand-bg, ${theme.background})`,
+          color: `var(--brand-bg-fg, ${theme.text})`,
           borderBottom: `1px solid ${theme.border}`,
         }}
       >
