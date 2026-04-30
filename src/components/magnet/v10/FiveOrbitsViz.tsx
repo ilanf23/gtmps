@@ -1,6 +1,6 @@
 // SECTION 02 — Five Orbits visualization
-// Each card: numbered circle · orbit name · proportional score meter · arrow affordance.
-// Hover peeks the first sentence; tap/click expands the full observation.
+// Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
+// Mobile (<md): vertical card list with progress bars (legacy layout).
 
 import { useState } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
@@ -13,6 +13,10 @@ const ORBIT_NAMES = [
   "Warm Adjacency",
   "New Gravity",
 ];
+
+// Label position angles (degrees, 0 = right, going clockwise from top via -90 offset).
+// Spec: 270° top, 342°, 54°, 126°, 198°.
+const ORBIT_ANGLES_DEG = [270, 342, 54, 126, 198];
 
 // Band-relative tokens: every color is now driven off `--brand-accent`,
 // so the orbit visualization re-skins to the prospect's brand. Intensity
@@ -51,14 +55,6 @@ interface Props {
   primary: string;
 }
 
-/** First-sentence "peek" used for the hover state. */
-function firstSentence(text: string | null | undefined): string {
-  if (!text) return "";
-  const trimmed = text.trim();
-  const m = trimmed.match(/^(.+?[.!?])(?:\s|$)/);
-  return (m?.[1] ?? trimmed).slice(0, 160);
-}
-
 export default function FiveOrbitsViz({
   orbits,
   perOrbit,
@@ -66,6 +62,16 @@ export default function FiveOrbitsViz({
   primary,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+  const fallbackObs =
+    "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
+
+  // SVG geometry — 500x500 viewBox, center (250, 250).
+  const CENTER = 250;
+  const RADII = [50, 100, 150, 200, 250];
+  // Scale ring radii down slightly so labels sit inside the viewBox bounds.
+  const VIEW = 560;
+  const VIEW_CENTER = VIEW / 2;
 
   return (
     <section
@@ -93,31 +99,198 @@ export default function FiveOrbitsViz({
         full observation.
       </p>
 
-      <div className="grid gap-3">
+      {/* ─── DESKTOP: concentric SVG diagram ──────────────────────────── */}
+      <div className="hidden md:block">
+        <style>{`
+          @keyframes orbit-pulse {
+            0%, 100% { opacity: 0.85; stroke-width: 2; }
+            50% { opacity: 1; stroke-width: 3.5; }
+          }
+          .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
+        `}</style>
+
+        <div className="flex justify-center">
+          <svg
+            viewBox={`0 0 ${VIEW} ${VIEW}`}
+            width="100%"
+            style={{ maxWidth: 560, height: "auto" }}
+            role="img"
+            aria-label="Five Orbits diagram"
+          >
+            {/* Center label */}
+            <text
+              x={VIEW_CENTER}
+              y={VIEW_CENTER - 4}
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="700"
+              letterSpacing="2"
+              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+            >
+              YOUR
+            </text>
+            <text
+              x={VIEW_CENTER}
+              y={VIEW_CENTER + 11}
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="700"
+              letterSpacing="2"
+              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+            >
+              FIRM
+            </text>
+
+            {/* Orbit rings */}
+            {RADII.map((r, i) => {
+              const band = bandPerOrbit[i] ?? "low";
+              const isStrong = band === "high";
+              const opacity = isStrong ? 1 : 0.3;
+              const isDeadZone = i === 2;
+              return (
+                <circle
+                  key={`ring-${i}`}
+                  cx={VIEW_CENTER}
+                  cy={VIEW_CENTER}
+                  r={r}
+                  fill="none"
+                  stroke="var(--brand-accent, currentColor)"
+                  strokeWidth={2}
+                  opacity={opacity}
+                  className={isDeadZone ? "orbit-ring-pulse" : ""}
+                  style={
+                    isDeadZone
+                      ? {
+                          filter:
+                            "drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent, #B43C32) 60%, transparent))",
+                        }
+                      : undefined
+                  }
+                />
+              );
+            })}
+
+            {/* Orbit labels */}
+            {RADII.map((r, i) => {
+              // Convert degrees to radians; SVG y-axis is inverted so use -sin.
+              const angleRad = (ORBIT_ANGLES_DEG[i] * Math.PI) / 180;
+              const lx = VIEW_CENTER + Math.cos(angleRad) * r;
+              const ly = VIEW_CENTER + Math.sin(angleRad) * r;
+              const id = String(i + 1).padStart(2, "0");
+              const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
+              const score = Math.max(0, Math.min(100, perOrbit[i] ?? 0));
+              const isOpen = openIdx === i;
+              const isDeadZone = i === 2;
+
+              // Pill dimensions
+              const pillW = 132;
+              const pillH = 38;
+              const pillX = lx - pillW / 2;
+              const pillY = ly - pillH / 2;
+
+              return (
+                <g
+                  key={`label-${i}`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setOpenIdx(isOpen ? null : i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
+                >
+                  <rect
+                    x={pillX}
+                    y={pillY}
+                    width={pillW}
+                    height={pillH}
+                    rx={pillH / 2}
+                    fill="var(--brand-bg-subtle, #FBF8F4)"
+                    stroke={tokens.border}
+                    strokeWidth={isOpen || isDeadZone ? 2 : 1}
+                    style={{
+                      filter:
+                        "drop-shadow(0 2px 6px rgba(0,0,0,0.08))",
+                    }}
+                  />
+                  <text
+                    x={lx}
+                    y={ly - 3}
+                    textAnchor="middle"
+                    fontSize="11"
+                    fontWeight="700"
+                    style={{ fill: tokens.fg }}
+                  >
+                    {id} · {ORBIT_NAMES[i]}
+                  </text>
+                  <text
+                    x={lx}
+                    y={ly + 11}
+                    textAnchor="middle"
+                    fontSize="10"
+                    fontWeight="600"
+                    style={{ fill: tokens.fg, opacity: 0.85 }}
+                  >
+                    {score} · {tokens.label}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+
+        {/* Expanded observation panel (desktop) */}
+        {openIdx !== null && (
+          <div
+            className="mt-6 mx-auto max-w-2xl border p-5 animate-fade-in"
+            style={{
+              borderColor: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].border,
+              backgroundColor: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].bg,
+            }}
+          >
+            <div className="flex items-center justify-between gap-4 mb-2">
+              <p
+                className="text-[11px] uppercase tracking-[0.25em] font-semibold"
+                style={{ color: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].fg }}
+              >
+                {String(openIdx + 1).padStart(2, "0")} · {ORBIT_NAMES[openIdx]}
+              </p>
+              <button
+                type="button"
+                onClick={() => setOpenIdx(null)}
+                className="text-xs opacity-60 hover:opacity-100"
+                aria-label="Close observation"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-sm leading-relaxed opacity-90">
+              {orbits[openIdx]?.trim() || fallbackObs}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* ─── MOBILE: vertical card list (unchanged layout) ───────────── */}
+      <div className="grid gap-3 md:hidden">
         {orbits.map((desc, i) => {
           const id = String(i + 1).padStart(2, "0");
           const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
           const isOpen = openIdx === i;
           const score = Math.max(0, Math.min(100, perOrbit[i] ?? 0));
-          const peek = firstSentence(desc);
-          const fallbackObs =
-            "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
           return (
             <button
               key={id}
               type="button"
               onClick={() => setOpenIdx(isOpen ? null : i)}
               aria-expanded={isOpen}
-              className="group text-left bg-[#FBF8F4] border p-4 sm:p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.18)]"
+              className="group text-left border p-4 transition-all duration-200"
               style={{
                 borderColor: tokens.border,
                 backgroundColor: tokens.bg,
               }}
             >
-              <div className="flex items-stretch gap-3 sm:gap-4">
-                {/* Left: numbered circle (uses --brand-bg as the dark badge color) */}
+              <div className="flex items-stretch gap-3">
                 <div
-                  className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full border flex items-center justify-center font-semibold text-sm tabular-nums self-center"
+                  className="w-11 h-11 shrink-0 rounded-full border flex items-center justify-center font-semibold text-sm tabular-nums self-center"
                   style={{
                     color: `var(--brand-bg-fg, #fff)`,
                     borderColor: tokens.border,
@@ -127,13 +300,11 @@ export default function FiveOrbitsViz({
                   {id}
                 </div>
 
-                {/* Center: name + score meter */}
                 <div className="flex-1 min-w-0 flex flex-col justify-center gap-2">
-                  <p className="text-sm sm:text-base font-semibold leading-tight">
+                  <p className="text-sm font-semibold leading-tight">
                     {ORBIT_NAMES[i]}
                   </p>
 
-                  {/* Proportional score meter */}
                   <div className="flex items-center gap-3">
                     <div
                       className="h-1.5 flex-1 rounded-full overflow-hidden"
@@ -160,42 +331,19 @@ export default function FiveOrbitsViz({
                     </span>
                   </div>
                 </div>
-
-                {/* Right: affordance arrow */}
-                <div className="shrink-0 self-center hidden sm:flex items-center">
-                  <span
-                    aria-hidden
-                    className="text-base transition-transform duration-200 group-hover:translate-x-0.5"
-                    style={{ color: tokens.fg, opacity: 0.7 }}
-                  >
-                    {isOpen ? "↓" : "→"}
-                  </span>
-                </div>
               </div>
 
-              {/* Hover peek (desktop only, hidden when open) */}
-              {!isOpen && peek && (
-                <p
-                  className="hidden md:block text-xs opacity-0 group-hover:opacity-70 transition-opacity duration-200 mt-3 leading-snug pl-[3.75rem]"
-                  style={{ color: tokens.fg }}
-                >
-                  {peek}
-                </p>
-              )}
-
-              {/* Read-the-observation CTA (mobile + desktop closed state) */}
               {!isOpen && (
                 <p
-                  className="text-[11px] sm:text-xs font-medium mt-3 pl-[3.75rem] flex items-center gap-1 md:group-hover:hidden"
+                  className="text-[11px] font-medium mt-3 pl-[3.5rem] flex items-center gap-1"
                   style={{ color: primary }}
                 >
                   Read the observation <span aria-hidden>→</span>
                 </p>
               )}
 
-              {/* Expanded observation */}
               {isOpen && (
-                <p className="text-sm opacity-85 mt-4 leading-relaxed pl-[3.75rem]">
+                <p className="text-sm opacity-85 mt-4 leading-relaxed pl-[3.5rem]">
                   {desc?.trim() || fallbackObs}
                 </p>
               )}
