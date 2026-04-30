@@ -123,9 +123,9 @@ export default function MagnetShell({
           borderBottom: `1px solid ${theme.border}`,
         }}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3 sm:gap-4">
           {/* Brand: client logo first (prominent), then a small "by Mabbly" mark */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
             {(() => {
               const safeName = isBadName(theme.companyName) ? null : theme.companyName;
               const showLogo = Boolean(theme.logoUrl) && !isBadName(theme.companyName);
@@ -173,7 +173,7 @@ export default function MagnetShell({
               if (safeName) {
                 return (
                   <span
-                    className="text-xs uppercase tracking-[0.32em] font-semibold"
+                    className="text-xs uppercase tracking-[0.32em] font-semibold truncate"
                     style={{ color: theme.text }}
                   >
                     {safeName}
@@ -215,8 +215,7 @@ export default function MagnetShell({
               )}
           </div>
 
-          {/* Spacer pushes CTA to the right */}
-          <div className="flex-1" />
+          {/* (Spacer removed — brand block uses flex-1) */}
 
           {/* Single conversion CTA */}
           <button
