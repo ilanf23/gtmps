@@ -108,7 +108,7 @@ export default function MagnetShell({
 
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className="min-h-screen flex flex-col overflow-x-hidden"
       data-ms-themed
       data-ms-dark={isDarkBg ? "" : undefined}
       data-ms-font={theme.fontFamily ? "" : undefined}
