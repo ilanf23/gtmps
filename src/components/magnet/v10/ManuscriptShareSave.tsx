@@ -109,7 +109,7 @@ export default function ManuscriptShareSave({
     <section
       id="v10-section-11"
       data-v10-section="11"
-      className="py-16 md:py-24"
+      className="py-10 md:py-12 border-b border-black/10"
     >
       {/* Manuscript anchor */}
       <div className="flex items-center gap-2 mb-5">
@@ -123,7 +123,7 @@ export default function ManuscriptShareSave({
       </div>
 
       <figure
-        className="max-w-2xl mb-12 md:mb-16 pl-5"
+        className="max-w-2xl mb-8 md:mb-10 pl-5"
         style={{ borderLeft: `2px solid ${MABBLY_GOLD}` }}
       >
         <blockquote

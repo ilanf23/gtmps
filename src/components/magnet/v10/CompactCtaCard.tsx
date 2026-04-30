@@ -40,7 +40,7 @@ export default function CompactCtaCard({
     <section
       id="v10-section-5"
       data-v10-section="5"
-      className="py-14 md:py-20 border-b border-black/10"
+      className="py-10 md:py-12 border-b border-black/10"
     >
       <div
         className="border-2 p-6 md:p-8"

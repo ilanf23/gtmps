@@ -27,7 +27,7 @@ export default function PersonalizedHeader({
     <section
       id="v10-section-1"
       data-v10-section="1"
-      className="pt-14 md:pt-20 pb-16 md:pb-24 border-b border-black/10"
+      className="pt-10 md:pt-12 pb-10 md:pb-12 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
         <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />

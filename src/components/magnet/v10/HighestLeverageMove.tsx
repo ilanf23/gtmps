@@ -36,7 +36,7 @@ export default function HighestLeverageMove({
     <section
       id="v10-section-9"
       data-v10-section="9"
-      className="py-16 md:py-24 border-b border-black/10"
+      className="py-10 md:py-12 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
         <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
