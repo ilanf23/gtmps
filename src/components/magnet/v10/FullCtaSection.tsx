@@ -108,7 +108,7 @@ export default function FullCtaSection({
       className="py-10 md:py-12 border-b border-black/10"
     >
       <div
-        className="p-6 md:p-8 border-2"
+        className="p-5 sm:p-6 md:p-8 border-2"
         style={{
           backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
           borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,

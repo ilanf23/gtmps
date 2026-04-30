@@ -43,7 +43,7 @@ export default function CompactCtaCard({
       className="py-10 md:py-12 border-b border-black/10"
     >
       <div
-        className="border-2 p-6 md:p-8"
+        className="border-2 p-5 sm:p-6 md:p-8"
         style={{
           borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
           backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
@@ -68,13 +68,13 @@ export default function CompactCtaCard({
         >
           Skip ahead. Book Adam now.
         </h2>
-        <p className="text-sm opacity-75 mb-5">
+        <p className="text-base md:text-sm opacity-75 mb-5">
           30 minutes. No pitch. We walk through your map together.
         </p>
         <button
           type="button"
           onClick={handleClick}
-          className="inline-flex items-center gap-2 h-12 min-h-[48px] px-6 font-semibold tracking-wide uppercase text-sm transition-opacity hover:opacity-90"
+          className="inline-flex items-center justify-center gap-2 w-full sm:w-auto h-12 min-h-[48px] px-6 font-semibold tracking-wide uppercase text-base sm:text-sm transition-opacity hover:opacity-90"
           style={{
             backgroundColor: `var(--brand-bg, ${primary})`,
             color: `var(--brand-bg-fg, #fff)`,

@@ -69,8 +69,8 @@ export default function DeadZone() {
       className="relative px-6 md:px-10"
       style={{
         background: '#120D05',
-        paddingTop: 144,
-        paddingBottom: 144,
+        paddingTop: "clamp(64px, 12vw, 144px)",
+        paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
     >
       <style>{`

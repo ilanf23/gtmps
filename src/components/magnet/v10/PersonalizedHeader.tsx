@@ -40,15 +40,17 @@ export default function PersonalizedHeader({
       </div>
 
       <h1
-        className="font-bold leading-[1.1] tracking-tight text-3xl md:text-5xl mb-4"
+        className="font-bold leading-[1.1] tracking-tight mb-4"
         style={{
           fontFamily: "'Cormorant Garamond', Georgia, serif",
           color: "var(--client-text, currentColor)",
+          fontSize: "clamp(26px, 7vw, 48px)",
+          wordBreak: "break-word",
         }}
       >
         Your Revenue Map for{" "}
         <span
-          className="px-2 py-0.5"
+          className="px-2 py-0.5 inline-block"
           style={{
             color: `var(--brand-accent, ${primary})`,
           }}

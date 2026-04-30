@@ -335,8 +335,8 @@ const SectionPromisedLand = () => {
       id="promised-land"
       className="relative px-6 md:px-10 vellum"
       style={{
-        paddingTop: 128,
-        paddingBottom: 128,
+        paddingTop: "clamp(56px, 11vw, 128px)",
+        paddingBottom: "clamp(56px, 11vw, 128px)",
       }}
     >
       <div className="max-w-[1100px] mx-auto">

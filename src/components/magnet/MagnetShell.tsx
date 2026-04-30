@@ -108,7 +108,7 @@ export default function MagnetShell({
 
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className="min-h-screen flex flex-col overflow-x-hidden"
       data-ms-themed
       data-ms-dark={isDarkBg ? "" : undefined}
       data-ms-font={theme.fontFamily ? "" : undefined}
@@ -123,9 +123,9 @@ export default function MagnetShell({
           borderBottom: `1px solid ${theme.border}`,
         }}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3 sm:gap-4">
           {/* Brand: client logo first (prominent), then a small "by Mabbly" mark */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
             {(() => {
               const safeName = isBadName(theme.companyName) ? null : theme.companyName;
               const showLogo = Boolean(theme.logoUrl) && !isBadName(theme.companyName);
@@ -173,7 +173,7 @@ export default function MagnetShell({
               if (safeName) {
                 return (
                   <span
-                    className="text-xs uppercase tracking-[0.32em] font-semibold"
+                    className="text-xs uppercase tracking-[0.32em] font-semibold truncate"
                     style={{ color: theme.text }}
                   >
                     {safeName}
@@ -215,21 +215,22 @@ export default function MagnetShell({
               )}
           </div>
 
-          {/* Spacer pushes CTA to the right */}
-          <div className="flex-1" />
+          {/* (Spacer removed — brand block uses flex-1) */}
 
           {/* Single conversion CTA */}
           <button
             type="button"
             onClick={handleBookClick}
-            className="inline-flex items-center gap-2 h-9 sm:h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold tracking-wide uppercase transition-opacity hover:opacity-90 shrink-0"
+            className="inline-flex items-center gap-1.5 sm:gap-2 h-11 sm:h-10 min-h-[44px] sm:min-h-[40px] px-3 sm:px-5 text-[11px] sm:text-sm font-semibold tracking-wide uppercase transition-opacity hover:opacity-90 shrink-0 whitespace-nowrap"
             style={{
               backgroundColor: `var(--brand-bg, ${theme.background})`,
               color: `var(--brand-bg-fg, #fff)`,
               border: `1px solid var(--brand-bg-fg, rgba(255,255,255,0.25))`,
             }}
           >
-            Book a Walkthrough <span aria-hidden>→</span>
+            <span className="hidden sm:inline">Book a Walkthrough</span>
+            <span className="sm:hidden">Book</span>
+            <span aria-hidden>→</span>
           </button>
 
           {firstName ? (
