@@ -63,7 +63,9 @@ function themesDiffer(a: ClientTheme, b: ClientTheme): boolean {
     a.textMuted !== b.textMuted ||
     a.companyName !== b.companyName ||
     a.logoUrl !== b.logoUrl ||
-    a.fontFamily !== b.fontFamily
+    a.fontFamily !== b.fontFamily ||
+    a.brandAccent !== b.brandAccent ||
+    a.brandBackground !== b.brandBackground
   );
 }
 
