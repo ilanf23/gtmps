@@ -110,8 +110,8 @@ export default function FullCtaSection({
       <div
         className="p-6 md:p-8 border-2"
         style={{
-          backgroundColor: `var(--client-surface, transparent)`,
-          borderColor: `var(--client-primary, ${primary})`,
+          backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
+          borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
         }}
       >
         <div className="flex items-center gap-2 mb-5">
@@ -142,14 +142,14 @@ export default function FullCtaSection({
               <ul className="space-y-1.5 pl-1">
                 {variant.bullets.map((b, i) => (
                   <li key={i} className="flex gap-3">
-                    <span style={{ color: `var(--client-primary, ${primary})` }} aria-hidden>·</span>
+                    <span style={{ color: `var(--brand-accent, ${primary})` }} aria-hidden>·</span>
                     <span>{b}</span>
                   </li>
                 ))}
               </ul>
             </>
           )}
-          <p className="font-semibold" style={{ color: `var(--client-primary, ${primary})` }}>
+          <p className="font-semibold" style={{ color: `var(--brand-accent, ${primary})` }}>
             {variant.closer}
           </p>
         </div>

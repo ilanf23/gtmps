@@ -14,7 +14,7 @@ const ORBIT_NAMES = [
   "New Gravity",
 ];
 
-// Band-relative tokens: every color is now driven off `--client-primary`,
+// Band-relative tokens: every color is now driven off `--brand-accent`,
 // so the orbit visualization re-skins to the prospect's brand. Intensity
 // (opacity / label) still signals high vs mid vs low.
 const BAND_TOKENS: Record<
@@ -22,24 +22,24 @@ const BAND_TOKENS: Record<
   { fg: string; meter: string; bg: string; border: string; label: string }
 > = {
   high: {
-    fg: "var(--client-primary, #2E7D32)",
-    meter: "var(--client-primary, #2E7D32)",
-    bg: "color-mix(in srgb, var(--client-primary, #2E7D32) 12%, transparent)",
-    border: "color-mix(in srgb, var(--client-primary, #2E7D32) 55%, transparent)",
+    fg: "var(--brand-accent, #2E7D32)",
+    meter: "var(--brand-accent, #2E7D32)",
+    bg: "color-mix(in srgb, var(--brand-accent, #2E7D32) 12%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #2E7D32) 55%, transparent)",
     label: "Strong",
   },
   mid: {
-    fg: "var(--client-primary, #B8933A)",
-    meter: "var(--client-primary, #B8933A)",
-    bg: "color-mix(in srgb, var(--client-primary, #B8933A) 8%, transparent)",
-    border: "color-mix(in srgb, var(--client-primary, #B8933A) 40%, transparent)",
+    fg: "var(--brand-accent, #B8933A)",
+    meter: "var(--brand-accent, #B8933A)",
+    bg: "color-mix(in srgb, var(--brand-accent, #B8933A) 8%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #B8933A) 40%, transparent)",
     label: "Mixed",
   },
   low: {
-    fg: "var(--client-primary, #B43C32)",
-    meter: "var(--client-primary, #B43C32)",
-    bg: "color-mix(in srgb, var(--client-primary, #B43C32) 5%, transparent)",
-    border: "color-mix(in srgb, var(--client-primary, #B43C32) 25%, transparent)",
+    fg: "var(--brand-accent, #B43C32)",
+    meter: "var(--brand-accent, #B43C32)",
+    bg: "color-mix(in srgb, var(--brand-accent, #B43C32) 5%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #B43C32) 25%, transparent)",
     label: "Gap",
   },
 };
@@ -115,13 +115,13 @@ export default function FiveOrbitsViz({
               }}
             >
               <div className="flex items-stretch gap-3 sm:gap-4">
-                {/* Left: numbered circle */}
+                {/* Left: numbered circle (uses --brand-bg as the dark badge color) */}
                 <div
                   className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full border flex items-center justify-center font-semibold text-sm tabular-nums self-center"
                   style={{
-                    color: tokens.fg,
+                    color: `var(--brand-bg-fg, #fff)`,
                     borderColor: tokens.border,
-                    backgroundColor: "rgba(255,255,255,0.7)",
+                    backgroundColor: `var(--brand-bg, ${tokens.fg})`,
                   }}
                 >
                   {id}

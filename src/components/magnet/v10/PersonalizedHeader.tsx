@@ -47,7 +47,14 @@ export default function PersonalizedHeader({
         }}
       >
         Your Revenue Map for{" "}
-        <span style={{ color: `var(--client-primary, ${primary})` }}>{firmName}</span>
+        <span
+          className="px-2 py-0.5"
+          style={{
+            color: `var(--brand-accent, ${primary})`,
+          }}
+        >
+          {firmName}
+        </span>
       </h1>
 
       <p className="text-sm md:text-base opacity-60 mb-3">{ageSentence}</p>

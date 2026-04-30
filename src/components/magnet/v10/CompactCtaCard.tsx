@@ -45,8 +45,8 @@ export default function CompactCtaCard({
       <div
         className="border-2 p-6 md:p-8"
         style={{
-          borderColor: `var(--client-primary, ${primary})`,
-          backgroundColor: `var(--client-surface, rgba(184,147,58,0.06))`,
+          borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
+          backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
         }}
       >
         <div className="flex items-center gap-2 mb-3">
@@ -76,8 +76,8 @@ export default function CompactCtaCard({
           onClick={handleClick}
           className="inline-flex items-center gap-2 h-12 min-h-[48px] px-6 font-semibold tracking-wide uppercase text-sm transition-opacity hover:opacity-90"
           style={{
-            backgroundColor: `var(--client-primary, ${primary})`,
-            color: "var(--client-primary-fg, #120D05)",
+            backgroundColor: `var(--brand-bg, ${primary})`,
+            color: `var(--brand-bg-fg, #fff)`,
           }}
         >
           See Available Times <span aria-hidden>→</span>

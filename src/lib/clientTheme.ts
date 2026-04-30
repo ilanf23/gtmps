@@ -19,7 +19,19 @@ export type ClientTheme = {
   textMuted: string;
   border: string;
   fontFamily: string | null;
+  /**
+   * Dual-color brand pair, distinct from `accent`/`background` which control
+   * the page chrome. `brandAccent` is the highlight/text color (links, CTAs,
+   * orbit bars). `brandBackground` is the dark container color (CTA buttons,
+   * orbit number badges, sticky header). Always present — defaults to a
+   * sensible industry fallback when extraction fails or returns near-white.
+   */
+  brandAccent: string;
+  brandBackground: string;
 };
+
+/** Default dark container when extracted background is near-white. */
+export const INDUSTRY_FALLBACK_BG = "#1B3A6B"; // consulting navy
 
 export const MABBLY_DEFAULTS: ClientTheme = {
   logoUrl: null,
@@ -33,6 +45,8 @@ export const MABBLY_DEFAULTS: ClientTheme = {
   textMuted: "rgba(28,16,8,0.6)",
   border: "rgba(28,16,8,0.1)",
   fontFamily: null,
+  brandAccent: "#B8933A",
+  brandBackground: INDUSTRY_FALLBACK_BG,
 };
 
 const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
@@ -100,6 +114,9 @@ export interface RawBranding {
   client_text_color?: string | null;
   client_text_muted_color?: string | null;
   client_font_family?: string | null;
+  /** Dual-color pair sourced from palette.primary / palette.background. */
+  brand_accent?: string | null;
+  brand_background?: string | null;
 }
 
 /**
@@ -185,6 +202,24 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     ? expandHex(raw.client_text_muted_color)
     : rgba(text, 0.6);
 
+  // ── Dual-color brand pair ───────────────────────────────────────────────
+  // brandAccent = the highlight color used for text, links, CTA borders,
+  // orbit bars. brandBackground = the dark container color used for CTA
+  // button backgrounds, orbit number badges, sticky header bar.
+  // Sourced from palette.primary / palette.background (passed into raw via
+  // useClientTheme). When the extracted background is near-white, we fall
+  // back to the industry default so we always have a usable dark color.
+  const brandAccent = isHex(raw.brand_accent)
+    ? expandHex(raw.brand_accent)
+    : accent;
+
+  let brandBackground = isHex(raw.brand_background)
+    ? expandHex(raw.brand_background)
+    : INDUSTRY_FALLBACK_BG;
+  if (relLuminance(brandBackground) > 0.9) {
+    brandBackground = INDUSTRY_FALLBACK_BG;
+  }
+
   return {
     logoUrl: raw.client_logo_url ?? null,
     companyName: raw.client_company_name ?? null,
@@ -197,6 +232,8 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     textMuted,
     border: rgba(text, bgIsDark ? 0.18 : 0.12),
     fontFamily: raw.client_font_family?.trim() || null,
+    brandAccent,
+    brandBackground,
   };
 }
 
@@ -226,6 +263,9 @@ export function themeStyle(theme: ClientTheme): React.CSSProperties {
     "--client-text": theme.text,
     "--client-text-muted": theme.textMuted,
     "--client-border": theme.border,
+    "--brand-accent": theme.brandAccent,
+    "--brand-bg": theme.brandBackground,
+    "--brand-bg-fg": pickForeground(theme.brandBackground),
     backgroundColor: theme.background,
     color: theme.text,
     ...(theme.fontFamily ? { fontFamily: `${theme.fontFamily}, system-ui, sans-serif` } : {}),

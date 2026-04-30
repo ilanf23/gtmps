@@ -63,7 +63,9 @@ function themesDiffer(a: ClientTheme, b: ClientTheme): boolean {
     a.textMuted !== b.textMuted ||
     a.companyName !== b.companyName ||
     a.logoUrl !== b.logoUrl ||
-    a.fontFamily !== b.fontFamily
+    a.fontFamily !== b.fontFamily ||
+    a.brandAccent !== b.brandAccent ||
+    a.brandBackground !== b.brandBackground
   );
 }
 
@@ -83,6 +85,30 @@ function rowToRawBranding(row: Record<string, unknown>): RawBranding {
     return isHex(v) ? (v as string).trim() : null;
   };
 
+  // Dual-color mapping: brandAccent = palette.primary (highlight color),
+  // brandBackground = palette.background (dark container color). If
+  // background is missing or near-white, try palette.surface as a fallback.
+  const isNearWhite = (hex: string | null): boolean => {
+    if (!hex) return true;
+    const m = hex.replace("#", "");
+    if (m.length !== 6) return false;
+    const r = parseInt(m.slice(0, 2), 16);
+    const g = parseInt(m.slice(2, 4), 16);
+    const b = parseInt(m.slice(4, 6), 16);
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.9;
+  };
+
+  const paletteBg = fromPalette("background");
+  const paletteSurface = fromPalette("surface");
+  const brandBackground =
+    paletteBg && !isNearWhite(paletteBg)
+      ? paletteBg
+      : paletteSurface && !isNearWhite(paletteSurface)
+        ? paletteSurface
+        : null;
+  const brandAccent =
+    fromPalette("primary") ?? ((row.client_accent_color as string | null) ?? null);
+
   return {
     client_logo_url: (row.client_logo_url as string | null) ?? null,
     client_company_name: (row.client_company_name as string | null) ?? null,
@@ -99,6 +125,8 @@ function rowToRawBranding(row: Record<string, unknown>): RawBranding {
       fromPalette("text") ?? ((row.client_text_color as string | null) ?? null),
     client_text_muted_color: fromPalette("textMuted"),
     client_font_family: (row.client_font_family as string | null) ?? null,
+    brand_accent: brandAccent,
+    brand_background: brandBackground,
   };
 }
 
@@ -153,6 +181,14 @@ export function useClientTheme(slug: string | undefined | null): ClientTheme {
       }
 
       const next = buildClientTheme(raw);
+
+      if (typeof console !== "undefined") {
+        // eslint-disable-next-line no-console
+        console.log("[useClientTheme] dual brand pair for", slug, {
+          brandAccent: next.brandAccent,
+          brandBackground: next.brandBackground,
+        });
+      }
 
       if (isBrandedRow(row as Record<string, unknown>)) {
         themeCache.set(slug, next);
