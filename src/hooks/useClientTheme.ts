@@ -182,6 +182,14 @@ export function useClientTheme(slug: string | undefined | null): ClientTheme {
 
       const next = buildClientTheme(raw);
 
+      if (typeof console !== "undefined") {
+        // eslint-disable-next-line no-console
+        console.log("[useClientTheme] dual brand pair for", slug, {
+          brandAccent: next.brandAccent,
+          brandBackground: next.brandBackground,
+        });
+      }
+
       if (isBrandedRow(row as Record<string, unknown>)) {
         themeCache.set(slug, next);
       }
