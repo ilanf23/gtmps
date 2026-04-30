@@ -29,12 +29,12 @@ export default function ObservedHypothesisQuestion({
       <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10`}>
         <div className="bg-[#FBF8F4] p-5">
           <p
-            className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-2"
+            className="text-[12px] md:text-[13px] uppercase tracking-[0.12em] font-medium mb-2"
             style={{ color: primary }}
           >
             Observed
           </p>
-          <p className="text-base md:text-sm opacity-85 leading-relaxed">{observed}</p>
+          <p className="text-base leading-relaxed opacity-85">{observed}</p>
         </div>
         <div className="bg-[#FBF8F4] p-5 relative">
           <span
@@ -43,12 +43,12 @@ export default function ObservedHypothesisQuestion({
             aria-hidden
           />
           <p
-            className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-2 pl-2"
+            className="text-[12px] md:text-[13px] uppercase tracking-[0.12em] font-medium mb-2 pl-2"
             style={{ color: primary }}
           >
             Hypothesis
           </p>
-          <p className="text-base md:text-sm leading-relaxed pl-2">{hypothesis}</p>
+          <p className="text-base leading-relaxed pl-2">{hypothesis}</p>
         </div>
         {hasQuestion && (
           <div className="bg-[#FBF8F4] p-5 relative">
@@ -58,17 +58,17 @@ export default function ObservedHypothesisQuestion({
               aria-hidden
             />
             <p
-              className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-2 pl-2"
+              className="text-[12px] md:text-[13px] uppercase tracking-[0.12em] font-medium mb-2 pl-2"
               style={{ color: MAGENTA }}
             >
               Question
             </p>
-            <p className="text-base md:text-sm italic leading-relaxed pl-2">{question}</p>
+            <p className="text-base italic leading-relaxed pl-2">{question}</p>
           </div>
         )}
       </div>
       {feedbackHref && (
-        <p className="text-xs italic opacity-65 mt-4 leading-relaxed">
+        <p className="text-sm md:text-[14px] italic opacity-65 mt-4 leading-relaxed">
           We would love your{" "}
           <a
             href={feedbackHref}
