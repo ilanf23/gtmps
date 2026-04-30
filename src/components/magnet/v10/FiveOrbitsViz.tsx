@@ -115,13 +115,13 @@ export default function FiveOrbitsViz({
               }}
             >
               <div className="flex items-stretch gap-3 sm:gap-4">
-                {/* Left: numbered circle */}
+                {/* Left: numbered circle (uses --brand-bg as the dark badge color) */}
                 <div
                   className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full border flex items-center justify-center font-semibold text-sm tabular-nums self-center"
                   style={{
-                    color: tokens.fg,
+                    color: `var(--brand-bg-fg, #fff)`,
                     borderColor: tokens.border,
-                    backgroundColor: "rgba(255,255,255,0.7)",
+                    backgroundColor: `var(--brand-bg, ${tokens.fg})`,
                   }}
                 >
                   {id}
