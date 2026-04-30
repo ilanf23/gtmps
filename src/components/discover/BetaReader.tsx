@@ -40,8 +40,8 @@ export default function BetaReader() {
       style={{
         background: '#F5EFE0',
         borderTop: '1px solid rgba(184,147,58,0.12)',
-        paddingTop: 144,
-        paddingBottom: 144,
+        paddingTop: "clamp(64px, 12vw, 144px)",
+        paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
     >
       <style>{`
