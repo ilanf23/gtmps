@@ -110,8 +110,8 @@ export default function FullCtaSection({
       <div
         className="p-6 md:p-8 border-2"
         style={{
-          backgroundColor: `var(--client-surface, transparent)`,
-          borderColor: `var(--client-primary, ${primary})`,
+          backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
+          borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
         }}
       >
         <div className="flex items-center gap-2 mb-5">
