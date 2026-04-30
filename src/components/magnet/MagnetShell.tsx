@@ -77,18 +77,16 @@ export default function MagnetShell({
   const theme = useClientTheme(slug);
   useGoogleFont(theme.fontFamily);
 
-  // When no slug is present (e.g. /book), tabs link to base routes that won't
-  // resolve — we hide the slug-scoped tabs and show only the base brand strip.
-  const hasSlug = Boolean(slug);
-
-  const tabs = hasSlug
-    ? [
-        { to: `/m/${slug}`, label: "MAP", end: true },
-        { to: `/m/${slug}/chat`, label: "Talk to the Book" },
-        { to: `/m/${slug}/read`, label: "Read" },
-        { to: `/m/${slug}/feedback`, label: "Feedback" },
-      ]
-    : [];
+  const handleBookClick = () => {
+    openCalendlyPopup({
+      slug: slug ?? "",
+      firmName: theme.companyName ?? null,
+      firstName,
+      primary: theme.accent,
+      background: theme.background,
+      text: theme.text,
+    });
+  };
 
   // Inject the font as a CSS variable for the override sheet to consume.
   const wrapperStyle: React.CSSProperties = {
