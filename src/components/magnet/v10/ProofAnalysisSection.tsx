@@ -6,9 +6,10 @@ import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 interface Props {
   observed: string | null;
   primary: string;
+  slug?: string;
 }
 
-export default function ProofAnalysisSection({ observed, primary }: Props) {
+export default function ProofAnalysisSection({ observed, primary, slug }: Props) {
   const hasObserved = Boolean(observed && observed.trim());
   return (
     <section
@@ -43,8 +44,9 @@ export default function ProofAnalysisSection({ observed, primary }: Props) {
             ? "The proof is real. The library isn't built. A 7-day proof sprint typically converts dormant pipeline like Madcraft did — $400K dormant proposal reactivated in 7 minutes."
             : "A 7-day proof library (3 wins, 1 page each) is the minimum. Madcraft reactivated a $400K dormant proposal in 7 minutes after building theirs."
         }
-        question="What proof would you want validated next?"
+        question="Which client result do your prospects cite most often when they decide to work with you?"
         primary={primary}
+        feedbackHref={slug ? `/m/${slug}/feedback` : undefined}
       />
     </section>
   );
