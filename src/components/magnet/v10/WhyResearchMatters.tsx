@@ -17,7 +17,7 @@ export default function WhyResearchMatters({ primary }: Props) {
     <section
       id="v10-section-6"
       data-v10-section="6"
-      className="py-16 md:py-24 border-b border-black/10"
+      className="py-10 md:py-12 border-b border-black/10"
       style={{ backgroundColor: "rgba(28,16,8,0.025)" }}
     >
       <div className="flex items-center gap-2 mb-5">

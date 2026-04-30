@@ -105,7 +105,7 @@ export default function FullCtaSection({
       data-v10-section="8"
       data-v10-cta="primary"
       data-v10-variant={variantId}
-      className="py-16 md:py-24 border-b border-black/10"
+      className="py-10 md:py-12 border-b border-black/10"
     >
       <div
         className="p-6 md:p-8 border-2"
