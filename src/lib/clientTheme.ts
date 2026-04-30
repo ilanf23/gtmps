@@ -96,7 +96,9 @@ export interface RawBranding {
   client_brand_color?: string | null;
   client_accent_color?: string | null;
   client_background_color?: string | null;
+  client_surface_color?: string | null;
   client_text_color?: string | null;
+  client_text_muted_color?: string | null;
   client_font_family?: string | null;
 }
 
