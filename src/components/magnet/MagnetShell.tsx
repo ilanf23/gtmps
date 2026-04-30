@@ -1,9 +1,9 @@
 import { ReactNode, useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { useParams } from "react-router-dom";
 import { useClientTheme } from "@/hooks/useClientTheme";
 import { themeStyle } from "@/lib/clientTheme";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import { openCalendlyPopup } from "@/lib/calendly";
 import Footer from "@/components/Footer";
 
 /**
