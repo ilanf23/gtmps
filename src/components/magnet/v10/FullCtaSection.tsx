@@ -142,14 +142,14 @@ export default function FullCtaSection({
               <ul className="space-y-1.5 pl-1">
                 {variant.bullets.map((b, i) => (
                   <li key={i} className="flex gap-3">
-                    <span style={{ color: `var(--client-primary, ${primary})` }} aria-hidden>·</span>
+                    <span style={{ color: `var(--brand-accent, ${primary})` }} aria-hidden>·</span>
                     <span>{b}</span>
                   </li>
                 ))}
               </ul>
             </>
           )}
-          <p className="font-semibold" style={{ color: `var(--client-primary, ${primary})` }}>
+          <p className="font-semibold" style={{ color: `var(--brand-accent, ${primary})` }}>
             {variant.closer}
           </p>
         </div>
