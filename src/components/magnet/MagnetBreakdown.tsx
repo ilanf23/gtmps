@@ -273,11 +273,13 @@ export default function MagnetBreakdown({
         <CoreAnalysisSection
           observed={data.gtm_profile_observed}
           primary={brand.primary}
+          slug={slug}
         />
 
         <ProofAnalysisSection
           observed={data.gtm_profile_assessment}
           primary={brand.primary}
+          slug={slug}
         />
 
         <CompactCtaCard
