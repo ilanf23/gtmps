@@ -45,8 +45,8 @@ export default function CompactCtaCard({
       <div
         className="border-2 p-6 md:p-8"
         style={{
-          borderColor: `var(--client-primary, ${primary})`,
-          backgroundColor: `var(--client-surface, rgba(184,147,58,0.06))`,
+          borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
+          backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
         }}
       >
         <div className="flex items-center gap-2 mb-3">
