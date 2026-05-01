@@ -130,11 +130,15 @@ export default function FiveOrbitsViz({
           .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
         `}</style>
 
-        <div className="flex justify-center">
+        {/* Break out of the parent's narrow column so the diagram can render
+            at full size (3x its previous max width) without clipping. The
+            negative-margin viewport spans the visible width on large screens
+            while staying centered. */}
+        <div className="flex justify-center -mx-[50vw] left-1/2 right-1/2 relative" style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)" }}>
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
             width="100%"
-            style={{ maxWidth: 820, height: "auto" }}
+            style={{ maxWidth: 2460, height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
