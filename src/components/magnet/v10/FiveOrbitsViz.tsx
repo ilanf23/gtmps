@@ -2,7 +2,7 @@
 // Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
 // Mobile (<md): vertical card list with progress bars (legacy layout).
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
@@ -55,6 +55,8 @@ interface Props {
   perOrbit: number[];
   bandPerOrbit: ScoreBand[];
   primary: string;
+  logoUrl?: string | null;
+  companyName?: string | null;
 }
 
 export default function FiveOrbitsViz({
@@ -62,8 +64,13 @@ export default function FiveOrbitsViz({
   perOrbit,
   bandPerOrbit,
   primary,
+  logoUrl,
+  companyName,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [logoBroken, setLogoBroken] = useState(false);
+  const clipId = useId().replace(/:/g, "");
+  const showLogo = Boolean(logoUrl) && !logoBroken;
 
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
@@ -127,29 +134,58 @@ export default function FiveOrbitsViz({
             role="img"
             aria-label="Five Orbits diagram"
           >
-            {/* Center label */}
-            <text
-              x={VIEW_CENTER}
-              y={VIEW_CENTER - 4}
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight="700"
-              letterSpacing="2"
-              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
-            >
-              YOUR
-            </text>
-            <text
-              x={VIEW_CENTER}
-              y={VIEW_CENTER + 11}
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight="700"
-              letterSpacing="2"
-              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
-            >
-              FIRM
-            </text>
+            {/* Center: client logo (if scraped) or "YOUR FIRM" text fallback */}
+            {showLogo ? (
+              <g>
+                <title>{companyName ? `${companyName} logo` : "Client logo"}</title>
+                <defs>
+                  <clipPath id={`logo-clip-${clipId}`}>
+                    <circle cx={VIEW_CENTER} cy={VIEW_CENTER} r={28} />
+                  </clipPath>
+                </defs>
+                <circle
+                  cx={VIEW_CENTER}
+                  cy={VIEW_CENTER}
+                  r={28}
+                  fill="var(--brand-bg-subtle, #FBF8F4)"
+                />
+                <image
+                  href={logoUrl as string}
+                  x={VIEW_CENTER - 24}
+                  y={VIEW_CENTER - 24}
+                  width={48}
+                  height={48}
+                  preserveAspectRatio="xMidYMid meet"
+                  clipPath={`url(#logo-clip-${clipId})`}
+                  onError={() => setLogoBroken(true)}
+                />
+              </g>
+            ) : (
+              <>
+                <text
+                  x={VIEW_CENTER}
+                  y={VIEW_CENTER - 4}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="700"
+                  letterSpacing="2"
+                  style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+                >
+                  YOUR
+                </text>
+                <text
+                  x={VIEW_CENTER}
+                  y={VIEW_CENTER + 11}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="700"
+                  letterSpacing="2"
+                  style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+                >
+                  FIRM
+                </text>
+              </>
+            )}
 
             {/* Orbit rings */}
             {RADII.map((r, i) => {
