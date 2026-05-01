@@ -13,7 +13,9 @@ interface Props {
   hypothesis: string;
   question?: string;
   primary: string;
-  feedbackHref?: string;
+  /** When provided, renders the "We would love your feedback" line as a button
+   *  that opens an in-page dialog instead of navigating to /feedback. */
+  onFeedbackClick?: () => void;
 }
 
 interface CollapsibleProps {
