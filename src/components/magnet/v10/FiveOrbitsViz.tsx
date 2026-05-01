@@ -109,11 +109,11 @@ export default function FiveOrbitsViz({
           .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
         `}</style>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center" style={{ overflow: "visible" }}>
           <svg
-            viewBox={`0 0 ${VIEW} ${VIEW}`}
+            viewBox={`-40 -20 ${VIEW + 80} ${VIEW + 40}`}
             width="100%"
-            style={{ maxWidth: 560, height: "auto" }}
+            style={{ maxWidth: 640, height: "auto", overflow: "visible" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
