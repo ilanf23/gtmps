@@ -80,7 +80,7 @@ export default function ObservedHypothesisQuestion({
   hypothesis,
   question,
   primary,
-  feedbackHref,
+  onFeedbackClick,
 }: Props) {
   const hasQuestion = Boolean(question && question.trim());
   const gridCols = hasQuestion ? "md:grid-cols-3" : "md:grid-cols-2";
