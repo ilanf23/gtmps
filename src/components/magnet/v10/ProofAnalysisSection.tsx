@@ -1,6 +1,8 @@
 // SECTION 04 — Your Proof (Observed / Hypothesis / Question)
 
+import { useState } from "react";
 import OHQ from "./ObservedHypothesisQuestion";
+import FeedbackDialog from "./FeedbackDialog";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
 
 export default function ProofAnalysisSection({ observed, primary, slug }: Props) {
   const hasObserved = Boolean(observed && observed.trim());
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   return (
     <section
       id="v10-section-4"
@@ -48,9 +51,16 @@ export default function ProofAnalysisSection({ observed, primary, slug }: Props)
         }
         question="Which client result do your prospects cite most often when they decide to work with you?"
         primary={primary}
-        feedbackHref={slug ? `/m/${slug}/feedback` : undefined}
+        onFeedbackClick={() => setFeedbackOpen(true)}
       />
       </div>
+      <FeedbackDialog
+        open={feedbackOpen}
+        onOpenChange={setFeedbackOpen}
+        slug={slug}
+        context="Section 4 · Your Proof"
+        primary={primary}
+      />
     </section>
   );
 }
