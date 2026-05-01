@@ -197,49 +197,74 @@ export default function FiveOrbitsViz({
               const statusText =
                 band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
 
+              const driftDur = `${240 + i * 60}s`;
+              const outerTo = `${i % 2 ? -360 : 360} ${VIEW_CENTER} ${VIEW_CENTER}`;
+              const innerTo = `${i % 2 ? 360 : -360} ${lx} ${ly}`;
+
               return (
-                <g
-                  key={`label-${i}`}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setOpenIdx(isOpen ? null : i)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
-                >
-                  <rect
-                    x={pillX}
-                    y={pillY}
-                    width={pillW}
-                    height={pillH}
-                    rx={pillH / 2}
-                    fill={statusFill}
-                    stroke={statusStroke}
-                    strokeWidth={isOpen || isDeadZone ? 2 : 1}
-                    style={{
-                      filter:
-                        "drop-shadow(0 2px 6px rgba(0,0,0,0.08))",
-                    }}
+                <g key={`label-${i}`}>
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from={`0 ${VIEW_CENTER} ${VIEW_CENTER}`}
+                    to={outerTo}
+                    dur={driftDur}
+                    repeatCount="indefinite"
+                    additive="sum"
                   />
-                  <text
-                    x={lx}
-                    y={ly - 3}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fontWeight="700"
-                    style={{ fill: statusText }}
-                  >
-                    {id} · {ORBIT_NAMES[i]}
-                  </text>
-                  <text
-                    x={lx}
-                    y={ly + 11}
-                    textAnchor="middle"
-                    fontSize="10"
-                    fontWeight="600"
-                    style={{ fill: statusText, opacity: 0.85 }}
-                  >
-                    {score} · {tokens.label}
-                  </text>
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      from={`0 ${lx} ${ly}`}
+                      to={innerTo}
+                      dur={driftDur}
+                      repeatCount="indefinite"
+                      additive="sum"
+                    />
+                    <g
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setOpenIdx(isOpen ? null : i)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
+                    >
+                      <rect
+                        x={pillX}
+                        y={pillY}
+                        width={pillW}
+                        height={pillH}
+                        rx={pillH / 2}
+                        fill={statusFill}
+                        stroke={statusStroke}
+                        strokeWidth={isOpen || isDeadZone ? 2 : 1}
+                        style={{
+                          filter:
+                            "drop-shadow(0 2px 6px rgba(0,0,0,0.08))",
+                        }}
+                      />
+                      <text
+                        x={lx}
+                        y={ly - 3}
+                        textAnchor="middle"
+                        fontSize="11"
+                        fontWeight="700"
+                        style={{ fill: statusText }}
+                      >
+                        {id} · {ORBIT_NAMES[i]}
+                      </text>
+                      <text
+                        x={lx}
+                        y={ly + 11}
+                        textAnchor="middle"
+                        fontSize="10"
+                        fontWeight="600"
+                        style={{ fill: statusText, opacity: 0.85 }}
+                      >
+                        {score} · {tokens.label}
+                      </text>
+                    </g>
+                  </g>
                 </g>
               );
             })}

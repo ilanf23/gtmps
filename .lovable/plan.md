@@ -1,37 +1,59 @@
-# Color orbit pill cells by band
+# Slow planetary drift on orbit pills
 
-Update only the pill (oval cell + label text) in the Five Orbits SVG diagram so its color reflects the band:
+Add a barely perceptible rotation to each of the 5 orbit pills so they slowly travel around their ring like planets. Rings, colors, click behavior, and mobile cards are unchanged.
 
-- Strong (high) → green
-- Mixed (mid) → yellow
-- Gap (low) → red
+## Approach
 
-Rings, ring colors, dead-zone pulse, mobile cards, and all other elements remain untouched.
+Use SVG `<animateTransform>` on a wrapper `<g>` around each pill, rotating around the SVG center. A second inner `<g>` counter-rotates around the pill's own center so the text stays upright (no upside-down labels).
+
+Each orbit gets a different period so they don't move in lockstep:
+
+```text
+Orbit 01 (Core Proof)     240s, clockwise
+Orbit 02 (Active)         300s, counter-clockwise
+Orbit 03 (Dead Zone)      360s, clockwise
+Orbit 04 (Warm Adjacency) 420s, counter-clockwise
+Orbit 05 (New Gravity)    480s, clockwise
+```
+
+At 240–480 seconds per full revolution the motion is below conscious perception unless watched directly.
 
 ## File
 
-`src/components/magnet/v10/FiveOrbitsViz.tsx` — desktop label loop (~lines 174–236).
+`src/components/magnet/v10/FiveOrbitsViz.tsx` — desktop label `.map` (~lines 173–245).
 
 ## Change
 
-Inside the label `.map`, derive three status colors from `bandPerOrbit[i]`:
+Wrap the existing label `<g>` in two new groups, using SMIL so the rotation works inside SVG without coordinate-math drift:
 
-```text
-band === "high" → fill #E8F5E9, stroke #2E7D32, text #1B5E20  (green)
-band === "mid"  → fill #FFF8E1, stroke #C9A227, text #8A6D1A  (yellow)
-band === "low"  → fill #FDECEA, stroke #C62828, text #B71C1C  (red)
+```tsx
+<g>
+  <animateTransform
+    attributeName="transform"
+    type="rotate"
+    from={`0 ${VIEW_CENTER} ${VIEW_CENTER}`}
+    to={`${i % 2 ? -360 : 360} ${VIEW_CENTER} ${VIEW_CENTER}`}
+    dur={`${240 + i * 60}s`}
+    repeatCount="indefinite"
+  />
+  <g>
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from={`0 ${lx} ${ly}`}
+      to={`${i % 2 ? 360 : -360} ${lx} ${ly}`}
+      dur={`${240 + i * 60}s`}
+      repeatCount="indefinite"
+    />
+    {/* existing pill <g> with rect + text untouched */}
+  </g>
+</g>
 ```
 
-Apply:
-- `<rect>` `fill` and `stroke` use the new status colors instead of `var(--brand-bg-subtle…)` and `tokens.border`.
-- Both `<text>` elements use the new status text color instead of `tokens.fg`.
-
-Keep stroke-width logic (`isOpen || isDeadZone ? 2 : 1`) and the drop-shadow filter exactly as-is.
+Add `prefers-reduced-motion` guard: if reduced motion is set, skip rendering the `<animateTransform>` elements so the diagram stays static.
 
 ## Out of scope
 
-- Ring `<circle>` colors, opacity, dead-zone pulse animation
-- Center "YOUR FIRM" text
-- Expanded observation panel below the diagram
+- Ring colors, dead-zone pulse, pill colors, click/expand behavior
 - Mobile card list
-- BAND_TOKENS object (still used for `tokens.label` text and the panel)
+- Hover pause (SMIL pause-on-hover is fragile across browsers; skipping unless requested later)
