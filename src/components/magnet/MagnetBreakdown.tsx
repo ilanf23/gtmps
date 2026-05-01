@@ -14,6 +14,7 @@ import {
 import { pickVariant } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
 import { displayNameFromSlug } from "@/lib/magnetSlug";
+import { assertReadableBrand } from "@/lib/clientTheme";
 
 import PersonalizedHeader from "./v10/PersonalizedHeader";
 import FiveOrbitsViz from "./v10/FiveOrbitsViz";
