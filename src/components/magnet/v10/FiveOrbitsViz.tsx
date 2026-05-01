@@ -180,21 +180,24 @@ export default function FiveOrbitsViz({
               );
             })}
 
-            {/* Orbit labels */}
+            {/* Orbit labels — positioned OUTSIDE each ring at staggered angles */}
             {RADII.map((r, i) => {
               // Convert degrees to radians; SVG y-axis is inverted so use -sin.
               const angleRad = (ORBIT_ANGLES_DEG[i] * Math.PI) / 180;
-              const lx = VIEW_CENTER + Math.cos(angleRad) * r;
-              const ly = VIEW_CENTER + Math.sin(angleRad) * r;
+              // Place pill center radially OUTSIDE the ring so the ring line
+              // never crosses the pill body.
+              const pillR = r + PILL_OUTSET;
+              const lx = VIEW_CENTER + Math.cos(angleRad) * pillR;
+              const ly = VIEW_CENTER + Math.sin(angleRad) * pillR;
               const id = String(i + 1).padStart(2, "0");
               const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
               const score = Math.max(0, Math.min(100, perOrbit[i] ?? 0));
               const isOpen = openIdx === i;
               const isDeadZone = i === 2;
 
-              // Pill dimensions
-              const pillW = 132;
-              const pillH = 38;
+              // Pill dimensions (shared geometry constants)
+              const pillW = PILL_W;
+              const pillH = PILL_H;
               const pillX = lx - pillW / 2;
               const pillY = ly - pillH / 2;
 
