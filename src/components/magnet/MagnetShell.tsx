@@ -77,6 +77,18 @@ export default function MagnetShell({
   const theme = useClientTheme(slug);
   useGoogleFont(theme.fontFamily);
 
+  // Warm Calendly assets (script + stylesheet) the moment the microsite mounts
+  // so that by the time the user clicks "Book" or scrolls to the inline widget,
+  // the network round-trips are already done. Saves ~5-10s of perceived load.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const idle = (window as unknown as {
+      requestIdleCallback?: (cb: () => void) => number;
+    }).requestIdleCallback;
+    if (idle) idle(() => prewarmCalendly());
+    else window.setTimeout(() => prewarmCalendly(), 200);
+  }, []);
+
   const handleBookClick = () => {
     openCalendlyPopup({
       slug: slug ?? "",
