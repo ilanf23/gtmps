@@ -260,6 +260,39 @@ export type Database = {
           },
         ]
       }
+      magnet_emails: {
+        Row: {
+          captured_at: string
+          consented_marketing: boolean
+          created_at: string
+          email: string
+          email_domain: string | null
+          id: string
+          source_event: string
+          source_slug: string | null
+        }
+        Insert: {
+          captured_at?: string
+          consented_marketing?: boolean
+          created_at?: string
+          email: string
+          email_domain?: string | null
+          id?: string
+          source_event: string
+          source_slug?: string | null
+        }
+        Update: {
+          captured_at?: string
+          consented_marketing?: boolean
+          created_at?: string
+          email?: string
+          email_domain?: string | null
+          id?: string
+          source_event?: string
+          source_slug?: string | null
+        }
+        Relationships: []
+      }
       magnet_map_emails: {
         Row: {
           created_at: string
@@ -305,6 +338,45 @@ export type Database = {
           id?: string
           share_token?: string | null
           slug?: string
+        }
+        Relationships: []
+      }
+      magnet_shares: {
+        Row: {
+          created_at: string
+          id: string
+          recipient_email: string | null
+          share_method: string
+          share_token: string
+          shared_at: string
+          sharer_email: string | null
+          source_slug: string
+          visited_at: string | null
+          visited_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          recipient_email?: string | null
+          share_method: string
+          share_token: string
+          shared_at?: string
+          sharer_email?: string | null
+          source_slug: string
+          visited_at?: string | null
+          visited_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          recipient_email?: string | null
+          share_method?: string
+          share_token?: string
+          shared_at?: string
+          sharer_email?: string | null
+          source_slug?: string
+          visited_at?: string | null
+          visited_count?: number
         }
         Relationships: []
       }
@@ -362,6 +434,57 @@ export type Database = {
           team_page_url?: string | null
           vertical?: string
           website_url?: string
+        }
+        Relationships: []
+      }
+      magnet_views: {
+        Row: {
+          created_at: string
+          dwell_seconds: number | null
+          id: string
+          last_section_seen: string | null
+          max_scroll_percent: number | null
+          referrer_slug: string | null
+          referrer_url: string | null
+          session_id: string | null
+          slug: string
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          viewed_at: string
+          visitor_fingerprint: string | null
+        }
+        Insert: {
+          created_at?: string
+          dwell_seconds?: number | null
+          id?: string
+          last_section_seen?: string | null
+          max_scroll_percent?: number | null
+          referrer_slug?: string | null
+          referrer_url?: string | null
+          session_id?: string | null
+          slug: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          viewed_at?: string
+          visitor_fingerprint?: string | null
+        }
+        Update: {
+          created_at?: string
+          dwell_seconds?: number | null
+          id?: string
+          last_section_seen?: string | null
+          max_scroll_percent?: number | null
+          referrer_slug?: string | null
+          referrer_url?: string | null
+          session_id?: string | null
+          slug?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          viewed_at?: string
+          visitor_fingerprint?: string | null
         }
         Relationships: []
       }
