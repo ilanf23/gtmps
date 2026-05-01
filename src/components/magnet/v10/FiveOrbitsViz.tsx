@@ -130,11 +130,10 @@ export default function FiveOrbitsViz({
           .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
         `}</style>
 
-        {/* Break out of the parent's narrow column so the diagram can render
-            at full size (3x its previous max width) without clipping. The
-            negative-margin viewport spans the visible width on large screens
-            while staying centered. */}
-        <div className="flex justify-center -mx-[50vw] left-1/2 right-1/2 relative" style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)" }}>
+        {/* Break out of the parent's narrow column and center horizontally
+            in the viewport. `relative left-1/2 -translate-x-1/2 w-screen`
+            spans the full window width while keeping the SVG perfectly centered. */}
+        <div className="relative left-1/2 -translate-x-1/2 w-screen flex justify-center">
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
             width="100%"
