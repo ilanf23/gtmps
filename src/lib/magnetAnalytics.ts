@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 export type MagnetEventName =
   | "section_view"
   | "cta_section5_click"
+  | "cta_section5_chapter_submit"
+  | "cta_section5_dismiss"
   | "cta_section8_view"
   | "cta_section8_click"
   | "share_click"
