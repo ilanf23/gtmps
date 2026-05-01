@@ -272,7 +272,7 @@ export default function MagnetBreakdown({
       <MobileProgressBar />
       <StickyShareFab onClick={handleStickyShare} />
 
-      <div className="max-w-2xl mx-auto px-6 pb-24">
+      <div className="max-w-[806px] mx-auto px-6 pb-24">
         <PersonalizedHeader
           firmName={customerName}
           buildSecondsAgo={buildSecondsAgo}

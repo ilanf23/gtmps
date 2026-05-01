@@ -49,7 +49,7 @@ export default function HighestLeverageMove({
       </div>
 
       <h2
-        className="font-bold leading-tight text-2xl md:text-3xl mb-5 max-w-2xl"
+        className="font-bold leading-tight text-2xl md:text-3xl mb-5 max-w-[806px]"
         style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
         {HEADLINES[profile]}

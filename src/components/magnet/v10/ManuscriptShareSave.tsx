@@ -123,7 +123,7 @@ export default function ManuscriptShareSave({
       </div>
 
       <figure
-        className="max-w-2xl mb-8 md:mb-10 pl-5"
+        className="max-w-[806px] mb-8 md:mb-10 pl-5"
         style={{ borderLeft: `2px solid ${MABBLY_GOLD}` }}
       >
         <blockquote

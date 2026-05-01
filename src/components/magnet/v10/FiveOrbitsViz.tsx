@@ -328,7 +328,7 @@ export default function FiveOrbitsViz({
             band === "high" ? "#F4FBF4" : band === "mid" ? "#FFFBEC" : "#FFF5F4";
           return (
             <div
-              className="mt-6 mx-auto max-w-2xl border p-5 animate-fade-in"
+              className="mt-6 mx-auto max-w-[806px] border p-5 animate-fade-in"
               style={{ borderColor: accentBorder, backgroundColor: accentBg }}
               onMouseEnter={() => enterHover(i)}
               onMouseLeave={leaveHover}
@@ -367,7 +367,7 @@ export default function FiveOrbitsViz({
         {/* Expanded observation panel (desktop) */}
         {openIdx !== null && (
           <div
-            className="mt-6 mx-auto max-w-2xl border p-5 animate-fade-in"
+            className="mt-6 mx-auto max-w-[806px] border p-5 animate-fade-in"
             style={{
               borderColor: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].border,
               backgroundColor: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].bg,

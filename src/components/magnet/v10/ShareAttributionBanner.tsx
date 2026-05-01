@@ -20,7 +20,7 @@ export default function ShareAttributionBanner({ fromName, fromFirm, primary }: 
         borderColor: "rgba(0,0,0,0.15)",
       }}
     >
-      <div className="max-w-2xl mx-auto px-6 py-2.5 flex items-center gap-2">
+      <div className="max-w-[806px] mx-auto px-6 py-2.5 flex items-center gap-2">
         <span className="font-semibold uppercase tracking-[0.18em] text-[10px] sm:text-[11px]">
           Shared with you
         </span>
