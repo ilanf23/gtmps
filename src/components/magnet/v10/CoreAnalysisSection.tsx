@@ -50,6 +50,7 @@ export default function CoreAnalysisSection({ observed, primary, slug }: Props) 
         primary={primary}
         feedbackHref={slug ? `/m/${slug}/feedback` : undefined}
       />
+      </div>
     </section>
   );
 }
