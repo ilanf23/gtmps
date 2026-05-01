@@ -77,17 +77,21 @@ export default function FiveOrbitsViz({
 
   // SVG geometry — concentric rings with labels sitting OUTSIDE each ring.
   // Center (CENTER, CENTER) is the firm. RADII are ring radii in viewBox units.
-  // PILL_OUTSET pushes each label radially outward beyond its ring so the ring
-  // line never visually overlaps the pill body. The viewBox is generously
-  // padded so even the outermost pill (ring 5) fits without clipping.
+  //
+  // RING SPACING RULE (no-overlap guarantee):
+  //   Each pill sits radially OUTSIDE its ring at distance r + PILL_OUTSET.
+  //   We pick a minimum 62-unit gap between adjacent rings (vs pill height 38)
+  //   so even worst-case angles cannot cause adjacent pills to collide on the
+  //   radial axis. Combined with the staggered angles below, this gives two
+  //   independent layers of separation: angular + radial.
   const CENTER = 250;
-  const RADII = [50, 100, 150, 200, 250];
+  const RADII = [50, 112, 178, 244, 310];
   const PILL_W = 132;
   const PILL_H = 38;
   const PILL_OUTSET = PILL_H / 2 + 6; // half pill + 6px breathing room past the ring
-  // viewBox sized so a pill placed at outermost ring + outset still has padding
-  // on every side. Outermost edge = CENTER + 250 + PILL_OUTSET + PILL_W/2 + 12.
-  const VIEW = 2 * (CENTER + 250 + PILL_OUTSET + PILL_W / 2 + 12);
+  // viewBox sized so a pill at the outermost ring + outset still has padding
+  // on every side. Outermost edge = CENTER + max(RADII) + PILL_OUTSET + PILL_W/2 + 12.
+  const VIEW = 2 * (CENTER + RADII[RADII.length - 1] + PILL_OUTSET + PILL_W / 2 + 12);
   const VIEW_CENTER = VIEW / 2;
 
   return (
@@ -130,7 +134,7 @@ export default function FiveOrbitsViz({
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
             width="100%"
-            style={{ maxWidth: 640, height: "auto" }}
+            style={{ maxWidth: 820, height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
