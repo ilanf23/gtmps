@@ -102,7 +102,7 @@ export default function FiveOrbitsViz({
     <section
       id="v10-section-2"
       data-v10-section="2"
-      className="py-2 md:py-2.5 border-b border-black/10"
+      className="pt-2 md:pt-2.5 pb-8 md:pb-12 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
         <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
@@ -119,7 +119,7 @@ export default function FiveOrbitsViz({
       >
         Where your next client already orbits you.
       </h2>
-      <p className="text-sm md:text-base opacity-60 mb-8 max-w-lg leading-relaxed">
+      <p className="text-sm md:text-base opacity-60 mb-6 md:mb-8 max-w-lg leading-relaxed">
         Color reflects what we observed on your site. Tap any orbit to read the
         full observation.
       </p>
@@ -134,14 +134,21 @@ export default function FiveOrbitsViz({
           .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
         `}</style>
 
-        {/* Break out of the parent's narrow column and center horizontally
-            in the viewport. `relative left-1/2 -translate-x-1/2 w-screen`
-            spans the full window width while keeping the SVG perfectly centered. */}
+        {/* Break out of the parent's narrow column and center horizontally in
+            the viewport. The SVG's natural square aspect ratio (viewBox is
+            ~1090×1090) would otherwise render as a viewport-wide square,
+            creating ~400-600px of empty padding above and below the actual
+            orbit content. We cap the rendered height and let
+            preserveAspectRatio center the content so the visible block
+            matches what the eye perceives as the chart's footprint. The
+            viewBox, ring radii, label positions, and label math are all
+            untouched. */}
         <div className="relative left-1/2 -translate-x-1/2 w-screen flex justify-center">
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
+            preserveAspectRatio="xMidYMid meet"
             width="100%"
-            style={{ maxWidth: 2460, height: "auto" }}
+            style={{ maxWidth: 2460, maxHeight: "min(80vh, 760px)", height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
