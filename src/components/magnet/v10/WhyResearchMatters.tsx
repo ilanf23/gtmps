@@ -58,7 +58,7 @@ export default function WhyResearchMatters({ primary }: Props) {
         />
       </div>
 
-      <div className="max-w-2xl mx-auto relative">
+      <div className="max-w-[806px] mx-auto relative">
         <div className="flex items-center gap-2 mb-5">
           <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
           <p
@@ -69,7 +69,7 @@ export default function WhyResearchMatters({ primary }: Props) {
           </p>
         </div>
         <h2
-          className="font-bold leading-tight text-2xl md:text-3xl mb-10 max-w-2xl"
+          className="font-bold leading-tight text-2xl md:text-3xl mb-10 max-w-[806px]"
           style={{
             fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
             color: "#FBF8F4",

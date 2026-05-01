@@ -125,7 +125,7 @@ export default function FullCtaSection({
         </div>
 
         <h2
-          className="font-bold leading-tight text-2xl md:text-3xl mb-2 max-w-2xl"
+          className="font-bold leading-tight text-2xl md:text-3xl mb-2 max-w-[806px]"
           style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
         >
           {scoreAdaptiveHeadline}
