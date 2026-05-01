@@ -144,15 +144,16 @@ export default function ObservedHypothesisQuestion({
           </div>
         )}
       </div>
-      {feedbackHref && (
+      {onFeedbackClick && (
         <p className="text-sm md:text-[14px] italic opacity-65 mt-4 leading-relaxed">
           We would love your{" "}
-          <a
-            href={feedbackHref}
-            className="underline underline-offset-2 hover:opacity-100"
+          <button
+            type="button"
+            onClick={onFeedbackClick}
+            className="underline underline-offset-2 hover:opacity-100 italic"
           >
             feedback
-          </a>
+          </button>
           . Did we get this right?
         </p>
       )}
