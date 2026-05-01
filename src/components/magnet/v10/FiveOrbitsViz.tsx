@@ -2,7 +2,7 @@
 // Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
 // Mobile (<md): vertical card list with progress bars (legacy layout).
 
-import { useState, useId } from "react";
+import { useState } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
@@ -15,41 +15,35 @@ const ORBIT_NAMES = [
 ];
 
 // Label position angles (degrees, 0 = right, going clockwise from top via -90 offset).
-// Staggered so adjacent rings drop their pills on opposite hemispheres of the
-// diagram, preventing the small inner rings (1, 2) from crowding each other.
-// Order is [ring1, ring2, ring3, ring4, ring5].
-const ORBIT_ANGLES_DEG = [270, 18, 162, 306, 90];
+// Spec: 270° top, 342°, 54°, 126°, 198°.
+const ORBIT_ANGLES_DEG = [270, 342, 54, 126, 198];
 
-// Semantic signal colors. These intentionally OVERRIDE the client brand
-// accent so signal strength is unambiguous: green = strong, orange = mixed,
-// red = gap. Brand color still drives chrome elsewhere on the page.
-const SIGNAL_GREEN = "#4CAF50";   // light green
-const SIGNAL_ORANGE = "#F57C00";  // orange
-const SIGNAL_RED = "#E57373";     // light red
-
+// Band-relative tokens: every color is now driven off `--brand-accent`,
+// so the orbit visualization re-skins to the prospect's brand. Intensity
+// (opacity / label) still signals high vs mid vs low.
 const BAND_TOKENS: Record<
   ScoreBand,
   { fg: string; meter: string; bg: string; border: string; label: string }
 > = {
   high: {
-    fg: SIGNAL_GREEN,
-    meter: SIGNAL_GREEN,
-    bg: `color-mix(in srgb, ${SIGNAL_GREEN} 12%, transparent)`,
-    border: `color-mix(in srgb, ${SIGNAL_GREEN} 55%, transparent)`,
+    fg: "var(--brand-accent, #2E7D32)",
+    meter: "var(--brand-accent, #2E7D32)",
+    bg: "color-mix(in srgb, var(--brand-accent, #2E7D32) 12%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #2E7D32) 55%, transparent)",
     label: "Strong",
   },
   mid: {
-    fg: SIGNAL_ORANGE,
-    meter: SIGNAL_ORANGE,
-    bg: `color-mix(in srgb, ${SIGNAL_ORANGE} 10%, transparent)`,
-    border: `color-mix(in srgb, ${SIGNAL_ORANGE} 50%, transparent)`,
+    fg: "var(--brand-accent, #B8933A)",
+    meter: "var(--brand-accent, #B8933A)",
+    bg: "color-mix(in srgb, var(--brand-accent, #B8933A) 8%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #B8933A) 40%, transparent)",
     label: "Mixed",
   },
   low: {
-    fg: SIGNAL_RED,
-    meter: SIGNAL_RED,
-    bg: `color-mix(in srgb, ${SIGNAL_RED} 8%, transparent)`,
-    border: `color-mix(in srgb, ${SIGNAL_RED} 45%, transparent)`,
+    fg: "var(--brand-accent, #B43C32)",
+    meter: "var(--brand-accent, #B43C32)",
+    bg: "color-mix(in srgb, var(--brand-accent, #B43C32) 5%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #B43C32) 25%, transparent)",
     label: "Gap",
   },
 };
@@ -59,8 +53,6 @@ interface Props {
   perOrbit: number[];
   bandPerOrbit: ScoreBand[];
   primary: string;
-  logoUrl?: string | null;
-  companyName?: string | null;
 }
 
 export default function FiveOrbitsViz({
@@ -68,41 +60,24 @@ export default function FiveOrbitsViz({
   perOrbit,
   bandPerOrbit,
   primary,
-  logoUrl,
-  companyName,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
-  const [logoBroken, setLogoBroken] = useState(false);
-  const clipId = useId().replace(/:/g, "");
-  const showLogo = Boolean(logoUrl) && !logoBroken;
 
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
 
-  // SVG geometry — concentric rings with labels sitting OUTSIDE each ring.
-  // Center (CENTER, CENTER) is the firm. RADII are ring radii in viewBox units.
-  //
-  // RING SPACING RULE (no-overlap guarantee):
-  //   Each pill sits radially OUTSIDE its ring at distance r + PILL_OUTSET.
-  //   We pick a minimum 62-unit gap between adjacent rings (vs pill height 38)
-  //   so even worst-case angles cannot cause adjacent pills to collide on the
-  //   radial axis. Combined with the staggered angles below, this gives two
-  //   independent layers of separation: angular + radial.
+  // SVG geometry — 500x500 viewBox, center (250, 250).
   const CENTER = 250;
-  const RADII = [50, 112, 178, 244, 310];
-  const PILL_W = 132;
-  const PILL_H = 38;
-  const PILL_OUTSET = PILL_H / 2 + 6; // half pill + 6px breathing room past the ring
-  // viewBox sized so a pill at the outermost ring + outset still has padding
-  // on every side. Outermost edge = CENTER + max(RADII) + PILL_OUTSET + PILL_W/2 + 12.
-  const VIEW = 2 * (CENTER + RADII[RADII.length - 1] + PILL_OUTSET + PILL_W / 2 + 12);
+  const RADII = [50, 100, 150, 200, 250];
+  // Scale ring radii down slightly so labels sit inside the viewBox bounds.
+  const VIEW = 560;
   const VIEW_CENTER = VIEW / 2;
 
   return (
     <section
       id="v10-section-2"
       data-v10-section="2"
-      className="pt-2 md:pt-2.5 pb-8 md:pb-12 border-b border-black/10"
+      className="py-10 md:py-12 border-b border-black/10"
     >
       <div className="flex items-center gap-2 mb-5">
         <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
@@ -119,7 +94,7 @@ export default function FiveOrbitsViz({
       >
         Where your next client already orbits you.
       </h2>
-      <p className="text-sm md:text-base opacity-60 mb-6 md:mb-8 max-w-lg leading-relaxed">
+      <p className="text-sm md:text-base opacity-60 mb-8 max-w-lg leading-relaxed">
         Color reflects what we observed on your site. Tap any orbit to read the
         full observation.
       </p>
@@ -134,84 +109,43 @@ export default function FiveOrbitsViz({
           .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
         `}</style>
 
-        {/* Break out of the parent's narrow column and center horizontally in
-            the viewport. The SVG's natural square aspect ratio (viewBox is
-            ~1090×1090) would otherwise render as a viewport-wide square,
-            creating ~400-600px of empty padding above and below the actual
-            orbit content. We cap the rendered height and let
-            preserveAspectRatio center the content so the visible block
-            matches what the eye perceives as the chart's footprint. The
-            viewBox, ring radii, label positions, and label math are all
-            untouched. */}
-        <div className="relative left-1/2 -translate-x-1/2 w-screen flex justify-center">
+        <div className="flex justify-center">
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
-            preserveAspectRatio="xMidYMid meet"
             width="100%"
-            style={{ maxWidth: 4920, maxHeight: "min(160vh, 1520px)", height: "auto" }}
+            style={{ maxWidth: 560, height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
-            {/* Center: client logo (if scraped) or "YOUR FIRM" text fallback */}
-            {showLogo ? (
-              <g>
-                <title>{companyName ? `${companyName} logo` : "Client logo"}</title>
-                <defs>
-                  <clipPath id={`logo-clip-${clipId}`}>
-                    <circle cx={VIEW_CENTER} cy={VIEW_CENTER} r={28} />
-                  </clipPath>
-                </defs>
-                <circle
-                  cx={VIEW_CENTER}
-                  cy={VIEW_CENTER}
-                  r={28}
-                  fill="var(--brand-bg-subtle, #FBF8F4)"
-                />
-                <image
-                  href={logoUrl as string}
-                  x={VIEW_CENTER - 24}
-                  y={VIEW_CENTER - 24}
-                  width={48}
-                  height={48}
-                  preserveAspectRatio="xMidYMid meet"
-                  clipPath={`url(#logo-clip-${clipId})`}
-                  onError={() => setLogoBroken(true)}
-                />
-              </g>
-            ) : (
-              <>
-                <text
-                  x={VIEW_CENTER}
-                  y={VIEW_CENTER - 4}
-                  textAnchor="middle"
-                  fontSize="11"
-                  fontWeight="700"
-                  letterSpacing="2"
-                  style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
-                >
-                  YOUR
-                </text>
-                <text
-                  x={VIEW_CENTER}
-                  y={VIEW_CENTER + 11}
-                  textAnchor="middle"
-                  fontSize="11"
-                  fontWeight="700"
-                  letterSpacing="2"
-                  style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
-                >
-                  FIRM
-                </text>
-              </>
-            )}
+            {/* Center label */}
+            <text
+              x={VIEW_CENTER}
+              y={VIEW_CENTER - 4}
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="700"
+              letterSpacing="2"
+              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+            >
+              YOUR
+            </text>
+            <text
+              x={VIEW_CENTER}
+              y={VIEW_CENTER + 11}
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="700"
+              letterSpacing="2"
+              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+            >
+              FIRM
+            </text>
 
-            {/* Orbit rings — stroke color matches the band signal so the
-                ring itself reads as green / orange / red at a glance. */}
+            {/* Orbit rings */}
             {RADII.map((r, i) => {
               const band = bandPerOrbit[i] ?? "low";
-              const tokens = BAND_TOKENS[band];
               const isStrong = band === "high";
-              const opacity = isStrong ? 1 : 0.55;
+              const opacity = isStrong ? 1 : 0.3;
               const isDeadZone = i === 2;
               return (
                 <circle
@@ -220,14 +154,15 @@ export default function FiveOrbitsViz({
                   cy={VIEW_CENTER}
                   r={r}
                   fill="none"
-                  stroke={tokens.meter}
+                  stroke="var(--brand-accent, currentColor)"
                   strokeWidth={2}
                   opacity={opacity}
                   className={isDeadZone ? "orbit-ring-pulse" : ""}
                   style={
                     isDeadZone
                       ? {
-                          filter: `drop-shadow(0 0 6px color-mix(in srgb, ${tokens.meter} 60%, transparent))`,
+                          filter:
+                            "drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent, #B43C32) 60%, transparent))",
                         }
                       : undefined
                   }
@@ -235,32 +170,23 @@ export default function FiveOrbitsViz({
               );
             })}
 
-            {/* Orbit labels — positioned OUTSIDE each ring at staggered angles */}
+            {/* Orbit labels */}
             {RADII.map((r, i) => {
               // Convert degrees to radians; SVG y-axis is inverted so use -sin.
               const angleRad = (ORBIT_ANGLES_DEG[i] * Math.PI) / 180;
-              // Place pill center radially OUTSIDE the ring so the ring line
-              // never crosses the pill body.
-              const pillR = r + PILL_OUTSET;
-              const lx = VIEW_CENTER + Math.cos(angleRad) * pillR;
-              const ly = VIEW_CENTER + Math.sin(angleRad) * pillR;
+              const lx = VIEW_CENTER + Math.cos(angleRad) * r;
+              const ly = VIEW_CENTER + Math.sin(angleRad) * r;
               const id = String(i + 1).padStart(2, "0");
               const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
               const score = Math.max(0, Math.min(100, perOrbit[i] ?? 0));
               const isOpen = openIdx === i;
               const isDeadZone = i === 2;
 
-              // Pill dimensions (shared geometry constants)
-              const pillW = PILL_W;
-              const pillH = PILL_H;
+              // Pill dimensions
+              const pillW = 132;
+              const pillH = 38;
               const pillX = lx - pillW / 2;
               const pillY = ly - pillH / 2;
-
-              // Tooltip text shown on hover (native browser tooltip via
-              // SVG <title>). Falls back to the generic "could not read"
-              // message when no observation was extracted for this orbit.
-              const observation = orbits[i]?.trim() || fallbackObs;
-              const tooltipText = `${id} · ${ORBIT_NAMES[i]} — ${tokens.label} (${score}/100)\n\n${observation}`;
 
               return (
                 <g
@@ -269,12 +195,8 @@ export default function FiveOrbitsViz({
                   onClick={() => setOpenIdx(isOpen ? null : i)}
                   role="button"
                   tabIndex={0}
-                  aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}. ${observation}`}
+                  aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
                 >
-                  {/* Native browser tooltip on hover — appears for both the
-                      pill rect and its text labels because <title> applies
-                      to the entire <g>. */}
-                  <title>{tooltipText}</title>
                   <rect
                     x={pillX}
                     y={pillY}
@@ -295,7 +217,7 @@ export default function FiveOrbitsViz({
                     textAnchor="middle"
                     fontSize="11"
                     fontWeight="700"
-                    style={{ fill: tokens.fg, pointerEvents: "none" }}
+                    style={{ fill: tokens.fg }}
                   >
                     {id} · {ORBIT_NAMES[i]}
                   </text>
@@ -305,7 +227,7 @@ export default function FiveOrbitsViz({
                     textAnchor="middle"
                     fontSize="10"
                     fontWeight="600"
-                    style={{ fill: tokens.fg, opacity: 0.85, pointerEvents: "none" }}
+                    style={{ fill: tokens.fg, opacity: 0.85 }}
                   >
                     {score} · {tokens.label}
                   </text>

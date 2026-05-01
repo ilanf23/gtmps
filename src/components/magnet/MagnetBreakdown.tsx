@@ -43,7 +43,6 @@ interface BreakdownRow {
   action_1: string | null;
   enrichment_error: string | null;
   client_company_name?: string | null;
-  client_logo_url?: string | null;
   deal_size_estimate?: number | null;
   client_brand_profile?: {
     palette?: {
@@ -269,8 +268,6 @@ export default function MagnetBreakdown({
           perOrbit={scores.perOrbit}
           bandPerOrbit={scores.bandPerOrbit}
           primary={brand.primary}
-          logoUrl={data.client_logo_url ?? null}
-          companyName={data.client_company_name ?? customerName}
         />
 
         <CoreAnalysisSection
