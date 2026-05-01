@@ -281,7 +281,7 @@ export default function MagnetBreakdown({
         />
 
         <FiveOrbitsViz
-          orbits={orbits}
+          orbits={sanitizedOrbits}
           perOrbit={scores.perOrbit}
           bandPerOrbit={scores.bandPerOrbit}
           primary={brand.primary}
@@ -297,13 +297,13 @@ export default function MagnetBreakdown({
         />
 
         <CoreAnalysisSection
-          observed={data.gtm_profile_observed}
+          observed={sanitizedObserved}
           primary={brand.primary}
           slug={slug}
         />
 
         <ProofAnalysisSection
-          observed={data.gtm_profile_assessment}
+          observed={sanitizedAssessment}
           primary={brand.primary}
           slug={slug}
         />
