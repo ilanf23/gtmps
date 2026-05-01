@@ -43,6 +43,7 @@ interface BreakdownRow {
   action_1: string | null;
   enrichment_error: string | null;
   client_company_name?: string | null;
+  client_logo_url?: string | null;
   deal_size_estimate?: number | null;
   client_brand_profile?: {
     palette?: {
