@@ -277,7 +277,26 @@ export default function MagnetBreakdown({
       <MobileProgressBar />
       <StickyShareFab onClick={handleStickyShare} />
 
-      <div className="max-w-[806px] mx-auto px-6 pb-24">
+      <div className="max-w-[806px] mx-auto px-6 pb-24 ms-centered">
+        <style>{`
+          /* Center all editorial content inside the breakdown column. Headlines,
+             body copy, eyebrows, and inline-flex CTA rows are all centered.
+             Grid/flex layouts (orbit chips, OHQ panels, share cards) keep their
+             own alignment because text-align does not affect their item axis. */
+          .ms-centered { text-align: center; }
+          .ms-centered .max-w-xl,
+          .ms-centered .max-w-prose,
+          .ms-centered figure[class*="max-w-"] { margin-left: auto; margin-right: auto; }
+          .ms-centered .flex.items-center.gap-2 { justify-content: center; }
+          .ms-centered figure[style*="border-left"] {
+            border-left: none !important;
+            padding-left: 0 !important;
+          }
+          /* Re-left-align dense card bodies so OHQ panels and share/save cards
+             don't read as ransom-notes when text wraps. */
+          .ms-centered [class*="bg-[#FBF8F4]"] { text-align: left; }
+          .ms-centered [class*="bg-[#FBF8F4]"] .flex.items-center.gap-2 { justify-content: flex-start; }
+        `}</style>
         <PersonalizedHeader
           firmName={customerName}
           buildSecondsAgo={buildSecondsAgo}
