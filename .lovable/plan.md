@@ -1,33 +1,48 @@
-## What changes
+## Problem
 
-In the microsite, the three-column **Observed / Hypothesis / Question** block (used in Section 3 Core, Section 4 Proof, and Section 10 Deeper Findings) sometimes renders one column much longer than the others, creating the lopsided layout in the screenshot. We will clamp any column whose body text would exceed **10 lines** and add a per-column **Show more / Show less** toggle.
+In the Five Orbits SVG diagram (microsite Section 02), pills representing each orbit are placed **directly on top of their orbit ring** at fixed angles. Two specific failure modes are visible in the screenshots:
+
+1. **Outer ring (05 New Gravity)** sits at the top of the SVG. Because the pill is centered on the ring at the top edge, the ring's curve clips into the pill from above and the pill itself sits tight against (and sometimes outside) the viewBox top edge.
+2. **Rings 01 (Core Proof) and 02 (Active)** are only 50 viewBox units apart. With pills both placed on the right side at similar angles (342° and 54°), the pills crowd and visually overlap.
 
 ## File modified
 
-Only one file: `src/components/magnet/v10/ObservedHypothesisQuestion.tsx`. No other component, routing, edge function, Supabase schema, or design token is touched.
+Only `src/components/magnet/v10/FiveOrbitsViz.tsx`. No copy, scoring logic, theme tokens, or other components are touched.
 
-## Behavior
+## Geometry strategy
 
-- Each column body text is rendered through a new internal `ClampableParagraph` helper.
-- On mount (and on resize), the helper measures the natural rendered height against `lineHeight × 10`.
-- If the text overflows the 10-line cap, the paragraph is clamped via `display: -webkit-box; -webkit-line-clamp: 10; overflow: hidden` and a "Show more" button appears underneath.
-- Clicking "Show more" expands the paragraph to its full height; the button toggles to "Show less".
-- If the text fits in 10 lines or fewer, no button is rendered (column behaves exactly as today).
-- The toggle button is colored to match the column accent (gold for Observed/Hypothesis, magenta for Question) and uses the existing eyebrow-style typography (uppercase, 12/13px, 0.12em tracking) so it reads as part of the system, not a generic UI control.
+The fix is purely positional and uses three rules that compose:
 
-## Why measure rather than just count characters
+1. **Outset pills beyond the ring, not on it.** Each pill center is computed at `r + PILL_OUTSET` (half pill height + 6px breathing room) instead of exactly `r`. This guarantees the ring line never crosses the pill body for any orbit at any angle.
+2. **Grow the viewBox to fit.** Recompute `VIEW` from the geometry so the outermost pill (ring 5 + outset + half pill width + a 12px margin) is always inside the viewBox on every side. No more clipping at the top of New Gravity.
+3. **Stagger angles by ring index** to keep adjacent small rings' pills from crowding. The current angles (270, 342, 54, 126, 198) put rings 1 and 2 on the same side at close angles. We rotate the angles per ring so neighboring rings drop their pills on opposite sides of the diagram. The new angle set is chosen so:
+   - Ring 1 (Core Proof) and Ring 2 (Active) sit on opposite hemispheres
+   - No two adjacent rings have angles within 60° of each other
+   - The overall composition still reads as orbital, not random
 
-Line count depends on column width, which changes between mobile (single column, wide) and desktop (3 columns, narrow). A character-count heuristic would be wrong on one viewport. Measuring `scrollHeight` against `lineHeight × 10` keeps the threshold accurate at every breakpoint and re-runs through a `ResizeObserver`.
+Concrete angle assignment used: `[270, 18, 162, 306, 90]` (ring 1 top, ring 2 upper-right far out, ring 3 upper-left, ring 4 lower-right, ring 5 bottom). Combined with the radial outset, this places every pill in unique angular space with no visual collision at any ring radius.
 
-## Visual / accessibility details
+## Quick desktop visual reference
 
-- Button uses `aria-expanded` so screen readers announce state.
-- 10-line cap is defined as a constant (`LINE_CLAMP = 10`) at the top of the file for easy tuning later.
-- Italic styling on the Question column is preserved when expanded and collapsed.
-- Feedback link beneath the grid is unchanged.
+```text
+Before                              After
+─────────                           ─────────
+   [05]  ← clips top edge              [01]  ← top, ring 1 (smallest)
+  /    \                              /    \
+ /  [01][02] ← crowd right           /      \
+/  YOUR    \                        /  YOUR  \  [02] ← outer-right
+\  FIRM    /                        \  FIRM  /
+ \  [04][03]                       [03]      \
+  \      /                          \   [05] /  ← bottom, ring 5 outset
+   ─────                              ─[04]──
+```
+
+## Mobile
+
+The mobile vertical card list is unchanged. Overlap was a desktop SVG-only concern.
 
 ## Out of scope
 
-- No copy changes.
-- No spacing or grid-layout changes (columns still use the existing `grid-cols-1 md:grid-cols-2/3` and `p-5` padding).
-- No changes to other long-text sections (Five Orbits cards, Why Research Matters, etc.). If you want the same treatment elsewhere, that would be a separate scoped pass.
+- No changes to the orbit copy, scoring bands, or color tokens.
+- No changes to the expanded observation panel that opens on pill click.
+- No changes to other sections, the main page, or the homepage.

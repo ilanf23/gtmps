@@ -15,8 +15,10 @@ const ORBIT_NAMES = [
 ];
 
 // Label position angles (degrees, 0 = right, going clockwise from top via -90 offset).
-// Spec: 270° top, 342°, 54°, 126°, 198°.
-const ORBIT_ANGLES_DEG = [270, 342, 54, 126, 198];
+// Staggered so adjacent rings drop their pills on opposite hemispheres of the
+// diagram, preventing the small inner rings (1, 2) from crowding each other.
+// Order is [ring1, ring2, ring3, ring4, ring5].
+const ORBIT_ANGLES_DEG = [270, 18, 162, 306, 90];
 
 // Band-relative tokens: every color is now driven off `--brand-accent`,
 // so the orbit visualization re-skins to the prospect's brand. Intensity
@@ -66,11 +68,19 @@ export default function FiveOrbitsViz({
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
 
-  // SVG geometry — 500x500 viewBox, center (250, 250).
+  // SVG geometry — concentric rings with labels sitting OUTSIDE each ring.
+  // Center (CENTER, CENTER) is the firm. RADII are ring radii in viewBox units.
+  // PILL_OUTSET pushes each label radially outward beyond its ring so the ring
+  // line never visually overlaps the pill body. The viewBox is generously
+  // padded so even the outermost pill (ring 5) fits without clipping.
   const CENTER = 250;
   const RADII = [50, 100, 150, 200, 250];
-  // Scale ring radii down slightly so labels sit inside the viewBox bounds.
-  const VIEW = 560;
+  const PILL_W = 132;
+  const PILL_H = 38;
+  const PILL_OUTSET = PILL_H / 2 + 6; // half pill + 6px breathing room past the ring
+  // viewBox sized so a pill placed at outermost ring + outset still has padding
+  // on every side. Outermost edge = CENTER + 250 + PILL_OUTSET + PILL_W/2 + 12.
+  const VIEW = 2 * (CENTER + 250 + PILL_OUTSET + PILL_W / 2 + 12);
   const VIEW_CENTER = VIEW / 2;
 
   return (
@@ -113,7 +123,7 @@ export default function FiveOrbitsViz({
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
             width="100%"
-            style={{ maxWidth: 560, height: "auto" }}
+            style={{ maxWidth: 640, height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
@@ -170,21 +180,24 @@ export default function FiveOrbitsViz({
               );
             })}
 
-            {/* Orbit labels */}
+            {/* Orbit labels — positioned OUTSIDE each ring at staggered angles */}
             {RADII.map((r, i) => {
               // Convert degrees to radians; SVG y-axis is inverted so use -sin.
               const angleRad = (ORBIT_ANGLES_DEG[i] * Math.PI) / 180;
-              const lx = VIEW_CENTER + Math.cos(angleRad) * r;
-              const ly = VIEW_CENTER + Math.sin(angleRad) * r;
+              // Place pill center radially OUTSIDE the ring so the ring line
+              // never crosses the pill body.
+              const pillR = r + PILL_OUTSET;
+              const lx = VIEW_CENTER + Math.cos(angleRad) * pillR;
+              const ly = VIEW_CENTER + Math.sin(angleRad) * pillR;
               const id = String(i + 1).padStart(2, "0");
               const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
               const score = Math.max(0, Math.min(100, perOrbit[i] ?? 0));
               const isOpen = openIdx === i;
               const isDeadZone = i === 2;
 
-              // Pill dimensions
-              const pillW = 132;
-              const pillH = 38;
+              // Pill dimensions (shared geometry constants)
+              const pillW = PILL_W;
+              const pillH = PILL_H;
               const pillX = lx - pillW / 2;
               const pillY = ly - pillH / 2;
 
