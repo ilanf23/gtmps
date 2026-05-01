@@ -140,7 +140,7 @@ export default function ManuscriptShareSave({
       {/* Share + Save cards */}
       <div className="grid gap-4 md:grid-cols-2">
         {/* SHARE */}
-        <div className="bg-[#FBF8F4] border border-black/10 p-5 md:p-6 flex flex-col">
+        <div className="bg-[#FBF8F4] text-[#1C1008] border border-black/10 p-5 md:p-6 flex flex-col">
           <p
             className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-2"
             style={{ color: primary }}
@@ -186,7 +186,7 @@ export default function ManuscriptShareSave({
         </div>
 
         {/* SAVE */}
-        <div className="bg-[#FBF8F4] border border-black/10 p-5 md:p-6 flex flex-col">
+        <div className="bg-[#FBF8F4] text-[#1C1008] border border-black/10 p-5 md:p-6 flex flex-col">
           <p
             className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-2"
             style={{ color: primary }}

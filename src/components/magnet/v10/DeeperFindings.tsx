@@ -74,7 +74,7 @@ export default function DeeperFindings({
         {blocks.map((b, i) => {
           const isOpen = openIdx === i;
           return (
-            <div key={b.eyebrow} className="border border-black/10 bg-[#FBF8F4]">
+            <div key={b.eyebrow} className="border border-black/10 bg-[#FBF8F4] text-[#1C1008]">
               <button
                 type="button"
                 onClick={() => setOpenIdx(isOpen ? null : i)}
