@@ -201,15 +201,19 @@ export default function MagnetBreakdown({
   const sanitizedObserved = sanitizeLLM(data.gtm_profile_observed);
   const sanitizedAssessment = sanitizeLLM(data.gtm_profile_assessment);
 
-  // Derive brand palette
+  // Derive brand palette + run the legibility guard. If the extracted text
+  // does not meet WCAG AA contrast against the extracted background, fall
+  // back to safe Mabbly defaults (cream + ink), preserving the firm's
+  // primary accent when it still reads. See assertReadableBrand for detail.
   const p = data.client_brand_profile?.palette ?? {};
-  const brand = {
+  const rawBrand = {
     primary: pick(p.primary, "#B8933A"),
     background: pick(p.background, "#FBF8F4"),
     surface: pick(p.surface, "#FFFFFF"),
     text: pick(p.text, "#1C1008"),
     textMuted: pick(p.textMuted, "#1C1008"),
   };
+  const { brand } = assertReadableBrand(rawBrand, data.client_company_name);
 
   // "Built X seconds ago" — only meaningful for first 5 minutes
   const buildSecondsAgo = createdAt
