@@ -68,11 +68,19 @@ export default function FiveOrbitsViz({
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
 
-  // SVG geometry — 500x500 viewBox, center (250, 250).
+  // SVG geometry — concentric rings with labels sitting OUTSIDE each ring.
+  // Center (CENTER, CENTER) is the firm. RADII are ring radii in viewBox units.
+  // PILL_OUTSET pushes each label radially outward beyond its ring so the ring
+  // line never visually overlaps the pill body. The viewBox is generously
+  // padded so even the outermost pill (ring 5) fits without clipping.
   const CENTER = 250;
   const RADII = [50, 100, 150, 200, 250];
-  // Scale ring radii down slightly so labels sit inside the viewBox bounds.
-  const VIEW = 560;
+  const PILL_W = 132;
+  const PILL_H = 38;
+  const PILL_OUTSET = PILL_H / 2 + 6; // half pill + 6px breathing room past the ring
+  // viewBox sized so a pill placed at outermost ring + outset still has padding
+  // on every side. Outermost edge = CENTER + 250 + PILL_OUTSET + PILL_W/2 + 12.
+  const VIEW = 2 * (CENTER + 250 + PILL_OUTSET + PILL_W / 2 + 12);
   const VIEW_CENTER = VIEW / 2;
 
   return (
