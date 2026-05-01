@@ -27,7 +27,7 @@ export default function DeeperFindings({
         signalObserved?.trim() ||
         `${customerName}'s site reads as a service catalog more than a signal source. Visitors learn what you do, not when to engage you.`,
       hypothesis:
-        "If we surface 1–2 trigger signals (org change, capability shift, named project), inbound qualifies before the first call.",
+        "If we surface 1 to 2 trigger signals (org change, capability shift, named project), inbound qualifies before the first call.",
       question: "Which signal would your team find most useful first?",
     },
     {
@@ -36,7 +36,7 @@ export default function DeeperFindings({
         cadenceObserved?.trim() ||
         "Your public cadence (insights, social, alumni touches) suggests episodic outreach rather than a scheduled rhythm.",
       hypothesis:
-        "A 4-week relationship rhythm tied to your top 100 contacts typically reactivates 3–5 dormant deals per quarter.",
+        "A 4-week relationship rhythm tied to your top 100 contacts typically reactivates 3 to 5 dormant deals per quarter.",
       question: "What does your current touch cadence look like?",
     },
     {

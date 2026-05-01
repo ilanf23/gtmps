@@ -620,7 +620,7 @@ export default function MagnetLoadingScene({
           }}
         >
           {firstName
-            ? `Hey ${firstName} — we're mapping your revenue universe.`
+            ? `Hey ${firstName}. We're mapping your revenue universe.`
             : "Mapping your revenue universe."}
         </h1>
 
@@ -649,7 +649,7 @@ export default function MagnetLoadingScene({
         </div>
 
         <p className="mt-10 text-[10px] uppercase tracking-[0.32em] text-[#1C1008]/40">
-          This usually takes 60–90 seconds
+          This usually takes 60 to 90 seconds
         </p>
       </div>
     </div>

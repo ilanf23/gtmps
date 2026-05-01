@@ -43,8 +43,8 @@ export default function CoreAnalysisSection({ observed, primary, slug }: Props) 
         }
         hypothesis={
           hasObserved
-            ? "If we sharpened the language by one degree — naming who you serve and what you refuse — your inbound qualifies itself before the first call."
-            : "A 1-paragraph Core statement (purpose · niche · who you refuse) typically lifts qualified inbound 20–40% within a quarter."
+            ? "If we sharpened the language by one degree, naming who you serve and what you refuse, your inbound qualifies itself before the first call."
+            : "A 1-paragraph Core statement (purpose · niche · who you refuse) typically lifts qualified inbound 20 to 40% within a quarter."
         }
         question="How do your best clients describe what you do, in their own words, when they refer you?"
         primary={primary}

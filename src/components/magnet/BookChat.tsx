@@ -11,7 +11,7 @@ interface ChatMessage {
 const WELCOME: ChatMessage = {
   role: "assistant",
   content:
-    "Ask me anything about the GTM book — frameworks, chapters, examples, or how to apply them to your firm.",
+    "Ask me anything about the GTM book. Frameworks, chapters, examples, or how to apply them to your firm.",
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/book-chat`;
@@ -167,7 +167,7 @@ export default function BookChat() {
           if (last?.role === "assistant" && !last.content) {
             copy[copy.length - 1] = {
               ...last,
-              content: "I couldn't generate a response — try rephrasing.",
+              content: "I couldn't generate a response. Try rephrasing.",
             };
           }
           return copy;
