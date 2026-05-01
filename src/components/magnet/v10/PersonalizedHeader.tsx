@@ -76,7 +76,7 @@ export default function PersonalizedHeader({
           "{MANUSCRIPT_OPENING.text}"
         </blockquote>
         <figcaption className="text-[10px] uppercase tracking-[0.25em] mt-3 opacity-50">
-          — {MANUSCRIPT_OPENING.attribution}
+          {MANUSCRIPT_OPENING.attribution}
         </figcaption>
       </figure>
     </section>

@@ -164,26 +164,42 @@ export default function MagnetBreakdown({
     );
   }
 
-  const orbits = [
-    data.orbit_01,
-    data.orbit_02,
-    data.orbit_03,
-    data.orbit_04,
-    data.orbit_05,
+  // Universal LLM text sanitizer:
+  //  1. Strip invented dollar figures (only real CRM-size x deal-size calcs allowed).
+  //  2. Remove em-dashes / en-dashes per project typography rule (use periods/commas).
+  const stripDashes = (s: string): string =>
+    s
+      .replace(/\s+[—–]\s+/g, ". ")
+      .replace(/(\w)[—–](\w)/g, "$1 to $2")
+      .replace(/[—–]/g, ",")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
+  const sanitizeLLM = (s: string | null | undefined): string | null => {
+    if (!s) return null;
+    const cleaned = stripDashes(
+      s.replace(/\s*\$\s*[\d,.]+\s*[KkMm]?\b(?: in (?:potential )?revenue)?/g, ""),
+    );
+    return cleaned || null;
+  };
+
+  const sanitizedOrbits = [
+    sanitizeLLM(data.orbit_01),
+    sanitizeLLM(data.orbit_02),
+    sanitizeLLM(data.orbit_03),
+    sanitizeLLM(data.orbit_04),
+    sanitizeLLM(data.orbit_05),
   ];
 
-  // Firm-name fallback: never surface "your firm" — fall back to a name
+  // Firm-name fallback: never surface "your firm". Fall back to a name
   // derived from the slug (calliope → Calliope) so every result page reads
   // as personalized to the visitor's firm.
   const customerName =
     data.client_company_name ?? displayNameFromSlug(slug) ?? "your firm";
 
-  // Strip any LLM-invented dollar figures from the recommended action — never
-  // surface a $ number unless it ties to a real CRM-size × deal-size calc.
-  const sanitizedAction = (data.action_1 ?? "").replace(
-    /\s*\$\s*[\d,.]+\s*[KkMm]?\b(?: in (?:potential )?revenue)?/g,
-    "",
-  ).replace(/\s{2,}/g, " ").trim() || null;
+  const sanitizedAction = sanitizeLLM(data.action_1);
+  const sanitizedObserved = sanitizeLLM(data.gtm_profile_observed);
+  const sanitizedAssessment = sanitizeLLM(data.gtm_profile_assessment);
 
   // Derive brand palette
   const p = data.client_brand_profile?.palette ?? {};
@@ -265,7 +281,7 @@ export default function MagnetBreakdown({
         />
 
         <FiveOrbitsViz
-          orbits={orbits}
+          orbits={sanitizedOrbits}
           perOrbit={scores.perOrbit}
           bandPerOrbit={scores.bandPerOrbit}
           primary={brand.primary}
@@ -281,13 +297,13 @@ export default function MagnetBreakdown({
         />
 
         <CoreAnalysisSection
-          observed={data.gtm_profile_observed}
+          observed={sanitizedObserved}
           primary={brand.primary}
           slug={slug}
         />
 
         <ProofAnalysisSection
-          observed={data.gtm_profile_assessment}
+          observed={sanitizedAssessment}
           primary={brand.primary}
           slug={slug}
         />

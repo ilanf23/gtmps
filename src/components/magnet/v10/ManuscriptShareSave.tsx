@@ -55,7 +55,7 @@ export default function ManuscriptShareSave({
     const text = `${shareTemplate} ${url}`;
     try {
       await navigator.clipboard.writeText(text);
-      toast.success("Link copied — share it with your team.");
+      toast.success("Link copied. Share it with your team.");
       trackMagnetEvent(slug, "share_click", { channel: "copy", vertical });
       await supabase
         .from("magnet_share_events")
@@ -67,10 +67,10 @@ export default function ManuscriptShareSave({
 
   const handleEmailForward = async () => {
     const url = buildShareUrl();
-    const subject = encodeURIComponent(`${emailSubject} — ${customerName}`);
+    const subject = encodeURIComponent(`${emailSubject}: ${customerName}`);
     const body = encodeURIComponent(
       `${shareTemplate}\n\n${url}\n\n${
-        fromName ? `— ${fromName}` : ""
+        fromName ? `${fromName}` : ""
       }`.trim()
     );
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
@@ -133,7 +133,7 @@ export default function ManuscriptShareSave({
           "{MANUSCRIPT_INTRODUCTION.text}"
         </blockquote>
         <figcaption className="text-[10px] uppercase tracking-[0.25em] mt-4 opacity-55">
-          — {MANUSCRIPT_INTRODUCTION.attribution}
+          {MANUSCRIPT_INTRODUCTION.attribution}
         </figcaption>
       </figure>
 
@@ -155,7 +155,7 @@ export default function ManuscriptShareSave({
           </h3>
           <p className="text-sm opacity-75 mb-5 flex-1">
             If someone else at your firm should see this, they should. They will see your map,
-            scores, and findings — with your name on it.
+            scores, and findings, with your name on it.
           </p>
           <div className="flex flex-col sm:flex-row gap-2">
             <button
@@ -232,7 +232,7 @@ export default function ManuscriptShareSave({
             <DialogDescription className="text-[#1C1008]/70">
               {emailSent
                 ? `We'll send the ${customerName} map to ${emailValue.trim()} shortly. The map stays here either way.`
-                : "We'll send a copy to your inbox. No newsletter, no follow-up sequence — just the map."}
+                : "We'll send a copy to your inbox. No newsletter, no follow-up sequence. Just the map."}
             </DialogDescription>
           </DialogHeader>
           {!emailSent && (

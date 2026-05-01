@@ -32,7 +32,7 @@ export default function ProofAnalysisSection({ observed, primary, slug }: Props)
         className="font-bold leading-tight text-2xl md:text-3xl mb-6"
         style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
       >
-        What proof you already own — and what's missing.
+        What proof you already own. And what's missing.
       </h2>
 
       <OHQ
@@ -43,7 +43,7 @@ export default function ProofAnalysisSection({ observed, primary, slug }: Props)
         }
         hypothesis={
           hasObserved
-            ? "The proof is real. The library isn't built. A 7-day proof sprint typically converts dormant pipeline like Madcraft did — $400K dormant proposal reactivated in 7 minutes."
+            ? "The proof is real. The library isn't built. A 7-day proof sprint typically converts dormant pipeline like Madcraft did. $400K dormant proposal reactivated in 7 minutes."
             : "A 7-day proof library (3 wins, 1 page each) is the minimum. Madcraft reactivated a $400K dormant proposal in 7 minutes after building theirs."
         }
         question="Which client result do your prospects cite most often when they decide to work with you?"

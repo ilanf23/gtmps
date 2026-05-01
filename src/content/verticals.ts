@@ -1,6 +1,6 @@
 // Per-vertical content for /consulting, /law, /accounting, /msp,
 // /advisory, /ae, /recruiting, /agency.
-// Single source of truth — VerticalLanding renders any of these.
+// Single source of truth. VerticalLanding renders any of these.
 
 export type VerticalSlug =
   | 'consulting'
@@ -101,8 +101,8 @@ const consulting: VerticalContent = {
   researchLabel: 'Practice Growth Research',
   diagnosticEyebrow: '06 · THE PRACTICE GROWTH SCORE',
   sizingEyebrow: 'B · THE PRACTICE GROWTH GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Dormant accounts. Stalled proposals. Lost pursuits. The clients you used to serve and the prospects you used to pitch. 60-80% of contacts in a typical consulting CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the engagements you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Dormant accounts. Stalled proposals. Lost pursuits. The clients you used to serve and the prospects you used to pitch. 60-80% of contacts in a typical consulting CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the engagements you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in consulting terms.',
     items: [
@@ -177,8 +177,8 @@ const law: VerticalContent = {
   researchLabel: 'Origination Strategy Research',
   diagnosticEyebrow: '06 · THE ORIGINATION SCORE',
   sizingEyebrow: 'B · THE ORIGINATION GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Your dormant client relationships. The clients you used to work with, the matters that went silent, the contacts who knew you and stopped hearing from you. 60-80% of contacts in a typical law firm CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the matters you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Your dormant client relationships. The clients you used to work with, the matters that went silent, the contacts who knew you and stopped hearing from you. 60-80% of contacts in a typical law firm CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the matters you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in law firm terms.',
     items: [
@@ -253,8 +253,8 @@ const accounting: VerticalContent = {
   researchLabel: 'Client Development Research',
   diagnosticEyebrow: '06 · THE CLIENT DEVELOPMENT SCORE',
   sizingEyebrow: 'B · THE CLIENT DEVELOPMENT GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Tax-only clients you never cross-sold. Lapsed advisory prospects. Former clients you have not contacted since the last engagement closed. 60-80% of contacts in a typical accounting CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the engagements you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Tax-only clients you never cross-sold. Lapsed advisory prospects. Former clients you have not contacted since the last engagement closed. 60-80% of contacts in a typical accounting CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the engagements you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in accounting terms.',
     items: [
@@ -327,8 +327,8 @@ const msp: VerticalContent = {
   },
   ctaLabel: 'See Your Firm\'s GTM Profile →',
   sizingEyebrow: 'B · THE PIPELINE GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Churned customers. Lapsed POCs. Past contacts who moved to new firms. 60-80% of contacts in a typical MSP CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the accounts you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Churned customers. Lapsed POCs. Past contacts who moved to new firms. 60-80% of contacts in a typical MSP CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the accounts you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in MSP terms.',
     items: [
@@ -409,8 +409,8 @@ const advisory: VerticalContent = {
   researchLabel: 'Prospecting Research',
   diagnosticEyebrow: '06 · THE PROSPECTING SCORE',
   sizingEyebrow: 'B · THE PROSPECTING GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Lost prospects. Cold COIs. Former clients who left without a goodbye conversation. 60-80% of contacts in a typical advisory firm CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the accounts you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Lost prospects. Cold COIs. Former clients who left without a goodbye conversation. 60-80% of contacts in a typical advisory firm CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the accounts you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in advisory terms.',
     items: [
@@ -483,8 +483,8 @@ const ae: VerticalContent = {
   researchLabel: 'BD Research',
   diagnosticEyebrow: '06 · THE BD SCORE',
   sizingEyebrow: 'B · THE BD GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Lost RFPs. Past project clients without recent contact. Dormant pursuits. 60-80% of contacts in a typical A&E firm CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the projects you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Lost RFPs. Past project clients without recent contact. Dormant pursuits. 60-80% of contacts in a typical A&E firm CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the projects you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in A&E terms.',
     items: [
@@ -558,8 +558,8 @@ const recruiting: VerticalContent = {
   researchLabel: 'Mandate Origination Research',
   diagnosticEyebrow: '06 · THE MANDATE ORIGINATION SCORE',
   sizingEyebrow: 'B · THE MANDATE ORIGINATION GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Past clients without recent mandates. Placed candidates not retracked. Searches that went on hold and never restarted. 60-80% of contacts in a typical search firm CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the mandates you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Past clients without recent mandates. Placed candidates not retracked. Searches that went on hold and never restarted. 60-80% of contacts in a typical search firm CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the mandates you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in search firm terms.',
     items: [
@@ -632,8 +632,8 @@ const agency: VerticalContent = {
   researchLabel: 'New Business Research',
   diagnosticEyebrow: '06 · THE NEW BUSINESS SCORE',
   sizingEyebrow: 'B · THE NEW BUSINESS GAP',
-  deadZoneTooltip: 'THE DEAD ZONE — Lost pitches. Past clients without recent contact. Stalled prospects. 60-80% of contacts in a typical agency CRM are here right now.',
-  rrosTooltip: 'THE RELATIONSHIP REVENUE OS — A system for turning the relationships you already have into the accounts you have not yet won.',
+  deadZoneTooltip: 'THE DEAD ZONE. Lost pitches. Past clients without recent contact. Stalled prospects. 60-80% of contacts in a typical agency CRM are here right now.',
+  rrosTooltip: 'THE RELATIONSHIP REVENUE OS. A system for turning the relationships you already have into the accounts you have not yet won.',
   orbitsBlock: {
     title: 'The Five Orbits, in agency terms.',
     items: [

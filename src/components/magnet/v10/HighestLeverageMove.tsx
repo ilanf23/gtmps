@@ -17,7 +17,7 @@ const HEADLINES: Record<FindingProfile, string> = {
   weakCoreStrongProof:
     "Tighten your Core in one paragraph. Your Proof deserves a clearer doorway.",
   weakDeadZone:
-    "Reactivate your Dead Zone with a 7-minute signal — same play Madcraft ran.",
+    "Reactivate your Dead Zone with a 7-minute signal. Same play Madcraft ran.",
   allWeak:
     "Run the 90-day RROS sequence. Discover → Prove → Design → Activate → Compound.",
   allStrong:
@@ -75,7 +75,7 @@ export default function HighestLeverageMove({
           "{MANUSCRIPT_FORMULA.text}"
         </blockquote>
         <figcaption className="text-[10px] uppercase tracking-[0.25em] mt-3 opacity-50">
-          — {MANUSCRIPT_FORMULA.attribution}
+          {MANUSCRIPT_FORMULA.attribution}
         </figcaption>
       </figure>
     </section>

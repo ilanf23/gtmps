@@ -1,65 +1,68 @@
-# Redesign Section 06 — "Why This Research Matters"
+# Strip all em/en dashes from the microsite
 
-The current section uses a barely-there beige tint (`rgba(28,16,8,0.025)`) that reads as visual noise next to the new light-beige Sections 3 and 4. We will convert it into a dark, full-width "credibility break" that anchors the middle of the page, matching the cinematic editorial aesthetic from the main Discover page.
+Project memory rule: never use hyphens, em-dashes, or en-dashes in content text. The `/m/:slug` microsite still has them in two places: (1) hardcoded source strings, and (2) LLM-generated fields (`action_1`, `gtm_profile_observed`, `gtm_profile_assessment`, `orbit_01..05`) which is where the user's example came from.
 
-## Visual direction
+## Approach
 
-- **Background**: Deep near-black (`#1C1008`, the existing `MABBLY_DARK`) extending edge-to-edge of the viewport, the same breakout technique used for Sections 3 and 4.
-- **Text inversion**: Cream/off-white body text (`#FBF8F4`) on the dark ground; gold (`MABBLY_GOLD #B8933A`) for the eyebrow, hairline, and accent numerals.
-- **Imagery layer** (subtle, atmospheric, not decorative noise):
-  1. A soft gold radial spotlight in the upper-right (matches the cinematic spotlight motif already memorized for the main site).
-  2. A faint topographic contour pattern reusing the existing `TopographicBackground` component at very low opacity (~0.06) — it ties to the "MAP / research / cartography" metaphor without introducing a new asset.
-  3. A film-grain overlay using a CSS noise gradient at ~3% opacity for editorial texture.
-- **Editorial numerals**: The three credibility stats (`30`, `500`, `26`) get pulled out as large serif display numerals in gold, with their labels beneath in small caps. This makes the stats scannable and gives the section the visual weight it currently lacks.
-- **Verified cohort firms strip**: Keep the locked list (Madcraft, Calliope, SPR, AArete) but render the names in cream at higher opacity against the dark ground so they actually read as a logo strip.
+### 1. Runtime sanitizer (catches LLM output for all current and future personalized pages)
 
-## Layout sketch
+In `src/components/magnet/MagnetBreakdown.tsx`, replace the existing single-purpose `sanitizedAction` block with a reusable `sanitizeLLM` helper that:
 
-```text
-┌──────────────────────────── full-width dark band ────────────────────────────┐
-│  ·· faint topographic contours ··           ·· soft gold spotlight ··        │
-│                                                                              │
-│   — 06 · WHY THIS RESEARCH MATTERS                                           │
-│                                                                              │
-│   30 firms. 500 practitioner interviews.                                     │
-│   Validated by Copulsky.                                                     │
-│                                                                              │
-│   ┌────────────┬────────────┬────────────┐                                   │
-│   │    30      │    500     │     26     │   ← large gold serif numerals     │
-│   │  PS FIRMS  │ INTERVIEWS │   YEARS    │                                   │
-│   └────────────┴────────────┴────────────┘                                   │
-│                                                                              │
-│   [existing 3 paragraphs of body copy, in cream]                             │
-│                                                                              │
-│   ── VERIFIED COHORT FIRMS ──                                                │
-│   Madcraft   Calliope   SPR   AArete                                         │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
+- Strips invented dollar figures (existing behavior).
+- Removes em/en dashes using these rules:
+  - ` — ` or ` – ` (with surrounding spaces) becomes `. ` (sentence break).
+  - Bare dashes between word chars like `5M–100M` or `0–40` become `5M to 100M`.
+  - Any remaining `—` or `–` becomes `,`.
+  - Collapses double spaces and trims.
 
-## Files to edit
+Apply it to `action_1`, `gtm_profile_observed`, `gtm_profile_assessment`, and each of `orbit_01..05`. Pass the sanitized values down to `FiveOrbitsViz`, `CoreAnalysisSection`, `ProofAnalysisSection`, and `HighestLeverageMove`.
 
-1. **`src/components/magnet/v10/WhyResearchMatters.tsx`** — single-file change:
-   - Replace the section's near-transparent background with `backgroundColor: MABBLY_DARK` and apply the same full-width breakout classes used in `CoreAnalysisSection` / `ProofAnalysisSection`:
-     `relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-6 md:px-10`
-   - Wrap inner content in `<div className="max-w-2xl mx-auto relative">` to keep alignment with the rest of the page.
-   - Add three absolutely-positioned visual layers inside the section (behind content, `pointer-events-none`):
-     - A radial gold spotlight via inline `background: radial-gradient(...)` at top-right.
-     - The existing `TopographicBackground` component at `opacity={0.06}`.
-     - A grain layer using a tiny SVG noise data-URI at `opacity-[0.03]`.
-   - Recolor text: eyebrow + hairline stay gold; `<h2>` becomes `#FBF8F4`; body paragraphs become `#FBF8F4` at ~75% opacity; cohort firm names become `#FBF8F4` at ~70% opacity.
-   - Insert the three editorial stat tiles between the headline and body paragraphs. Numerals use the existing `font-serif` (Source Serif 4) at ~`text-5xl md:text-6xl` in gold; labels are `text-[10px] uppercase tracking-[0.25em]` in cream/60.
-   - Update the divider above the cohort firms strip to `border-white/10` so it reads on dark.
+### 2. Static source string replacements (user-visible JSX/strings only, NOT code comments)
 
-## Out of scope
+Replace dashes in user-visible strings across these files (comments untouched since they aren't rendered):
 
-- No changes to other sections, no font additions, no new imported assets.
-- The locked `VERIFIED_CLIENTS` list is preserved exactly (Madcraft, Calliope, SPR, AArete) — only its text color changes.
-- No copy edits to the three body paragraphs.
-- No layout/width changes to neighboring sections.
+- `src/content/verticals.ts` — 8 `deadZoneTooltip` + 8 `rrosTooltip` strings: replace ` — ` with `. `.
+- `src/content/verticalFlow.ts` — 9 `shareTemplate` strings: replace ` — ` with `. `.
+- `src/content/industryStats.ts` — 8 `label` strings: replace `$5M–$100M` with `$5M to $100M`.
+- `src/content/ctaVariants.ts` — section comments only (no user-visible dashes); skip.
+- `src/components/microsite/SpectrumBar.tsx` lines 13-15: `"0 — Relationship Dependent"` becomes `"0. Relationship Dependent"`, etc.
+- `src/components/microsite/MicrositeShell.tsx` line 31: title separator `${name} — Market Activation Profile` becomes `${name} | Market Activation Profile`.
+- `src/components/magnet/v10/ManuscriptShareSave.tsx`:
+  - Line 58 toast: `"Link copied — share it..."` becomes `"Link copied. Share it..."`.
+  - Line 70 subject: `${emailSubject} — ${customerName}` becomes `${emailSubject}: ${customerName}`.
+  - Line 73 signature: `— ${fromName}` becomes `${fromName}` (signature line, just the name).
+  - Line 136 attribution `— {attribution}` becomes plain `{attribution}` on its own line (or prefix with `By `).
+  - Line 158 body: `findings — with your name` becomes `findings, with your name`.
+  - Line 235 body: `follow-up sequence — just the map` becomes `follow-up sequence. Just the map`.
+- `src/components/magnet/v10/ValueInTheirWords.tsx`:
+  - Line 76, 101 attribution `— {attr}` becomes plain attribution prefixed with a styled spacer or just removed dash.
+- `src/components/magnet/v10/ProofAnalysisSection.tsx` line 35: `What proof you already own — and what's missing.` becomes `What proof you already own. And what's missing.`. Line 46 hypothesis: `like Madcraft did — $400K dormant proposal reactivated` becomes `like Madcraft did. $400K dormant proposal reactivated`.
+- `src/components/magnet/v10/HighestLeverageMove.tsx`:
+  - Line 20: `7-minute signal — same play Madcraft ran.` becomes `7-minute signal. Same play Madcraft ran.`.
+  - Line 78 attribution `— {attribution}` becomes plain attribution.
+  - Plus any other body strings in that file (re-scan).
+- `src/components/magnet/v10/CompactCtaCard.tsx`, `FullCtaSection.tsx`, `FiveOrbitsViz.tsx`, `PersonalizedHeader.tsx`, `MobileProgressBar.tsx`, `StickyShareFab.tsx`, `DeeperFindings.tsx`, `WhyResearchMatters.tsx`, `CoreAnalysisSection.tsx`: re-scan each for user-visible dashes (most matches are in code comments) and replace any user-visible ones with periods/commas.
+- `src/components/magnet/MagnetChat.tsx`, `MagnetWaitTheater.tsx`, `MagnetShell.tsx`, `MagnetLoadingScene.tsx`, `BookReader.tsx`, `BookChat.tsx`: same re-scan; replace user-visible dashes only.
 
-## Constraints respected
+### 3. Skip (intentional)
 
-- No hyphens / em-dashes / en-dashes in any new copy (only the three numeral labels are added, all single words).
-- Full-width breakout uses the exact pattern already approved for Sections 3 and 4.
-- Gold accent color stays `MABBLY_GOLD` (`#B8933A`); no new palette values introduced.
-- Reuses `TopographicBackground` rather than adding new image files — keeps bundle size flat.
+- All `// comment` lines remain untouched (not rendered).
+- `src/lib/magnetScoring.ts` is comments-only matches; skip.
+- `src/content/manuscriptQuotes.ts` line 3 is a comment; skip. The actual quote strings are verbatim research artifacts and will be re-scanned; if any quote contains a dash, leave it (these are direct quotes per the "Keep attribution exact" rule).
+
+### Replacement cheat sheet
+
+| Original | Replacement |
+|---|---|
+| ` — ` between clauses | `. ` |
+| ` — ` introducing attribution | drop dash, keep attribution |
+| `5M–100M` numeric range | `5M to 100M` |
+| `0–40` numeric range | `0 to 40` |
+| `—` in a title separator | `\|` (pipe) |
+| Any other bare dash | `,` |
+
+## Files touched
+
+Runtime: 1 file.
+Source string edits: ~15 files.
+Total: ~16 files. No new dependencies, no schema changes, no behavior changes besides text rendering.

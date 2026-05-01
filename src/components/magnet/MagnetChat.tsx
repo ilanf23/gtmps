@@ -81,7 +81,7 @@ export default function MagnetChat({ slug, companyName }: MagnetChatProps) {
             <span className="w-2 h-2 rounded-full bg-[#B8933A] animate-pulse shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-[#1C1008] truncate">
-                GTM Advisor — {companyName}
+                GTM Advisor. {companyName}
               </p>
               <p className="text-xs opacity-40 text-[#1C1008]">
                 Scoped to your breakdown

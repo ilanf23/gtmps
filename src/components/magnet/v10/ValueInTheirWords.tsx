@@ -73,7 +73,7 @@ export default function ValueInTheirWords({ primary }: Props) {
               "{c.quote}"
             </blockquote>
             <figcaption className="text-[10px] uppercase tracking-[0.18em] mt-4 opacity-60">
-              — {c.attribution}
+              {c.attribution}
             </figcaption>
           </figure>
         ))}
@@ -98,7 +98,7 @@ export default function ValueInTheirWords({ primary }: Props) {
           I'm building this research with practitioners like you. The book gets sharper from your
           input. Let's discuss what we're learning from your firm.
           <span className="block not-italic mt-1 text-xs uppercase tracking-[0.22em] opacity-60">
-            — Adam Fridman
+            Adam Fridman
           </span>
         </p>
       </div>

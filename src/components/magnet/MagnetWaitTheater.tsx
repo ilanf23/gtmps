@@ -167,7 +167,7 @@ export default function MagnetWaitTheater({
           Building your map
         </p>
         <h1 className="mt-2 text-xl sm:text-2xl font-serif leading-tight">
-          {firstName ? `${firstName} — building your RROS map for ` : 'Building your RROS map for '}
+          {firstName ? `${firstName}. Building your RROS map for ` : 'Building your RROS map for '}
           <span className="font-semibold not-italic">{headerName}</span>
         </h1>
 
@@ -237,7 +237,7 @@ export default function MagnetWaitTheater({
       )}
 
       <p className="mt-10 text-[10px] uppercase tracking-[0.28em] text-[#1C1008]/40 text-center">
-        This usually takes 60–90 seconds
+        This usually takes 60 to 90 seconds
       </p>
     </div>
   );
