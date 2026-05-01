@@ -52,8 +52,10 @@ export default function DeeperFindings({
     <section
       id="v10-section-10"
       data-v10-section="10"
-      className="py-10 md:py-12 border-b border-black/10"
+      className="py-14 md:py-20 border-y border-black/10 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-6 md:px-10"
+      style={{ backgroundColor: "#F7F1E6" }}
     >
+      <div className="max-w-[806px] mx-auto">
       <div className="flex items-center gap-2 mb-5">
         <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
         <p
