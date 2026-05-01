@@ -1,71 +1,144 @@
-# Brand palette contrast guard + local panel text colors
+# EDITH Ops Dashboard, Pass 1
 
-## Why the Idea2Result microsite is unreadable
+## Scope
 
-I checked the database row. Idea2Result extracted a dark theme:
+This pass ships the dashboard skeleton end-to-end against the data we already collect. The new tracking pixel, share-token attribution, and unified email log (Phases 2, 3, 4) are intentionally deferred to a second prompt. That keeps the blast radius small and gets you something usable today.
 
-```
-primary    #ff0000   (red)
-background #0a0a0a   (near-black)
-surface    #1a1a1a
-text       #ffffff   (white)
-textMuted  #b0b0b0
-```
+Tabs that ship with real data:
+- Overview, Microsites, Email List, Bookings, Health.
 
-`MagnetBreakdown.tsx` paints the page with `backgroundColor: brand.background` and `color: brand.text`, so the page is black with white text by default. That works for sections that respect the brand. The problem is that **multiple v10 sections hardcode a cream panel background** (`bg-[#FBF8F4]`) without setting a local text color, so they inherit the white parent color and render white text on cream cards (invisible). The screenshots confirm exactly this:
+Tabs that ship with a clearly-labelled "needs Phase 2 wiring" empty state:
+- Share / Affiliate Tracking. The view-attribution columns on Microsites (views, last viewed, shares) will display a placeholder pill rather than fake numbers.
 
-- Sections 3, 4, 10 (`ObservedHypothesisQuestion`): `bg-[#FBF8F4]` panels with inherited white body text.
-- Section 7 (`ValueInTheirWords`): `bg-[#FBF8F4]` quote cards on the dark Section 6 backdrop, white text.
-- Section 10 (`DeeperFindings`): same pattern.
-- Section 11 (`ManuscriptShareSave`): same pattern.
-- Section 1 (`PersonalizedHeader`): the "Your Revenue Map for" overline uses an opacity, but the firm-name display uses `brand.primary`. Idea2Result's gold defaults already look fine, but the rest of the page is borderline.
+Nothing on the public site changes. No new client deps. No design tokens touched.
 
-There are two layers to fix, and both should ship.
+## Auth approach (decision)
 
-## Fix 1 — Palette contrast guard (data layer, scalable)
+Password-on-every-request, no JWT. Reason:
 
-A new helper `assertReadableBrand(brand)` in `src/lib/clientTheme.ts` runs once in `MagnetBreakdown.tsx` after the palette is derived. It:
+- One role, one password. A signed JWT adds a key (`OPS_JWT_SECRET`), a signing library, and a verification path on every endpoint, with no security gain over re-checking the password header server-side.
+- Each `ops-*` edge function reads `Authorization: Bearer <password>` and constant-time compares against `OPS_DASHBOARD_PASSWORD`. If missing or wrong, return 401 immediately with no body details.
+- Client stores the password (after a successful `ops-auth` ping) under `sessionStorage.opsAuth` only. Never `localStorage`. Cleared on Sign Out and on tab close.
+- 5 wrong attempts inside 60s triggers a 5-minute soft lockout in `sessionStorage` (matches the prompt).
+- If `OPS_DASHBOARD_PASSWORD` is not set in Supabase secrets, every endpoint returns 503 "ops dashboard not configured". Never silently allows access.
 
-1. Computes WCAG contrast ratio between `text` and `background`. If below 4.5:1, **reject the extracted palette** and fall back to the safe Mabbly defaults (`bg #FBF8F4`, `text #1C1008`). The brand `primary` (accent) is preserved so the firm's color identity survives.
-2. Computes contrast between `primary` and `background`. If primary becomes invisible (ratio < 3.0 against the background), darken or lighten `primary` toward `MABBLY_GOLD` enough to meet 3.0:1. (For Idea2Result this would keep red but nudge it toward a darker red on a cream background.)
-3. Returns `{ brand, paletteRejected: boolean, originalBrand }` so the page can optionally surface a tiny dev-mode badge ("brand auto adjusted for legibility"). No user-facing badge in production. We log a `console.warn` so future failures are visible during QA.
+Only one secret to add: `OPS_DASHBOARD_PASSWORD`. I will request it via `add_secret` before deploying any function. Recommended value is the prompt's `12345678910`. You can rotate any time without code changes.
 
-Why fall back to cream-on-ink instead of trying to make the dark theme work: every v10 panel is designed around the cream surface (the OHQ panels, the quote cards, the Manuscript anchor). Trying to invert each one introduces 6+ branching code paths with their own contrast risks. Falling back to the validated cream palette is one decision that fixes every section at once.
+## Phase 1, database migrations
 
-## Fix 2 — Self-contained panel text colors (defensive belt-and-braces)
+Create three new tables with RLS service-role-only (no anon access at all, since this pass has no public writes to them yet):
 
-Even with the palette guard, hardcoded cream panels should never depend on inherited color. Add an explicit `text-[#1C1008]` (Mabbly dark) class to every panel that hardcodes `bg-[#FBF8F4]`. This way, if a future palette slips past the guard, the panels still read.
+- `magnet_views` (full schema as specified, indexed on `(slug, viewed_at)`)
+- `magnet_shares` (full schema as specified, indexed on `source_slug`, `share_token`, `recipient_email`)
+- `magnet_emails` (unified email log, unique on `(email, source_event, source_slug)`, generated `email_domain` column)
 
-Files touched:
+`magnet_bookings`: skip in this pass. The Bookings tab will read from existing `magnet_call_bookings` and show empty-state copy if you want a separate table later.
 
-- `src/components/magnet/v10/ObservedHypothesisQuestion.tsx` — both `<div className="bg-[#FBF8F4] p-5">` panels and the question panel: add `text-[#1C1008]`.
-- `src/components/magnet/v10/ValueInTheirWords.tsx` line 61: add `text-[#1C1008]`.
-- `src/components/magnet/v10/DeeperFindings.tsx` line 77: add `text-[#1C1008]`.
-- `src/components/magnet/v10/ManuscriptShareSave.tsx` lines 143 and 189: add `text-[#1C1008]`.
+`magnet_submissions` denorm columns: skip. The dashboard derives counts at query time. We add denorm in Phase 2 alongside the triggers that populate them.
 
-The Adam anchor block in `ValueInTheirWords` and the dialog content already declare explicit colors, so they are safe.
+RLS:
+- All three new tables: service role only. No anon insert, no anon select. Safe even if the table names leak; only edge functions with the service-role key can read them.
 
-## Fix 3 — Same guard for the OG/share image generator
+## Phase 5, /ops route + password gate
 
-`supabase/functions/og-pepper-group/index.ts` and any future OG functions read the palette directly. Out of scope for this pass since OG cards already use Mabbly dark defaults, but worth flagging in a TODO comment in `clientTheme.ts`.
+- `src/pages/Ops.tsx`: password gate UI, then dashboard layout. Centered single input, "EDITH OPS, enter access code". Shake animation on wrong code via a Tailwind keyframe added inline. Soft lockout after 5 fails / 60s.
+- `<meta name="robots" content="noindex,nofollow" />` injected via `react-helmet-async`-style pattern (the project does not have helmet; use a small `useEffect` that mutates `document.head`). No `robots.txt` change per your decision.
+- Register `/ops` in `src/App.tsx` above the catch-all `*`.
 
-## Files
+## Phase 6, dashboard UI (admin styling)
 
-1. `src/lib/clientTheme.ts` — add `assertReadableBrand` and WCAG helpers (or extend existing helpers if present).
-2. `src/components/magnet/MagnetBreakdown.tsx` — call `assertReadableBrand` after building `brand`.
-3. `src/components/magnet/v10/ObservedHypothesisQuestion.tsx` — add explicit panel text color.
-4. `src/components/magnet/v10/ValueInTheirWords.tsx` — same.
-5. `src/components/magnet/v10/DeeperFindings.tsx` — same.
-6. `src/components/magnet/v10/ManuscriptShareSave.tsx` — same.
+Plain dark surface using existing tokens (`bg-background`, `text-foreground`, `border-border`). No new colors. Layout: top strip + tabbed content via existing `@/components/ui/tabs`.
 
-## Out of scope
+Tabs and their data sources:
+- Overview, KPI cards from `magnet_submissions`, `magnet_call_bookings`, `magnet_emails`, `magnet_share_events`, `magnet_views`. 30-day chart via `recharts`. Activity feed from a UNION of recent inserts.
+- Microsites, paginated table from `magnet_submissions` joined to `magnet_breakdowns`. Click a row to expand inline detail (full breakdown JSON via `<pre>` viewer).
+- Share / Affiliate, current data: rows from `magnet_share_events` (already exists). New `magnet_shares` is empty until Phase 3, displayed as a "wire share-token attribution to populate" banner.
+- Email List, all rows from `magnet_emails`. Filters by source/date/domain. CSV export downloads via Blob link, no edge function needed beyond the data fetch. Backfill rows from existing `magnet_map_emails` on the fly with a UNION inside the edge function so day-1 isn't empty.
+- Bookings, list from `magnet_call_bookings`. If empty, copy: "No bookings tracked yet. Wire Calendly webhook to populate this tab."
+- Health, recent enrichment errors (`magnet_breakdowns.enrichment_error not null`), pending submissions older than 5 minutes (`status = 'pending' and created_at < now() - 5m`), edge function error rate (skip for v1, show "wire Supabase logs API for live error rate").
 
-- No prompt changes to the LLM brand extraction (the AI palette prompt already requests 4.5:1 text contrast against background; Idea2Result's site simply confused it). The runtime guard is the durable fix.
-- No new database migration, no schema changes, no edge function redeploy.
-- Existing well-behaved palettes (Madcraft, SPR, Calliope, etc.) are unaffected since their text/background ratios already exceed 4.5:1.
+## Phase 7, ops-* edge functions
 
-## What the fix does for the user
+All deploy with `verify_jwt = false` (we do our own auth). Every function:
+1. Reads `Authorization` header, constant-time compares against `OPS_DASHBOARD_PASSWORD`.
+2. If missing/wrong, returns 401 with `{ error: "unauthorized" }`.
+3. Otherwise runs the appropriate Supabase service-role query and returns JSON.
 
-- Idea2Result and any other dark-themed extraction renders as cream + ink (readable), with the firm's red preserved as the accent on eyebrows, hairlines, and CTAs.
-- A `console.warn` fires once on load when the guard rejects a palette, surfacing the issue during QA so it can be tightened later if needed.
-- All future microsites are protected from the same class of bug, regardless of how exotic the extracted palette is.
+Functions:
+- `ops-auth`, body `{ password }`, returns `{ ok: true }` or 401.
+- `ops-overview`, returns `{ kpis, timeseries, activity }`.
+- `ops-microsites`, query params `?q=&page=&sort=`, returns paginated rows.
+- `ops-microsite-detail`, query param `?slug=`, returns full breakdown + recent events.
+- `ops-shares`, returns outbound + inbound + top-sharers (mostly empty until Phase 3).
+- `ops-emails`, query params `?source=&from=&to=&domain=&q=&page=`, returns paginated.
+- `ops-emails-export`, same params, returns text/csv.
+- `ops-bookings`, paginated bookings.
+- `ops-health`, errors + pending + daily stats.
+
+Shared utility: `supabase/functions/_shared/ops-auth.ts` exporting `requireOpsAuth(req): Response | null`.
+
+## File map
+
+New files:
+- `supabase/migrations/<ts>_ops_dashboard_tables.sql`
+- `supabase/functions/_shared/ops-auth.ts`
+- `supabase/functions/ops-auth/index.ts`
+- `supabase/functions/ops-overview/index.ts`
+- `supabase/functions/ops-microsites/index.ts`
+- `supabase/functions/ops-microsite-detail/index.ts`
+- `supabase/functions/ops-shares/index.ts`
+- `supabase/functions/ops-emails/index.ts`
+- `supabase/functions/ops-emails-export/index.ts`
+- `supabase/functions/ops-bookings/index.ts`
+- `supabase/functions/ops-health/index.ts`
+- `src/pages/Ops.tsx`
+- `src/components/ops/OpsAuthGate.tsx`
+- `src/components/ops/OpsLayout.tsx`
+- `src/components/ops/tabs/OverviewTab.tsx`
+- `src/components/ops/tabs/MicrositesTab.tsx`
+- `src/components/ops/tabs/SharesTab.tsx`
+- `src/components/ops/tabs/EmailsTab.tsx`
+- `src/components/ops/tabs/BookingsTab.tsx`
+- `src/components/ops/tabs/HealthTab.tsx`
+- `src/lib/opsClient.ts` (small fetch wrapper that injects the password header)
+
+Modified files:
+- `src/App.tsx` (one new `<Route path="/ops" element={<Ops />} />` line above the catch-all)
+
+Untouched (explicit no-touch):
+- `magnet_submissions` schema
+- Any file under `src/components/magnet/`
+- `src/pages/MagnetSite.tsx`, `src/pages/MagnetAssess.tsx`
+- `src/pages/Discover.tsx`, `About.tsx`, `Awards.tsx`, `Manuscript.tsx`, `Aletheia.tsx`, vertical pages
+- `public/robots.txt`
+- `index.html`
+- `tailwind.config.ts`, `src/index.css`, design tokens
+- `src/integrations/supabase/client.ts`, `types.ts`
+
+## What this build does NOT do
+
+- No tracking pixel on `/m/:slug` (Phase 2). View counts on Microsites tab read 0 / "needs pixel".
+- No share-token generation or `?ref=` resolution (Phase 3). Outbound/Inbound share tables empty with banner.
+- No new email-capture wire-up (Phase 4). The Emails tab unions `magnet_emails` + existing `magnet_map_emails` so day-1 has data.
+- No realtime, no auto-refresh, no write operations, no roles beyond `ops`, no exports beyond email CSV.
+- No JWT, no Lovable Cloud auth user, no robots.txt change, no `config.toml` changes.
+
+## Order of operations
+
+1. Migration (Phase 1 tables, RLS).
+2. `add_secret` request for `OPS_DASHBOARD_PASSWORD`. Build pauses here until you confirm.
+3. Edge functions + shared auth util.
+4. `src/pages/Ops.tsx` with auth gate.
+5. Dashboard layout + 6 tabs.
+6. Smoke test each tab via the live preview, fix anything that surfaces.
+7. Report: files touched, secrets needed, gaps, Phase 2/3/4 follow-up checklist.
+
+## Phase 2/3/4 follow-up (next prompt, not now)
+
+When you're ready, the second prompt is:
+- `src/lib/magnetTracking.ts` (trackView / trackDwell / trackEvent)
+- `magnet-create-share` and `magnet-resolve-ref` edge functions
+- Triggers to maintain `view_count` / `share_count` denorm on `magnet_submissions`
+- Wire-up at the 4 capture points listed in Phase 4
+
+Approve and I'll start with the migration.
