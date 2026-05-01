@@ -197,7 +197,7 @@ export default function FiveOrbitsViz({
               const statusText =
                 band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
 
-              const driftDur = `${240 + i * 60}s`;
+              const driftDur = `${120 + i * 30}s`;
               const outerTo = `${i % 2 ? -360 : 360} ${VIEW_CENTER} ${VIEW_CENTER}`;
               const innerTo = `${i % 2 ? 360 : -360} ${lx} ${ly}`;
 
