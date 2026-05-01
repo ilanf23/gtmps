@@ -47,11 +47,16 @@ export function buildCalendlyPopupUrl(ctx: CalendlyContext): string {
   return buildCalendlyEmbedUrl(ctx);
 }
 
-/** Lazy-load the Calendly widget assets and resolve when ready. */
-export function ensureCalendlyAssets(): Promise<void> {
-  if (typeof document === "undefined") return Promise.resolve();
-  const w = window as AnyWindow;
+/**
+ * Warm up Calendly assets as early as possible.
+ * Safe to call multiple times. Loads the popup script + stylesheet so that by
+ * the time a user actually clicks a CTA or scrolls to the inline widget, the
+ * network round-trips are already done.
+ */
+export function prewarmCalendly(): void {
+  if (typeof document === "undefined") return;
 
+  // Stylesheet (used by both popup and inline widgets).
   if (!document.querySelector(`link[href="${STYLE_HREF}"]`)) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -59,56 +64,71 @@ export function ensureCalendlyAssets(): Promise<void> {
     document.head.appendChild(link);
   }
 
-  let script = document.querySelector<HTMLScriptElement>(
-    `script[src="${SCRIPT_SRC}"]`,
-  );
-  if (!script) {
-    script = document.createElement("script");
+  // widget.js — only needed for the popup. Inline mounts a direct iframe.
+  if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
+    const script = document.createElement("script");
     script.src = SCRIPT_SRC;
     script.async = true;
     document.body.appendChild(script);
   }
+}
+
+/** Lazy-load the Calendly widget assets and resolve when ready (popup path). */
+export function ensureCalendlyAssets(): Promise<void> {
+  if (typeof document === "undefined") return Promise.resolve();
+  prewarmCalendly();
+  const w = window as AnyWindow;
 
   return new Promise((resolve) => {
-    if (w.Calendly?.initInlineWidget) {
+    if (w.Calendly?.initPopupWidget) {
       resolve();
       return;
     }
     const start = Date.now();
     const timer = window.setInterval(() => {
-      if (w.Calendly?.initInlineWidget) {
+      if (w.Calendly?.initPopupWidget) {
         window.clearInterval(timer);
         resolve();
       } else if (Date.now() - start > 5000) {
         window.clearInterval(timer);
         resolve(); // resolve anyway; caller can fall back
       }
-    }, 80);
+    }, 60);
   });
 }
 
-/** Initialize the inline widget in `parent`. Clears any prior render. */
+/**
+ * Initialize the inline widget in `parent` by mounting the Calendly iframe
+ * directly. We deliberately bypass widget.js here because:
+ *  - widget.js itself just creates the same iframe with the same URL
+ *  - mounting directly removes a JS download + parse + a polling round-trip
+ *  - the iframe still emits the `calendly.event_scheduled` postMessage that
+ *    our listener relies on
+ */
 export function initCalendlyInline(
   parent: HTMLElement,
   ctx: CalendlyContext,
 ): void {
-  const url = buildCalendlyEmbedUrl(ctx);
-  const w = window as AnyWindow;
-  // Clear any prior placeholder text or previously-mounted iframe.
+  const url = `${buildCalendlyEmbedUrl(ctx)}&embed_domain=${encodeURIComponent(
+    window.location.hostname,
+  )}&embed_type=Inline`;
+
+  // Reuse an existing iframe if its URL is identical (avoids reload flicker).
+  const existing = parent.querySelector("iframe");
+  if (existing && existing.getAttribute("src") === url) return;
+
   parent.innerHTML = "";
-  if (w.Calendly?.initInlineWidget) {
-    w.Calendly.initInlineWidget({ url, parentElement: parent });
-  } else {
-    // Fallback: raw iframe so users still see the booker even if the JS fails.
-    const iframe = document.createElement("iframe");
-    iframe.src = url;
-    iframe.title = "Book a call with Adam";
-    iframe.style.width = "100%";
-    iframe.style.height = "100%";
-    iframe.style.border = "0";
-    iframe.allow = "fullscreen";
-    parent.appendChild(iframe);
-  }
+  const iframe = document.createElement("iframe");
+  iframe.src = url;
+  iframe.title = "Book a call with Adam";
+  iframe.style.width = "100%";
+  iframe.style.height = "100%";
+  iframe.style.minHeight = "660px";
+  iframe.style.border = "0";
+  iframe.style.colorScheme = "normal";
+  iframe.loading = "eager";
+  iframe.allow = "fullscreen";
+  parent.appendChild(iframe);
 }
 
 /** Open Calendly's popup widget. Falls back to a new tab if JS isn't ready. */
