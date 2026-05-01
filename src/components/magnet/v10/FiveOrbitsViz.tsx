@@ -249,6 +249,12 @@ export default function FiveOrbitsViz({
               const pillX = lx - pillW / 2;
               const pillY = ly - pillH / 2;
 
+              // Tooltip text shown on hover (native browser tooltip via
+              // SVG <title>). Falls back to the generic "could not read"
+              // message when no observation was extracted for this orbit.
+              const observation = orbits[i]?.trim() || fallbackObs;
+              const tooltipText = `${id} · ${ORBIT_NAMES[i]} — ${tokens.label} (${score}/100)\n\n${observation}`;
+
               return (
                 <g
                   key={`label-${i}`}
@@ -256,8 +262,12 @@ export default function FiveOrbitsViz({
                   onClick={() => setOpenIdx(isOpen ? null : i)}
                   role="button"
                   tabIndex={0}
-                  aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
+                  aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}. ${observation}`}
                 >
+                  {/* Native browser tooltip on hover — appears for both the
+                      pill rect and its text labels because <title> applies
+                      to the entire <g>. */}
+                  <title>{tooltipText}</title>
                   <rect
                     x={pillX}
                     y={pillY}
@@ -278,7 +288,7 @@ export default function FiveOrbitsViz({
                     textAnchor="middle"
                     fontSize="11"
                     fontWeight="700"
-                    style={{ fill: tokens.fg }}
+                    style={{ fill: tokens.fg, pointerEvents: "none" }}
                   >
                     {id} · {ORBIT_NAMES[i]}
                   </text>
@@ -288,7 +298,7 @@ export default function FiveOrbitsViz({
                     textAnchor="middle"
                     fontSize="10"
                     fontWeight="600"
-                    style={{ fill: tokens.fg, opacity: 0.85 }}
+                    style={{ fill: tokens.fg, opacity: 0.85, pointerEvents: "none" }}
                   >
                     {score} · {tokens.label}
                   </text>
