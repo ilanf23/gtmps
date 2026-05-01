@@ -54,6 +54,7 @@ interface Props {
   perOrbit: number[];
   bandPerOrbit: ScoreBand[];
   primary: string;
+  calendlyCtx?: CalendlyContext;
 }
 
 export default function FiveOrbitsViz({
@@ -61,8 +62,23 @@ export default function FiveOrbitsViz({
   perOrbit,
   bandPerOrbit,
   primary,
+  calendlyCtx,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const hoverTimer = useRef<number | null>(null);
+
+  const enterHover = (i: number) => {
+    if (hoverTimer.current) {
+      window.clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+    setHoverIdx(i);
+  };
+  const leaveHover = () => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => setHoverIdx(null), 220);
+  };
 
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
