@@ -148,7 +148,7 @@ export default function FiveOrbitsViz({
             viewBox={`0 0 ${VIEW} ${VIEW}`}
             preserveAspectRatio="xMidYMid meet"
             width="100%"
-            style={{ maxWidth: 2460, maxHeight: "min(80vh, 760px)", height: "auto" }}
+            style={{ maxWidth: 4920, maxHeight: "min(160vh, 1520px)", height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
