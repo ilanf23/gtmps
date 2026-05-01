@@ -15,7 +15,8 @@ export default function ProofAnalysisSection({ observed, primary, slug }: Props)
     <section
       id="v10-section-4"
       data-v10-section="4"
-      className="py-10 md:py-12 border-b border-black/10"
+      className="py-10 md:py-12 border-b border-black/10 -mx-6 px-6 md:-mx-10 md:px-10"
+      style={{ backgroundColor: "#F7F1E6" }}
     >
       <div className="flex items-center gap-2 mb-5">
         <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
