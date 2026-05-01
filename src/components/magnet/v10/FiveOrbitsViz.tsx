@@ -55,6 +55,7 @@ interface Props {
   bandPerOrbit: ScoreBand[];
   primary: string;
   calendlyCtx?: CalendlyContext;
+  clientLogoUrl?: string | null;
 }
 
 export default function FiveOrbitsViz({
@@ -63,9 +64,11 @@ export default function FiveOrbitsViz({
   bandPerOrbit,
   primary,
   calendlyCtx,
+  clientLogoUrl,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [logoOk, setLogoOk] = useState(true);
   const hoverTimer = useRef<number | null>(null);
 
   const enterHover = (i: number) => {
