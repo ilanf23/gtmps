@@ -81,7 +81,7 @@ export function OpsAuthGate({ onAuthed }: OpsAuthGateProps) {
         onAuthed();
         return;
       }
-      const failStatus = result.status;
+      const failStatus = (result as { ok: false; status: number }).status;
       if (failStatus === 503) {
         setError("ops dashboard not configured");
       } else {
