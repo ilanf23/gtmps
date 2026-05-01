@@ -145,9 +145,7 @@ export default function MagnetShell({
 
               if (showLogo) {
                 return (
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
+                  <div
                     className="flex items-center gap-3"
                     aria-label={safeName ?? "Client"}
                   >
@@ -178,7 +176,7 @@ export default function MagnetShell({
                         {safeName}
                       </span>
                     ) : null}
-                  </a>
+                  </div>
                 );
               }
 
