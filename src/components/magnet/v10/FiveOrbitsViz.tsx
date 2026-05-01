@@ -137,29 +137,49 @@ export default function FiveOrbitsViz({
             role="img"
             aria-label="Five Orbits diagram"
           >
-            {/* Center label */}
-            <text
-              x={VIEW_CENTER}
-              y={VIEW_CENTER - 4}
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight="700"
-              letterSpacing="2"
-              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
-            >
-              YOUR
-            </text>
-            <text
-              x={VIEW_CENTER}
-              y={VIEW_CENTER + 11}
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight="700"
-              letterSpacing="2"
-              style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
-            >
-              FIRM
-            </text>
+            {/* Center: client logo if available, otherwise "YOUR FIRM" text */}
+            <defs>
+              <clipPath id="orbit-center-clip">
+                <circle cx={VIEW_CENTER} cy={VIEW_CENTER} r={42} />
+              </clipPath>
+            </defs>
+            {clientLogoUrl && logoOk ? (
+              <image
+                href={clientLogoUrl}
+                x={VIEW_CENTER - 38}
+                y={VIEW_CENTER - 38}
+                width={76}
+                height={76}
+                preserveAspectRatio="xMidYMid meet"
+                clipPath="url(#orbit-center-clip)"
+                onError={() => setLogoOk(false)}
+              />
+            ) : (
+              <>
+                <text
+                  x={VIEW_CENTER}
+                  y={VIEW_CENTER - 4}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="700"
+                  letterSpacing="2"
+                  style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+                >
+                  YOUR
+                </text>
+                <text
+                  x={VIEW_CENTER}
+                  y={VIEW_CENTER + 11}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="700"
+                  letterSpacing="2"
+                  style={{ fill: "var(--brand-accent, currentColor)", textTransform: "uppercase" }}
+                >
+                  FIRM
+                </text>
+              </>
+            )}
 
             {/* Orbit rings */}
             {RADII.map((r, i) => {
