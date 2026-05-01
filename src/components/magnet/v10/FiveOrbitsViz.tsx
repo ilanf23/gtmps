@@ -292,6 +292,55 @@ export default function FiveOrbitsViz({
           </svg>
         </div>
 
+        {/* Hover preview card (desktop) — only when nothing is click-expanded */}
+        {hoverIdx !== null && openIdx === null && (() => {
+          const i = hoverIdx;
+          const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
+          const band = bandPerOrbit[i] ?? "low";
+          const accentBorder =
+            band === "high" ? "#2E7D32" : band === "mid" ? "#C9A227" : "#C62828";
+          const accentText =
+            band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
+          const accentBg =
+            band === "high" ? "#F4FBF4" : band === "mid" ? "#FFFBEC" : "#FFF5F4";
+          return (
+            <div
+              className="mt-6 mx-auto max-w-2xl border p-5 animate-fade-in"
+              style={{ borderColor: accentBorder, backgroundColor: accentBg }}
+              onMouseEnter={() => enterHover(i)}
+              onMouseLeave={leaveHover}
+            >
+              <div className="flex items-center justify-between gap-4 mb-2">
+                <p
+                  className="text-[11px] uppercase tracking-[0.25em] font-semibold"
+                  style={{ color: accentText }}
+                >
+                  {String(i + 1).padStart(2, "0")} · {ORBIT_NAMES[i]}
+                </p>
+                <span
+                  className="text-[11px] uppercase tracking-[0.18em] font-bold"
+                  style={{ color: accentText }}
+                >
+                  {tokens.label}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed opacity-90 mb-4">
+                {orbits[i]?.trim() || fallbackObs}
+              </p>
+              {calendlyCtx && (
+                <button
+                  type="button"
+                  onClick={() => openCalendlyPopup(calendlyCtx)}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-[12px] uppercase tracking-[0.14em] font-semibold transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: accentBorder, color: "#fff" }}
+                >
+                  Learn more <span aria-hidden>→</span>
+                </button>
+              )}
+            </div>
+          );
+        })()}
+
         {/* Expanded observation panel (desktop) */}
         {openIdx !== null && (
           <div
