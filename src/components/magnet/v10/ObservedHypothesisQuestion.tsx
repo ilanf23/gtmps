@@ -1,10 +1,12 @@
 // Shared 3-panel block used by Sections 3 (Core), 4 (Proof), and 10 (Deeper Findings).
 // Renders Observed / Hypothesis / Question columns (equal-width on desktop,
-// stacked on mobile). If `question` is empty, falls back gracefully to a
-// 2-column layout. A small italic feedback note sits below when `feedbackHref`
-// is provided, reinforcing the research-collaboration framing.
+// stacked on mobile). Columns whose text exceeds ~10 lines auto-collapse with
+// a "Show more" toggle so the boxes don't dominate the page.
+
+import { useEffect, useRef, useState } from "react";
 
 const MAGENTA = "#C2185B";
+const LINE_LIMIT = 10;
 
 interface Props {
   observed: string;
@@ -12,6 +14,63 @@ interface Props {
   question?: string;
   primary: string;
   feedbackHref?: string;
+}
+
+interface CollapsibleProps {
+  text: string;
+  className?: string;
+  toggleColor: string;
+}
+
+function CollapsibleText({ text, className = "", toggleColor }: CollapsibleProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const style = window.getComputedStyle(el);
+      const lh = parseFloat(style.lineHeight);
+      if (!lh || Number.isNaN(lh)) return;
+      const maxH = lh * LINE_LIMIT + 1;
+      setOverflowing(el.scrollHeight > maxH);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [text]);
+
+  const clampStyle: React.CSSProperties =
+    overflowing && !expanded
+      ? {
+          display: "-webkit-box",
+          WebkitLineClamp: LINE_LIMIT,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }
+      : {};
+
+  return (
+    <>
+      <div ref={ref} className={className} style={clampStyle}>
+        {text}
+      </div>
+      {overflowing && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-2 text-[12px] uppercase tracking-[0.12em] font-semibold hover:opacity-80"
+          style={{ color: toggleColor }}
+          aria-expanded={expanded}
+        >
+          {expanded ? "Show less" : "Show more"}
+        </button>
+      )}
+    </>
+  );
 }
 
 export default function ObservedHypothesisQuestion({
@@ -26,7 +85,7 @@ export default function ObservedHypothesisQuestion({
 
   return (
     <div>
-      <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10`}>
+      <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10 items-start`}>
         <div className="bg-[#FBF8F4] p-5">
           <p
             className="text-[12px] md:text-[13px] uppercase tracking-[0.12em] font-medium mb-2"
@@ -34,7 +93,11 @@ export default function ObservedHypothesisQuestion({
           >
             Observed
           </p>
-          <p className="text-base leading-relaxed opacity-85">{observed}</p>
+          <CollapsibleText
+            text={observed}
+            className="text-base leading-relaxed opacity-85"
+            toggleColor={primary}
+          />
         </div>
         <div className="bg-[#FBF8F4] p-5 relative">
           <span
@@ -48,7 +111,13 @@ export default function ObservedHypothesisQuestion({
           >
             Hypothesis
           </p>
-          <p className="text-base leading-relaxed pl-2">{hypothesis}</p>
+          <div className="pl-2">
+            <CollapsibleText
+              text={hypothesis}
+              className="text-base leading-relaxed"
+              toggleColor={primary}
+            />
+          </div>
         </div>
         {hasQuestion && (
           <div className="bg-[#FBF8F4] p-5 relative">
@@ -63,7 +132,13 @@ export default function ObservedHypothesisQuestion({
             >
               Question
             </p>
-            <p className="text-base italic leading-relaxed pl-2">{question}</p>
+            <div className="pl-2">
+              <CollapsibleText
+                text={question!}
+                className="text-base italic leading-relaxed"
+                toggleColor={MAGENTA}
+              />
+            </div>
           </div>
         )}
       </div>
