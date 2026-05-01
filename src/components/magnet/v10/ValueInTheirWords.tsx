@@ -84,18 +84,16 @@ export default function ValueInTheirWords({ primary }: Props) {
         className="mt-10 pt-8 flex items-start gap-4"
         style={{ borderTop: `1px solid ${MABBLY_GOLD}33` }}
       >
-        <div
-          className="w-20 h-20 rounded-full shrink-0 flex items-center justify-center text-base font-bold border-2"
+        <img
+          src="/adam-fridman.png"
+          alt="Adam Fridman"
+          loading="lazy"
+          className="w-20 h-20 rounded-full shrink-0 object-cover border-2"
           style={{
-            backgroundColor: MABBLY_DARK,
-            color: MABBLY_GOLD,
             borderColor: MABBLY_GOLD,
-            fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
+            backgroundColor: MABBLY_DARK,
           }}
-          aria-label="Adam Fridman"
-        >
-          AF
-        </div>
+        />
         <p className="text-sm md:text-base italic leading-relaxed opacity-85">
           I'm building this research with practitioners like you. The book gets sharper from your
           input. Let's discuss what we're learning from your firm.
