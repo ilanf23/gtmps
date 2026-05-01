@@ -15,8 +15,10 @@ const ORBIT_NAMES = [
 ];
 
 // Label position angles (degrees, 0 = right, going clockwise from top via -90 offset).
-// Spec: 270° top, 342°, 54°, 126°, 198°.
-const ORBIT_ANGLES_DEG = [270, 342, 54, 126, 198];
+// Staggered so adjacent rings drop their pills on opposite hemispheres of the
+// diagram, preventing the small inner rings (1, 2) from crowding each other.
+// Order is [ring1, ring2, ring3, ring4, ring5].
+const ORBIT_ANGLES_DEG = [270, 18, 162, 306, 90];
 
 // Band-relative tokens: every color is now driven off `--brand-accent`,
 // so the orbit visualization re-skins to the prospect's brand. Intensity
