@@ -85,7 +85,7 @@ export default function ObservedHypothesisQuestion({
 
   return (
     <div>
-      <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10 items-start`}>
+      <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10`}>
         <div className="bg-[#FBF8F4] p-5">
           <p
             className="text-[12px] md:text-[13px] uppercase tracking-[0.12em] font-medium mb-2"
