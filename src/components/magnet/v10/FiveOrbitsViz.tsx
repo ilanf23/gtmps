@@ -123,7 +123,7 @@ export default function FiveOrbitsViz({
           <svg
             viewBox={`0 0 ${VIEW} ${VIEW}`}
             width="100%"
-            style={{ maxWidth: 560, height: "auto" }}
+            style={{ maxWidth: 640, height: "auto" }}
             role="img"
             aria-label="Five Orbits diagram"
           >
