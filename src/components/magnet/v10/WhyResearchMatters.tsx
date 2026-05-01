@@ -59,7 +59,7 @@ export default function WhyResearchMatters({ primary }: Props) {
             color: MABBLY_DARK,
           }}
         >
-          30 firms. 500 practitioner interviews. Validated by Copulsky.
+          30 firms. 500 practitioner interviews.
         </h2>
 
         {/* Editorial stat tiles */}
