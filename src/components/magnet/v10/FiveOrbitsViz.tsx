@@ -2,9 +2,10 @@
 // Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
 // Mobile (<md): vertical card list with progress bars (legacy layout).
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import { openCalendlyPopup, type CalendlyContext } from "@/lib/calendly";
 
 const ORBIT_NAMES = [
   "Core Proof",
@@ -53,6 +54,7 @@ interface Props {
   perOrbit: number[];
   bandPerOrbit: ScoreBand[];
   primary: string;
+  calendlyCtx?: CalendlyContext;
 }
 
 export default function FiveOrbitsViz({
@@ -60,8 +62,23 @@ export default function FiveOrbitsViz({
   perOrbit,
   bandPerOrbit,
   primary,
+  calendlyCtx,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const hoverTimer = useRef<number | null>(null);
+
+  const enterHover = (i: number) => {
+    if (hoverTimer.current) {
+      window.clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+    setHoverIdx(i);
+  };
+  const leaveHover = () => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => setHoverIdx(null), 220);
+  };
 
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
@@ -225,6 +242,10 @@ export default function FiveOrbitsViz({
                     <g
                       style={{ cursor: "pointer" }}
                       onClick={() => setOpenIdx(isOpen ? null : i)}
+                      onMouseEnter={() => enterHover(i)}
+                      onMouseLeave={leaveHover}
+                      onFocus={() => enterHover(i)}
+                      onBlur={leaveHover}
                       role="button"
                       tabIndex={0}
                       aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
@@ -270,6 +291,55 @@ export default function FiveOrbitsViz({
             })}
           </svg>
         </div>
+
+        {/* Hover preview card (desktop) — only when nothing is click-expanded */}
+        {hoverIdx !== null && openIdx === null && (() => {
+          const i = hoverIdx;
+          const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
+          const band = bandPerOrbit[i] ?? "low";
+          const accentBorder =
+            band === "high" ? "#2E7D32" : band === "mid" ? "#C9A227" : "#C62828";
+          const accentText =
+            band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
+          const accentBg =
+            band === "high" ? "#F4FBF4" : band === "mid" ? "#FFFBEC" : "#FFF5F4";
+          return (
+            <div
+              className="mt-6 mx-auto max-w-2xl border p-5 animate-fade-in"
+              style={{ borderColor: accentBorder, backgroundColor: accentBg }}
+              onMouseEnter={() => enterHover(i)}
+              onMouseLeave={leaveHover}
+            >
+              <div className="flex items-center justify-between gap-4 mb-2">
+                <p
+                  className="text-[11px] uppercase tracking-[0.25em] font-semibold"
+                  style={{ color: accentText }}
+                >
+                  {String(i + 1).padStart(2, "0")} · {ORBIT_NAMES[i]}
+                </p>
+                <span
+                  className="text-[11px] uppercase tracking-[0.18em] font-bold"
+                  style={{ color: accentText }}
+                >
+                  {tokens.label}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed opacity-90 mb-4">
+                {orbits[i]?.trim() || fallbackObs}
+              </p>
+              {calendlyCtx && (
+                <button
+                  type="button"
+                  onClick={() => openCalendlyPopup(calendlyCtx)}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-[12px] uppercase tracking-[0.14em] font-semibold transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: accentBorder, color: "#fff" }}
+                >
+                  Learn more <span aria-hidden>→</span>
+                </button>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Expanded observation panel (desktop) */}
         {openIdx !== null && (

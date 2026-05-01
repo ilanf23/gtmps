@@ -268,6 +268,14 @@ export default function MagnetBreakdown({
           perOrbit={scores.perOrbit}
           bandPerOrbit={scores.bandPerOrbit}
           primary={brand.primary}
+          calendlyCtx={{
+            slug,
+            firmName: customerName,
+            firstName: submission?.first_name ?? null,
+            primary: brand.primary,
+            background: brand.background,
+            text: brand.text,
+          }}
         />
 
         <CoreAnalysisSection
