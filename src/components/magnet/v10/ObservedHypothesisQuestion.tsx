@@ -13,7 +13,9 @@ interface Props {
   hypothesis: string;
   question?: string;
   primary: string;
-  feedbackHref?: string;
+  /** When provided, renders the "We would love your feedback" line as a button
+   *  that opens an in-page dialog instead of navigating to /feedback. */
+  onFeedbackClick?: () => void;
 }
 
 interface CollapsibleProps {
@@ -78,7 +80,7 @@ export default function ObservedHypothesisQuestion({
   hypothesis,
   question,
   primary,
-  feedbackHref,
+  onFeedbackClick,
 }: Props) {
   const hasQuestion = Boolean(question && question.trim());
   const gridCols = hasQuestion ? "md:grid-cols-3" : "md:grid-cols-2";
@@ -142,15 +144,16 @@ export default function ObservedHypothesisQuestion({
           </div>
         )}
       </div>
-      {feedbackHref && (
+      {onFeedbackClick && (
         <p className="text-sm md:text-[14px] italic opacity-65 mt-4 leading-relaxed">
           We would love your{" "}
-          <a
-            href={feedbackHref}
-            className="underline underline-offset-2 hover:opacity-100"
+          <button
+            type="button"
+            onClick={onFeedbackClick}
+            className="underline underline-offset-2 hover:opacity-100 italic"
           >
             feedback
-          </a>
+          </button>
           . Did we get this right?
         </p>
       )}
