@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useClientTheme } from "@/hooks/useClientTheme";
 import { themeStyle } from "@/lib/clientTheme";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
-import { openCalendlyPopup } from "@/lib/calendly";
+import { openCalendlyPopup, prewarmCalendly } from "@/lib/calendly";
 import Footer from "@/components/Footer";
 
 /**
@@ -76,6 +76,18 @@ export default function MagnetShell({
   const slug = slugProp ?? params.slug;
   const theme = useClientTheme(slug);
   useGoogleFont(theme.fontFamily);
+
+  // Warm Calendly assets (script + stylesheet) the moment the microsite mounts
+  // so that by the time the user clicks "Book" or scrolls to the inline widget,
+  // the network round-trips are already done. Saves ~5-10s of perceived load.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const idle = (window as unknown as {
+      requestIdleCallback?: (cb: () => void) => number;
+    }).requestIdleCallback;
+    if (idle) idle(() => prewarmCalendly());
+    else window.setTimeout(() => prewarmCalendly(), 200);
+  }, []);
 
   const handleBookClick = () => {
     openCalendlyPopup({
