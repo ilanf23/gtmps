@@ -238,6 +238,64 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
 }
 
 /**
+ * V10 microsite brand pair shape used by `MagnetBreakdown.tsx`.
+ * Smaller surface than `ClientTheme`, just enough to paint the page chrome.
+ */
+export interface MagnetBrand {
+  primary: string;
+  background: string;
+  surface: string;
+  text: string;
+  textMuted: string;
+}
+
+const SAFE_FALLBACK: MagnetBrand = {
+  primary: "#B8933A",
+  background: "#FBF8F4",
+  surface: "#FFFFFF",
+  text: "#1C1008",
+  textMuted: "#1C1008",
+};
+
+/**
+ * Validate an extracted brand for legibility before it paints the microsite.
+ *
+ * Many v10 sections (OHQ panels, quote cards, manuscript anchor) hardcode a
+ * cream surface and rely on inherited text color. If the extracted brand
+ * yields a dark page (white text on near-black bg), those cream panels
+ * render white-on-cream and disappear. To avoid one-off branching in every
+ * panel, we reject any palette whose text/background contrast falls below
+ * WCAG AA (4.5:1) and fall back to the safe Mabbly cream + ink defaults.
+ * The firm's `primary` accent is preserved so brand identity survives.
+ */
+export function assertReadableBrand(
+  brand: MagnetBrand,
+  companyName?: string | null,
+): { brand: MagnetBrand; rejected: boolean } {
+  const ratio = contrastRatio(brand.text, brand.background);
+  if (ratio >= 4.5) {
+    return { brand, rejected: false };
+  }
+  if (typeof console !== "undefined") {
+    console.warn(
+      "[brand-guard] Extracted palette failed contrast check; falling back to safe defaults.",
+      {
+        company: companyName ?? null,
+        contrastRatio: Number(ratio.toFixed(2)),
+        rejected: brand,
+      },
+    );
+  }
+  // Preserve the firm's primary if it reads against the safe cream bg.
+  // If the primary is also illegible against cream, fall back fully.
+  const safe: MagnetBrand = { ...SAFE_FALLBACK };
+  if (contrastRatio(brand.primary, SAFE_FALLBACK.background) >= 3.0) {
+    safe.primary = brand.primary;
+  }
+  return { brand: safe, rejected: true };
+}
+
+/**
  * Convert a theme into CSS variables that any microsite component can read.
  * Use these on a wrapper element via `style={themeStyle(theme)}`.
  *
