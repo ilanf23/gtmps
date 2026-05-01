@@ -28,7 +28,7 @@ export default function MicrositeShell({ data }: Props) {
   };
 
   useEffect(() => {
-    const title = `${data.companyName} — Market Activation Profile | Mabbly`;
+    const title = `${data.companyName} | Market Activation Profile | Mabbly`;
     const description = `A personalized market activation profile prepared for ${data.preparedFor} by Mabbly.`;
     const ogImage = data.ogImage ? `${window.location.origin}/${data.ogImage}` : `${window.location.origin}/og-${data.slug}.jpg`;
 

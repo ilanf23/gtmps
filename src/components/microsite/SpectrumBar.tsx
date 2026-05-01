@@ -10,9 +10,9 @@ export default function SpectrumBar({
   score,
   maxScore,
   labels = {
-    left: "0 — Relationship Dependent",
-    center: "2 — Transactional",
-    right: "4 — System-Driven",
+    left: "0. Relationship Dependent",
+    center: "2. Transactional",
+    right: "4. System-Driven",
   },
 }: Props) {
   const [animate, setAnimate] = useState(false);
