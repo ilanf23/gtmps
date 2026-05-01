@@ -161,12 +161,6 @@ export default function FullCtaSection({
           style={{ minWidth: "320px", height: "720px" }}
         />
 
-        {/* Microlines */}
-        <div className="mt-4 flex flex-col sm:flex-row gap-1 sm:gap-3 text-xs opacity-65">
-          <span>Adam typically has 4–6 slots open this week.</span>
-          <span className="hidden sm:inline opacity-40" aria-hidden>·</span>
-          <span>30 minutes. No pitch. No commitment.</span>
-        </div>
       </div>
     </section>
   );
