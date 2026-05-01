@@ -13,6 +13,7 @@ interface Props {
 
 export default function CoreAnalysisSection({ observed, primary, slug }: Props) {
   const hasObserved = Boolean(observed && observed.trim());
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   return (
     <section
       id="v10-section-3"
@@ -50,9 +51,16 @@ export default function CoreAnalysisSection({ observed, primary, slug }: Props) 
         }
         question="How do your best clients describe what you do, in their own words, when they refer you?"
         primary={primary}
-        feedbackHref={slug ? `/m/${slug}/feedback` : undefined}
+        onFeedbackClick={() => setFeedbackOpen(true)}
       />
       </div>
+      <FeedbackDialog
+        open={feedbackOpen}
+        onOpenChange={setFeedbackOpen}
+        slug={slug}
+        context="Section 3 · Your Core"
+        primary={primary}
+      />
     </section>
   );
 }
