@@ -1,6 +1,8 @@
 // SECTION 03 — Your Core (Observed / Hypothesis / Question)
 
+import { useState } from "react";
 import OHQ from "./ObservedHypothesisQuestion";
+import FeedbackDialog from "./FeedbackDialog";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
