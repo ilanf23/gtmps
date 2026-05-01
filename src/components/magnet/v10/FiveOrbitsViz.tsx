@@ -20,32 +20,36 @@ const ORBIT_NAMES = [
 // Order is [ring1, ring2, ring3, ring4, ring5].
 const ORBIT_ANGLES_DEG = [270, 18, 162, 306, 90];
 
-// Band-relative tokens: every color is now driven off `--brand-accent`,
-// so the orbit visualization re-skins to the prospect's brand. Intensity
-// (opacity / label) still signals high vs mid vs low.
+// Semantic signal colors. These intentionally OVERRIDE the client brand
+// accent so signal strength is unambiguous: green = strong, orange = mixed,
+// red = gap. Brand color still drives chrome elsewhere on the page.
+const SIGNAL_GREEN = "#4CAF50";   // light green
+const SIGNAL_ORANGE = "#F57C00";  // orange
+const SIGNAL_RED = "#E57373";     // light red
+
 const BAND_TOKENS: Record<
   ScoreBand,
   { fg: string; meter: string; bg: string; border: string; label: string }
 > = {
   high: {
-    fg: "var(--brand-accent, #2E7D32)",
-    meter: "var(--brand-accent, #2E7D32)",
-    bg: "color-mix(in srgb, var(--brand-accent, #2E7D32) 12%, transparent)",
-    border: "color-mix(in srgb, var(--brand-accent, #2E7D32) 55%, transparent)",
+    fg: SIGNAL_GREEN,
+    meter: SIGNAL_GREEN,
+    bg: `color-mix(in srgb, ${SIGNAL_GREEN} 12%, transparent)`,
+    border: `color-mix(in srgb, ${SIGNAL_GREEN} 55%, transparent)`,
     label: "Strong",
   },
   mid: {
-    fg: "var(--brand-accent, #B8933A)",
-    meter: "var(--brand-accent, #B8933A)",
-    bg: "color-mix(in srgb, var(--brand-accent, #B8933A) 8%, transparent)",
-    border: "color-mix(in srgb, var(--brand-accent, #B8933A) 40%, transparent)",
+    fg: SIGNAL_ORANGE,
+    meter: SIGNAL_ORANGE,
+    bg: `color-mix(in srgb, ${SIGNAL_ORANGE} 10%, transparent)`,
+    border: `color-mix(in srgb, ${SIGNAL_ORANGE} 50%, transparent)`,
     label: "Mixed",
   },
   low: {
-    fg: "var(--brand-accent, #B43C32)",
-    meter: "var(--brand-accent, #B43C32)",
-    bg: "color-mix(in srgb, var(--brand-accent, #B43C32) 5%, transparent)",
-    border: "color-mix(in srgb, var(--brand-accent, #B43C32) 25%, transparent)",
+    fg: SIGNAL_RED,
+    meter: SIGNAL_RED,
+    bg: `color-mix(in srgb, ${SIGNAL_RED} 8%, transparent)`,
+    border: `color-mix(in srgb, ${SIGNAL_RED} 45%, transparent)`,
     label: "Gap",
   },
 };
@@ -194,11 +198,13 @@ export default function FiveOrbitsViz({
               </>
             )}
 
-            {/* Orbit rings */}
+            {/* Orbit rings — stroke color matches the band signal so the
+                ring itself reads as green / orange / red at a glance. */}
             {RADII.map((r, i) => {
               const band = bandPerOrbit[i] ?? "low";
+              const tokens = BAND_TOKENS[band];
               const isStrong = band === "high";
-              const opacity = isStrong ? 1 : 0.3;
+              const opacity = isStrong ? 1 : 0.55;
               const isDeadZone = i === 2;
               return (
                 <circle
@@ -207,15 +213,14 @@ export default function FiveOrbitsViz({
                   cy={VIEW_CENTER}
                   r={r}
                   fill="none"
-                  stroke="var(--brand-accent, currentColor)"
+                  stroke={tokens.meter}
                   strokeWidth={2}
                   opacity={opacity}
                   className={isDeadZone ? "orbit-ring-pulse" : ""}
                   style={
                     isDeadZone
                       ? {
-                          filter:
-                            "drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent, #B43C32) 60%, transparent))",
+                          filter: `drop-shadow(0 0 6px color-mix(in srgb, ${tokens.meter} 60%, transparent))`,
                         }
                       : undefined
                   }
