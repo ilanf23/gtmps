@@ -2,9 +2,10 @@
 // Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
 // Mobile (<md): vertical card list with progress bars (legacy layout).
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import { openCalendlyPopup, type CalendlyContext } from "@/lib/calendly";
 
 const ORBIT_NAMES = [
   "Core Proof",
