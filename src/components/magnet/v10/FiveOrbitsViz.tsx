@@ -188,6 +188,15 @@ export default function FiveOrbitsViz({
               const pillX = lx - pillW / 2;
               const pillY = ly - pillH / 2;
 
+              // Status colors for the pill cell + text only (rings unchanged).
+              const band = bandPerOrbit[i] ?? "low";
+              const statusFill =
+                band === "high" ? "#E8F5E9" : band === "mid" ? "#FFF8E1" : "#FDECEA";
+              const statusStroke =
+                band === "high" ? "#2E7D32" : band === "mid" ? "#C9A227" : "#C62828";
+              const statusText =
+                band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
+
               return (
                 <g
                   key={`label-${i}`}
@@ -203,8 +212,8 @@ export default function FiveOrbitsViz({
                     width={pillW}
                     height={pillH}
                     rx={pillH / 2}
-                    fill="var(--brand-bg-subtle, #FBF8F4)"
-                    stroke={tokens.border}
+                    fill={statusFill}
+                    stroke={statusStroke}
                     strokeWidth={isOpen || isDeadZone ? 2 : 1}
                     style={{
                       filter:
@@ -217,7 +226,7 @@ export default function FiveOrbitsViz({
                     textAnchor="middle"
                     fontSize="11"
                     fontWeight="700"
-                    style={{ fill: tokens.fg }}
+                    style={{ fill: statusText }}
                   >
                     {id} · {ORBIT_NAMES[i]}
                   </text>
@@ -227,7 +236,7 @@ export default function FiveOrbitsViz({
                     textAnchor="middle"
                     fontSize="10"
                     fontWeight="600"
-                    style={{ fill: tokens.fg, opacity: 0.85 }}
+                    style={{ fill: statusText, opacity: 0.85 }}
                   >
                     {score} · {tokens.label}
                   </text>

@@ -1,10 +1,37 @@
-## Reduce gap between CH numbers and titles
+# Color orbit pill cells by band
 
-In `src/components/aletheia/AletheiaChapters.tsx`, the chapter row is a 12-column grid where the CH label takes col-span-2 and the title takes col-span-10, leaving a large empty space between them.
+Update only the pill (oval cell + label text) in the Five Orbits SVG diagram so its color reflects the band:
 
-### Change
-- Shrink the CH label column from `md:col-span-2` to `md:col-span-1`
-- Expand the title column from `md:col-span-10` to `md:col-span-11`
-- Reduce grid `gap-4` to `gap-2` to further tighten the spacing
+- Strong (high) → green
+- Mixed (mid) → yellow
+- Gap (low) → red
 
-This pulls the chapter title much closer to the "CH 0X" label while keeping the gold left border and overall row rhythm intact.
+Rings, ring colors, dead-zone pulse, mobile cards, and all other elements remain untouched.
+
+## File
+
+`src/components/magnet/v10/FiveOrbitsViz.tsx` — desktop label loop (~lines 174–236).
+
+## Change
+
+Inside the label `.map`, derive three status colors from `bandPerOrbit[i]`:
+
+```text
+band === "high" → fill #E8F5E9, stroke #2E7D32, text #1B5E20  (green)
+band === "mid"  → fill #FFF8E1, stroke #C9A227, text #8A6D1A  (yellow)
+band === "low"  → fill #FDECEA, stroke #C62828, text #B71C1C  (red)
+```
+
+Apply:
+- `<rect>` `fill` and `stroke` use the new status colors instead of `var(--brand-bg-subtle…)` and `tokens.border`.
+- Both `<text>` elements use the new status text color instead of `tokens.fg`.
+
+Keep stroke-width logic (`isOpen || isDeadZone ? 2 : 1`) and the drop-shadow filter exactly as-is.
+
+## Out of scope
+
+- Ring `<circle>` colors, opacity, dead-zone pulse animation
+- Center "YOUR FIRM" text
+- Expanded observation panel below the diagram
+- Mobile card list
+- BAND_TOKENS object (still used for `tokens.label` text and the panel)
