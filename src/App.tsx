@@ -28,6 +28,7 @@ import MagnetFeedbackPage from "./pages/MagnetFeedbackPage.tsx";
 import Awards from "./pages/Awards.tsx";
 import About from "./pages/About.tsx";
 import Aletheia from "./pages/Aletheia.tsx";
+import Ops from "./pages/Ops.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/awards" element={<Awards />} />
           <Route path="/about" element={<About />} />
           <Route path="/aletheia" element={<Aletheia />} />
+          <Route path="/ops" element={<Ops />} />
           {/* ADD NEW MICROSITE ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
