@@ -15,6 +15,8 @@ interface Props {
 export default function StickyShareFab({ onClick }: Props) {
   const [pastSection2, setPastSection2] = useState(false);
   const [section11Visible, setSection11Visible] = useState(false);
+  const [s2Ready, setS2Ready] = useState(false);
+  const [s11Ready, setS11Ready] = useState(false);
 
   // Track when user has scrolled past Section 2 (top edge of S2 above viewport top)
   useEffect(() => {
@@ -28,10 +30,9 @@ export default function StickyShareFab({ onClick }: Props) {
       }
       obs = new IntersectionObserver(
         ([entry]) => {
-          // Once the bottom of S2 has scrolled above viewport top, intersection
-          // is false AND boundingClientRect is above 0 → user is past it.
           const past = !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
           setPastSection2(past);
+          setS2Ready(true);
         },
         { threshold: 0, rootMargin: "0px" }
       );
@@ -55,7 +56,10 @@ export default function StickyShareFab({ onClick }: Props) {
         return;
       }
       obs = new IntersectionObserver(
-        ([entry]) => setSection11Visible(entry.isIntersecting),
+        ([entry]) => {
+          setSection11Visible(entry.isIntersecting);
+          setS11Ready(true);
+        },
         { threshold: 0.2 }
       );
       obs.observe(el);
@@ -67,7 +71,13 @@ export default function StickyShareFab({ onClick }: Props) {
     };
   }, []);
 
+  // Don't render until both observers have produced their first reading.
+  // Prevents the sub-second window where the FAB exists in the DOM but is
+  // invisible/non-interactive.
+  if (!s2Ready || !s11Ready) return null;
+
   const visible = pastSection2 && !section11Visible;
+  if (!visible) return null;
 
   return (
     <button
@@ -83,8 +93,6 @@ export default function StickyShareFab({ onClick }: Props) {
         border: `2px solid ${MABBLY_GOLD}`,
         color: MABBLY_GOLD,
         boxShadow: "0 6px 18px -4px rgba(0,0,0,0.35)",
-        opacity: visible ? 1 : 0,
-        pointerEvents: visible ? "auto" : "none",
       }}
     >
       <svg
