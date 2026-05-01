@@ -242,6 +242,10 @@ export default function FiveOrbitsViz({
                     <g
                       style={{ cursor: "pointer" }}
                       onClick={() => setOpenIdx(isOpen ? null : i)}
+                      onMouseEnter={() => enterHover(i)}
+                      onMouseLeave={leaveHover}
+                      onFocus={() => enterHover(i)}
+                      onBlur={leaveHover}
                       role="button"
                       tabIndex={0}
                       aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
