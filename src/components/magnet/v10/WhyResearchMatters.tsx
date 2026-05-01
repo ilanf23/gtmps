@@ -25,37 +25,21 @@ export default function WhyResearchMatters({ primary }: Props) {
     <section
       id="v10-section-6"
       data-v10-section="6"
-      className="py-14 md:py-20 border-y border-white/5 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-6 md:px-10 overflow-hidden"
-      style={{ backgroundColor: MABBLY_DARK, color: "#FBF8F4" }}
+      className="py-14 md:py-20 border-y border-black/10 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-6 md:px-10 overflow-hidden"
+      style={{ backgroundColor: "#FFFFFF", color: MABBLY_DARK }}
     >
       {/* Imagery layers (behind content) */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        {/* Soft gold spotlight, upper-right */}
+        {/* Soft gold spotlight, upper-right (toned down for light bg) */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 60% 50% at 85% 0%, rgba(184,147,58,0.22), transparent 60%)",
+              "radial-gradient(ellipse 60% 50% at 85% 0%, rgba(184,147,58,0.10), transparent 60%)",
           }}
         />
         {/* Topographic contour map */}
-        <TopographicBackground opacity={0.06} />
-        {/* Film grain */}
-        <div
-          className="absolute inset-0 mix-blend-overlay opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")",
-          }}
-        />
-        {/* Bottom fade for depth */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-32"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.4), transparent)",
-          }}
-        />
+        <TopographicBackground opacity={0.04} />
       </div>
 
       <div className="max-w-[806px] mx-auto relative">
@@ -72,14 +56,14 @@ export default function WhyResearchMatters({ primary }: Props) {
           className="font-bold leading-tight text-2xl md:text-3xl mb-10 max-w-[806px]"
           style={{
             fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
-            color: "#FBF8F4",
+            color: MABBLY_DARK,
           }}
         >
           30 firms. 500 practitioner interviews. Validated by Copulsky.
         </h2>
 
         {/* Editorial stat tiles */}
-        <div className="grid grid-cols-3 gap-4 md:gap-8 mb-10 pb-10 border-b border-white/10">
+        <div className="grid grid-cols-3 gap-4 md:gap-8 mb-10 pb-10 border-b border-black/10">
           {STATS.map((s) => (
             <div key={s.label} className="text-left">
               <div
@@ -93,7 +77,7 @@ export default function WhyResearchMatters({ primary }: Props) {
               </div>
               <div
                 className="text-[10px] md:text-[11px] uppercase font-semibold"
-                style={{ letterSpacing: "0.25em", color: "rgba(251,248,244,0.6)" }}
+                style={{ letterSpacing: "0.25em", color: "rgba(28,16,8,0.6)" }}
               >
                 {s.label}
               </div>
@@ -103,7 +87,7 @@ export default function WhyResearchMatters({ primary }: Props) {
 
         <div
           className="space-y-5 max-w-xl text-sm md:text-base leading-relaxed"
-          style={{ color: "rgba(251,248,244,0.78)" }}
+          style={{ color: "rgba(28,16,8,0.82)" }}
         >
           <p>
             30 PS firms in the cohort. Including AArete and SPR. Validated by Jonathan Copulsky, Former CMO Deloitte and Senior Lecturer Northwestern Kellogg. He wrote the foreword.
@@ -118,10 +102,10 @@ export default function WhyResearchMatters({ primary }: Props) {
         </div>
 
         {/* Verified-only logo strip */}
-        <div className="mt-10 pt-6 border-t border-white/10">
+        <div className="mt-10 pt-6 border-t border-black/10">
           <p
             className="text-[10px] uppercase font-semibold mb-4"
-            style={{ letterSpacing: "0.25em", color: "rgba(251,248,244,0.5)" }}
+            style={{ letterSpacing: "0.25em", color: "rgba(28,16,8,0.55)" }}
           >
             Verified cohort firms
           </p>
@@ -130,7 +114,7 @@ export default function WhyResearchMatters({ primary }: Props) {
               <span
                 key={name}
                 className="font-display font-bold text-sm"
-                style={{ color: "rgba(251,248,244,0.75)", letterSpacing: "-0.01em" }}
+                style={{ color: "rgba(28,16,8,0.78)", letterSpacing: "-0.01em" }}
               >
                 {name}
               </span>
