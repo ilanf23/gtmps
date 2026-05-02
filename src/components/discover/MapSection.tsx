@@ -1,3 +1,5 @@
+import { scrollToHero } from '@/lib/scrollToHero';
+
 const DIMENSIONS = [
   'Relationship Depth',
   'Orbit Activation',
@@ -149,7 +151,8 @@ export default function MapSection() {
               Get your GTM Score. See exactly where you stand.
             </p>
             <a
-              href="/assess"
+              href="#hero"
+              onClick={(e) => { e.preventDefault(); scrollToHero(); }}
               data-cta="add-your-firm"
               style={{
                 display: 'block',

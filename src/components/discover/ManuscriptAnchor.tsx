@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import bookCover from '@/assets/book-cover-v2.png';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { scrollToHero } from '@/lib/scrollToHero';
 
 export default function ManuscriptAnchor() {
   const ref = useRef<HTMLElement>(null);
@@ -143,7 +144,12 @@ export default function ManuscriptAnchor() {
         <p className="ma-line">
           30 chapters. Three frameworks. Available now to Early Access readers.
         </p>
-        <a href="/assess" className="ma-cta" data-cta="add-your-firm">
+        <a
+          href="#hero"
+          onClick={(e) => { e.preventDefault(); scrollToHero(); }}
+          className="ma-cta"
+          data-cta="add-your-firm"
+        >
           Add Your Firm →
         </a>
       </div>

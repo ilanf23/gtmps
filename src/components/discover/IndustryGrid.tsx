@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 import { NAV_VERTICAL_LINKS } from '@/content/verticals';
 import { INDUSTRY_ICONS } from '@/content/industryIcons';
-
-const ADD_YOUR_FIRM_HREF = '/assess';
+import { scrollToHero } from '@/lib/scrollToHero';
 
 export default function IndustryGrid() {
   return (
@@ -164,7 +163,8 @@ export default function IndustryGrid() {
               Or stay general — <em>Take the diagnostic now.</em>
             </p>
             <a
-              href={ADD_YOUR_FIRM_HREF}
+              href="#hero"
+              onClick={(e) => { e.preventDefault(); scrollToHero(); }}
               className="ig-cta"
               data-cta="add-your-firm"
             >

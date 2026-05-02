@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { scrollToHero } from '@/lib/scrollToHero';
 
 const BADGES = ['AArete', 'West Monroe', 'Kearney', 'Accenture', 'Madcraft'];
 
@@ -221,7 +222,11 @@ export default function BetaReader() {
               style={inputStyle}
             />
             <button
-              type="submit"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToHero();
+              }}
               style={{
                 background: '#A8923A',
                 color: '#fff',

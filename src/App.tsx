@@ -19,7 +19,6 @@ import Advisory from "./pages/verticals/Advisory.tsx";
 import Ae from "./pages/verticals/Ae.tsx";
 import Recruiting from "./pages/verticals/Recruiting.tsx";
 import Agency from "./pages/verticals/Agency.tsx";
-import MagnetAssess from "./pages/MagnetAssess.tsx";
 import MagnetSite from "./pages/MagnetSite.tsx";
 import MagnetBook from "./pages/MagnetBook.tsx";
 import MagnetBookChatPage from "./pages/MagnetBookChatPage.tsx";
@@ -64,7 +63,6 @@ const App = () => (
           <Route path="/ae" element={<Ae />} />
           <Route path="/recruiting" element={<Recruiting />} />
           <Route path="/agency" element={<Agency />} />
-          <Route path="/assess" element={<MagnetAssess />} />
           <Route path="/m/:slug" element={<MagnetSite />} />
           <Route path="/m/:slug/chat" element={<MagnetBookChatPage />} />
           <Route path="/m/:slug/read" element={<MagnetBookReaderPage />} />

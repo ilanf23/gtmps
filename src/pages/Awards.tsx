@@ -154,7 +154,7 @@ function AwardsNav() {
             <Link to="/about" className="an-link">About</Link>
             <Link to="/awards" className="an-link" data-active="true">Awards</Link>
             <a href={PODCAST_HREF} target="_blank" rel="noopener noreferrer" className="an-link">Podcast</a>
-            <a href="/assess" className="an-cta">Add Your Firm →</a>
+            <a href="/#hero" className="an-cta">Add Your Firm →</a>
           </div>
 
           <button className="an-burger" aria-label="Toggle menu" onClick={() => setOpen(!open)}>
@@ -184,7 +184,7 @@ function AwardsNav() {
           <a href={PODCAST_HREF} target="_blank" rel="noopener noreferrer" className="an-mobile-link" onClick={() => setOpen(false)}>
             Podcast
           </a>
-          <a href="/assess" className="an-mobile-cta" onClick={() => setOpen(false)}>Add Your Firm →</a>
+          <a href="/#hero" className="an-mobile-cta" onClick={() => setOpen(false)}>Add Your Firm →</a>
         </div>
       )}
     </>

@@ -252,7 +252,7 @@ export default function MagnetSite() {
             We couldn't generate your breakdown. Please try again.
           </p>
           <button
-            onClick={() => navigate('/assess')}
+            onClick={() => navigate('/#hero')}
             className="h-12 px-8 font-semibold tracking-wide uppercase text-sm transition-colors"
             style={{
               backgroundColor: theme.accent,

@@ -200,7 +200,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="button"
-              onClick={() => navigate("/assess")}
+              onClick={() => navigate("/#hero")}
               className="inline-flex items-center justify-center h-[52px] min-w-[200px] sm:min-w-[220px] rounded-full text-sm font-semibold no-underline cursor-pointer transition-all duration-300 border-none"
               style={{
                 background: "linear-gradient(135deg, #b8972e 0%, #d4a832 100%)",

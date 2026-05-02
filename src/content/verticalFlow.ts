@@ -1,13 +1,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Per-vertical content for the post-CTA "diagnostic" flow (form → wait → result).
 //
-// When a visitor arrives at /assess?vertical=<slug>, the flow swaps generic
-// language for vertical-native vocabulary at every stage. The slug propagates
-// into the URL of the wait/result pages and is persisted on the submission row
-// so a refresh after Calendly redirects, etc., still hydrates the right copy.
+// When a visitor lands on a vertical page (/consulting, /law, etc.) and submits
+// via the in-page #add-your-firm anchor (HeroUrlField), the slug propagates into
+// the URL of the wait/result pages and is persisted on the submission row so a
+// refresh after Calendly redirects, etc., still hydrates the right copy.
 //
 // `general` is the fallback when no vertical is present (e.g., /discover or
-// direct link to /assess).
+// the homepage hero submission).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { VerticalSlug } from './verticals';
