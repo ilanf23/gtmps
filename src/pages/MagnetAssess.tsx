@@ -1,38 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
 import { toast } from 'sonner';
 import { Volume2, VolumeX, Play } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { generateMagnetSlug, magnetSlugSuffix } from '@/lib/magnetSlug';
+import { submitMagnetUrl } from '@/lib/magnetSubmit';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useVerticalFlow } from '@/hooks/useVerticalFlow';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Single-field validation — only website URL. Bare domains accepted; we
-// auto-prepend `https://` before validating + persisting.
-// ─────────────────────────────────────────────────────────────────────────────
-function normalizeUrl(input: string): string | null {
-  const trimmed = (input ?? '').trim();
-  if (!trimmed) return null;
-  if (/\s/.test(trimmed)) return null;
-  const withProto = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-  try {
-    const u = new URL(withProto);
-    if (!u.hostname.includes('.')) return null;
-    return `https://${u.hostname.toLowerCase()}${u.pathname === '/' ? '' : u.pathname}${u.search}${u.hash}`;
-  } catch {
-    return null;
-  }
-}
-
-const websiteSchema = z
-  .string()
-  .trim()
-  .max(255)
-  .refine((v) => normalizeUrl(v) !== null, {
-    message: 'Enter a valid URL (e.g. yourfirm.com)',
-  });
 
 const inputClass =
   'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-14 px-4 text-base transition-colors';
@@ -62,83 +34,22 @@ export default function MagnetAssess() {
     e.preventDefault();
     setError(null);
 
-    const r = websiteSchema.safeParse(website);
-    if (!r.success) {
-      setError(r.error.issues[0]?.message ?? 'Invalid URL');
-      return;
-    }
-
     setSubmitting(true);
     try {
-      const normalizedUrl = normalizeUrl(website) ?? website.trim();
+      const result = await submitMagnetUrl(website, { verticalSlug });
 
-      // Slug is derived from the website's domain root.
-      const baseSlug = generateMagnetSlug(normalizedUrl);
-      let slug = baseSlug;
-      let insertError: { code?: string; message?: string } | null = null;
-
-      // Collision-retry loop: if slug exists for a prior submitter, append
-      // a 3-char suffix and try again, up to 4 attempts total.
-      for (let attempt = 0; attempt < 4; attempt++) {
-        const candidate = attempt === 0 ? baseSlug : `${baseSlug}-${magnetSlugSuffix()}`;
-        const res = await supabase
-          .from('magnet_submissions')
-          .insert({
-            slug: candidate,
-            website_url: normalizedUrl,
-            first_name: '',
-            role: '',
-            linkedin_url: '',
-            email: '',
-            status: 'pending',
-            crm_size: null,
-            deal_size: null,
-            bd_challenge: null,
-            case_studies_url: null,
-            team_page_url: null,
-            vertical: verticalSlug,
-          });
-
-        if (!res.error) {
-          slug = candidate;
-          insertError = null;
-          break;
+      if (!result.ok) {
+        if (result.validation) {
+          setError(result.error);
+        } else {
+          toast.error(result.error);
         }
-        // 23505 = unique_violation. Anything else is fatal.
-        if (res.error.code !== '23505') {
-          insertError = res.error;
-          break;
-        }
-        insertError = res.error;
-      }
-
-      if (insertError) {
-        console.error('Insert error:', insertError);
-        toast.error('Something went wrong. Please try again.');
         setSubmitting(false);
         return;
       }
 
-      // Fire and forget — enrichment runs in the background.
-      void supabase.functions
-        .invoke('enrich-magnet', {
-          body: {
-            slug,
-            crmSize: null,
-            dealSize: null,
-            bdChallenge: null,
-            caseStudiesUrl: null,
-            teamPageUrl: null,
-          },
-        })
-        .catch((err) => console.error('Enrich invoke error:', err));
-
-      const dest =
-        verticalSlug === 'general'
-          ? `/m/${slug}`
-          : `/m/${slug}?vertical=${verticalSlug}`;
-      navigate(dest, {
-        state: { websiteUrl: normalizedUrl },
+      navigate(result.destination, {
+        state: { websiteUrl: result.normalizedUrl },
       });
     } catch (err) {
       console.error('Submit error:', err);

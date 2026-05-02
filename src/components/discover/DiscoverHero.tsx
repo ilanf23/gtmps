@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import HeroUrlField from './HeroUrlField';
 
 export default function DiscoverHero() {
   // Video state for the Hero phone-frame S6E1 clip
@@ -555,17 +556,12 @@ export default function DiscoverHero() {
             </p>
 
             <div className="dh-ctas">
-              <a
-                href="/assess"
-                className="dh-cta-primary"
-                data-cta="add-your-firm"
-              >
-                Add Your Firm →
-              </a>
+              <HeroUrlField
+                variant="dark"
+                submitLabel="Build My Map →"
+                foot="Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer firms."
+              />
             </div>
-            <p className="dh-mini-foot" style={{ marginTop: -10, marginBottom: 0 }}>
-              Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer firms.
-            </p>
           </div>
         </div>
       </section>
