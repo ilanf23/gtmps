@@ -51,7 +51,7 @@ export const DARK_BODY_LUMINANCE_THRESHOLD = 0.35;
  * Read the v2 flag with sensible fallbacks for non-Vite contexts (Vitest,
  * SSR, eventual edge-function reuse).
  */
-function clientThemeV2Enabled(): boolean {
+export function clientThemeV2Enabled(): boolean {
   // Vite injects import.meta.env; guard for non-browser builds.
   try {
     const env = (import.meta as unknown as { env?: Record<string, string> }).env;
@@ -65,6 +65,18 @@ function clientThemeV2Enabled(): boolean {
     return process.env.VITE_CLIENT_THEME_V2 === "true";
   }
   return false;
+}
+
+/**
+ * Returns true when the v2 dark-body guard should activate for the given
+ * extracted background color. Shared between `buildClientTheme` and the
+ * MagnetBreakdown brand-resolution path so both surfaces apply the same
+ * cream-fallback rule without diverging.
+ */
+export function shouldForceDarkBodyFallback(extractedBgHex: string): boolean {
+  if (!clientThemeV2Enabled()) return false;
+  if (!isHex(extractedBgHex)) return false;
+  return relLuminance(expandHex(extractedBgHex)) < DARK_BODY_LUMINANCE_THRESHOLD;
 }
 
 export const MABBLY_DEFAULTS: ClientTheme = {
