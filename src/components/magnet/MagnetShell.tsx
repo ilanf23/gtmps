@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useClientTheme } from "@/hooks/useClientTheme";
 import { themeStyle } from "@/lib/clientTheme";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
@@ -282,67 +282,73 @@ export default function MagnetShell({
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 sm:gap-4">
           {/* ─── Left: brand wordmark (logo / client × Mabbly / fallback) ─── */}
           <div className="flex items-center gap-3 min-w-0 shrink-0">
-            {(() => {
-              const safeName = isBadName(theme.companyName) ? null : theme.companyName;
-              const showLogo = Boolean(theme.logoUrl) && !isBadName(theme.companyName);
+            <Link
+              to="/"
+              aria-label="Mabbly home"
+              className="flex items-center gap-3 min-w-0 transition-opacity hover:opacity-80"
+            >
+              {(() => {
+                const safeName = isBadName(theme.companyName) ? null : theme.companyName;
+                const showLogo = Boolean(theme.logoUrl) && !isBadName(theme.companyName);
 
-              if (showLogo) {
-                return (
-                  <div
-                    className="flex items-center gap-3"
-                    aria-label={safeName ?? "Client"}
-                  >
-                    <img
-                      src={theme.logoUrl!}
-                      alt={safeName ? `${safeName} logo` : "Client logo"}
-                      className="h-7 w-auto max-w-[160px] object-contain"
-                      loading="lazy"
-                      onLoad={(e) => {
-                        const img = e.currentTarget as HTMLImageElement;
-                        const w = img.naturalWidth;
-                        const h = img.naturalHeight;
-                        if (!w || !h) return;
-                        const ratio = w / h;
-                        if (ratio > 5 || ratio < 0.5) {
-                          img.style.display = "none";
-                        }
-                      }}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                    {safeName ? (
-                      <span
-                        className="hidden md:inline text-[11px] uppercase tracking-[0.28em] font-semibold"
-                        style={{ color: `var(--brand-bg-fg, ${theme.text})` }}
-                      >
-                        {safeName}
-                      </span>
-                    ) : null}
-                  </div>
-                );
-              }
+                if (showLogo) {
+                  return (
+                    <div
+                      className="flex items-center gap-3"
+                      aria-label={safeName ?? "Client"}
+                    >
+                      <img
+                        src={theme.logoUrl!}
+                        alt={safeName ? `${safeName} logo` : "Client logo"}
+                        className="h-7 w-auto max-w-[160px] object-contain"
+                        loading="lazy"
+                        onLoad={(e) => {
+                          const img = e.currentTarget as HTMLImageElement;
+                          const w = img.naturalWidth;
+                          const h = img.naturalHeight;
+                          if (!w || !h) return;
+                          const ratio = w / h;
+                          if (ratio > 5 || ratio < 0.5) {
+                            img.style.display = "none";
+                          }
+                        }}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                      {safeName ? (
+                        <span
+                          className="hidden md:inline text-[11px] uppercase tracking-[0.28em] font-semibold"
+                          style={{ color: `var(--brand-bg-fg, ${theme.text})` }}
+                        >
+                          {safeName}
+                        </span>
+                      ) : null}
+                    </div>
+                  );
+                }
 
-              if (safeName) {
+                if (safeName) {
+                  return (
+                    <span
+                      className="text-[11px] uppercase tracking-[0.32em] font-semibold truncate"
+                      style={{ color: `var(--brand-bg-fg, ${theme.text})` }}
+                    >
+                      {safeName}
+                    </span>
+                  );
+                }
+
                 return (
                   <span
-                    className="text-[11px] uppercase tracking-[0.32em] font-semibold truncate"
-                    style={{ color: `var(--brand-bg-fg, ${theme.text})` }}
+                    className="text-[11px] uppercase tracking-[0.32em] font-semibold"
+                    style={{ color: MABBLY_GOLD }}
                   >
-                    {safeName}
+                    Mabbly · GTM
                   </span>
                 );
-              }
-
-              return (
-                <span
-                  className="text-[11px] uppercase tracking-[0.32em] font-semibold"
-                  style={{ color: MABBLY_GOLD }}
-                >
-                  Mabbly · GTM
-                </span>
-              );
-            })()}
+              })()}
+            </Link>
 
             {/* "× Mabbly" credential — verified non-Mabbly client + logo only. */}
             {theme.logoUrl &&
