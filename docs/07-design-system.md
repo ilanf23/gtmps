@@ -92,6 +92,14 @@
 - Alternate light sections: Warm White `#FAF9F5`.
 - Cards on dark backgrounds: a slightly lighter forest tone — approximately `#1A2B2A` — or subtle transparency over Deep Forest.
 
+#### 3.1.1 Alt-light page with Sage Light cards
+
+Where a section anchors a *grouped index* (e.g. the homepage industry grid), invert the default surface stack: page band uses **Warm White `#FAF9F5`** as the ground, and the cards inside use **Sage Light `#EDF5EC`** as the lifted tile. Card text stays Deep Forest `#0F1E1D`; card border tint stays Olive Gold (`rgba(168, 146, 58, 0.18)`).
+
+**When to use:** the section is structurally a directory or chooser (8+ peer items the reader scans laterally) AND nothing else on the page uses the same Warm White ground in the same scroll region. Avoid in editorial sections where the cream-on-cream subtlety drains energy.
+
+**First implementation:** `src/components/discover/IndustryGrid.tsx` (the "Find Your Industry" section on `/discover`).
+
 ### 3.2 Buttons and CTAs
 
 - **Primary CTA:** Burnt Orange `#BF461A` background, Sage Light `#EDF5EC` text.

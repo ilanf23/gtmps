@@ -9,7 +9,7 @@ export default function IndustryGrid() {
       <style>{`
         .ig-root {
           width: 100%;
-          background: #EDF5EC;
+          background: #FAF9F5;
           border-top: 1px solid rgba(168, 146, 58,0.15);
           padding: 96px 24px;
         }
@@ -71,7 +71,7 @@ export default function IndustryGrid() {
           align-items: flex-start;
           gap: 18px;
           padding: 28px 24px;
-          background: #fff;
+          background: #EDF5EC;
           border: 1px solid rgba(168, 146, 58,0.18);
           border-radius: 6px;
           color: #2A1A08;
