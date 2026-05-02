@@ -44,7 +44,7 @@ export default function TwoPaths() {
             fontWeight: 500,
           }}
         >
-          12 · THE DECISION
+          11 · THE DECISION
         </p>
         <div
           aria-hidden

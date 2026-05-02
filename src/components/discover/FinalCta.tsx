@@ -62,7 +62,7 @@ export default function FinalCta() {
             margin: '0 0 12px',
           }}
         >
-          14 · BEGIN
+          13 · BEGIN
         </p>
         <div
           aria-hidden
