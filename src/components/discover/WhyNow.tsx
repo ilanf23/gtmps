@@ -3,7 +3,7 @@ export default function WhyNow() {
     <section
       id="why-now"
       className="py-24 md:py-32 px-6 md:px-10"
-      style={{ background: '#08070a', borderTop: '1px solid rgba(184,147,58,0.1)' }}
+      style={{ background: '#08070a', borderTop: '1px solid rgba(168, 146, 58,0.1)' }}
     >
       <div
         style={{
@@ -18,7 +18,7 @@ export default function WhyNow() {
             fontSize: 9,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
           }}
         >
@@ -29,17 +29,17 @@ export default function WhyNow() {
           style={{
             width: 28,
             height: 1,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '12px 0 18px',
             animation: 'growRule 0.8s ease both',
           }}
         />
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontFamily: "var(--font-display)",
             fontSize: 'clamp(40px, 6.5vw, 68px)',
             fontWeight: 400,
-            color: '#F5EFE0',
+            color: '#EDF5EC',
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             margin: 0,
@@ -52,7 +52,7 @@ export default function WhyNow() {
           style={{
             width: '100%',
             height: 1,
-            background: 'rgba(184,147,58,0.12)',
+            background: 'rgba(168, 146, 58,0.12)',
             margin: '28px 0',
           }}
         />
@@ -62,17 +62,17 @@ export default function WhyNow() {
             style={{
               flex: '1 1 240px',
               background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(184,147,58,0.15)',
+              border: '1px solid rgba(168, 146, 58,0.15)',
               borderRadius: 3,
               padding: '18px 20px',
             }}
           >
             <div
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 48,
                 fontWeight: 700,
-                color: '#B8933A',
+                color: '#A8923A',
                 lineHeight: 1,
               }}
             >
@@ -82,7 +82,7 @@ export default function WhyNow() {
               style={{
                 fontFamily: "'Inter Tight', system-ui, sans-serif",
                 fontSize: 11,
-                color: 'rgba(245,239,224,0.4)',
+                color: 'rgba(237, 245, 236,0.4)',
                 lineHeight: 1.5,
                 marginTop: 8,
               }}
@@ -101,7 +101,7 @@ export default function WhyNow() {
           style={{
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             fontSize: 10,
-            color: 'rgba(245,239,224,0.35)',
+            color: 'rgba(237, 245, 236,0.35)',
             margin: '4px 0 24px',
           }}
         >
@@ -113,7 +113,7 @@ export default function WhyNow() {
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             fontSize: 14,
             lineHeight: 1.75,
-            color: 'rgba(245,239,224,0.65)',
+            color: 'rgba(237, 245, 236,0.65)',
             maxWidth: 640,
             marginBottom: 28,
             margin: '0 0 28px',
@@ -125,7 +125,7 @@ export default function WhyNow() {
 
         <div
           style={{
-            borderTop: '1px solid rgba(184,147,58,0.15)',
+            borderTop: '1px solid rgba(168, 146, 58,0.15)',
             paddingTop: 24,
           }}
         >
@@ -134,7 +134,7 @@ export default function WhyNow() {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: 'clamp(18px, 2.8vw, 28px)',
               fontStyle: 'italic',
-              color: '#B8933A',
+              color: '#A8923A',
               marginBottom: 4,
               margin: '0 0 4px',
             }}
@@ -143,9 +143,9 @@ export default function WhyNow() {
           </p>
           <p
             style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontFamily: "var(--font-display)",
               fontSize: 'clamp(18px, 2.8vw, 28px)',
-              color: '#F5EFE0',
+              color: '#EDF5EC',
               margin: 0,
             }}
           >

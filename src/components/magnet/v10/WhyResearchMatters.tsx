@@ -35,7 +35,7 @@ export default function WhyResearchMatters({ primary }: Props) {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 60% 50% at 85% 0%, rgba(184,147,58,0.10), transparent 60%)",
+              "radial-gradient(ellipse 60% 50% at 85% 0%, rgba(168, 146, 58,0.10), transparent 60%)",
           }}
         />
         {/* Topographic contour map */}
@@ -77,7 +77,7 @@ export default function WhyResearchMatters({ primary }: Props) {
               </div>
               <div
                 className="text-[10px] md:text-[11px] uppercase font-semibold"
-                style={{ letterSpacing: "0.25em", color: "rgba(28,16,8,0.6)" }}
+                style={{ letterSpacing: "0.25em", color: "rgba(15, 30, 29,0.6)" }}
               >
                 {s.label}
               </div>
@@ -87,7 +87,7 @@ export default function WhyResearchMatters({ primary }: Props) {
 
         <div
           className="space-y-5 max-w-xl text-sm md:text-base leading-relaxed"
-          style={{ color: "rgba(28,16,8,0.82)" }}
+          style={{ color: "rgba(15, 30, 29,0.82)" }}
         >
           <p>
             30 PS firms in the cohort. Including AArete and SPR. Validated by Jonathan Copulsky, Former CMO Deloitte and Senior Lecturer Northwestern Kellogg. He wrote the foreword.
@@ -105,7 +105,7 @@ export default function WhyResearchMatters({ primary }: Props) {
         <div className="mt-10 pt-6 border-t border-black/10">
           <p
             className="text-[10px] uppercase font-semibold mb-4"
-            style={{ letterSpacing: "0.25em", color: "rgba(28,16,8,0.55)" }}
+            style={{ letterSpacing: "0.25em", color: "rgba(15, 30, 29,0.55)" }}
           >
             Verified cohort firms
           </p>
@@ -114,7 +114,7 @@ export default function WhyResearchMatters({ primary }: Props) {
               <span
                 key={name}
                 className="font-display font-bold text-sm"
-                style={{ color: "rgba(28,16,8,0.78)", letterSpacing: "-0.01em" }}
+                style={{ color: "rgba(15, 30, 29,0.78)", letterSpacing: "-0.01em" }}
               >
                 {name}
               </span>

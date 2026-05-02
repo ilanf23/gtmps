@@ -17,9 +17,9 @@ const TopographicBackground = ({ className = "", opacity = 0.08 }: Props) => (
   >
     <defs>
       <linearGradient id="topo-fade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="rgba(184,147,58,0)" />
-        <stop offset="50%" stopColor="rgba(184,147,58,1)" />
-        <stop offset="100%" stopColor="rgba(184,147,58,0)" />
+        <stop offset="0%" stopColor="rgba(168, 146, 58,0)" />
+        <stop offset="50%" stopColor="rgba(168, 146, 58,1)" />
+        <stop offset="100%" stopColor="rgba(168, 146, 58,0)" />
       </linearGradient>
     </defs>
     <g fill="none" stroke="url(#topo-fade)" strokeWidth="1">

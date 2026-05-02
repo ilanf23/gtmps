@@ -23,8 +23,8 @@ const EmberMesh = ({ intensity = "med", className = "" }: Props) => {
       className={`absolute inset-0 pointer-events-none ${className}`}
       style={{
         background: `
-          radial-gradient(60% 50% at 70% 18%, rgba(184,147,58,${goldA}) 0%, rgba(184,147,58,0) 60%),
-          radial-gradient(50% 50% at 18% 78%, rgba(184,147,58,${goldB}) 0%, rgba(184,147,58,0) 65%),
+          radial-gradient(60% 50% at 70% 18%, rgba(168, 146, 58,${goldA}) 0%, rgba(168, 146, 58,0) 60%),
+          radial-gradient(50% 50% at 18% 78%, rgba(168, 146, 58,${goldB}) 0%, rgba(168, 146, 58,0) 65%),
           radial-gradient(80% 60% at 50% 50%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 70%)
         `,
         backgroundSize: "200% 200%, 200% 200%, 200% 200%",

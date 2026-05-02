@@ -7,7 +7,7 @@ const eyebrow: React.CSSProperties = {
   fontSize: 14,
   letterSpacing: '0.32em',
   textTransform: 'uppercase',
-  color: '#B8933A',
+  color: '#A8923A',
   margin: 0,
   fontWeight: 500,
 };
@@ -15,7 +15,7 @@ const eyebrow: React.CSSProperties = {
 const goldRule: React.CSSProperties = {
   width: 44,
   height: 2,
-  background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+  background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
   margin: '18px 0 28px',
   animation: 'growRule 0.8s ease both',
 };
@@ -40,15 +40,15 @@ export default function BetaReader() {
       id="beta-reader"
       className="px-6 md:px-10"
       style={{
-        background: '#F5EFE0',
-        borderTop: '1px solid rgba(184,147,58,0.12)',
+        background: '#EDF5EC',
+        borderTop: '1px solid rgba(168, 146, 58,0.12)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
     >
       <style>{`
         .br-input::placeholder { color: rgba(42,26,8,0.35); }
-        .br-input:focus { border-color: rgba(184,147,58,0.65); }
+        .br-input:focus { border-color: rgba(168, 146, 58,0.65); }
         .br-grid {
           max-width: 1280px;
           margin: 0 auto;
@@ -63,25 +63,22 @@ export default function BetaReader() {
         .br-left { animation: fadeUp 0.7s ease 0.1s both; }
         .br-right { animation: fadeUp 0.7s ease 0.3s both; }
         .br-badge {
-          display: inline-block;
-          border: 1px solid rgba(184,147,58,0.28);
+          border: 1px solid rgba(168, 146, 58,0.28);
           border-radius: 3px;
           padding: 8px 16px;
           font-family: 'Inter Tight', sans-serif;
           font-size: 12.5px;
           letter-spacing: 0.12em;
           color: #6A5038;
-          text-decoration: none;
           text-transform: uppercase;
           cursor: default;
           font-weight: 500;
           transition: border-color 0.18s, color 0.18s, background 0.18s;
         }
-        a.br-badge { cursor: pointer; }
         .br-badge:hover {
-          border-color: rgba(184,147,58,0.65);
+          border-color: rgba(168, 146, 58,0.65);
           color: #9A7020;
-          background: rgba(184,147,58,0.08);
+          background: rgba(168, 146, 58,0.08);
         }
       `}</style>
 
@@ -142,7 +139,7 @@ export default function BetaReader() {
 
           <div
             style={{
-              borderLeft: '4px solid #B8933A',
+              borderLeft: '4px solid #A8923A',
               paddingLeft: 24,
               marginBottom: 32,
             }}
@@ -167,7 +164,7 @@ export default function BetaReader() {
                 fontSize: 13,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: '#B8933A',
+                color: '#A8923A',
                 marginTop: 14,
                 margin: '14px 0 0',
                 fontWeight: 500,
@@ -191,7 +188,7 @@ export default function BetaReader() {
             action="mailto:beta@mabbly.com"
             style={{
               background: '#fff',
-              border: '1px solid rgba(184,147,58,0.2)',
+              border: '1px solid rgba(168, 146, 58,0.2)',
               borderRadius: 6,
               padding: '40px 36px',
             }}
@@ -226,7 +223,7 @@ export default function BetaReader() {
             <button
               type="submit"
               style={{
-                background: '#B8933A',
+                background: '#A8923A',
                 color: '#fff',
                 borderRadius: 3,
                 padding: '16px',

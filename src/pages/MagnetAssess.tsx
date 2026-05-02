@@ -1,13 +1,41 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 import { toast } from 'sonner';
 import { Volume2, VolumeX, Play } from 'lucide-react';
-import { submitMagnetUrl } from '@/lib/magnetSubmit';
+import { supabase } from '@/integrations/supabase/client';
+import { generateMagnetSlug, magnetSlugSuffix } from '@/lib/magnetSlug';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Single-field validation — only website URL. Bare domains accepted; we
+// auto-prepend `https://` before validating + persisting.
+// ─────────────────────────────────────────────────────────────────────────────
+function normalizeUrl(input: string): string | null {
+  const trimmed = (input ?? '').trim();
+  if (!trimmed) return null;
+  if (/\s/.test(trimmed)) return null;
+  const withProto = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const u = new URL(withProto);
+    if (!u.hostname.includes('.')) return null;
+    return `https://${u.hostname.toLowerCase()}${u.pathname === '/' ? '' : u.pathname}${u.search}${u.hash}`;
+  } catch {
+    return null;
+  }
+}
+
+const websiteSchema = z
+  .string()
+  .trim()
+  .max(255)
+  .refine((v) => normalizeUrl(v) !== null, {
+    message: 'Enter a valid URL (e.g. yourfirm.com)',
+  });
+
 const inputClass =
-  'w-full bg-black/5 border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:border-[#B8933A] focus:outline-none focus:ring-0 rounded-none h-14 px-4 text-base transition-colors';
+  'w-full bg-black/5 border border-black/10 text-[#0F1E1D] placeholder:text-black/30 focus:border-[#A8923A] focus:outline-none focus:ring-0 rounded-none h-14 px-4 text-base transition-colors';
 
 export default function MagnetAssess() {
   const navigate = useNavigate();
@@ -34,22 +62,83 @@ export default function MagnetAssess() {
     e.preventDefault();
     setError(null);
 
+    const r = websiteSchema.safeParse(website);
+    if (!r.success) {
+      setError(r.error.issues[0]?.message ?? 'Invalid URL');
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const result = await submitMagnetUrl(website, { verticalSlug });
+      const normalizedUrl = normalizeUrl(website) ?? website.trim();
 
-      if (!result.ok) {
-        if (result.validation) {
-          setError(result.error);
-        } else {
-          toast.error(result.error);
+      // Slug is derived from the website's domain root.
+      const baseSlug = generateMagnetSlug(normalizedUrl);
+      let slug = baseSlug;
+      let insertError: { code?: string; message?: string } | null = null;
+
+      // Collision-retry loop: if slug exists for a prior submitter, append
+      // a 3-char suffix and try again, up to 4 attempts total.
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const candidate = attempt === 0 ? baseSlug : `${baseSlug}-${magnetSlugSuffix()}`;
+        const res = await supabase
+          .from('magnet_submissions')
+          .insert({
+            slug: candidate,
+            website_url: normalizedUrl,
+            first_name: '',
+            role: '',
+            linkedin_url: '',
+            email: '',
+            status: 'pending',
+            crm_size: null,
+            deal_size: null,
+            bd_challenge: null,
+            case_studies_url: null,
+            team_page_url: null,
+            vertical: verticalSlug,
+          });
+
+        if (!res.error) {
+          slug = candidate;
+          insertError = null;
+          break;
         }
+        // 23505 = unique_violation. Anything else is fatal.
+        if (res.error.code !== '23505') {
+          insertError = res.error;
+          break;
+        }
+        insertError = res.error;
+      }
+
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        toast.error('Something went wrong. Please try again.');
         setSubmitting(false);
         return;
       }
 
-      navigate(result.destination, {
-        state: { websiteUrl: result.normalizedUrl },
+      // Fire and forget — enrichment runs in the background.
+      void supabase.functions
+        .invoke('enrich-magnet', {
+          body: {
+            slug,
+            crmSize: null,
+            dealSize: null,
+            bdChallenge: null,
+            caseStudiesUrl: null,
+            teamPageUrl: null,
+          },
+        })
+        .catch((err) => console.error('Enrich invoke error:', err));
+
+      const dest =
+        verticalSlug === 'general'
+          ? `/m/${slug}`
+          : `/m/${slug}?vertical=${verticalSlug}`;
+      navigate(dest, {
+        state: { websiteUrl: normalizedUrl },
       });
     } catch (err) {
       console.error('Submit error:', err);
@@ -59,10 +148,10 @@ export default function MagnetAssess() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008]">
+    <div className="min-h-screen bg-[#EDF5EC] text-[#0F1E1D]">
       <div className="max-w-lg mx-auto px-6 py-10 md:py-16">
         {/* ─── Eyebrow + headline ────────────────────────────────────────── */}
-        <p className="text-[11px] tracking-[0.18em] font-medium text-[#B8933A]">
+        <p className="text-[11px] tracking-[0.18em] font-medium text-[#A8923A]">
           {flow.eyebrow}
         </p>
         <h1 className="mt-4 font-serif text-3xl md:text-4xl leading-tight">
@@ -72,7 +161,7 @@ export default function MagnetAssess() {
           90 seconds. We analyze your website and build your custom RROS map.
           No call required to see it.
         </p>
-        <p className="mt-4 text-[10px] tracking-[0.22em] font-semibold text-[#B8933A]/90 uppercase">
+        <p className="mt-4 text-[10px] tracking-[0.22em] font-semibold text-[#A8923A]/90 uppercase">
           {flow.methodologyLine}
         </p>
 
@@ -98,16 +187,16 @@ export default function MagnetAssess() {
             onFocus={pauseFounderVideo}
           />
 
-          {error && <p className="mt-3 text-xs text-[#8B3A2A]">{error}</p>}
+          {error && <p className="mt-3 text-xs text-[#803402]">{error}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-6 w-full h-14 bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-6 w-full h-14 bg-[#BF461A] hover:bg-[#A33A14] text-[#EDF5EC] font-semibold tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? (
               <>
-                <span className="h-4 w-4 rounded-full border-2 border-[#120D05]/30 border-t-[#120D05] animate-spin" />
+                <span className="h-4 w-4 rounded-full border-2 border-[#0F1E1D]/30 border-t-[#0F1E1D] animate-spin" />
                 BUILDING YOUR MAP…
               </>
             ) : (
@@ -179,7 +268,7 @@ function FounderVideoCard({
           padding: 4px;
           box-shadow:
             0 12px 32px -10px rgba(0, 0, 0, 0.35),
-            0 0 0 1px rgba(184, 147, 58, 0.18);
+            0 0 0 1px rgba(168, 146, 58, 0.18);
         }
         @media (max-width: 640px) {
           .fvc-frame { width: min(60vw, 220px); }
@@ -217,8 +306,8 @@ function FounderVideoCard({
           width: 32px;
           height: 32px;
           border-radius: 50%;
-          background: rgba(184, 147, 58, 0.95);
-          color: #120D05;
+          background: rgba(168, 146, 58, 0.95);
+          color: #0F1E1D;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -230,11 +319,11 @@ function FounderVideoCard({
           transition: transform 180ms ease, background 180ms ease;
         }
         .fvc-sound-btn:hover {
-          background: #B8933A;
+          background: #A8923A;
           transform: scale(1.06);
         }
         .fvc-sound-btn:focus-visible {
-          outline: 2px solid #B8933A;
+          outline: 2px solid #A8923A;
           outline-offset: 2px;
         }
         .fvc-poster-play {
@@ -253,8 +342,8 @@ function FounderVideoCard({
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          background: rgba(184, 147, 58, 0.95);
-          color: #120D05;
+          background: rgba(168, 146, 58, 0.95);
+          color: #0F1E1D;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -280,7 +369,7 @@ function FounderVideoCard({
                 aria-label="Play Adam's intro"
               >
                 <span className="fvc-poster-play-icon">
-                  <Play size={20} fill="#120D05" strokeWidth={0} />
+                  <Play size={20} fill="#0F1E1D" strokeWidth={0} />
                 </span>
               </button>
             </>
@@ -316,7 +405,7 @@ function FounderVideoCard({
       </div>
 
       <p
-        className="mt-3 text-[10px] font-mono uppercase text-[#B8933A]"
+        className="mt-3 text-[10px] font-mono uppercase text-[#A8923A]"
         style={{ letterSpacing: '0.22em' }}
       >
         {CAPTION}

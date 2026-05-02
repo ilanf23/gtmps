@@ -28,7 +28,7 @@ export default function ManuscriptAnchor() {
       ref={ref}
       id="manuscript"
       style={{
-        background: '#1C1008',
+        background: '#0F1E1D',
         position: 'relative',
         minHeight: '100vh',
         display: 'flex',
@@ -46,7 +46,7 @@ export default function ManuscriptAnchor() {
           width: 720px;
           height: 720px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(184,147,58,0.14) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(168, 146, 58,0.14) 0%, transparent 70%);
           transform: translate(-50%, -50%);
           pointer-events: none;
         }
@@ -65,7 +65,7 @@ export default function ManuscriptAnchor() {
           font-size: 11px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0;
         }
         .ma-book-wrap {
@@ -77,18 +77,20 @@ export default function ManuscriptAnchor() {
           display: block;
           box-shadow:
             0 40px 80px -20px rgba(0,0,0,0.7),
-            0 0 0 1px rgba(184,147,58,0.18),
-            0 0 100px -20px rgba(184,147,58,0.25);
+            0 0 0 1px rgba(168, 146, 58,0.18),
+            0 0 100px -20px rgba(168, 146, 58,0.25);
           transform-origin: center;
           transform: rotateY(-15deg);
           transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
         }
         .ma-book.ma-revealed { transform: rotateY(0deg); }
         .ma-line {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-size: clamp(20px, 2.4vw, 26px);
           font-weight: 400;
-          color: #F5EFE0;
+          color: #EDF5EC;
           line-height: 1.45;
           margin: 0;
           letter-spacing: -0.005em;
@@ -102,17 +104,17 @@ export default function ManuscriptAnchor() {
           text-transform: uppercase;
           font-weight: 500;
           padding: 14px 30px;
-          border: 1px solid rgba(184,147,58,0.55);
-          color: #B8933A;
+          border: 1px solid rgba(168, 146, 58,0.55);
+          color: #A8923A;
           background: transparent;
           border-radius: 999px;
           text-decoration: none;
           transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
         }
         .ma-cta:hover {
-          background: rgba(184,147,58,0.10);
-          color: #F5EFE0;
-          border-color: #B8933A;
+          background: rgba(168, 146, 58,0.10);
+          color: #EDF5EC;
+          border-color: #A8923A;
         }
 
         @media (max-width: 767px) {

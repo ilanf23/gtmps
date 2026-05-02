@@ -79,7 +79,7 @@ const DeadZoneDotField = ({
         // initial: all gold; final: only "alive" dots stay gold, rest go dim
         const isFinal = trigger || reduced;
         const opacity = isFinal ? (d.alive ? 0.85 : 0.10) : 0.85;
-        const fill = d.alive ? "#B8933A" : "#3A3326";
+        const fill = d.alive ? "#A8923A" : "#3A3326";
         return (
           <circle
             key={i}

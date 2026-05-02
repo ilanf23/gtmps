@@ -1,25 +1,58 @@
 /**
- * Mabbly Design System — Canonical Tokens (v1.0, 2026-05-02)
+ * Mabbly Design System — Canonical Tokens (v2.0, 2026-05-02)
  *
  * Single source-of-truth for design tokens. Tailwind config and src/index.css
- * read from this file; components import semantic tokens from here.
+ * mirror these values; components import semantic tokens from here.
  *
- * Aesthetic: Editorial book-launch / restrained / sophisticated B2B.
- * Locked palette + fonts (no substitutions). See the audit page for spec details.
+ * Aesthetic: Monocle meets McKinsey — organic, grounded, premium.
+ * Heading rule: 900 weight + UPPERCASE. Body: 400 sentence case.
+ * The 900↔400 contrast IS the brand.
+ *
+ * Source spec: docs/07-design-system.md (extracted from mabbly.com 2026-03-29).
  */
 
 // ============================================================================
-// Brand palette (locked — never substitute)
+// Brand palette — locked spec values
+// ============================================================================
+//
+// Old token names (ink/gold/sage/rust/slate/cream/warmWhite/softNavy) are
+// retained as aliases so existing class strings keep compiling. The values
+// behind those names now point to the new spec — all surfaces using them
+// will visually shift to the new brand. Out-of-scope microsite surfaces
+// override locally via their own component styles.
 // ============================================================================
 export const brand = {
-  ink:        "#0D1117",
-  gold:       "#B8933A",
-  sage:       "#3D5A4A",
-  rust:       "#8B3A2A",
-  slate:      "#5A6A7A",
-  cream:      "#F5F1E8",
-  warmWhite:  "#FFFFFF",
-  softNavy:   "#1B3A6B",
+  // New spec — primary
+  deepForest:    "#0F1E1D",  // dark primary — hero / dark sections / headings on light
+  sageLight:     "#EDF5EC",  // light primary — page bg / text on dark / Mabbly fallback
+  oliveGold:     "#A8923A",  // PRIMARY ACCENT — links, borders, focus, decorative
+  burntOrange:   "#BF461A",  // RESERVED — primary conversion CTAs only
+
+  // New spec — secondary
+  darkRust:      "#803402",  // H3 subheading color, secondary accent, hover
+  sageMedium:    "#D5DED4",  // borders, dividers, secondary surfaces
+  goldHighlight: "#FFBA1A",  // emphasis: labels, stat callouts, badge accents
+  amber:         "#A79014",  // muted gold, secondary labels
+  forestTeal:    "#225351",  // section accents, data viz secondary
+  sageMuted:     "#A1A9A0",  // captions, footnotes, helper text
+  warmWhite:     "#FAF9F5",  // alternate light surface
+  charcoal:      "#141413",  // alternate dark, footer
+
+  // New spec — extended
+  ctaPurple:     "#491D89",  // waitlist CTA / product pages
+  signalRed:     "#C02B0A",  // error / urgency
+
+  // Card surface on dark — derived from spec ("slightly lighter forest").
+  cardDark:      "#1A2B2A",
+
+  // Backwards-compat aliases — point at new spec values.
+  ink:        "#0F1E1D",  // → Deep Forest
+  gold:       "#A8923A",  // → Olive Gold (primary accent)
+  sage:       "#225351",  // → Forest Teal (most legacy uses are accents)
+  rust:       "#803402",  // → Dark Rust
+  slate:      "#A1A9A0",  // → Sage Muted (demoted to muted-text role)
+  cream:      "#EDF5EC",  // → Sage Light
+  softNavy:   "#1B3A6B",  // not in new spec — preserved for vertical landings (out of scope)
 } as const;
 
 // ============================================================================
@@ -57,6 +90,8 @@ export const color = {
     secondaryOn:   "var(--color-accent-secondary-on)",
     tertiary:      "var(--color-accent-tertiary)",
     tertiaryOn:    "var(--color-accent-tertiary-on)",
+    highlight:     "var(--color-accent-highlight)",     // Gold #FFBA1A — emphasis only
+    highlightOn:   "var(--color-accent-highlight-on)",
   },
   status: {
     success:    "var(--color-status-success)",
@@ -68,12 +103,9 @@ export const color = {
     info:       "var(--color-status-info)",
     infoOn:     "var(--color-status-info-on)",
   },
-  // Per-client (Magnet) — runtime injected by useClientTheme.
-  // Falls back to brand accent if not set.
   client: {
     accent:   "var(--client-accent, var(--color-accent-primary))",
     accentOn: "var(--client-accent-on, var(--color-accent-primary-on))",
-    // Sprint 2: split chrome bg from body bg to fix Cravath dark-bg failure.
     chromeBg:   "var(--client-chrome-bg, var(--color-surface-inverse))",
     chromeText: "var(--client-chrome-text, var(--color-text-inverse))",
     bodyBg:     "var(--client-body-bg, var(--color-surface-page))",
@@ -82,59 +114,86 @@ export const color = {
 } as const;
 
 // ============================================================================
-// Typography — 7 semantic roles
-// Each role names: font, weight, size, line-height, letter-spacing.
+// Typography — heading rule: 900 + UPPERCASE. Body: 400, sentence case.
+//
+// Heading stack: Mabbly Repro (custom, not yet loaded) → Arial Black (system)
+//                → Verdana → sans-serif. Arial Black is the doc-sanctioned
+//                substitute that preserves the heavy / editorial register.
+// Body stack:    Mabbly Repro → Instrument Sans (closer to spec than Verdana
+//                visually until Mabbly Repro arrives).
+// Editorial face: Cormorant Garamond — retained ONLY for decorative numerals
+//                 and italic pull quotes per Q3 lock-in.
 // ============================================================================
+export const FONT_HEADING = "'Mabbly Repro', 'Arial Black', Verdana, Helvetica, sans-serif";
+export const FONT_BODY    = "'Mabbly Repro', 'Instrument Sans', system-ui, sans-serif";
+export const FONT_SERIF_EDITORIAL = "'Cormorant Garamond', Georgia, serif"; // numerals + pull quotes only
+export const FONT_MONO    = "'Mabbly Repro Mono', 'DM Mono', 'Trebuchet MS', ui-monospace, monospace";
+
 export const type = {
   display: {
-    font:   "'Cormorant Garamond', Georgia, serif",
-    weight: 500,
-    size:   "clamp(3rem, 5vw + 1rem, 4.5rem)", // 48–72px
-    line:   1.05,
-    track:  "-0.015em",
+    font:      FONT_HEADING,
+    weight:    900,
+    size:      "clamp(3rem, 5vw + 1rem, 4.5rem)", // 48–72px
+    line:      1.05,
+    track:     "-0.005em",
+    uppercase: true,
   },
   headline: {
-    font:   "'Cormorant Garamond', Georgia, serif",
-    weight: 500,
-    size:   "clamp(2rem, 3vw + 0.5rem, 2.5rem)", // 32–40px
-    line:   1.15,
-    track:  "-0.01em",
+    font:      FONT_HEADING,
+    weight:    900,
+    size:      "clamp(2rem, 3vw + 0.5rem, 2.5rem)", // 32–40px
+    line:      1.15,
+    track:     "0",
+    uppercase: true,
   },
   title: {
-    font:   "'Inter Tight', system-ui, sans-serif",
-    weight: 600,
-    size:   "clamp(1.375rem, 1vw + 1rem, 1.5rem)", // 22–24px
-    line:   1.3,
-    track:  "-0.005em",
+    // H3 per spec: 900 UPPERCASE, color = Dark Rust (#803402).
+    font:      FONT_HEADING,
+    weight:    900,
+    size:      "clamp(1.375rem, 1vw + 1rem, 1.5rem)", // 22–24px
+    line:      1.3,
+    track:     "0.01em",
+    uppercase: true,
+    color:     "var(--color-accent-tertiary)", // Dark Rust per spec
   },
   body: {
-    font:   "'Instrument Sans', system-ui, sans-serif",
+    font:   FONT_BODY,
     weight: 400,
     size:   "1rem",
     line:   1.6,
     track:  "0",
   },
   bodyLarge: {
-    font:   "'Instrument Sans', system-ui, sans-serif",
+    font:   FONT_BODY,
     weight: 400,
     size:   "1.125rem",
     line:   1.55,
     track:  "0",
   },
   label: {
-    font:      "'DM Mono', ui-monospace, monospace",
-    weight:    500,
+    font:      FONT_HEADING,
+    weight:    900,
     size:      "0.75rem",
     line:      1.4,
     track:     "0.12em",
     uppercase: true,
   },
   caption: {
-    font:   "'Instrument Sans', system-ui, sans-serif",
+    font:   FONT_BODY,
     weight: 400,
     size:   "0.875rem",
     line:   1.5,
     track:  "0",
+  },
+  // Editorial register: decorative chapter numerals + italic pull quotes.
+  // Not used for headings.
+  editorial: {
+    font:   FONT_SERIF_EDITORIAL,
+    weight: 400,
+    size:   "1rem",
+    line:   1.4,
+    track:  "0",
+    italic: true,
   },
 } as const;
 
@@ -161,26 +220,26 @@ export const space = {
 // Layout — max widths
 // ============================================================================
 export const maxWidth = {
-  prose:   "65ch",   // long-form reading
-  content: "1040px", // default
-  wide:    "1280px", // hero / wide sections
-  page:    "1440px", // outer page bound
+  prose:   "65ch",
+  content: "1040px",
+  wide:    "1280px",
+  page:    "1440px",
 } as const;
 
 // ============================================================================
-// Radius
+// Radius — primary CTA is 25px pill per spec §3.2
 // ============================================================================
 export const radius = {
   sm:   "0.25rem",
   md:   "0.5rem",
   lg:   "0.75rem",
   xl:   "1.25rem",
+  pill: "25px",      // primary CTA per spec
   full: "9999px",
 } as const;
 
 // ============================================================================
-// Shadow — 4 steps + focus ring (light + dark variants in CSS)
-// Editorial paper-edge depth, not Material elevation.
+// Shadow
 // ============================================================================
 export const shadow = {
   sm:    "var(--shadow-sm)",
@@ -191,7 +250,7 @@ export const shadow = {
 } as const;
 
 // ============================================================================
-// Motion — durations + easings (reduced-motion overrides in CSS)
+// Motion
 // ============================================================================
 export const motion = {
   duration: {
@@ -200,14 +259,14 @@ export const motion = {
     normal:    "240ms",
     slow:      "400ms",
     slower:    "600ms",
-    cinematic: "1200ms", // polling theater stages, framework explainer
+    cinematic: "1200ms",
   },
   easing: {
     default:   "cubic-bezier(0.4, 0, 0.2, 1)",
     in:        "cubic-bezier(0.4, 0, 1, 1)",
     out:       "cubic-bezier(0, 0, 0.2, 1)",
     bounce:    "cubic-bezier(0.34, 1.56, 0.64, 1)",
-    editorial: "cubic-bezier(0.25, 0.46, 0.45, 0.94)", // existing MicrositeShell tab fade
+    editorial: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   },
 } as const;
 
@@ -223,8 +282,10 @@ export const breakpoint = {
 } as const;
 
 // ============================================================================
-// Per-vertical accent palettes (Sprint P1+ wires these into VerticalLanding)
-// Each vertical stays inside the locked palette.
+// Per-vertical accent palettes — OUT OF SCOPE for v2.0 brand migration.
+// Vertical landings (/consulting, /law, etc.) keep their existing palettes.
+// Values below intentionally reference brand aliases that now point at
+// new-spec values; verticals were not migrated as part of this pass.
 // ============================================================================
 export type VerticalPalette = {
   bg:        string;
@@ -246,7 +307,7 @@ export const verticalPalette: Record<string, VerticalPalette> = {
 };
 
 // ============================================================================
-// Convenience export — single import, full token tree
+// Convenience export
 // ============================================================================
 export const tokens = {
   brand,

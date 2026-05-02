@@ -34,10 +34,10 @@ const BAND_TOKENS: Record<
     label: "Strong",
   },
   mid: {
-    fg: "var(--brand-accent, #B8933A)",
-    meter: "var(--brand-accent, #B8933A)",
-    bg: "color-mix(in srgb, var(--brand-accent, #B8933A) 8%, transparent)",
-    border: "color-mix(in srgb, var(--brand-accent, #B8933A) 40%, transparent)",
+    fg: "var(--brand-accent, #A8923A)",
+    meter: "var(--brand-accent, #A8923A)",
+    bg: "color-mix(in srgb, var(--brand-accent, #A8923A) 8%, transparent)",
+    border: "color-mix(in srgb, var(--brand-accent, #A8923A) 40%, transparent)",
     label: "Mixed",
   },
   low: {

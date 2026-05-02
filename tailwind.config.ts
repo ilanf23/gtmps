@@ -14,10 +14,16 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Inter Tight'", "sans-serif"],
-        serif: ["'Cormorant Garamond'", "serif"],
-        sans: ["'Instrument Sans'", "sans-serif"],
-        mono: ["'DM Mono'", "monospace"],
+        // Heading / display — Mabbly Repro per brand spec. Arial Black is the
+        // doc-sanctioned visible substitute until the custom font lands.
+        display: ["'Mabbly Repro'", "'Arial Black'", "Verdana", "Helvetica", "sans-serif"],
+        // Editorial register — kept ONLY for decorative numerals + italic
+        // pull quotes per the v2 brand migration (not for headings).
+        serif:   ["'Cormorant Garamond'", "Georgia", "serif"],
+        // Body — Mabbly Repro with Instrument Sans as the visible fallback
+        // (closer to the Mabbly Repro register than Verdana while waiting).
+        sans:    ["'Mabbly Repro'", "'Instrument Sans'", "system-ui", "sans-serif"],
+        mono:    ["'Mabbly Repro Mono'", "'DM Mono'", "'Trebuchet MS'", "ui-monospace", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,19 +59,36 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        ink: "#0D1117",
-        gold: "#B8933A",
-        sage: "#3D5A4A",
-        rust: "#8B3A2A",
-        slate: "#5A6A7A",
-        cream: "hsl(var(--cream))",
+        // === Mabbly brand v2.0 — primary spec colors ============================
+        "deep-forest":    "#0F1E1D",
+        "sage-light":     "#EDF5EC",
+        "olive-gold":     "#A8923A",             // primary brand accent
+        "burnt-orange":   "#BF461A",             // reserved for conversion CTAs only
+        "dark-rust":      "#803402",
+        "sage-medium":    "#D5DED4",
+        "gold-highlight": "#FFBA1A",
+        "amber":          "#A79014",
+        "forest-teal":    "#225351",
+        "sage-muted":     "#A1A9A0",
+        "charcoal":       "#141413",
+        "card-dark":      "#1A2B2A",
+        "cta-purple":     "#491D89",
+        "signal-red":     "#C02B0A",
+
+        // === Backwards-compat aliases — point at new spec values ==============
+        ink: "#0F1E1D",                          // → Deep Forest
+        gold: "#A8923A",                         // → Olive Gold (primary accent)
+        sage: "#225351",                         // → Forest Teal
+        rust: "#803402",                         // → Dark Rust
+        slate: "#A1A9A0",                        // → Sage Muted
+        cream: "hsl(var(--cream))",              // CSS var retuned in index.css
         "warm-white": "hsl(var(--warm-white))",
-        "soft-navy": "hsl(var(--soft-navy))",
+        "soft-navy": "hsl(var(--soft-navy))",    // unchanged — verticals (out of scope)
         "text-dark": "hsl(var(--text-dark))",
         "text-body": "hsl(var(--text-body))",
-        "surface-dark": "#131820",
-        "surface-darker": "#0D1117",
-        "muted-color": "#9AAABB",
+        "surface-dark": "#1A2B2A",               // → Card Dark
+        "surface-darker": "#0F1E1D",             // → Deep Forest
+        "muted-color": "#A1A9A0",                // → Sage Muted
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -174,6 +197,7 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        pill: "25px",                            // primary CTA per brand spec §3.2
       },
       keyframes: {
         "accordion-down": {

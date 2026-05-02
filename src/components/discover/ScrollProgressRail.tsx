@@ -29,13 +29,13 @@ const ScrollProgressRail = ({ className = "" }: { className?: string }) => {
     <div
       aria-hidden
       className={`relative w-full ${className}`}
-      style={{ height: 1, background: "rgba(184,147,58,0.12)" }}
+      style={{ height: 1, background: "rgba(168, 146, 58,0.12)" }}
     >
       <div
         style={{
           width: `${pct * 100}%`,
           height: "100%",
-          background: "linear-gradient(to right, rgba(184,147,58,0.3), #B8933A)",
+          background: "linear-gradient(to right, rgba(168, 146, 58,0.3), #A8923A)",
           transition: "width 80ms linear",
         }}
       />

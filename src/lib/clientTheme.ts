@@ -82,16 +82,19 @@ export function shouldForceDarkBodyFallback(extractedBgHex: string): boolean {
 export const MABBLY_DEFAULTS: ClientTheme = {
   logoUrl: null,
   companyName: null,
-  accent: "#B8933A",
-  accentHover: "#a07c2e",
-  accentForeground: "#120D05",
-  background: "#FBF8F4",
-  surface: "#F2EBDC",
-  text: "#1C1008",
-  textMuted: "rgba(28,16,8,0.6)",
-  border: "rgba(28,16,8,0.1)",
+  // Mabbly brand v2.0 — Olive Gold accent, Sage Light page bg, Deep Forest text.
+  // Burnt Orange is reserved for primary conversion CTAs and is not the
+  // default brand accent.
+  accent: "#A8923A",
+  accentHover: "#8F7C2F",
+  accentForeground: "#0F1E1D",
+  background: "#EDF5EC",          // Sage Light
+  surface: "#FAF9F5",             // Warm White
+  text: "#0F1E1D",                // Deep Forest
+  textMuted: "rgba(15, 30, 29, 0.6)",
+  border: "rgba(15, 30, 29, 0.1)",
   fontFamily: null,
-  brandAccent: "#B8933A",
+  brandAccent: "#A8923A",
   brandBackground: INDUSTRY_FALLBACK_BG,
 };
 
@@ -332,11 +335,11 @@ export interface MagnetBrand {
 }
 
 const SAFE_FALLBACK: MagnetBrand = {
-  primary: "#B8933A",
-  background: "#FBF8F4",
-  surface: "#FFFFFF",
-  text: "#1C1008",
-  textMuted: "#1C1008",
+  primary: "#A8923A",       // Olive Gold (primary accent)
+  background: "#EDF5EC",    // Sage Light
+  surface: "#FAF9F5",       // Warm White
+  text: "#0F1E1D",          // Deep Forest
+  textMuted: "#0F1E1D",
 };
 
 /**

@@ -127,7 +127,7 @@ export default function FloatingHeroVideo() {
           transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
                       transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
                       box-shadow 200ms ease;
-          border: 1px solid rgba(184,147,58,0.18);
+          border: 1px solid rgba(168, 146, 58,0.18);
         }
         .fhv-thumb.is-visible {
           opacity: 1;
@@ -136,7 +136,7 @@ export default function FloatingHeroVideo() {
         }
         .fhv-thumb:hover {
           transform: translateY(-2px) scale(1.03);
-          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 24px rgba(184,147,58,0.18);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 24px rgba(168, 146, 58,0.18);
         }
         .fhv-screen {
           position: relative;
@@ -171,8 +171,8 @@ export default function FloatingHeroVideo() {
           height: 28px;
           border-radius: 50%;
           background: rgba(10,8,7,0.9);
-          border: 1px solid rgba(184,147,58,0.5);
-          color: #B8933A;
+          border: 1px solid rgba(168, 146, 58,0.5);
+          color: #A8923A;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -182,7 +182,7 @@ export default function FloatingHeroVideo() {
           padding: 0;
         }
         .fhv-dismiss:hover {
-          background: rgba(184,147,58,0.2);
+          background: rgba(168, 146, 58,0.2);
           transform: scale(1.08);
         }
         .fhv-caption {
@@ -229,8 +229,8 @@ export default function FloatingHeroVideo() {
           padding: 6px;
           box-shadow:
             0 30px 80px -20px rgba(0,0,0,0.8),
-            0 0 0 1px rgba(184,147,58,0.18),
-            0 0 100px -10px rgba(184,147,58,0.25);
+            0 0 0 1px rgba(168, 146, 58,0.18),
+            0 0 100px -10px rgba(168, 146, 58,0.25);
           transform: scale(0.5);
           opacity: 0;
           transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -267,8 +267,8 @@ export default function FloatingHeroVideo() {
           height: 44px;
           border-radius: 50%;
           background: rgba(10,8,7,0.85);
-          border: 1px solid rgba(184,147,58,0.5);
-          color: #B8933A;
+          border: 1px solid rgba(168, 146, 58,0.5);
+          color: #A8923A;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -278,7 +278,7 @@ export default function FloatingHeroVideo() {
           padding: 0;
         }
         .fhv-modal-close:hover {
-          background: rgba(184,147,58,0.2);
+          background: rgba(168, 146, 58,0.2);
           transform: scale(1.06);
         }
 

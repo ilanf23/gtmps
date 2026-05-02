@@ -67,7 +67,7 @@ export default function Manuscript() {
     <main
       className="px-6 md:px-10"
       style={{
-        background: "#F5EFE0",
+        background: "#EDF5EC",
         minHeight: "100vh",
         paddingTop: 96,
         paddingBottom: 144,
@@ -80,7 +80,7 @@ export default function Manuscript() {
             fontSize: 13,
             letterSpacing: "0.32em",
             textTransform: "uppercase",
-            color: "#B8933A",
+            color: "#A8923A",
             margin: 0,
             fontWeight: 500,
           }}
@@ -92,7 +92,7 @@ export default function Manuscript() {
           style={{
             width: 44,
             height: 2,
-            background: "linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))",
+            background: "linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))",
             margin: "18px 0 28px",
           }}
         />
@@ -141,7 +141,7 @@ export default function Manuscript() {
                 key={c.num}
                 style={{
                   background: "rgba(255,250,240,0.8)",
-                  border: "1px solid rgba(184,147,58,0.18)",
+                  border: "1px solid rgba(168, 146, 58,0.18)",
                   borderRadius: 4,
                   padding: "24px 28px",
                 }}
@@ -209,7 +209,7 @@ export default function Manuscript() {
             <span
               key={b}
               style={{
-                border: "1px solid rgba(184,147,58,0.28)",
+                border: "1px solid rgba(168, 146, 58,0.28)",
                 borderRadius: 3,
                 padding: "8px 16px",
                 fontSize: 12.5,
@@ -226,7 +226,7 @@ export default function Manuscript() {
 
         <div
           style={{
-            borderTop: "1px solid rgba(184,147,58,0.18)",
+            borderTop: "1px solid rgba(168, 146, 58,0.18)",
             paddingTop: 40,
             textAlign: "center",
           }}
@@ -235,7 +235,7 @@ export default function Manuscript() {
             href="/discover#beta-reader"
             style={{
               display: "inline-block",
-              background: "#B8933A",
+              background: "#A8923A",
               color: "#fff",
               padding: "16px 32px",
               borderRadius: 3,

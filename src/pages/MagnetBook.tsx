@@ -58,7 +58,7 @@ export default function MagnetBook() {
       <div className="max-w-2xl mx-auto px-6 w-full">
         {/* SECTION 1: HEADER */}
         <section className="pt-20 pb-12">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest">
+          <p className="text-[#A8923A] text-xs uppercase tracking-widest">
             A 30-MINUTE CONVERSATION
           </p>
           <h1 className="text-4xl font-bold mt-4 max-w-lg leading-tight">
@@ -73,7 +73,7 @@ export default function MagnetBook() {
 
         {/* SECTION 2: WHAT TO EXPECT */}
         <section className="py-14 border-t border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-10">
+          <p className="text-[#A8923A] text-xs uppercase tracking-widest mb-10">
             WHAT HAPPENS ON THE CALL
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -96,7 +96,7 @@ export default function MagnetBook() {
           {QUOTES.map((q, i) => (
             <div
               key={i}
-              className="border-l-2 border-[#B8933A]/40 pl-5 py-2 mb-6 last:mb-0"
+              className="border-l-2 border-[#A8923A]/40 pl-5 py-2 mb-6 last:mb-0"
             >
               <p className="text-sm opacity-70 italic leading-relaxed">
                 {q.text}
@@ -110,7 +110,7 @@ export default function MagnetBook() {
 
         {/* SECTION 4: CALENDLY EMBED */}
         <section className="py-14 border-t border-black/10">
-          <p className="text-[#B8933A] text-xs uppercase tracking-widest mb-8">
+          <p className="text-[#A8923A] text-xs uppercase tracking-widest mb-8">
             CHOOSE A TIME
           </p>
           <div

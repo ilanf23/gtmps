@@ -5,7 +5,7 @@ export default function FinalCta() {
       className="px-6 md:px-10"
       style={{
         background: '#0D0905',
-        borderTop: '1px solid rgba(184,147,58,0.1)',
+        borderTop: '1px solid rgba(168, 146, 58,0.1)',
         padding: 'clamp(64px, 11vw, 112px) 24px',
       }}
     >
@@ -14,9 +14,10 @@ export default function FinalCta() {
         @media (min-width: 768px) {
           .fc-section { padding: 160px 40px; }
         }
+        /* Primary conversion CTA — reserved Burnt Orange per brand spec. */
         .fc-btn-primary {
-          background: #B8933A;
-          color: #fff;
+          background: #BF461A;
+          color: #EDF5EC;
           border-radius: 2px;
           padding: 13px 32px;
           font-family: 'Inter Tight', system-ui, sans-serif;
@@ -26,11 +27,11 @@ export default function FinalCta() {
           transition: background 0.18s;
           display: inline-block;
         }
-        .fc-btn-primary:hover { background: #9A7020; }
+        .fc-btn-primary:hover { background: #A33A14; }
         .fc-btn-secondary {
           background: transparent;
-          border: 1px solid rgba(184,147,58,0.35);
-          color: rgba(184,147,58,0.75);
+          border: 1px solid rgba(168, 146, 58,0.35);
+          color: rgba(168, 146, 58,0.75);
           border-radius: 2px;
           padding: 13px 32px;
           font-family: 'Inter Tight', system-ui, sans-serif;
@@ -40,7 +41,7 @@ export default function FinalCta() {
           transition: background 0.18s;
           display: inline-block;
         }
-        .fc-btn-secondary:hover { background: rgba(184,147,58,0.12); }
+        .fc-btn-secondary:hover { background: rgba(168, 146, 58,0.12); }
       `}</style>
 
       <div
@@ -57,7 +58,7 @@ export default function FinalCta() {
             fontSize: 9,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             marginBottom: 12,
             margin: '0 0 12px',
           }}
@@ -69,17 +70,17 @@ export default function FinalCta() {
           style={{
             width: 28,
             height: 1,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '12px auto 20px',
             animation: 'growRule 0.8s ease both',
           }}
         />
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontFamily: "var(--font-display)",
             fontSize: 'clamp(36px, 6vw, 62px)',
             fontWeight: 400,
-            color: '#F5EFE0',
+            color: '#EDF5EC',
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             margin: '0 0 14px',
@@ -91,7 +92,7 @@ export default function FinalCta() {
           style={{
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             fontSize: 14,
-            color: 'rgba(245,239,224,0.45)',
+            color: 'rgba(237, 245, 236,0.45)',
             lineHeight: 1.65,
             margin: '0 0 24px',
           }}
@@ -103,7 +104,7 @@ export default function FinalCta() {
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             fontSize: 13,
             fontStyle: 'italic',
-            color: '#B8933A',
+            color: '#A8923A',
             lineHeight: 1.55,
             margin: '0 0 28px',
           }}
@@ -133,7 +134,7 @@ export default function FinalCta() {
           style={{
             width: 40,
             height: 1,
-            background: 'rgba(184,147,58,0.15)',
+            background: 'rgba(168, 146, 58,0.15)',
             margin: '0 auto 20px',
           }}
         />
@@ -144,7 +145,7 @@ export default function FinalCta() {
             fontSize: 9,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(245,239,224,0.2)',
+            color: 'rgba(237, 245, 236,0.2)',
             margin: 0,
           }}
         >

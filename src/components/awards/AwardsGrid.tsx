@@ -93,7 +93,7 @@ export default function AwardsGrid() {
       style={{
         background: '#0D0905',
         padding: '120px 24px',
-        borderTop: '1px solid rgba(184,147,58,0.08)',
+        borderTop: '1px solid rgba(168, 146, 58,0.08)',
       }}
     >
       <style>{`
@@ -107,23 +107,25 @@ export default function AwardsGrid() {
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 20px;
         }
         .ag-headline {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-weight: 400;
           font-size: clamp(32px, 5vw, 56px);
           line-height: 1.08;
           letter-spacing: -0.018em;
-          color: #F5EFE0;
+          color: #EDF5EC;
           margin: 0 0 20px;
         }
         .ag-sub {
           font-family: 'Inter Tight', sans-serif;
           font-size: 16px;
           line-height: 1.6;
-          color: rgba(245,239,224,0.6);
+          color: rgba(237, 245, 236,0.6);
           margin: 0;
           max-width: 640px;
           margin: 0 auto;
@@ -146,8 +148,8 @@ export default function AwardsGrid() {
           flex-direction: column;
           gap: 16px;
           padding: 32px 28px;
-          background: #1C1008;
-          border: 1px solid rgba(184,147,58,0.18);
+          background: #0F1E1D;
+          border: 1px solid rgba(168, 146, 58,0.18);
           border-radius: 4px;
           text-decoration: none;
           transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
@@ -155,12 +157,12 @@ export default function AwardsGrid() {
         }
         .ag-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 24px 48px -16px rgba(184,147,58,0.28);
-          border-color: rgba(184,147,58,0.5);
+          box-shadow: 0 24px 48px -16px rgba(168, 146, 58,0.28);
+          border-color: rgba(168, 146, 58,0.5);
         }
         .ag-card:hover .ag-icon { transform: scale(1.06); }
         .ag-icon {
-          color: #B8933A;
+          color: #A8923A;
           transition: transform 220ms ease;
         }
         .ag-name {
@@ -168,7 +170,7 @@ export default function AwardsGrid() {
           font-weight: 600;
           font-size: 22px;
           line-height: 1.25;
-          color: #F5EFE0;
+          color: #EDF5EC;
           margin: 0;
           letter-spacing: -0.01em;
         }
@@ -176,14 +178,16 @@ export default function AwardsGrid() {
           font-family: 'Inter Tight', sans-serif;
           font-style: italic;
           font-size: 14px;
-          color: rgba(245,239,224,0.55);
+          color: rgba(237, 245, 236,0.55);
           margin: 0;
         }
         .ag-desc {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-size: 16px;
           line-height: 1.55;
-          color: rgba(245,239,224,0.75);
+          color: rgba(237, 245, 236,0.75);
           margin: 0;
           flex: 1;
         }
@@ -193,13 +197,13 @@ export default function AwardsGrid() {
           font-weight: 500;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           text-decoration: underline;
           text-underline-offset: 4px;
-          text-decoration-color: rgba(184,147,58,0.35);
+          text-decoration-color: rgba(168, 146, 58,0.35);
           transition: text-decoration-color 200ms;
         }
-        .ag-card:hover .ag-link { text-decoration-color: #B8933A; }
+        .ag-card:hover .ag-link { text-decoration-color: #A8923A; }
       `}</style>
 
       <div className="ag-header">

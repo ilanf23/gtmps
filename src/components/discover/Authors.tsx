@@ -39,15 +39,15 @@ export default function Authors() {
       id="authors"
       className="px-6 md:px-10"
       style={{
-        background: '#F5EFE0',
-        borderTop: '2px solid rgba(184,147,58,0.15)',
+        background: '#EDF5EC',
+        borderTop: '2px solid rgba(168, 146, 58,0.15)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
     >
       <style>{`
         .au-badge {
-          border: 1px solid rgba(184,147,58,0.28);
+          border: 1px solid rgba(168, 146, 58,0.28);
           border-radius: 3px;
           padding: 8px 16px;
           font-family: 'Inter Tight', sans-serif;
@@ -60,9 +60,9 @@ export default function Authors() {
           transition: border-color 0.18s, color 0.18s, background 0.18s;
         }
         .au-badge:hover {
-          border-color: rgba(184,147,58,0.65);
+          border-color: rgba(168, 146, 58,0.65);
           color: #9A7020;
-          background: rgba(184,147,58,0.08);
+          background: rgba(168, 146, 58,0.08);
         }
         .au-grid {
           display: grid;
@@ -78,8 +78,8 @@ export default function Authors() {
           height: 140px;
           margin: 0 auto 28px;
           border-radius: 50%;
-          border: 3px solid #B8933A;
-          background: #1C1008;
+          border: 3px solid #A8923A;
+          background: #0F1E1D;
           overflow: hidden;
           box-shadow: 0 8px 24px -10px rgba(42,26,8,0.35);
         }
@@ -89,8 +89,8 @@ export default function Authors() {
           inset: 0;
           border-radius: 50%;
           box-shadow:
-            0 0 0 1px rgba(245,239,224,0.10) inset,
-            0 0 40px rgba(28,16,8,0.30) inset;
+            0 0 0 1px rgba(237, 245, 236,0.10) inset,
+            0 0 40px rgba(15, 30, 29,0.30) inset;
           pointer-events: none;
         }
         .au-portrait {
@@ -125,16 +125,16 @@ export default function Authors() {
           width: 44px;
           height: 44px;
           margin: -14px 0 -14px -10px;
-          color: #B8933A;
+          color: #A8923A;
           border-radius: 4px;
           transition: color 0.18s ease, transform 0.18s ease;
         }
         .au-li:hover {
-          color: #D4AE48;
+          color: #C4AC4A;
           transform: scale(1.1);
         }
         .au-li:focus-visible {
-          outline: 2px solid rgba(184,147,58,0.55);
+          outline: 2px solid rgba(168, 146, 58,0.55);
           outline-offset: 2px;
         }
       `}</style>
@@ -146,7 +146,7 @@ export default function Authors() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
           }}
@@ -158,7 +158,7 @@ export default function Authors() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
@@ -241,7 +241,7 @@ export default function Authors() {
                   fontSize: 'clamp(18px, 1.7vw, 22px)',
                   lineHeight: 1.5,
                   color: 'rgba(42,26,8,0.78)',
-                  borderLeft: '3px solid rgba(184,147,58,0.45)',
+                  borderLeft: '3px solid rgba(168, 146, 58,0.45)',
                   paddingLeft: 20,
                   margin: '0 0 28px',
                   fontWeight: 300,

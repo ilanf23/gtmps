@@ -9,8 +9,8 @@ export default function AdamNote() {
       className="px-6 md:px-10"
       style={{
         background: '#0A0807',
-        borderTop: '1px solid rgba(184,147,58,0.1)',
-        borderBottom: '1px solid rgba(184,147,58,0.1)',
+        borderTop: '1px solid rgba(168, 146, 58,0.1)',
+        borderBottom: '1px solid rgba(168, 146, 58,0.1)',
         paddingTop: 112,
         paddingBottom: 112,
       }}
@@ -29,7 +29,7 @@ export default function AdamNote() {
             fontSize: 11,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: '0 0 32px',
             fontWeight: 500,
           }}
@@ -42,7 +42,7 @@ export default function AdamNote() {
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: 'clamp(20px, 2.4vw, 26px)',
             fontStyle: 'italic',
-            color: 'rgba(245,239,224,0.85)',
+            color: 'rgba(237, 245, 236,0.85)',
             lineHeight: 1.6,
             fontWeight: 400,
           }}
@@ -67,7 +67,7 @@ export default function AdamNote() {
           style={{
             width: 32,
             height: 1,
-            background: 'rgba(184,147,58,0.4)',
+            background: 'rgba(168, 146, 58,0.4)',
             margin: '0 auto 16px',
           }}
         />
@@ -77,7 +77,7 @@ export default function AdamNote() {
             fontSize: 12,
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
             display: 'inline-flex',
@@ -92,7 +92,7 @@ export default function AdamNote() {
             rel="noopener noreferrer"
             aria-label="Adam Fridman on LinkedIn (opens in new tab)"
             style={{
-              color: '#B8933A',
+              color: '#A8923A',
               display: 'inline-flex',
               alignItems: 'center',
               opacity: 0.85,

@@ -10,7 +10,7 @@ const HairlineRule = ({ variant = "gold", double, vertical, className = "", styl
   if (vertical) {
     const color =
       variant === "gold"
-        ? "linear-gradient(to bottom, transparent, rgba(184,147,58,0.45), transparent)"
+        ? "linear-gradient(to bottom, transparent, rgba(168, 146, 58,0.45), transparent)"
         : "linear-gradient(to bottom, transparent, rgba(0,0,0,0.16), transparent)";
     return (
       <span
@@ -28,8 +28,8 @@ const HairlineRule = ({ variant = "gold", double, vertical, className = "", styl
         className={className}
         style={{
           height: 5,
-          borderTop: `1px solid ${variant === "gold" ? "rgba(184,147,58,0.55)" : "rgba(0,0,0,0.18)"}`,
-          borderBottom: `1px solid ${variant === "gold" ? "rgba(184,147,58,0.55)" : "rgba(0,0,0,0.18)"}`,
+          borderTop: `1px solid ${variant === "gold" ? "rgba(168, 146, 58,0.55)" : "rgba(0,0,0,0.18)"}`,
+          borderBottom: `1px solid ${variant === "gold" ? "rgba(168, 146, 58,0.55)" : "rgba(0,0,0,0.18)"}`,
           ...style,
         }}
       />

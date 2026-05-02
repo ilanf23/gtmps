@@ -111,8 +111,8 @@ export default function AuthorityStrip() {
 
         .as-root {
           width: 100%;
-          background: #F5EFE0;
-          border-top: 2px solid rgba(184, 147, 58, 0.22);
+          background: #EDF5EC;
+          border-top: 2px solid rgba(168, 146, 58, 0.22);
           padding: clamp(64px, 12vw, 144px) 24px;
         }
         @media (min-width: 768px) {
@@ -141,7 +141,7 @@ export default function AuthorityStrip() {
           font-size: 14px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0;
           font-weight: 500;
         }
@@ -149,13 +149,13 @@ export default function AuthorityStrip() {
         .as-rule {
           width: 44px;
           height: 2px;
-          background: linear-gradient(90deg, #B8933A, rgba(184, 147, 58, 0.3));
+          background: linear-gradient(90deg, #A8923A, rgba(168, 146, 58, 0.3));
           margin: 18px 0 28px;
           animation: asGrowRule 0.8s ease both;
         }
 
         .as-quote-block {
-          border-left: 4px solid #B8933A;
+          border-left: 4px solid #A8923A;
           padding-left: 24px;
           margin-bottom: 32px;
         }
@@ -198,7 +198,7 @@ export default function AuthorityStrip() {
           font-size: 18px;
           line-height: 1;
           letter-spacing: -0.01em;
-          color: rgba(184,147,58,0.6);
+          color: rgba(168, 146, 58,0.6);
           text-transform: none;
         }
         .as-affil-mark--kellogg {
@@ -206,7 +206,7 @@ export default function AuthorityStrip() {
           letter-spacing: 0.02em;
         }
         .as-affil-dot {
-          color: rgba(184,147,58,0.45);
+          color: rgba(168, 146, 58,0.45);
           font-size: 16px;
         }
         @media (max-width: 768px) {
@@ -248,16 +248,16 @@ export default function AuthorityStrip() {
           width: 44px;
           height: 44px;
           margin: -14px 0 -14px -10px;
-          color: #B8933A;
+          color: #A8923A;
           border-radius: 4px;
           transition: color 0.18s ease, transform 0.18s ease;
         }
         .as-li:hover {
-          color: #D4AE48;
+          color: #C4AC4A;
           transform: scale(1.1);
         }
         .as-li:focus-visible {
-          outline: 2px solid rgba(184,147,58,0.55);
+          outline: 2px solid rgba(168, 146, 58,0.55);
           outline-offset: 2px;
         }
 
@@ -270,7 +270,7 @@ export default function AuthorityStrip() {
           position: relative;
           overflow: hidden;
           background: rgba(255, 250, 240, 0.8);
-          border: 1px solid rgba(184, 147, 58, 0.18);
+          border: 1px solid rgba(168, 146, 58, 0.18);
           border-radius: 4px;
           padding: 18px 20px;
           cursor: default;
@@ -285,13 +285,13 @@ export default function AuthorityStrip() {
           left: 0;
           bottom: 0;
           width: 3px;
-          background: #B8933A;
+          background: #A8923A;
           height: 0;
           transition: height 0.25s ease;
         }
         .as-stat:hover {
-          background: rgba(184, 147, 58, 0.10);
-          border-color: rgba(184, 147, 58, 0.42);
+          background: rgba(168, 146, 58, 0.10);
+          border-color: rgba(168, 146, 58, 0.42);
           transform: translateX(5px);
         }
         .as-stat:hover::before { height: 100%; }
@@ -299,7 +299,7 @@ export default function AuthorityStrip() {
           font-family: 'Inter Tight', sans-serif;
           font-size: 44px;
           font-weight: 600;
-          color: #B8933A;
+          color: #A8923A;
           line-height: 1;
           min-width: 80px;
           text-align: right;
@@ -320,7 +320,7 @@ export default function AuthorityStrip() {
           font-size: 18px;
           color: #7A6040;
           line-height: 1.55;
-          border-left: 2px solid rgba(184, 147, 58, 0.3);
+          border-left: 2px solid rgba(168, 146, 58, 0.3);
           padding-left: 18px;
           margin: 22px 0 0;
           font-weight: 300;
@@ -331,7 +331,7 @@ export default function AuthorityStrip() {
           max-width: 1280px;
           margin: 56px auto 0;
           padding-top: 28px;
-          border-top: 1px solid rgba(184, 147, 58, 0.18);
+          border-top: 1px solid rgba(168, 146, 58, 0.18);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -353,24 +353,22 @@ export default function AuthorityStrip() {
           flex-wrap: wrap;
         }
         .as-badge {
-          display: inline-block;
-          border: 1px solid rgba(184, 147, 58, 0.28);
+          border: 1px solid rgba(168, 146, 58, 0.28);
           border-radius: 3px;
           padding: 8px 16px;
           font-family: 'Inter Tight', sans-serif;
           font-size: 12.5px;
           letter-spacing: 0.12em;
           color: #6A5038;
-          text-decoration: none;
           text-transform: uppercase;
-          cursor: pointer;
+          cursor: default;
           font-weight: 500;
           transition: border-color 0.18s, color 0.18s, background 0.18s;
         }
         .as-badge:hover {
-          border-color: rgba(184, 147, 58, 0.65);
+          border-color: rgba(168, 146, 58, 0.65);
           color: #9A7020;
-          background: rgba(184, 147, 58, 0.08);
+          background: rgba(168, 146, 58, 0.08);
         }
       `}</style>
 

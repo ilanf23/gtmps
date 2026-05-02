@@ -10,49 +10,66 @@
     --card-foreground: 0 0% 95%;
     --popover: 220 18% 10%;
     --popover-foreground: 0 0% 95%;
-    --primary: 40 52% 47%;
-    --primary-foreground: 220 20% 7%;
+    --primary: 49 49% 44%;
+    --primary-foreground: 178 32% 9%;
     --secondary: 220 14% 14%;
     --secondary-foreground: 0 0% 85%;
     --muted: 220 14% 14%;
     --muted-foreground: 210 14% 55%;
     --accent: 220 14% 14%;
     --accent-foreground: 0 0% 95%;
-    --destructive: 8 56% 36%;
-    --destructive-foreground: 0 0% 95%;
+    --destructive: 8 88% 40%;
+    --destructive-foreground: 113 28% 94%;
     --border: 220 14% 18%;
     --input: 220 14% 18%;
-    --ring: 40 52% 47%;
+    --ring: 49 49% 44%;
     --radius: 0.5rem;
-    --sidebar-background: 220 20% 7%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 40 52% 47%;
-    --sidebar-primary-foreground: 220 20% 7%;
-    --sidebar-accent: 220 14% 14%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 220 14% 18%;
-    --sidebar-ring: 40 52% 47%;
+    --sidebar-background: 178 32% 9%;
+    --sidebar-foreground: 113 28% 94%;
+    --sidebar-primary: 49 49% 44%;
+    --sidebar-primary-foreground: 113 28% 94%;
+    --sidebar-accent: 178 22% 14%;
+    --sidebar-accent-foreground: 113 28% 94%;
+    --sidebar-border: 178 22% 18%;
+    --sidebar-ring: 49 49% 44%;
 
-    --ink: #0D1117;
-    --surface-dark: #131820;
-    --surface-darker: #0D1117;
-    --gold: #B8933A;
-    --gold-light: rgba(184,147,58,0.08);
-    --gold-border: rgba(184,147,58,0.2);
-    --cream: 38 33% 94%;
-    --warm-white: 0 0% 100%;
-    --soft-navy: 216 30% 15%;
-    --text-dark: 0 0% 10%;
-    --text-body: 0 0% 29%;
-    --sage: #3D5A4A;
-    --rust: #8B3A2A;
-    --slate: #5A6A7A;
-    --muted-color: #9AAABB;
-    --border-color: rgba(255,255,255,0.1);
-    --font-display: 'Inter Tight', sans-serif;
-    --font-serif: 'Cormorant Garamond', serif;
-    --font-sans: 'Instrument Sans', sans-serif;
-    --font-mono: 'DM Mono', monospace;
+    /* === Mabbly brand v2.0 — primary spec colors ============================ */
+    --deep-forest:    #0F1E1D;
+    --sage-light:     #EDF5EC;
+    --olive-gold:     #A8923A;   /* primary brand accent — links, borders, focus, decorative */
+    --burnt-orange:   #BF461A;   /* reserved for primary conversion CTAs only */
+    --dark-rust:      #803402;
+    --sage-medium:    #D5DED4;
+    --gold-highlight: #FFBA1A;
+    --amber:          #A79014;
+    --forest-teal:    #225351;
+    --sage-muted:     #A1A9A0;
+    --charcoal:       #141413;
+    --card-dark:      #1A2B2A;
+
+    /* === Backwards-compat aliases — point at new spec values =============== */
+    --ink:            #0F1E1D;                  /* → Deep Forest */
+    --surface-dark:   #1A2B2A;                  /* → Card Dark */
+    --surface-darker: #0F1E1D;                  /* → Deep Forest */
+    --gold:           #A8923A;                   /* → Olive Gold (primary accent) */
+    --gold-light:     rgba(168, 146, 58, 0.08);  /* accent glow tint */
+    --gold-border:    rgba(168, 146, 58, 0.2);
+    --cream:          113 28% 94%;              /* → Sage Light (HSL) */
+    --warm-white:     48 33% 97%;               /* → Warm White #FAF9F5 (HSL) */
+    --soft-navy:      216 30% 15%;              /* unchanged — preserved for vertical landings */
+    --text-dark:      178 32% 9%;               /* → Deep Forest */
+    --text-body:      178 12% 18%;
+    --sage:           #225351;                  /* → Forest Teal */
+    --rust:           #803402;                  /* → Dark Rust */
+    --slate:          #A1A9A0;                  /* → Sage Muted (demoted) */
+    --muted-color:    #A1A9A0;                  /* → Sage Muted */
+    --border-color:   rgba(237, 245, 236, 0.12);
+
+    /* === Font stacks ======================================================= */
+    --font-display: 'Mabbly Repro', 'Arial Black', Verdana, Helvetica, sans-serif;
+    --font-serif:   'Cormorant Garamond', Georgia, serif;
+    --font-sans:    'Mabbly Repro', 'Instrument Sans', system-ui, sans-serif;
+    --font-mono:    'Mabbly Repro Mono', 'DM Mono', 'Trebuchet MS', ui-monospace, monospace;
 
     /* ============================================================
        Mabbly Design System v1.0 (2026-05-02) — semantic tokens
@@ -62,52 +79,57 @@
        ============================================================ */
 
     /* Surfaces */
-    --color-surface-page:    #F5F1E8;            /* cream */
-    --color-surface-raised:  #FFFFFF;            /* warm-white */
-    --color-surface-sunken:  #EDE8DA;
-    --color-surface-inverse: #0D1117;            /* ink */
-    --color-surface-overlay: rgba(13, 17, 23, 0.55);
+    --color-surface-page:    #EDF5EC;            /* Sage Light */
+    --color-surface-raised:  #FAF9F5;            /* Warm White */
+    --color-surface-sunken:  #D5DED4;            /* Sage Medium */
+    --color-surface-inverse: #0F1E1D;            /* Deep Forest */
+    --color-surface-overlay: rgba(15, 30, 29, 0.55);
 
     /* Text */
-    --color-text-primary:    #0D1117;
-    --color-text-secondary:  #3A4452;
-    --color-text-tertiary:   #5A6A7A;            /* slate */
-    --color-text-inverse:    #F5F1E8;
-    --color-text-link:       #8B3A2A;            /* rust */
-    --color-text-disabled:   #9AA3AD;
+    --color-text-primary:    #0F1E1D;            /* Deep Forest */
+    --color-text-secondary:  #225351;            /* Forest Teal */
+    --color-text-tertiary:   #A1A9A0;            /* Sage Muted */
+    --color-text-inverse:    #EDF5EC;            /* Sage Light */
+    --color-text-link:       #A8923A;            /* Olive Gold */
+    --color-text-disabled:   #A1A9A0;
 
     /* Borders */
-    --color-border-subtle:  rgba(13, 17, 23, 0.08);
-    --color-border-default: rgba(13, 17, 23, 0.16);
-    --color-border-strong:  rgba(13, 17, 23, 0.32);
-    --color-border-focus:   #B8933A;
+    --color-border-subtle:  rgba(15, 30, 29, 0.08);
+    --color-border-default: #D5DED4;             /* Sage Medium per spec */
+    --color-border-strong:  rgba(15, 30, 29, 0.32);
+    --color-border-focus:   #A8923A;             /* Olive Gold */
 
     /* Accent */
-    --color-accent-primary:        #B8933A;     /* gold */
-    --color-accent-primary-hover:  #A68431;
-    --color-accent-primary-active: #93742A;
-    --color-accent-primary-on:     #0D1117;     /* ink on gold — AA 6.2:1 */
-    --color-accent-secondary:      #3D5A4A;     /* sage */
-    --color-accent-secondary-on:   #F5F1E8;
-    --color-accent-tertiary:       #8B3A2A;     /* rust */
-    --color-accent-tertiary-on:    #F5F1E8;
+    --color-accent-primary:        #A8923A;      /* Olive Gold — primary brand accent */
+    --color-accent-primary-hover:  #8F7C2F;
+    --color-accent-primary-active: #756626;
+    --color-accent-primary-on:     #0F1E1D;      /* Deep Forest on Olive Gold — AA 6.1:1 */
+    --color-accent-secondary:      #225351;      /* Forest Teal */
+    --color-accent-secondary-on:   #EDF5EC;
+    --color-accent-tertiary:       #803402;      /* Dark Rust — H3 color per spec */
+    --color-accent-tertiary-on:    #EDF5EC;
+    --color-accent-conversion:     #BF461A;      /* Burnt Orange — reserved for primary CTAs */
+    --color-accent-conversion-hover: #A33A14;
+    --color-accent-conversion-on:    #EDF5EC;
+    --color-accent-highlight:      #FFBA1A;      /* Gold — emphasis only (labels, stats, badges) */
+    --color-accent-highlight-on:   #0F1E1D;      /* Deep Forest on Gold */
 
     /* Status */
-    --color-status-success:    #3D5A4A;
-    --color-status-success-on: #F5F1E8;
-    --color-status-warning:    #B8933A;
-    --color-status-warning-on: #0D1117;
-    --color-status-error:      #8B3A2A;
-    --color-status-error-on:   #F5F1E8;
-    --color-status-info:       #1B3A6B;
-    --color-status-info-on:    #F5F1E8;
+    --color-status-success:    #225351;          /* Forest Teal */
+    --color-status-success-on: #EDF5EC;
+    --color-status-warning:    #FFBA1A;          /* Gold */
+    --color-status-warning-on: #0F1E1D;
+    --color-status-error:      #C02B0A;          /* Signal Red */
+    --color-status-error-on:   #EDF5EC;
+    --color-status-info:       #491D89;          /* CTA Purple */
+    --color-status-info-on:    #EDF5EC;
 
     /* Shadow — light mode (cool, paper-edge depth) */
-    --shadow-sm: 0 1px 2px 0 rgba(13, 17, 23, 0.04), 0 1px 1px 0 rgba(13, 17, 23, 0.02);
-    --shadow-md: 0 4px 12px -2px rgba(13, 17, 23, 0.06), 0 2px 4px -2px rgba(13, 17, 23, 0.04);
-    --shadow-lg: 0 12px 32px -6px rgba(13, 17, 23, 0.10), 0 4px 8px -4px rgba(13, 17, 23, 0.06);
-    --shadow-xl: 0 24px 64px -12px rgba(13, 17, 23, 0.16), 0 8px 16px -8px rgba(13, 17, 23, 0.08);
-    --shadow-focus: 0 0 0 3px rgba(184, 147, 58, 0.32);
+    --shadow-sm: 0 1px 2px 0 rgba(15, 30, 29, 0.04), 0 1px 1px 0 rgba(15, 30, 29, 0.02);
+    --shadow-md: 0 4px 12px -2px rgba(15, 30, 29, 0.06), 0 2px 4px -2px rgba(15, 30, 29, 0.04);
+    --shadow-lg: 0 12px 32px -6px rgba(15, 30, 29, 0.10), 0 4px 8px -4px rgba(15, 30, 29, 0.06);
+    --shadow-xl: 0 24px 64px -12px rgba(15, 30, 29, 0.16), 0 8px 16px -8px rgba(15, 30, 29, 0.08);
+    --shadow-focus: 0 0 0 3px rgba(168, 146, 58, 0.32);
 
     /* Motion */
     --duration-instant:   80ms;
@@ -127,47 +149,52 @@
      Used by Aletheia today; future homepage dark toggle reads from this.
      NOT inverted-light: warm dark surfaces, desaturated/lifted accents. */
   [data-theme="dark"] {
-    --color-surface-page:    #0D1117;
-    --color-surface-raised:  #161B22;
-    --color-surface-sunken:  #0A0E13;
-    --color-surface-inverse: #F5F1E8;
+    --color-surface-page:    #0F1E1D;            /* Deep Forest */
+    --color-surface-raised:  #1A2B2A;            /* Card Dark per spec */
+    --color-surface-sunken:  #0A1413;
+    --color-surface-inverse: #EDF5EC;
     --color-surface-overlay: rgba(0, 0, 0, 0.65);
 
-    --color-text-primary:   #EDE8DA;
-    --color-text-secondary: #A8B0BA;
-    --color-text-tertiary:  #6B7585;
-    --color-text-inverse:   #0D1117;
-    --color-text-link:      #D4A847;
-    --color-text-disabled:  #4A5560;
+    --color-text-primary:   #EDF5EC;             /* Sage Light */
+    --color-text-secondary: #D5DED4;             /* Sage Medium */
+    --color-text-tertiary:  #A1A9A0;             /* Sage Muted */
+    --color-text-inverse:   #0F1E1D;
+    --color-text-link:      #C4AC4A;             /* lifted Olive Gold for dark contrast (5.2:1 vs Deep Forest) */
+    --color-text-disabled:  #6B7570;
 
-    --color-border-subtle:  rgba(245, 241, 232, 0.08);
-    --color-border-default: rgba(245, 241, 232, 0.16);
-    --color-border-strong:  rgba(245, 241, 232, 0.28);
-    --color-border-focus:   #D4A847;
+    --color-border-subtle:  rgba(237, 245, 236, 0.08);
+    --color-border-default: rgba(237, 245, 236, 0.16);
+    --color-border-strong:  rgba(237, 245, 236, 0.28);
+    --color-border-focus:   #C4AC4A;
 
-    --color-accent-primary:        #D4A847;     /* gold +6% L for dark contrast */
-    --color-accent-primary-hover:  #C4994A;
-    --color-accent-primary-active: #B8933A;
-    --color-accent-primary-on:     #0D1117;     /* AA 8.1:1 */
-    --color-accent-secondary:      #6B8A7A;
-    --color-accent-secondary-on:   #0D1117;
-    --color-accent-tertiary:       #C25A45;
-    --color-accent-tertiary-on:    #0D1117;
+    --color-accent-primary:        #C4AC4A;      /* lifted Olive Gold for dark contrast */
+    --color-accent-primary-hover:  #D4BC5A;
+    --color-accent-primary-active: #A8923A;
+    --color-accent-primary-on:     #0F1E1D;
+    --color-accent-secondary:      #6B8A7A;      /* lifted Forest Teal for dark contrast */
+    --color-accent-secondary-on:   #0F1E1D;
+    --color-accent-tertiary:       #B85020;      /* lifted Dark Rust for dark contrast */
+    --color-accent-tertiary-on:    #EDF5EC;
+    --color-accent-conversion:     #BF461A;      /* Burnt Orange — primary CTAs only */
+    --color-accent-conversion-hover: #D45525;
+    --color-accent-conversion-on:    #EDF5EC;
+    --color-accent-highlight:      #FFBA1A;      /* Gold */
+    --color-accent-highlight-on:   #0F1E1D;
 
     --color-status-success:    #6B8A7A;
-    --color-status-success-on: #0D1117;
-    --color-status-warning:    #D4A847;
-    --color-status-warning-on: #0D1117;
-    --color-status-error:      #C25A45;
-    --color-status-error-on:   #0D1117;
-    --color-status-info:       #4A6FA8;
-    --color-status-info-on:    #0D1117;
+    --color-status-success-on: #0F1E1D;
+    --color-status-warning:    #FFBA1A;
+    --color-status-warning-on: #0F1E1D;
+    --color-status-error:      #C02B0A;
+    --color-status-error-on:   #EDF5EC;
+    --color-status-info:       #6E3FB8;          /* lifted CTA Purple */
+    --color-status-info-on:    #EDF5EC;
 
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.32), 0 1px 1px 0 rgba(0, 0, 0, 0.16);
     --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.40), 0 2px 4px -2px rgba(0, 0, 0, 0.24);
     --shadow-lg: 0 12px 32px -6px rgba(0, 0, 0, 0.48), 0 4px 8px -4px rgba(0, 0, 0, 0.32);
     --shadow-xl: 0 24px 64px -12px rgba(0, 0, 0, 0.56), 0 8px 16px -8px rgba(0, 0, 0, 0.40);
-    --shadow-focus: 0 0 0 3px rgba(212, 168, 71, 0.40);
+    --shadow-focus: 0 0 0 3px rgba(196, 172, 74, 0.40);
   }
 
   /* Reduced-motion overrides for the new motion tokens */
@@ -183,25 +210,25 @@
   }
 
   .dark {
-    --background: 220 20% 7%;
-    --foreground: 0 0% 95%;
-    --card: 220 18% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 220 18% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 40 52% 47%;
-    --primary-foreground: 220 20% 7%;
-    --secondary: 220 14% 14%;
-    --secondary-foreground: 0 0% 85%;
-    --muted: 220 14% 14%;
-    --muted-foreground: 210 14% 55%;
-    --accent: 220 14% 14%;
-    --accent-foreground: 0 0% 95%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 220 14% 18%;
-    --input: 220 14% 18%;
-    --ring: 40 52% 47%;
+    --background: 178 32% 9%;
+    --foreground: 113 28% 94%;
+    --card: 178 22% 14%;
+    --card-foreground: 113 28% 94%;
+    --popover: 178 22% 14%;
+    --popover-foreground: 113 28% 94%;
+    --primary: 49 49% 44%;
+    --primary-foreground: 178 32% 9%;
+    --secondary: 178 22% 14%;
+    --secondary-foreground: 113 16% 84%;
+    --muted: 178 22% 14%;
+    --muted-foreground: 113 6% 65%;
+    --accent: 178 22% 14%;
+    --accent-foreground: 113 28% 94%;
+    --destructive: 8 88% 40%;
+    --destructive-foreground: 113 28% 94%;
+    --border: 178 22% 18%;
+    --input: 178 22% 18%;
+    --ring: 49 49% 44%;
   }
 }
 
@@ -216,6 +243,17 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 60px;
+  }
+
+  /* Mabbly brand spec §2.3 — Headings are 900 + UPPERCASE.
+     Applies to inline-style usages where var(--font-display) is the
+     font-family (the post-migration heading swap targets). Tailwind
+     `.font-display` className does NOT inject this var into inline
+     style, so this rule only fires on heading-class elements. */
+  [style*="var(--font-display)"] {
+    font-weight: 900 !important;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
   }
 }
 
@@ -265,10 +303,10 @@
   }
 }
 
-/* Gold pulse for nav button */
+/* Accent pulse (Olive Gold) for nav button */
 @keyframes goldPulse {
   0%, 100% { box-shadow: none; }
-  50% { box-shadow: 0 0 0 6px rgba(184,147,58,0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(168, 146, 58, 0.25); }
 }
 
 /* Urgency dot pulse */
@@ -319,7 +357,7 @@
 /* Custom select chevron */
 select.custom-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23B8933A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23A8923A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 40px;
@@ -333,7 +371,7 @@ select.custom-select {
   transition: all 0.3s ease;
 }
 .glass-card:hover {
-  border-color: rgba(184, 147, 58, 0.3);
+  border-color: rgba(168, 146, 58, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
@@ -346,20 +384,20 @@ select.custom-select {
   transition: all 0.3s ease;
 }
 .glass-card-light:hover {
-  border-color: rgba(184, 147, 58, 0.4);
+  border-color: rgba(168, 146, 58, 0.4);
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
 /* ───────────── DISCOVER PAGE — EDITORIAL MOTION ───────────── */
 
-/* Slow breathing ember for primary CTAs */
+/* Slow breathing ember for accent surfaces (Olive Gold) */
 @keyframes goldEmber {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(184,147,58,0.0), 0 8px 24px rgba(184,147,58,0.22);
+    box-shadow: 0 0 0 0 rgba(168, 146, 58, 0.0), 0 8px 24px rgba(168, 146, 58, 0.22);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(184,147,58,0.10), 0 8px 32px rgba(184,147,58,0.42);
+    box-shadow: 0 0 0 8px rgba(168, 146, 58, 0.10), 0 8px 32px rgba(168, 146, 58, 0.42);
   }
 }
 .gold-ember { animation: goldEmber 8s ease-in-out infinite; }
@@ -472,48 +510,49 @@ select.custom-select {
 /* Vellum surface — paper-like card background */
 .vellum {
   background:
-    linear-gradient(180deg, rgba(255,253,248,1) 0%, rgba(252,248,242,1) 100%),
-    radial-gradient(circle at 20% 10%, rgba(184,147,58,0.05), transparent 40%);
+    linear-gradient(180deg, rgba(250,249,245,1) 0%, rgba(237,245,236,1) 100%),
+    radial-gradient(circle at 20% 10%, rgba(255, 186, 26, 0.06), transparent 40%);
   background-blend-mode: multiply;
   position: relative;
 }
 .vellum-dark {
   background:
-    linear-gradient(180deg, rgba(20,18,16,1) 0%, rgba(14,12,10,1) 100%);
+    linear-gradient(180deg, rgba(15, 30, 29, 1) 0%, rgba(20, 20, 19, 1) 100%);
   position: relative;
 }
 
 /* Editorial accent — keeps inline emphasis subtle and uniform */
 .editorial-italic {
-  font-family: 'Inter Tight', sans-serif;
+  font-family: var(--font-display);
   letter-spacing: -0.015em;
-  font-weight: 500;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-/* Hairline-rule helpers */
+/* Hairline-rule helpers — gold-highlight is the spec emphasis color */
 .hairline-rule-gold {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(184,147,58,0.6), transparent);
+  background: linear-gradient(to right, transparent, rgba(255, 186, 26, 0.6), transparent);
 }
 .hairline-rule-ink {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(0,0,0,0.18), transparent);
+  background: linear-gradient(to right, transparent, rgba(15, 30, 29, 0.18), transparent);
 }
 .double-rule-gold {
-  border-top: 1px solid rgba(184,147,58,0.6);
-  border-bottom: 1px solid rgba(184,147,58,0.6);
+  border-top: 1px solid rgba(255, 186, 26, 0.6);
+  border-bottom: 1px solid rgba(255, 186, 26, 0.6);
   height: 4px;
 }
 
-/* Drop cap utility */
+/* Drop cap utility — heavy display face per brand spec */
 .drop-cap::first-letter {
-  font-family: 'Inter Tight', sans-serif;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 900;
   font-size: 4.2em;
   line-height: 0.9;
   float: left;
   padding: 6px 14px 0 0;
-  color: #B8933A;
+  color: #A8923A;
   letter-spacing: -0.04em;
 }
 

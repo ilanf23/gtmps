@@ -13,7 +13,7 @@ const DropCap = ({ children, className = "", tone = "gold", style }: Props) => (
     style={{
       fontFamily: "'Instrument Sans', sans-serif",
       ...style,
-      ["--drop-cap-color" as never]: tone === "gold" ? "#B8933A" : "#2D2A26",
+      ["--drop-cap-color" as never]: tone === "gold" ? "#A8923A" : "#2D2A26",
     }}
   >
     {children}

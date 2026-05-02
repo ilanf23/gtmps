@@ -14,7 +14,7 @@ export default function ThePodcast() {
       className="px-6 md:px-10"
       style={{
         background: '#0D0A04',
-        borderTop: '1px solid rgba(184,147,58,0.1)',
+        borderTop: '1px solid rgba(168, 146, 58,0.1)',
         paddingTop: 144,
         paddingBottom: 144,
       }}
@@ -32,7 +32,7 @@ export default function ThePodcast() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
           }}
@@ -44,7 +44,7 @@ export default function ThePodcast() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
@@ -54,7 +54,7 @@ export default function ThePodcast() {
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(56px, 8vw, 104px)',
             fontWeight: 500,
-            color: '#F5EFE0',
+            color: '#EDF5EC',
             lineHeight: 0.98,
             letterSpacing: '-0.04em',
             margin: '0 0 18px',
@@ -66,7 +66,7 @@ export default function ThePodcast() {
           style={{
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(18px, 1.8vw, 22px)',
-            color: 'rgba(245,239,224,0.5)',
+            color: 'rgba(237, 245, 236,0.5)',
             margin: '0 0 40px',
             fontWeight: 300,
             lineHeight: 1.5,
@@ -80,7 +80,7 @@ export default function ThePodcast() {
             width: '100%',
             height: 3,
             background:
-              'linear-gradient(90deg, transparent, rgba(184,147,58,0.3), rgba(184,147,58,0.7), rgba(184,147,58,0.3), transparent)',
+              'linear-gradient(90deg, transparent, rgba(168, 146, 58,0.3), rgba(168, 146, 58,0.7), rgba(168, 146, 58,0.3), transparent)',
             borderRadius: 3,
             marginBottom: 48,
           }}
@@ -92,12 +92,12 @@ export default function ThePodcast() {
               width: 96,
               height: 96,
               borderRadius: '50%',
-              background: 'rgba(184,147,58,0.12)',
-              border: '2px solid #B8933A',
+              background: 'rgba(168, 146, 58,0.12)',
+              border: '2px solid #A8923A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 0 0 12px rgba(184,147,58,0.06)',
+              boxShadow: '0 0 0 12px rgba(168, 146, 58,0.06)',
               flexShrink: 0,
             }}
           >
@@ -105,7 +105,7 @@ export default function ThePodcast() {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 32,
-                color: '#B8933A',
+                color: '#A8923A',
                 marginLeft: 4,
               }}
             >
@@ -120,7 +120,7 @@ export default function ThePodcast() {
                 fontSize: 13,
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#B8933A',
+                color: '#A8923A',
                 marginBottom: 12,
                 fontWeight: 500,
               }}
@@ -132,7 +132,7 @@ export default function ThePodcast() {
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 'clamp(24px, 2.4vw, 32px)',
                 fontWeight: 500,
-                color: '#F5EFE0',
+                color: '#EDF5EC',
                 marginBottom: 12,
                 lineHeight: 1.2,
                 letterSpacing: '-0.02em',
@@ -144,7 +144,7 @@ export default function ThePodcast() {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 16,
-                color: 'rgba(245,239,224,0.5)',
+                color: 'rgba(237, 245, 236,0.5)',
                 marginBottom: 22,
                 fontWeight: 300,
               }}
@@ -156,14 +156,14 @@ export default function ThePodcast() {
                 <span
                   key={p}
                   style={{
-                    border: '1px solid rgba(184,147,58,0.25)',
+                    border: '1px solid rgba(168, 146, 58,0.25)',
                     borderRadius: 3,
                     padding: '6px 14px',
                     fontFamily: "'Inter Tight', sans-serif",
                     fontSize: 11.5,
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
-                    color: 'rgba(184,147,58,0.75)',
+                    color: 'rgba(168, 146, 58,0.75)',
                     fontWeight: 500,
                   }}
                 >
@@ -176,7 +176,7 @@ export default function ThePodcast() {
 
         <div
           style={{
-            borderTop: '1px solid rgba(184,147,58,0.12)',
+            borderTop: '1px solid rgba(168, 146, 58,0.12)',
             margin: '48px 0',
           }}
         />
@@ -189,7 +189,7 @@ export default function ThePodcast() {
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 'clamp(56px, 6vw, 76px)',
                   fontWeight: 600,
-                  color: '#B8933A',
+                  color: '#A8923A',
                   lineHeight: 1,
                   letterSpacing: '-0.04em',
                 }}
@@ -200,7 +200,7 @@ export default function ThePodcast() {
                 style={{
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 14,
-                  color: 'rgba(245,239,224,0.5)',
+                  color: 'rgba(237, 245, 236,0.5)',
                   marginTop: 10,
                   fontWeight: 400,
                   letterSpacing: '0.04em',

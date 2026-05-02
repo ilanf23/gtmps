@@ -20,7 +20,7 @@ export default function AwardsJudging() {
   return (
     <section
       style={{
-        background: '#F5EFE0',
+        background: '#EDF5EC',
         padding: '120px 24px',
       }}
     >
@@ -35,16 +35,18 @@ export default function AwardsJudging() {
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 20px;
         }
         .aj-headline {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-weight: 400;
           font-size: clamp(32px, 5vw, 52px);
           line-height: 1.1;
           letter-spacing: -0.018em;
-          color: #1C1008;
+          color: #0F1E1D;
           margin: 0;
         }
         .aj-grid {
@@ -59,9 +61,9 @@ export default function AwardsJudging() {
         }
         .aj-card {
           padding: 36px 32px;
-          background: #FBF8F4;
-          border: 1px solid rgba(28,16,8,0.1);
-          border-top: 2px solid #B8933A;
+          background: #EDF5EC;
+          border: 1px solid rgba(15, 30, 29,0.1);
+          border-top: 2px solid #A8923A;
           border-radius: 2px;
         }
         .aj-card-eyebrow {
@@ -69,14 +71,16 @@ export default function AwardsJudging() {
           font-size: 10px;
           letter-spacing: 0.28em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 16px;
         }
         .aj-card-body {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-size: 18px;
           line-height: 1.55;
-          color: #1C1008;
+          color: #0F1E1D;
           margin: 0;
         }
       `}</style>

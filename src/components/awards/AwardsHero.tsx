@@ -2,7 +2,7 @@ export default function AwardsHero() {
   return (
     <section
       style={{
-        background: '#1C1008',
+        background: '#0F1E1D',
         position: 'relative',
         overflow: 'hidden',
         padding: '140px 24px 120px',
@@ -12,7 +12,7 @@ export default function AwardsHero() {
         .ah-glow {
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at 50% 40%, rgba(184,147,58,0.14), transparent 60%);
+          background: radial-gradient(circle at 50% 40%, rgba(168, 146, 58,0.14), transparent 60%);
           pointer-events: none;
         }
         .ah-inner {
@@ -31,7 +31,7 @@ export default function AwardsHero() {
           width: 320px;
           height: 320px;
           margin: 0 auto 56px;
-          filter: drop-shadow(0 40px 80px rgba(184,147,58,0.35));
+          filter: drop-shadow(0 40px 80px rgba(168, 146, 58,0.35));
         }
         @media (max-width: 640px) {
           .ah-sculpture { width: 60vw; height: 60vw; margin-bottom: 40px; }
@@ -40,18 +40,18 @@ export default function AwardsHero() {
           position: absolute;
           inset: 0;
           border-radius: 50%;
-          border: 1px solid rgba(184,147,58,0.9);
+          border: 1px solid rgba(168, 146, 58,0.9);
           animation: ahSpin 60s linear infinite;
         }
         .ah-ring.r2 {
           inset: 14%;
-          border-color: rgba(184,147,58,0.55);
+          border-color: rgba(168, 146, 58,0.55);
           animation-duration: 80s;
           animation-direction: reverse;
         }
         .ah-ring.r3 {
           inset: 30%;
-          border-color: rgba(184,147,58,0.3);
+          border-color: rgba(168, 146, 58,0.3);
           animation-duration: 100s;
         }
         @keyframes ahSpin { to { transform: rotate(360deg); } }
@@ -60,7 +60,7 @@ export default function AwardsHero() {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #D4AE48, #B8933A);
+          background: linear-gradient(135deg, #C4AC4A, #A8923A);
           box-shadow: 0 0 16px rgba(212,174,72,0.6);
         }
         .ah-dot.d1 { top: -5px; left: 50%; transform: translateX(-50%); }
@@ -69,7 +69,7 @@ export default function AwardsHero() {
           inset: 44%;
           width: auto;
           height: auto;
-          background: radial-gradient(circle, #F5EFE0, #B8933A 70%);
+          background: radial-gradient(circle, #EDF5EC, #A8923A 70%);
           box-shadow: 0 0 32px rgba(212,174,72,0.8);
         }
         @media (prefers-reduced-motion: reduce) {
@@ -80,16 +80,18 @@ export default function AwardsHero() {
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 24px;
         }
         .ah-headline {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-weight: 400;
           font-size: clamp(48px, 8vw, 88px);
           line-height: 1.04;
           letter-spacing: -0.02em;
-          color: #F5EFE0;
+          color: #EDF5EC;
           margin: 0 0 28px;
         }
         .ah-sub {
@@ -97,7 +99,7 @@ export default function AwardsHero() {
           font-style: italic;
           font-size: clamp(18px, 2.4vw, 24px);
           line-height: 1.5;
-          color: rgba(245,239,224,0.7);
+          color: rgba(237, 245, 236,0.7);
           max-width: 640px;
           margin: 0 auto 40px;
         }
@@ -108,15 +110,15 @@ export default function AwardsHero() {
           font-size: 14px;
           letter-spacing: 0.04em;
           padding: 16px 36px;
-          background: linear-gradient(135deg, #B8933A 0%, #D4AE48 100%);
-          color: #1C1008;
+          background: linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%);
+          color: #0F1E1D;
           border-radius: 999px;
           text-decoration: none;
           transition: transform 200ms, box-shadow 200ms;
         }
         .ah-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 12px 32px -8px rgba(184,147,58,0.6);
+          box-shadow: 0 12px 32px -8px rgba(168, 146, 58,0.6);
         }
         @media (max-width: 640px) {
           .ah-cta { display: block; width: 100%; }
@@ -125,7 +127,7 @@ export default function AwardsHero() {
           margin-top: 24px;
           font-family: 'Inter Tight', sans-serif;
           font-size: 13px;
-          color: rgba(245,239,224,0.45);
+          color: rgba(237, 245, 236,0.45);
           letter-spacing: 0.01em;
         }
       `}</style>

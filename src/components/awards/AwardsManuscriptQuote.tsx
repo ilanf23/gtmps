@@ -2,7 +2,7 @@ export default function AwardsManuscriptQuote() {
   return (
     <section
       style={{
-        background: '#F5EFE0',
+        background: '#EDF5EC',
         padding: '120px 24px',
       }}
     >
@@ -20,7 +20,7 @@ export default function AwardsManuscriptQuote() {
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 32px;
         }
         .amq-quote {
@@ -29,28 +29,28 @@ export default function AwardsManuscriptQuote() {
           font-weight: 400;
           font-size: clamp(28px, 4vw, 44px);
           line-height: 1.32;
-          color: #1C1008;
+          color: #0F1E1D;
           letter-spacing: -0.01em;
           margin: 0 0 32px;
         }
         .amq-rule {
           width: 40px;
           height: 1px;
-          background: rgba(184,147,58,0.35);
+          background: rgba(168, 146, 58,0.35);
           margin: 0 auto 20px;
         }
         .amq-attr {
           font-family: 'Inter Tight', sans-serif;
           font-style: italic;
           font-size: 13px;
-          color: rgba(28,16,8,0.55);
+          color: rgba(15, 30, 29,0.55);
           margin: 0 0 24px;
           letter-spacing: 0.02em;
         }
         .amq-tag {
           font-family: 'Inter Tight', sans-serif;
           font-size: 14px;
-          color: #B8933A;
+          color: #A8923A;
           font-weight: 500;
           margin: 0;
         }

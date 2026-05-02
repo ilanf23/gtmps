@@ -3,7 +3,7 @@
 //
 // Behavior:
 //   - Fixed at bottom, 3px tall, full width.
-//   - Gold (#B8933A) fill grows with scroll position.
+//   - Gold (#A8923A) fill grows with scroll position.
 //   - Hidden on >= 1024px (rail handles desktop).
 //   - Hidden once the final v10 Section 11 enters the viewport — same gating
 //     intent as the rail.
@@ -67,7 +67,7 @@ export default function MobileProgressBar() {
         right: 0,
         bottom: 0,
         height: 3,
-        backgroundColor: "rgba(184,147,58,0.12)",
+        backgroundColor: "rgba(168, 146, 58,0.12)",
         zIndex: 50,
         opacity: hidden ? 0 : 1,
         transition: "opacity 200ms ease",
