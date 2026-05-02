@@ -6,8 +6,8 @@ export default function FinalCta() {
       id="final-cta"
       className="px-6 md:px-10"
       style={{
-        background: '#0F1E1D',
-        borderTop: '1px solid rgba(168, 146, 58,0.1)',
+        background: '#FBF8F4',
+        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
         padding: 'clamp(64px, 11vw, 112px) 24px',
       }}
     >
@@ -19,7 +19,7 @@ export default function FinalCta() {
         /* Primary conversion CTA — reserved Burnt Orange per brand spec. */
         .fc-btn-primary {
           background: #BF461A;
-          color: #EDF5EC;
+          color: #FFFFFF;
           border-radius: 2px;
           padding: 13px 32px;
           font-family: 'Inter Tight', system-ui, sans-serif;
@@ -82,7 +82,7 @@ export default function FinalCta() {
             fontFamily: "var(--font-display)",
             fontSize: 'clamp(36px, 6vw, 62px)',
             fontWeight: 400,
-            color: '#EDF5EC',
+            color: '#0F1E1D',
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             margin: '0 0 14px',
@@ -94,7 +94,7 @@ export default function FinalCta() {
           style={{
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             fontSize: 14,
-            color: 'rgba(237, 245, 236,0.45)',
+            color: 'rgba(15, 30, 29, 0.6)',
             lineHeight: 1.65,
             margin: '0 0 24px',
           }}
@@ -148,7 +148,7 @@ export default function FinalCta() {
             fontSize: 9,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(237, 245, 236,0.2)',
+            color: 'rgba(15, 30, 29, 0.4)',
             margin: 0,
           }}
         >
