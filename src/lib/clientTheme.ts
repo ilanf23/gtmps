@@ -33,6 +33,40 @@ export type ClientTheme = {
 /** Default dark container when extracted background is near-white. */
 export const INDUSTRY_FALLBACK_BG = "#1B3A6B"; // consulting navy
 
+/**
+ * Luminance threshold under which an extracted background is considered "too
+ * dark to render content sections on" — forces body bg to Mabbly cream while
+ * keeping the extracted dark color available for chrome (header/footer/CTA).
+ *
+ * The Cravath failure mode: client_background = #0B1A2E (navy, lum ≈ 0.02).
+ * Body sections (orbit viz, two-column proof, gold pull-quote, "Activate your
+ * Dead Zone") were designed for cream-on-ink and collapse contrast on navy.
+ *
+ * Gated behind VITE_CLIENT_THEME_V2 so the fix can be smoke-tested before
+ * flipping for all live microsites. Default off in prod.
+ */
+export const DARK_BODY_LUMINANCE_THRESHOLD = 0.35;
+
+/**
+ * Read the v2 flag with sensible fallbacks for non-Vite contexts (Vitest,
+ * SSR, eventual edge-function reuse).
+ */
+function clientThemeV2Enabled(): boolean {
+  // Vite injects import.meta.env; guard for non-browser builds.
+  try {
+    const env = (import.meta as unknown as { env?: Record<string, string> }).env;
+    if (env && typeof env.VITE_CLIENT_THEME_V2 === "string") {
+      return env.VITE_CLIENT_THEME_V2 === "true";
+    }
+  } catch {
+    /* non-Vite context */
+  }
+  if (typeof process !== "undefined" && process.env) {
+    return process.env.VITE_CLIENT_THEME_V2 === "true";
+  }
+  return false;
+}
+
 export const MABBLY_DEFAULTS: ClientTheme = {
   logoUrl: null,
   companyName: null,
@@ -150,9 +184,31 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
   const accentRaw = raw.client_accent_color ?? raw.client_brand_color;
   let accent = isHex(accentRaw) ? expandHex(accentRaw) : MABBLY_DEFAULTS.accent;
 
-  const background = isHex(raw.client_background_color)
+  const extractedBackground = isHex(raw.client_background_color)
     ? expandHex(raw.client_background_color)
     : MABBLY_DEFAULTS.background;
+
+  // ── Dark-body guard (v2) ────────────────────────────────────────────────
+  // Cravath failure mode: extracted background is deep navy → editorial body
+  // sections (cream-designed) lose contrast. Force cream body bg when the
+  // extracted color falls below the luminance threshold; preserve the
+  // extracted dark color via `brandBackground` below for chrome use.
+  // Gated behind VITE_CLIENT_THEME_V2 — defaults off, no behavior change for
+  // existing live microsites until the flag is flipped.
+  const v2 = clientThemeV2Enabled();
+  const extractedIsTooDark = relLuminance(extractedBackground) < DARK_BODY_LUMINANCE_THRESHOLD;
+  const background = (v2 && extractedIsTooDark)
+    ? MABBLY_DEFAULTS.background
+    : extractedBackground;
+
+  if (v2 && extractedIsTooDark && typeof console !== "undefined") {
+    console.info("[client-theme-v2] dark-body guard: forcing cream body bg", {
+      extracted: extractedBackground,
+      luminance: relLuminance(extractedBackground).toFixed(3),
+      threshold: DARK_BODY_LUMINANCE_THRESHOLD,
+      company: raw.client_company_name ?? null,
+    });
+  }
 
   // ── Palette quality threshold ───────────────────────────────────────────
   // Valid extracted hex must take priority over Mabbly defaults. We only
@@ -217,6 +273,20 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     ? expandHex(raw.brand_background)
     : INDUSTRY_FALLBACK_BG;
   if (relLuminance(brandBackground) > 0.9) {
+    brandBackground = INDUSTRY_FALLBACK_BG;
+  }
+
+  // ── Dark-chrome safety (v2) ─────────────────────────────────────────────
+  // brandBackground powers `--brand-bg` which MagnetShell consumes via
+  // color-mix() for nested section surfaces (line 415, 519, etc.). When the
+  // extracted brand bg is *very* dark (Cravath's #002554, lum ≈ 0.02),
+  // those nested surfaces ship as near-pure-black with editorial cream-on-
+  // ink content rendered illegibly on top. Substitute the consulting
+  // INDUSTRY_FALLBACK_BG which the color-mix logic was originally designed
+  // around — keeps a navy chrome register but preserves contrast on the
+  // section cards. The firm's actual brand color stays as `brandAccent` for
+  // links, button text, and accent rules.
+  if (v2 && extractedIsTooDark && relLuminance(brandBackground) < DARK_BODY_LUMINANCE_THRESHOLD) {
     brandBackground = INDUSTRY_FALLBACK_BG;
   }
 

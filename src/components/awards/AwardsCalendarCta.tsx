@@ -161,7 +161,7 @@ export default function AwardsCalendarCta() {
           Take the 10 min diagnostic. Your firm is added to the research and considered for the Awards by default. No separate application.
         </p>
         <a href="/assess" className="ac-cta" data-cta="add-your-firm">Add Your Firm →</a>
-        <p className="ac-trust">Free. 10 minutes. Confidential.</p>
+        <p className="ac-trust">Free. 90 seconds to build. 10 minutes to read. Confidential.</p>
       </div>
     </section>
   );

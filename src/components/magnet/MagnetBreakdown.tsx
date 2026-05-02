@@ -14,6 +14,7 @@ import {
 import { pickVariant } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
 import { displayNameFromSlug } from "@/lib/magnetSlug";
+import { getDisplayName } from "@/lib/companyName";
 import { assertReadableBrand } from "@/lib/clientTheme";
 
 import PersonalizedHeader from "./v10/PersonalizedHeader";
@@ -192,11 +193,16 @@ export default function MagnetBreakdown({
     sanitizeLLM(data.orbit_05),
   ];
 
-  // Firm-name fallback: never surface "your firm". Fall back to a name
-  // derived from the slug (calliope → Calliope) so every result page reads
-  // as personalized to the visitor's firm.
-  const customerName =
-    data.client_company_name ?? displayNameFromSlug(slug) ?? "your firm";
+  // Firm-name fallback: never render an empty hero. The previous chain used
+  // `??` which only catches null/undefined — when enrichment wrote
+  // client_company_name="" (whitespace-trimmed empty), the hero rendered
+  // "Your Revenue Map for ___" with no name (the v2 P0 Cravath bug).
+  // getDisplayName() handles null, undefined, "", and whitespace.
+  const customerName = getDisplayName({
+    companyName: data.client_company_name,
+    slug,
+    fallback: "your firm",
+  });
 
   const sanitizedAction = sanitizeLLM(data.action_1);
   const sanitizedObserved = sanitizeLLM(data.gtm_profile_observed);

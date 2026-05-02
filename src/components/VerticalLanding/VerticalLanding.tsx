@@ -804,7 +804,7 @@ export default function VerticalLanding({ vertical }: Props) {
             >
               {ctaLabel}
             </a>
-            <p className="vl-diag-foot">Free. 10 minutes. Most decisions within 48 hours.</p>
+            <p className="vl-diag-foot">Free. 90 seconds to build. 10 minutes to read. Most decisions within 48 hours.</p>
           </div>
         </section>
 

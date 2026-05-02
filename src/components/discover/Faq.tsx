@@ -14,7 +14,7 @@ const ITEMS: Item[] = [
   },
   {
     q: 'How long does MAP implementation take?',
-    a: 'The diagnostic takes 10 minutes. A full MAP activation — scoring your CRM, mapping your orbits, and establishing a relationship cadence — typically takes 3–4 weeks with one internal owner. Beta cohort firms saw first results within 90 days.',
+    a: 'Building your map takes ~90 seconds; reading and acting on it takes ~10 minutes. A full MAP activation — scoring your CRM, mapping your orbits, and establishing a relationship cadence — typically takes 3–4 weeks with one internal owner. Beta cohort firms saw first results within 90 days.',
   },
   {
     q: 'What makes this different from other GTM books?',

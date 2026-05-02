@@ -76,6 +76,99 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Mabbly Design System v1.0 (2026-05-02) — semantic tokens.
+        // New code uses these. Existing brand aliases (ink/gold/...) remain
+        // for backward compat until the codemod sweep (P1).
+        // Namespaced as `ds-*` to avoid collision with shadcn's `accent` etc.
+        "ds-surface": {
+          page:    "var(--color-surface-page)",
+          raised:  "var(--color-surface-raised)",
+          sunken:  "var(--color-surface-sunken)",
+          inverse: "var(--color-surface-inverse)",
+        },
+        "ds-content": {
+          primary:   "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          tertiary:  "var(--color-text-tertiary)",
+          inverse:   "var(--color-text-inverse)",
+          link:      "var(--color-text-link)",
+          disabled:  "var(--color-text-disabled)",
+        },
+        "ds-stroke": {
+          subtle:  "var(--color-border-subtle)",
+          DEFAULT: "var(--color-border-default)",
+          strong:  "var(--color-border-strong)",
+          focus:   "var(--color-border-focus)",
+        },
+        "ds-accent": {
+          DEFAULT: "var(--color-accent-primary)",
+          hover:   "var(--color-accent-primary-hover)",
+          active:  "var(--color-accent-primary-active)",
+          on:      "var(--color-accent-primary-on)",
+          secondary:      "var(--color-accent-secondary)",
+          "secondary-on": "var(--color-accent-secondary-on)",
+          tertiary:       "var(--color-accent-tertiary)",
+          "tertiary-on":  "var(--color-accent-tertiary-on)",
+        },
+        "ds-status": {
+          success:      "var(--color-status-success)",
+          "success-on": "var(--color-status-success-on)",
+          warning:      "var(--color-status-warning)",
+          "warning-on": "var(--color-status-warning-on)",
+          error:        "var(--color-status-error)",
+          "error-on":   "var(--color-status-error-on)",
+          info:         "var(--color-status-info)",
+          "info-on":    "var(--color-status-info-on)",
+        },
+        // Per-client (Magnet) — runtime injected by useClientTheme.
+        // Sprint 2 splits chrome from body to fix the Cravath dark-bg failure.
+        "ds-client": {
+          accent:      "var(--client-accent, var(--color-accent-primary))",
+          "accent-on": "var(--client-accent-on, var(--color-accent-primary-on))",
+          "chrome-bg":   "var(--client-chrome-bg, var(--color-surface-inverse))",
+          "chrome-text": "var(--client-chrome-text, var(--color-text-inverse))",
+          "body-bg":     "var(--client-body-bg, var(--color-surface-page))",
+          "body-text":   "var(--client-body-text, var(--color-text-primary))",
+        },
+      },
+      // Mabbly Design System v1.0 — type scale (7 semantic roles).
+      // Namespaced `ds-*` to avoid collision with default text-base/lg/xl.
+      fontSize: {
+        "ds-display":    ["clamp(3rem, 5vw + 1rem, 4.5rem)",        { lineHeight: "1.05", letterSpacing: "-0.015em", fontWeight: "500" }],
+        "ds-headline":   ["clamp(2rem, 3vw + 0.5rem, 2.5rem)",       { lineHeight: "1.15", letterSpacing: "-0.01em",  fontWeight: "500" }],
+        "ds-title":      ["clamp(1.375rem, 1vw + 1rem, 1.5rem)",     { lineHeight: "1.3",  letterSpacing: "-0.005em", fontWeight: "600" }],
+        "ds-body":       ["1rem",                                    { lineHeight: "1.6" }],
+        "ds-body-large": ["1.125rem",                                { lineHeight: "1.55" }],
+        "ds-label":      ["0.75rem",                                 { lineHeight: "1.4",  letterSpacing: "0.12em",   fontWeight: "500" }],
+        "ds-caption":    ["0.875rem",                                { lineHeight: "1.5" }],
+      },
+      maxWidth: {
+        "ds-prose":   "65ch",
+        "ds-content": "1040px",
+        "ds-wide":    "1280px",
+        "ds-page":    "1440px",
+      },
+      boxShadow: {
+        "ds-sm":    "var(--shadow-sm)",
+        "ds-md":    "var(--shadow-md)",
+        "ds-lg":    "var(--shadow-lg)",
+        "ds-xl":    "var(--shadow-xl)",
+        "ds-focus": "var(--shadow-focus)",
+      },
+      transitionDuration: {
+        "ds-instant":   "var(--duration-instant)",
+        "ds-fast":      "var(--duration-fast)",
+        "ds-normal":    "var(--duration-normal)",
+        "ds-slow":      "var(--duration-slow)",
+        "ds-slower":    "var(--duration-slower)",
+        "ds-cinematic": "var(--duration-cinematic)",
+      },
+      transitionTimingFunction: {
+        "ds-default":   "var(--easing-default)",
+        "ds-in":        "var(--easing-in)",
+        "ds-out":       "var(--easing-out)",
+        "ds-bounce":    "var(--easing-bounce)",
+        "ds-editorial": "var(--easing-editorial)",
       },
       borderRadius: {
         lg: "var(--radius)",

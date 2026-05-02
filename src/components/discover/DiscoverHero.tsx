@@ -9,17 +9,11 @@ export default function DiscoverHero() {
   const [isMuted, setIsMuted] = useState(true);
   const reducedMotion = useReducedMotion();
 
-  // Attempt muted autoplay on mount unless user prefers reduced motion
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v || videoFailed) return;
-    if (reducedMotion) return;
-    v.muted = true;
-    const p = v.play();
-    if (p && typeof p.then === 'function') {
-      p.then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
-    }
-  }, [reducedMotion, videoFailed]);
+  // Audit feedback: autoplay on mount made users miss the first ~5 seconds
+  // while scanning the page. Default to paused with poster visible. The phone
+  // tap-control (handleVideoTap below) starts playback when the user is
+  // ready, with sound on by default since the click is an explicit gesture.
+  // Reduced-motion users get the same paused-with-poster default.
 
   const handleVideoTap = useCallback(() => {
     const v = videoRef.current;
@@ -570,7 +564,7 @@ export default function DiscoverHero() {
               </a>
             </div>
             <p className="dh-mini-foot" style={{ marginTop: -10, marginBottom: 0 }}>
-              Free. 10 minutes. Confidential. Benchmarked against peer firms.
+              Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer firms.
             </p>
           </div>
         </div>

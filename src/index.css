@@ -53,6 +53,133 @@
     --font-serif: 'Cormorant Garamond', serif;
     --font-sans: 'Instrument Sans', sans-serif;
     --font-mono: 'DM Mono', monospace;
+
+    /* ============================================================
+       Mabbly Design System v1.0 (2026-05-02) — semantic tokens
+       Single source-of-truth — see src/lib/tokens.ts and the audit.
+       Existing ad-hoc vars above are kept for backward compat;
+       new code references these semantic tokens.
+       ============================================================ */
+
+    /* Surfaces */
+    --color-surface-page:    #F5F1E8;            /* cream */
+    --color-surface-raised:  #FFFFFF;            /* warm-white */
+    --color-surface-sunken:  #EDE8DA;
+    --color-surface-inverse: #0D1117;            /* ink */
+    --color-surface-overlay: rgba(13, 17, 23, 0.55);
+
+    /* Text */
+    --color-text-primary:    #0D1117;
+    --color-text-secondary:  #3A4452;
+    --color-text-tertiary:   #5A6A7A;            /* slate */
+    --color-text-inverse:    #F5F1E8;
+    --color-text-link:       #8B3A2A;            /* rust */
+    --color-text-disabled:   #9AA3AD;
+
+    /* Borders */
+    --color-border-subtle:  rgba(13, 17, 23, 0.08);
+    --color-border-default: rgba(13, 17, 23, 0.16);
+    --color-border-strong:  rgba(13, 17, 23, 0.32);
+    --color-border-focus:   #B8933A;
+
+    /* Accent */
+    --color-accent-primary:        #B8933A;     /* gold */
+    --color-accent-primary-hover:  #A68431;
+    --color-accent-primary-active: #93742A;
+    --color-accent-primary-on:     #0D1117;     /* ink on gold — AA 6.2:1 */
+    --color-accent-secondary:      #3D5A4A;     /* sage */
+    --color-accent-secondary-on:   #F5F1E8;
+    --color-accent-tertiary:       #8B3A2A;     /* rust */
+    --color-accent-tertiary-on:    #F5F1E8;
+
+    /* Status */
+    --color-status-success:    #3D5A4A;
+    --color-status-success-on: #F5F1E8;
+    --color-status-warning:    #B8933A;
+    --color-status-warning-on: #0D1117;
+    --color-status-error:      #8B3A2A;
+    --color-status-error-on:   #F5F1E8;
+    --color-status-info:       #1B3A6B;
+    --color-status-info-on:    #F5F1E8;
+
+    /* Shadow — light mode (cool, paper-edge depth) */
+    --shadow-sm: 0 1px 2px 0 rgba(13, 17, 23, 0.04), 0 1px 1px 0 rgba(13, 17, 23, 0.02);
+    --shadow-md: 0 4px 12px -2px rgba(13, 17, 23, 0.06), 0 2px 4px -2px rgba(13, 17, 23, 0.04);
+    --shadow-lg: 0 12px 32px -6px rgba(13, 17, 23, 0.10), 0 4px 8px -4px rgba(13, 17, 23, 0.06);
+    --shadow-xl: 0 24px 64px -12px rgba(13, 17, 23, 0.16), 0 8px 16px -8px rgba(13, 17, 23, 0.08);
+    --shadow-focus: 0 0 0 3px rgba(184, 147, 58, 0.32);
+
+    /* Motion */
+    --duration-instant:   80ms;
+    --duration-fast:      160ms;
+    --duration-normal:    240ms;
+    --duration-slow:      400ms;
+    --duration-slower:    600ms;
+    --duration-cinematic: 1200ms;
+    --easing-default:   cubic-bezier(0.4, 0, 0.2, 1);
+    --easing-in:        cubic-bezier(0.4, 0, 1, 1);
+    --easing-out:       cubic-bezier(0, 0, 0.2, 1);
+    --easing-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
+    --easing-editorial: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Dark theme — opt-in via [data-theme="dark"] OR system preference.
+     Used by Aletheia today; future homepage dark toggle reads from this.
+     NOT inverted-light: warm dark surfaces, desaturated/lifted accents. */
+  [data-theme="dark"] {
+    --color-surface-page:    #0D1117;
+    --color-surface-raised:  #161B22;
+    --color-surface-sunken:  #0A0E13;
+    --color-surface-inverse: #F5F1E8;
+    --color-surface-overlay: rgba(0, 0, 0, 0.65);
+
+    --color-text-primary:   #EDE8DA;
+    --color-text-secondary: #A8B0BA;
+    --color-text-tertiary:  #6B7585;
+    --color-text-inverse:   #0D1117;
+    --color-text-link:      #D4A847;
+    --color-text-disabled:  #4A5560;
+
+    --color-border-subtle:  rgba(245, 241, 232, 0.08);
+    --color-border-default: rgba(245, 241, 232, 0.16);
+    --color-border-strong:  rgba(245, 241, 232, 0.28);
+    --color-border-focus:   #D4A847;
+
+    --color-accent-primary:        #D4A847;     /* gold +6% L for dark contrast */
+    --color-accent-primary-hover:  #C4994A;
+    --color-accent-primary-active: #B8933A;
+    --color-accent-primary-on:     #0D1117;     /* AA 8.1:1 */
+    --color-accent-secondary:      #6B8A7A;
+    --color-accent-secondary-on:   #0D1117;
+    --color-accent-tertiary:       #C25A45;
+    --color-accent-tertiary-on:    #0D1117;
+
+    --color-status-success:    #6B8A7A;
+    --color-status-success-on: #0D1117;
+    --color-status-warning:    #D4A847;
+    --color-status-warning-on: #0D1117;
+    --color-status-error:      #C25A45;
+    --color-status-error-on:   #0D1117;
+    --color-status-info:       #4A6FA8;
+    --color-status-info-on:    #0D1117;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.32), 0 1px 1px 0 rgba(0, 0, 0, 0.16);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.40), 0 2px 4px -2px rgba(0, 0, 0, 0.24);
+    --shadow-lg: 0 12px 32px -6px rgba(0, 0, 0, 0.48), 0 4px 8px -4px rgba(0, 0, 0, 0.32);
+    --shadow-xl: 0 24px 64px -12px rgba(0, 0, 0, 0.56), 0 8px 16px -8px rgba(0, 0, 0, 0.40);
+    --shadow-focus: 0 0 0 3px rgba(212, 168, 71, 0.40);
+  }
+
+  /* Reduced-motion overrides for the new motion tokens */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --duration-instant:   0ms;
+      --duration-fast:      0ms;
+      --duration-normal:    0ms;
+      --duration-slow:      0ms;
+      --duration-slower:    0ms;
+      --duration-cinematic: 0ms;
+    }
   }
 
   .dark {
