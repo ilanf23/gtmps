@@ -420,6 +420,13 @@ export default function MagnetBreakdown({
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
             <a
+              href={`/m/${slug}/cohort`}
+              className="underline underline-offset-4 hover:opacity-80 transition-opacity"
+              style={{ color: `var(--brand-accent, ${brand.primary})` }}
+            >
+              How you compare →
+            </a>
+            <a
               href={`/m/${slug}/chat`}
               className="underline underline-offset-4 hover:opacity-80 transition-opacity"
               style={{ color: `var(--brand-accent, ${brand.primary})` }}
