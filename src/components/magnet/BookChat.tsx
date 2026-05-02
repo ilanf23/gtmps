@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import ReactMarkdown from "react-markdown";
 import { SendHorizontal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -8,21 +8,69 @@ interface ChatMessage {
   content: string;
 }
 
+interface BookChatProps {
+  /** Firm name for personalized empty-state prompts. */
+  firmName?: string | null;
+  /** Plain-language vertical label (e.g. "law firms", "consulting practices"). */
+  verticalLabel?: string | null;
+}
+
 const WELCOME: ChatMessage = {
   role: "assistant",
   content:
-    "Ask me anything about the GTM book. Frameworks, chapters, examples, or how to apply them to your firm.",
+    "Ask Adam anything about the GTM book — frameworks, chapters, or how to apply Relationship Revenue OS to your firm.",
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/book-chat`;
 
-export default function BookChat() {
+/**
+ * Build 4–6 suggested prompts personalized to the firm in scope. Falls back
+ * to generic-but-still-specific prompts when we don't have a firm name yet.
+ */
+function buildSuggestedPrompts(
+  firmName: string | null | undefined,
+  verticalLabel: string | null | undefined,
+): string[] {
+  const firm = firmName?.trim() || null;
+  const vertical = verticalLabel?.trim() || null;
+
+  const firmRef = firm ?? "our firm";
+  const peerRef = vertical
+    ? `firms like ${firm ?? "ours"} in ${vertical}`
+    : `firms like ${firm ?? "ours"}`;
+
+  const prompts = [
+    `How would the Five Orbits framework apply to ${firmRef}?`,
+    vertical
+      ? `What does the book say about ${vertical}?`
+      : `What does the book say about firms in our category?`,
+    `Give me the 30-second pitch for why ${firmRef} should care about Relationship Revenue OS.`,
+    `Which chapter should I read first if I only have 20 minutes?`,
+    `What are the most common origination mistakes ${peerRef} make?`,
+    `Walk me through the dormant-relationship reactivation playbook.`,
+  ];
+
+  // De-dupe defensively in case vertical/firm collapse to the same wording.
+  return Array.from(new Set(prompts)).slice(0, 6);
+}
+
+export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}) {
   const { toast } = useToast();
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Empty-state shows when no user message has been sent yet (only the
+  // initial welcome is in the transcript).
+  const isEmptyState =
+    messages.length === 1 && messages[0].role === "assistant" && !isLoading;
+
+  const suggestedPrompts = useMemo(
+    () => buildSuggestedPrompts(firmName, verticalLabel),
+    [firmName, verticalLabel],
+  );
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -39,8 +87,8 @@ export default function BookChat() {
     ta.style.height = `${Math.min(ta.scrollHeight, 200)}px`;
   }, [input]);
 
-  async function sendMessage() {
-    const trimmed = input.trim();
+  async function sendMessage(override?: string) {
+    const trimmed = (override ?? input).trim();
     if (!trimmed || isLoading) return;
 
     const userMessage: ChatMessage = { role: "user", content: trimmed };
@@ -234,6 +282,65 @@ export default function BookChat() {
               </div>
             ),
           )}
+
+          {/* ─── Empty-state: "Ask Adam" framing + per-firm prompt chips ─── */}
+          {isEmptyState ? (
+            <div
+              className="mt-2 sm:mt-4 flex flex-col gap-4"
+              data-testid="bookchat-empty-state"
+            >
+              <div className="flex items-start gap-3 sm:gap-4">
+                <span
+                  className="mt-0.5 w-6 h-6 rounded-full bg-[#B8933A]/15 border border-[#B8933A]/40 text-[#B8933A] text-[10px] font-mono uppercase tracking-[0.14em] flex items-center justify-center shrink-0"
+                  aria-hidden
+                >
+                  A
+                </span>
+                <div className="flex flex-col gap-1">
+                  <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#B8933A]/90">
+                    Ask Adam
+                  </p>
+                  <p className="text-[14px] sm:text-[15px] leading-relaxed text-[#1C1008]/70">
+                    Adam co-wrote the book. Pick a starter or ask anything in your own
+                    words
+                    {firmName ? (
+                      <>
+                        {" "}— answers are framed for{" "}
+                        <span className="font-medium text-[#1C1008]">
+                          {firmName}
+                        </span>
+                      </>
+                    ) : null}
+                    .
+                  </p>
+                </div>
+              </div>
+
+              <ul
+                className="flex flex-col gap-2 pl-9 sm:pl-10"
+                aria-label="Suggested prompts"
+              >
+                {suggestedPrompts.map((prompt) => (
+                  <li key={prompt}>
+                    <button
+                      type="button"
+                      onClick={() => sendMessage(prompt)}
+                      disabled={isLoading}
+                      className="group w-full text-left rounded-lg border border-black/10 bg-black/[0.02] hover:bg-black/[0.04] hover:border-[#B8933A]/40 px-3.5 py-2.5 text-[14px] leading-snug text-[#1C1008]/85 hover:text-[#1C1008] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-between gap-3"
+                    >
+                      <span>{prompt}</span>
+                      <span
+                        aria-hidden
+                        className="text-[#B8933A]/60 group-hover:text-[#B8933A] transition-colors text-[1.05em] leading-none shrink-0"
+                      >
+                        →
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -247,13 +354,17 @@ export default function BookChat() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
               disabled={isLoading}
-              placeholder="Ask about the GTM book…"
+              placeholder={
+                firmName
+                  ? `Ask Adam about ${firmName} and the book…`
+                  : "Ask Adam about the GTM book…"
+              }
               rows={1}
               className="flex-1 bg-transparent text-[15px] text-[#1C1008] placeholder:text-black/30 focus:outline-none resize-none py-1.5 max-h-[200px]"
             />
             <button
               type="button"
-              onClick={sendMessage}
+              onClick={() => sendMessage()}
               disabled={isLoading || !input.trim()}
               className="bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] w-9 h-9 rounded-lg shrink-0 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
               aria-label="Send message"
@@ -262,7 +373,7 @@ export default function BookChat() {
             </button>
           </div>
           <p className="text-[11px] text-black/30 text-center mt-2">
-            Scoped to the GTM book content. Press Enter to send · Shift+Enter for newline.
+            Scoped to the GTM book content. Press Enter to send · Shift+Enter for new line.
           </p>
         </div>
       </div>
