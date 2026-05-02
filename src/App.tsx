@@ -24,6 +24,7 @@ import MagnetBook from "./pages/MagnetBook.tsx";
 import MagnetBookChatPage from "./pages/MagnetBookChatPage.tsx";
 import MagnetBookReaderPage from "./pages/MagnetBookReaderPage.tsx";
 import MagnetFeedbackPage from "./pages/MagnetFeedbackPage.tsx";
+import MagnetCohortPage from "./pages/MagnetCohortPage.tsx";
 import Awards from "./pages/Awards.tsx";
 import About from "./pages/About.tsx";
 import Aletheia from "./pages/Aletheia.tsx";
@@ -67,6 +68,7 @@ const App = () => (
           <Route path="/m/:slug/chat" element={<MagnetBookChatPage />} />
           <Route path="/m/:slug/read" element={<MagnetBookReaderPage />} />
           <Route path="/m/:slug/feedback" element={<MagnetFeedbackPage />} />
+          <Route path="/m/:slug/cohort" element={<MagnetCohortPage />} />
           <Route path="/book" element={<MagnetBook />} />
           <Route path="/awards" element={<Awards />} />
           <Route path="/about" element={<About />} />
