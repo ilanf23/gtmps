@@ -22,13 +22,13 @@ const goldRule: React.CSSProperties = {
 };
 
 const inputStyle: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid rgba(42,26,8,0.18)',
+  background: '#FBF8F4',
+  border: '1px solid #D5DEC2',
   borderRadius: 3,
   padding: '16px 20px',
   fontFamily: "'Inter Tight', sans-serif",
   fontSize: 18,
-  color: '#2A1A08',
+  color: '#0F1E1D',
   marginBottom: 14,
   width: '100%',
   outline: 'none',
@@ -41,14 +41,14 @@ export default function BetaReader() {
       id="beta-reader"
       className="px-6 md:px-10"
       style={{
-        background: '#EDF5EC',
-        borderTop: '1px solid rgba(168, 146, 58,0.12)',
+        background: '#FBF8F4',
+        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
     >
       <style>{`
-        .br-input::placeholder { color: rgba(42,26,8,0.35); }
+        .br-input::placeholder { color: rgba(15, 30, 29, 0.4); }
         .br-input:focus { border-color: rgba(168, 146, 58,0.65); }
         .br-grid {
           max-width: 1280px;
@@ -64,7 +64,7 @@ export default function BetaReader() {
         .br-left { animation: fadeUp 0.7s ease 0.1s both; }
         .br-right { animation: fadeUp 0.7s ease 0.3s both; }
         .br-badge {
-          border: 1px solid rgba(168, 146, 58,0.28);
+          border: 1px solid #D5DEC2;
           border-radius: 3px;
           padding: 8px 16px;
           font-family: 'Inter Tight', sans-serif;
@@ -92,7 +92,7 @@ export default function BetaReader() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 'clamp(48px, 7vw, 84px)',
               fontWeight: 500,
-              color: '#2A1A08',
+              color: '#0F1E1D',
               lineHeight: 1.0,
               letterSpacing: '-0.035em',
               margin: '0 0 20px',
@@ -104,7 +104,7 @@ export default function BetaReader() {
             style={{
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 'clamp(18px, 1.8vw, 22px)',
-              color: 'rgba(42,26,8,0.55)',
+              color: 'rgba(15, 30, 29, 0.66)',
               margin: '0 0 14px',
               lineHeight: 1.5,
               fontWeight: 300,
@@ -117,7 +117,7 @@ export default function BetaReader() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 15,
               fontStyle: 'italic',
-              color: 'rgba(42,26,8,0.5)',
+              color: 'rgba(15, 30, 29, 0.55)',
               margin: '0 0 36px',
               lineHeight: 1.5,
               fontWeight: 300,
@@ -150,7 +150,7 @@ export default function BetaReader() {
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 'clamp(18px, 1.7vw, 22px)',
                 lineHeight: 1.55,
-                color: 'rgba(42,26,8,0.8)',
+                color: 'rgba(15, 30, 29, 0.82)',
                 margin: 0,
                 fontWeight: 300,
                 letterSpacing: '-0.01em',
@@ -188,8 +188,8 @@ export default function BetaReader() {
           <form
             action="mailto:beta@mabbly.com"
             style={{
-              background: '#fff',
-              border: '1px solid rgba(168, 146, 58,0.2)',
+              background: '#FBF8F4',
+              border: '1px solid #D5DEC2',
               borderRadius: 6,
               padding: '40px 36px',
             }}
@@ -200,7 +200,7 @@ export default function BetaReader() {
                 fontSize: 13,
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: 'rgba(42,26,8,0.5)',
+                color: 'rgba(15, 30, 29, 0.55)',
                 marginBottom: 24,
                 fontWeight: 500,
               }}
@@ -229,7 +229,7 @@ export default function BetaReader() {
               }}
               style={{
                 background: '#A8923A',
-                color: '#fff',
+                color: '#FBF8F4',
                 borderRadius: 3,
                 padding: '16px',
                 fontFamily: "'Inter Tight', sans-serif",
@@ -248,7 +248,7 @@ export default function BetaReader() {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 13,
-                color: 'rgba(42,26,8,0.4)',
+                color: 'rgba(15, 30, 29, 0.45)',
                 textAlign: 'center',
                 marginTop: 14,
                 margin: '14px 0 0',

@@ -29,7 +29,7 @@ export default function ManuscriptAnchor() {
       ref={ref}
       id="manuscript"
       style={{
-        background: '#0F1E1D',
+        background: '#FFFFFF',
         position: 'relative',
         minHeight: '100vh',
         display: 'flex',
@@ -47,7 +47,7 @@ export default function ManuscriptAnchor() {
           width: 720px;
           height: 720px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(168, 146, 58,0.14) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(168, 146, 58,0.10) 0%, transparent 70%);
           transform: translate(-50%, -50%);
           pointer-events: none;
         }
@@ -77,7 +77,7 @@ export default function ManuscriptAnchor() {
           height: auto;
           display: block;
           box-shadow:
-            0 40px 80px -20px rgba(0,0,0,0.7),
+            0 40px 80px -20px rgba(15, 30, 29, 0.18),
             0 0 0 1px rgba(168, 146, 58,0.18),
             0 0 100px -20px rgba(168, 146, 58,0.25);
           transform-origin: center;
@@ -91,7 +91,7 @@ export default function ManuscriptAnchor() {
           text-transform: uppercase;
           font-size: clamp(20px, 2.4vw, 26px);
           font-weight: 400;
-          color: #EDF5EC;
+          color: #0F1E1D;
           line-height: 1.45;
           margin: 0;
           letter-spacing: -0.005em;
@@ -114,7 +114,7 @@ export default function ManuscriptAnchor() {
         }
         .ma-cta:hover {
           background: rgba(168, 146, 58,0.10);
-          color: #EDF5EC;
+          color: #0F1E1D;
           border-color: #A8923A;
         }
 

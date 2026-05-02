@@ -6,7 +6,7 @@ export default function FinalCta() {
       id="final-cta"
       className="px-6 md:px-10"
       style={{
-        background: '#0D0905',
+        background: '#0F1E1D',
         borderTop: '1px solid rgba(168, 146, 58,0.1)',
         padding: 'clamp(64px, 11vw, 112px) 24px',
       }}

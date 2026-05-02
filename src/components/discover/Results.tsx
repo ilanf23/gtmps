@@ -48,8 +48,8 @@ export default function Results() {
       id="results"
       className="px-6 md:px-10"
       style={{
-        background: '#0F1E1D',
-        borderTop: '1px solid rgba(168, 146, 58,0.1)',
+        background: '#FBF8F4',
+        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
@@ -65,8 +65,8 @@ export default function Results() {
           .rs-grid { grid-template-columns: repeat(3, 1fr); }
         }
         .rs-card {
-          background: #1A2B2A;
-          border: 1px solid rgba(213, 222, 212, 0.10);
+          background: #FFFFFF;
+          border: 1px solid #D5DEC2;
           border-radius: 4px;
           padding: 36px 28px;
           position: relative;
@@ -74,6 +74,7 @@ export default function Results() {
           display: flex;
           flex-direction: column;
           transition: background 0.18s, border-color 0.18s, transform 0.18s;
+          box-shadow: 0 2px 16px -8px rgba(15, 30, 29, 0.06);
         }
         .rs-card::before {
           content: '';
@@ -82,8 +83,8 @@ export default function Results() {
           left: 0;
           width: 16px;
           height: 16px;
-          border-top: 2px solid rgba(255, 186, 26, 0.6);
-          border-left: 2px solid rgba(255, 186, 26, 0.6);
+          border-top: 2px solid rgba(168, 146, 58, 0.55);
+          border-left: 2px solid rgba(168, 146, 58, 0.55);
         }
         .rs-card::after {
           content: '';
@@ -92,19 +93,19 @@ export default function Results() {
           right: 0;
           width: 16px;
           height: 16px;
-          border-bottom: 2px solid rgba(255, 186, 26, 0.6);
-          border-right: 2px solid rgba(255, 186, 26, 0.6);
+          border-bottom: 2px solid rgba(168, 146, 58, 0.55);
+          border-right: 2px solid rgba(168, 146, 58, 0.55);
         }
         .rs-card:hover {
-          background: #213635;
-          border-color: rgba(213, 222, 212, 0.20);
+          background: #FFFFFF;
+          border-color: rgba(168, 146, 58, 0.5);
           transform: translateY(-3px);
         }
         .rs-industry {
           font-family: 'Inter Tight', sans-serif;
           font-size: 11px;
           letter-spacing: 0.18em;
-          color: rgba(255, 186, 26, 0.90);
+          color: #A8923A;
           font-weight: 500;
           margin: 0 0 20px;
           line-height: 1.4;
@@ -113,7 +114,7 @@ export default function Results() {
           font-family: 'Inter Tight', sans-serif;
           font-size: clamp(48px, 5vw, 64px);
           font-weight: 700;
-          color: #FFBA1A;
+          color: #A8923A;
           line-height: 1;
           letter-spacing: -0.04em;
           margin: 0 0 12px;
@@ -121,7 +122,7 @@ export default function Results() {
         .rs-label {
           font-family: 'Inter Tight', sans-serif;
           font-size: 14px;
-          color: rgba(237, 245, 236,0.78);
+          color: rgba(15, 30, 29, 0.78);
           line-height: 1.5;
           font-weight: 400;
           margin: 0 0 16px;
@@ -129,7 +130,7 @@ export default function Results() {
         .rs-detail {
           font-family: 'Inter Tight', sans-serif;
           font-size: 13.5px;
-          color: rgba(237, 245, 236,0.55);
+          color: rgba(15, 30, 29, 0.6);
           line-height: 1.6;
           font-weight: 400;
           margin: 0 0 20px;
@@ -137,10 +138,10 @@ export default function Results() {
         .rs-quote {
           font-family: 'Cormorant Garamond', Georgia, serif;
           font-size: 16px;
-          color: rgba(237, 245, 236,0.88);
+          color: rgba(15, 30, 29, 0.85);
           font-style: italic;
           line-height: 1.5;
-          border-left: 2px solid #FFBA1A;
+          border-left: 2px solid #A8923A;
           padding-left: 14px;
           margin: 0 0 12px;
         }
@@ -149,7 +150,7 @@ export default function Results() {
           font-size: 11px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(213, 222, 212, 0.65);
+          color: rgba(15, 30, 29, 0.55);
           font-weight: 500;
           margin: 0 0 18px;
         }
@@ -162,11 +163,11 @@ export default function Results() {
           text-decoration: none;
           margin-top: auto;
           padding-top: 12px;
-          border-top: 1px solid rgba(213, 222, 212, 0.12);
+          border-top: 1px solid rgba(15, 30, 29, 0.08);
           transition: color 0.18s;
           font-weight: 600;
         }
-        .rs-link:hover { color: #D8633A; }
+        .rs-link:hover { color: #8F3414; }
       `}</style>
 
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -177,7 +178,7 @@ export default function Results() {
               fontSize: 14,
               letterSpacing: '0.32em',
               textTransform: 'uppercase',
-              color: '#FFBA1A',
+              color: '#A8923A',
               margin: 0,
               fontWeight: 500,
             }}
@@ -189,7 +190,7 @@ export default function Results() {
             style={{
               width: 44,
               height: 2,
-              background: 'linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26,0.3))',
+              background: 'linear-gradient(90deg, #A8923A, #C4AC4A)',
               margin: '18px auto 28px',
               animation: 'growRule 0.8s ease both',
             }}
@@ -199,7 +200,7 @@ export default function Results() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 'clamp(40px, 6vw, 72px)',
               fontWeight: 500,
-              color: '#EDF5EC',
+              color: '#0F1E1D',
               lineHeight: 1.0,
               letterSpacing: '-0.035em',
               margin: '0 0 18px',
@@ -211,7 +212,7 @@ export default function Results() {
             style={{
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 'clamp(17px, 1.6vw, 20px)',
-              color: 'rgba(237, 245, 236,0.62)',
+              color: 'rgba(15, 30, 29, 0.66)',
               margin: 0,
               fontWeight: 400,
               lineHeight: 1.55,
@@ -247,7 +248,7 @@ export default function Results() {
             maxWidth: 680,
             margin: '64px auto 0',
             paddingTop: 32,
-            borderTop: '1px solid rgba(168, 146, 58,0.25)',
+            borderTop: '1px solid #D5DEC2',
             textAlign: 'center',
           }}
         >
@@ -256,7 +257,7 @@ export default function Results() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 14,
               fontStyle: 'italic',
-              color: 'rgba(237, 245, 236,0.55)',
+              color: 'rgba(15, 30, 29, 0.55)',
               lineHeight: 1.65,
               margin: 0,
               fontWeight: 300,

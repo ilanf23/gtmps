@@ -227,7 +227,7 @@ const TopNav = () => {
       {open && (
         <div
           className="fixed inset-0 z-[99] flex flex-col items-center justify-start gap-4 overflow-y-auto"
-          style={{ background: "rgba(10,10,10,0.97)", backdropFilter: "blur(20px)", padding: "88px 24px 40px" }}
+          style={{ background: "rgba(251,248,244,0.97)", backdropFilter: "blur(20px)", padding: "88px 24px 40px" }}
         >
           <p
             className="font-mono"
@@ -258,9 +258,9 @@ const TopNav = () => {
                     alignItems: "center",
                     gap: 12,
                     fontSize: 19,
-                    color: "#EDF5EC",
+                    color: "#0F1E1D",
                     padding: "12px 0",
-                    borderBottom: "1px solid rgba(168, 146, 58,0.15)",
+                    borderBottom: "1px solid rgba(168, 146, 58,0.18)",
                     textDecoration: "none",
                   }}
                 >
@@ -277,7 +277,7 @@ const TopNav = () => {
                 to={n.href}
                 onClick={() => setOpen(false)}
                 className="font-display text-lg transition-colors"
-                style={{ color: "rgba(245,241,232,0.7)", marginTop: 12 }}
+                style={{ color: "rgba(15,30,29,0.7)", marginTop: 12 }}
               >
                 {n.label}
               </Link>
@@ -288,7 +288,7 @@ const TopNav = () => {
                 {...(n.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 onClick={() => setOpen(false)}
                 className="font-display text-lg transition-colors"
-                style={{ color: "rgba(245,241,232,0.7)", marginTop: 12 }}
+                style={{ color: "rgba(15,30,29,0.7)", marginTop: 12 }}
               >
                 {n.label}
               </a>
@@ -343,8 +343,9 @@ const SectionPromisedLand = () => {
     <section
       ref={ref}
       id="promised-land"
-      className="relative px-6 md:px-10 vellum"
+      className="relative px-6 md:px-10"
       style={{
+        background: "#FFFFFF",
         paddingTop: "clamp(56px, 11vw, 128px)",
         paddingBottom: "clamp(56px, 11vw, 128px)",
       }}
@@ -353,11 +354,11 @@ const SectionPromisedLand = () => {
         <div className="mx-auto" style={{ maxWidth: 760, textAlign: "center" }}>
           <p
             style={{
-              fontFamily: "'Inter Tight', sans-serif",
-              fontSize: 14,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 12,
               letterSpacing: "0.32em",
               textTransform: "uppercase",
-              color: "#FFBA1A",
+              color: "#A8923A",
               margin: 0,
               fontWeight: 500,
             }}
@@ -369,7 +370,7 @@ const SectionPromisedLand = () => {
             style={{
               width: 44,
               height: 2,
-              background: "linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3))",
+              background: "linear-gradient(90deg, #A8923A, #C4AC4A)",
               margin: "18px auto 28px",
             }}
           />
@@ -385,34 +386,26 @@ const SectionPromisedLand = () => {
             }}
           >
             The Relationship Revenue OS
+            <span style={{ color: "#BF461A" }}>.</span>
           </h2>
           <p
             style={{
               marginTop: 18,
-              color: "rgba(15, 30, 29, 0.62)",
+              color: "rgba(15, 30, 29, 0.66)",
               fontSize: "clamp(17px, 1.6vw, 20px)",
               lineHeight: 1.55,
               fontWeight: 400,
               fontFamily: "'Inter Tight', sans-serif",
-              maxWidth: 600,
+              maxWidth: 620,
               marginLeft: "auto",
               marginRight: "auto",
             }}
           >
-            Map every relationship you own. Start with the ones you know. From Signal to Response, not Pitch.
+            Four stages. Every relationship you own becomes a signal the firm can act on — not a pitch.
           </p>
         </div>
 
-        <div
-          style={{
-            marginTop: 72,
-            marginBottom: 16,
-            background: "#0F1E1D",
-            border: "1px solid rgba(34, 83, 81, 0.4)",
-            borderRadius: 4,
-            padding: "56px 32px",
-          }}
-        >
+        <div style={{ marginTop: 72, marginBottom: 16 }}>
           <FiveOrbitsDiagram triggered={triggered} staticMode={reduced} />
         </div>
       </div>
@@ -461,11 +454,11 @@ const StickyCTA = () => {
           onClick={handleAddYourFirmClick}
           className="pointer-events-auto rounded-full font-sans"
           style={{
-            background: "rgba(15, 30, 29,0.92)",
+            background: "rgba(251,248,244,0.96)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(168, 146, 58,0.3)",
-            color: "#A8923A",
+            border: "1px solid #D5DEC2",
+            color: "#0F1E1D",
             height: 56,
             padding: "0 28px",
             fontSize: 14,
@@ -475,20 +468,22 @@ const StickyCTA = () => {
             alignItems: "center",
             justifyContent: "center",
             textDecoration: "none",
-            boxShadow: "0 4px 16px -8px rgba(168, 146, 58,0.25)",
+            boxShadow: "0 8px 24px -12px rgba(15,30,29,0.18)",
             pointerEvents: show ? "auto" : "none",
-            transition: "color 200ms ease, background 200ms ease, box-shadow 200ms ease",
+            transition: "color 200ms ease, background 200ms ease, border-color 200ms ease, box-shadow 200ms ease",
             maxWidth: "calc(100% - 16px)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#EDF5EC";
-            e.currentTarget.style.background = "#A8923A";
-            e.currentTarget.style.boxShadow = "0 6px 20px -6px rgba(168, 146, 58,0.4)";
+            e.currentTarget.style.color = "#0F1E1D";
+            e.currentTarget.style.background = "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)";
+            e.currentTarget.style.borderColor = "#A8923A";
+            e.currentTarget.style.boxShadow = "0 10px 28px -10px rgba(168, 146, 58,0.45)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#A8923A";
-            e.currentTarget.style.background = "rgba(15, 30, 29,0.92)";
-            e.currentTarget.style.boxShadow = "0 4px 16px -8px rgba(168, 146, 58,0.25)";
+            e.currentTarget.style.color = "#0F1E1D";
+            e.currentTarget.style.background = "rgba(251,248,244,0.96)";
+            e.currentTarget.style.borderColor = "#D5DEC2";
+            e.currentTarget.style.boxShadow = "0 8px 24px -12px rgba(15,30,29,0.18)";
           }}
         >
           {ADD_YOUR_FIRM_LABEL}
