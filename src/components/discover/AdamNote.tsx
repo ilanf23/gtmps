@@ -1,3 +1,7 @@
+import { Linkedin } from 'lucide-react';
+
+const ADAM_LINKEDIN_URL = 'https://www.linkedin.com/in/adamfridman/';
+
 export default function AdamNote() {
   return (
     <section
@@ -76,9 +80,29 @@ export default function AdamNote() {
             color: '#B8933A',
             margin: 0,
             fontWeight: 500,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
           }}
         >
           Adam Fridman · Co-author
+          <a
+            href={ADAM_LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Adam Fridman on LinkedIn (opens in new tab)"
+            style={{
+              color: '#B8933A',
+              display: 'inline-flex',
+              alignItems: 'center',
+              opacity: 0.85,
+              transition: 'opacity 180ms ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.85')}
+          >
+            <Linkedin size={14} strokeWidth={1.75} />
+          </a>
         </p>
       </div>
     </section>
