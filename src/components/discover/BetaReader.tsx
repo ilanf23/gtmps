@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const BADGES = ['AArete', 'West Monroe', 'Kearney', 'Accenture', 'Madcraft'];
 
 const eyebrow: React.CSSProperties = {
@@ -61,6 +63,7 @@ export default function BetaReader() {
         .br-left { animation: fadeUp 0.7s ease 0.1s both; }
         .br-right { animation: fadeUp 0.7s ease 0.3s both; }
         .br-badge {
+          display: inline-block;
           border: 1px solid rgba(184,147,58,0.28);
           border-radius: 3px;
           padding: 8px 16px;
@@ -68,11 +71,13 @@ export default function BetaReader() {
           font-size: 12.5px;
           letter-spacing: 0.12em;
           color: #6A5038;
+          text-decoration: none;
           text-transform: uppercase;
           cursor: default;
           font-weight: 500;
           transition: border-color 0.18s, color 0.18s, background 0.18s;
         }
+        a.br-badge { cursor: pointer; }
         .br-badge:hover {
           border-color: rgba(184,147,58,0.65);
           color: #9A7020;
@@ -124,7 +129,13 @@ export default function BetaReader() {
           </p>
 
           <div style={{ display: 'flex', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
-            <span className="br-badge">30 chapters</span>
+            <Link
+              to="/manuscript"
+              className="br-badge"
+              aria-label="See all 30 chapters in the manuscript"
+            >
+              30 chapters
+            </Link>
             <span className="br-badge">Three frameworks</span>
             <span className="br-badge">Approved by application</span>
           </div>
