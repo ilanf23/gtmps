@@ -83,7 +83,7 @@ const TopNav = () => {
             : "1px solid rgba(13,17,23,0.08)",
         }}
       >
-        <a href="#hero" className="flex items-baseline gap-2 group">
+        <a href="/" className="flex items-baseline gap-2 group">
           <span
             className="font-display"
             style={{
