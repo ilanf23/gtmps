@@ -30,12 +30,19 @@ import About from "./pages/About.tsx";
 import Aletheia from "./pages/Aletheia.tsx";
 import Ops from "./pages/Ops.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
+import SkipLink from "./components/SkipLink.tsx";
 import useScrollRestoration from "./hooks/useScrollRestoration.ts";
+import useFocusOnRouteChange from "./hooks/useFocusOnRouteChange.ts";
 
 const queryClient = new QueryClient();
 
 const ScrollRestoration = () => {
   useScrollRestoration();
+  return null;
+};
+
+const FocusOnRouteChange = () => {
+  useFocusOnRouteChange();
   return null;
 };
 
@@ -47,6 +54,9 @@ const App = () => (
       <BrowserRouter>
         <ScrollRestoration />
         <ScrollToTop />
+        <FocusOnRouteChange />
+        <SkipLink />
+        <main id="main-content" tabIndex={-1} style={{ outline: "none" }}>
         <Routes>
           <Route path="/" element={<Discover />} />
           <Route path="/v1" element={<Index />} />
@@ -77,6 +87,7 @@ const App = () => (
           {/* ADD NEW MICROSITE ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </main>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
