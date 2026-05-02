@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { scrollToHero } from "@/lib/scrollToHero";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -29,8 +30,12 @@ import FinalCta from '@/components/discover/FinalCta';
 import AdamNote from '@/components/discover/AdamNote';
 import WarStory from '@/components/discover/WarStory';
 
-const ADD_YOUR_FIRM_HREF = "/assess";
 const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
+
+const handleAddYourFirmClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  scrollToHero();
+};
 const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
 
 /* ─────────────────────────────────────────────
@@ -192,7 +197,8 @@ const TopNav = () => {
             )
           )}
           <a
-            href={ADD_YOUR_FIRM_HREF}
+            href="#hero"
+            onClick={handleAddYourFirmClick}
             className="font-sans font-medium rounded-full transition-all duration-200 hover:scale-[1.02]"
             style={{
               fontSize: 13,
@@ -288,8 +294,11 @@ const TopNav = () => {
             )
           )}
           <a
-            href={ADD_YOUR_FIRM_HREF}
-            onClick={() => setOpen(false)}
+            href="#hero"
+            onClick={(e) => {
+              setOpen(false);
+              handleAddYourFirmClick(e);
+            }}
             className="font-sans font-semibold rounded-full mt-3 px-8 py-3"
             style={{
               background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
@@ -429,7 +438,8 @@ const StickyCTA = () => {
         }}
       >
         <a
-          href={ADD_YOUR_FIRM_HREF}
+          href="#hero"
+          onClick={handleAddYourFirmClick}
           className="pointer-events-auto rounded-full font-sans"
           style={{
             background: "rgba(15, 30, 29,0.92)",
@@ -474,10 +484,18 @@ const StickyCTA = () => {
    ───────────────────────────────────────────── */
 const Discover = () => {
   useScrollReveal();
+  const location = useLocation();
 
   useEffect(() => {
     document.title = "Discover · GTM for Professional Services · Mabbly";
   }, []);
+
+  useEffect(() => {
+    if (location.hash === "#hero") {
+      // Defer to next paint so the hero is mounted before we scroll/focus
+      requestAnimationFrame(() => scrollToHero({ focus: true }));
+    }
+  }, [location.hash]);
 
   const railItems = [
     { id: "hero", label: "01 · Hero" },

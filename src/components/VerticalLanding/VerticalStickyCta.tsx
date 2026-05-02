@@ -30,7 +30,7 @@ export default function VerticalStickyCta({ label = 'Add Your Firm →', vertica
       }}
     >
       <a
-        href={vertical ? `/assess?vertical=${vertical}` : '/assess'}
+        href="#add-your-firm"
         className="pointer-events-auto"
         style={{
           background: 'rgba(28,16,8,0.92)',

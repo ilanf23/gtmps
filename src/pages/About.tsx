@@ -12,7 +12,7 @@ import scienceOfStory from "@/assets/science-of-story-cover.png";
 import { useRevealRef, revealStyle } from "@/hooks/useRevealRef";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const ADD_YOUR_FIRM_HREF = "/assess";
+const ADD_YOUR_FIRM_HREF = "/#hero";
 const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
 const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
 

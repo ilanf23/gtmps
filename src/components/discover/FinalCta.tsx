@@ -1,3 +1,5 @@
+import { scrollToHero } from '@/lib/scrollToHero';
+
 export default function FinalCta() {
   return (
     <section
@@ -122,7 +124,8 @@ export default function FinalCta() {
           }}
         >
           <a
-            href="/assess"
+            href="#hero"
+            onClick={(e) => { e.preventDefault(); scrollToHero(); }}
             className="fc-btn-primary"
             data-cta="add-your-firm"
           >

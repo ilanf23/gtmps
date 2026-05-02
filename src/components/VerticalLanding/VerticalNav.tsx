@@ -236,7 +236,7 @@ export default function VerticalNav({ currentSlug }: Props) {
               Podcast
             </a>
             <a
-              href={currentSlug ? `/assess?vertical=${currentSlug}` : '/assess'}
+              href="#add-your-firm"
               className="vn-cta"
             >
               Add Your Firm →
@@ -286,7 +286,7 @@ export default function VerticalNav({ currentSlug }: Props) {
             Podcast
           </a>
           <a
-            href={currentSlug ? `/assess?vertical=${currentSlug}` : '/assess'}
+            href="#add-your-firm"
             className="vn-mobile-cta"
             onClick={() => setOpen(false)}
           >

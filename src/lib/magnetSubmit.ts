@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Shared Magnet URL submission helper.
 //
-// Used by both `/assess` (MagnetAssess) and the embedded hero URL fields on
-// the Discover homepage and vertical landings. Keeps the slug-generation,
-// collision-retry, Supabase insert, and edge-function dispatch logic in one
-// place so the surfaces stay in sync.
+// Used by the embedded hero URL fields on the Discover homepage and every
+// vertical landing. Keeps the slug-generation, collision-retry, Supabase
+// insert, and edge-function dispatch logic in one place so the surfaces stay
+// in sync.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { z } from 'zod';
@@ -60,7 +60,7 @@ export type SubmitMagnetUrlResult =
 /**
  * Validate, persist, and dispatch enrichment for a Magnet URL submission.
  *
- * Mirrors the flow that lived inline in `MagnetAssess.tsx`:
+ * Mirrors the flow:
  *   1. Validate via `websiteSchema` (URL only, bare domains accepted).
  *   2. Generate slug from the domain root.
  *   3. Insert into `magnet_submissions` with collision-retry (4 attempts).

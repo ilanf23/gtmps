@@ -62,7 +62,7 @@ const StickyNav = () => {
         {/* CTA */}
         <button
           type="button"
-          onClick={() => navigate("/assess")}
+          onClick={() => navigate("/#hero")}
           className="hidden lg:inline-flex font-sans font-semibold rounded-full transition-all duration-200 text-white border border-white/25 hover:bg-white hover:text-ink"
           style={{
             fontSize: 13,
@@ -105,7 +105,7 @@ const StickyNav = () => {
             type="button"
             onClick={() => {
               setMobileOpen(false);
-              navigate("/assess");
+              navigate("/#hero");
             }}
             className="font-sans font-semibold text-ink bg-gold rounded-full mt-4 px-8 py-3 text-base border-none"
           >
