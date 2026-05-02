@@ -306,7 +306,7 @@ const TopNav = () => {
 };
 
 /* ─────────────────────────────────────────────
-   SECTION 04 · THE RELATIONSHIP REVENUE OS
+   THE RELATIONSHIP REVENUE OS (unnumbered system section)
    ───────────────────────────────────────────── */
 const SectionPromisedLand = () => {
   const ref = useRef<HTMLElement>(null);
@@ -481,21 +481,21 @@ const Discover = () => {
 
   const railItems = [
     { id: "hero", label: "01 · Hero" },
-    { id: "industries", label: "01.25 · Industries" },
-    { id: "manuscript", label: "01.5 · Manuscript" },
-    { id: "authority", label: "02 · Built By" },
-    { id: "dead-zone", label: "03 · Dead Zone" },
-    { id: "adam-note", label: "03.5 · Note" },
-    { id: "promised-land", label: "04 · The System" },
+    { id: "industries", label: "02 · Industries" },
+    { id: "manuscript", label: "03 · Manuscript" },
+    { id: "authority", label: "— · Built By" },
+    { id: "dead-zone", label: "04 · Dead Zone" },
+    { id: "adam-note", label: "— · Note" },
+    { id: "promised-land", label: "— · The System" },
     { id: "why-now", label: "05 · Why Now" },
     { id: "beta-reader", label: "06 · Early Access" },
     { id: "authors", label: "07 · Authors" },
     { id: "results", label: "08 · Proof" },
-    { id: "war-story", label: "08.5 · One Story" },
-    { id: "map", label: "09 · GTM Score" },
-    { id: "two-paths", label: "10 · Paths" },
-    { id: "faq", label: "11 · FAQ" },
-    { id: "final", label: "12 · Final" },
+    { id: "war-story", label: "09 · One Story" },
+    { id: "map", label: "10 · GTM Score" },
+    { id: "two-paths", label: "11 · Paths" },
+    { id: "faq", label: "12 · FAQ" },
+    { id: "final", label: "13 · Final" },
   ];
 
   return (

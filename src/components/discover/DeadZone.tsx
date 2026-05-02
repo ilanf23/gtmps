@@ -337,7 +337,7 @@ export default function DeadZone() {
 
       <div className="dz-content">
         <div>
-          <p className="dz-eyebrow">03 · The Problem</p>
+          <p className="dz-eyebrow">04 · The Problem</p>
           <div className={`dz-rule ${triggered ? 'dz-on' : ''}`} style={{ width: 44 }} />
           <h2 className="dz-headline">The Dead Zone</h2>
           <p className="dz-subhead">
