@@ -353,6 +353,7 @@ export default function AuthorityStrip() {
           flex-wrap: wrap;
         }
         .as-badge {
+          display: inline-block;
           border: 1px solid rgba(184, 147, 58, 0.28);
           border-radius: 3px;
           padding: 8px 16px;
@@ -360,8 +361,9 @@ export default function AuthorityStrip() {
           font-size: 12.5px;
           letter-spacing: 0.12em;
           color: #6A5038;
+          text-decoration: none;
           text-transform: uppercase;
-          cursor: default;
+          cursor: pointer;
           font-weight: 500;
           transition: border-color 0.18s, color 0.18s, background 0.18s;
         }
@@ -439,9 +441,33 @@ export default function AuthorityStrip() {
             The most credentialed GTM authority strip in professional services.
           </p>
           <div className="as-badges">
-            <span className="as-badge">Deloitte</span>
-            <span className="as-badge">A.T. Kearney</span>
-            <span className="as-badge">Mabbly</span>
+            <a
+              className="as-badge"
+              href="https://www.deloitte.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Deloitte (opens in new tab)"
+            >
+              Deloitte
+            </a>
+            <a
+              className="as-badge"
+              href="https://www.kearney.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="A.T. Kearney (opens in new tab)"
+            >
+              A.T. Kearney
+            </a>
+            <a
+              className="as-badge"
+              href="https://mabbly.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Mabbly (opens in new tab)"
+            >
+              Mabbly
+            </a>
           </div>
         </div>
       </section>
