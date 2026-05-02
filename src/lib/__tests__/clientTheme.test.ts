@@ -1,12 +1,11 @@
 /**
- * Tests for `buildClientTheme` — focused on the v2 dark-body guard
- * (the Cravath failure mode surfaced in the audit).
- *
- * The guard is gated behind VITE_CLIENT_THEME_V2. We toggle it via
- * import.meta.env using vi.stubEnv so each test runs in a known mode.
+ * Tests for `buildClientTheme` — focused on the dark-body guard
+ * (the Cravath failure mode surfaced in the audit). The guard is
+ * now always-on; the previously-gated VITE_CLIENT_THEME_V2 flag
+ * was removed once the path was proven via fixtures.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   buildClientTheme,
   shouldForceDarkBodyFallback,
@@ -26,46 +25,7 @@ describe("buildClientTheme — null/undefined input", () => {
   });
 });
 
-describe("buildClientTheme — v2 dark-body guard OFF (legacy behavior)", () => {
-  beforeEach(() => {
-    vi.stubEnv("VITE_CLIENT_THEME_V2", "");
-  });
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
-  it("Cravath case: keeps extracted dark navy as body bg (legacy, broken)", () => {
-    const raw: RawBranding = {
-      client_company_name: "Cravath, Swaine & Moore",
-      client_brand_color: "#A99054",
-      client_background_color: "#0B1A2E",
-    };
-    const theme = buildClientTheme(raw);
-    expect(theme.background.toLowerCase()).toBe("#0b1a2e");
-    // bgIsDark → text defaults to white
-    expect(theme.text).toBe("#FFFFFF");
-  });
-
-  it("Slalom case: keeps a medium-blue body bg (no dark-body issue)", () => {
-    const raw: RawBranding = {
-      client_company_name: "Slalom",
-      client_brand_color: "#0066CC",
-      client_background_color: "#0066CC",
-    };
-    const theme = buildClientTheme(raw);
-    // 0066CC is below the threshold but legacy doesn't gate.
-    expect(theme.background.toLowerCase()).toBe("#0066cc");
-  });
-});
-
-describe("buildClientTheme — v2 dark-body guard ON (Cravath fix)", () => {
-  beforeEach(() => {
-    vi.stubEnv("VITE_CLIENT_THEME_V2", "true");
-  });
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
+describe("buildClientTheme — dark-body guard (Cravath fix)", () => {
   it("Cravath case: forces cream body bg, switches chrome to safe navy", () => {
     const raw: RawBranding = {
       client_company_name: "Cravath, Swaine & Moore",
@@ -87,7 +47,7 @@ describe("buildClientTheme — v2 dark-body guard ON (Cravath fix)", () => {
 
   it("Slalom case (light body, blue chrome): no override, brand colors preserved", () => {
     // Realistic Slalom extraction: body bg already light (cream-ish), chrome
-    // bg navy-blue. v2 dark-body guard does NOT trigger because body is light.
+    // bg navy-blue. Dark-body guard does NOT trigger because body is light.
     const raw: RawBranding = {
       client_company_name: "Slalom",
       client_brand_color: "#0066CC",
@@ -102,7 +62,7 @@ describe("buildClientTheme — v2 dark-body guard ON (Cravath fix)", () => {
 
   it("Both body AND chrome dark: chrome-safety swaps brandBackground to fallback navy", () => {
     // Cravath-class: extracted body is deep navy AND brand_background is also
-    // deep navy. v2 forces body cream AND swaps chrome to INDUSTRY_FALLBACK_BG
+    // deep navy. Forces body cream AND swaps chrome to INDUSTRY_FALLBACK_BG
     // so the inner-section color-mix logic in MagnetShell remains legible.
     const raw: RawBranding = {
       client_company_name: "DeepNavyCo",
@@ -138,7 +98,7 @@ describe("buildClientTheme — v2 dark-body guard ON (Cravath fix)", () => {
     expect(theme.background.toLowerCase()).toBe("#f5f1e8");
   });
 
-  it("Missing color: falls back to Mabbly default cream regardless of flag", () => {
+  it("Missing color: falls back to Mabbly default cream", () => {
     const raw: RawBranding = {
       client_company_name: "NoColorFirm",
     };
@@ -165,8 +125,8 @@ describe("buildClientTheme — companyName preservation", () => {
   });
 
   it("returns null when company name is missing", () => {
-    // This is the v2 P0 'missing firm name' bug — Sprint 3 wires the fallback
-    // separately via getDisplayName(). Here we just confirm current contract.
+    // The 'missing firm name' bug — Sprint 3 wires the fallback separately
+    // via getDisplayName(). Here we just confirm current contract.
     const raw: RawBranding = {};
     expect(buildClientTheme(raw).companyName).toBe(null);
   });
@@ -180,13 +140,6 @@ describe("DARK_BODY_LUMINANCE_THRESHOLD", () => {
 });
 
 describe("shouldForceDarkBodyFallback (shared helper)", () => {
-  beforeEach(() => {
-    vi.stubEnv("VITE_CLIENT_THEME_V2", "true");
-  });
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
   it("true for deep navy", () => {
     expect(shouldForceDarkBodyFallback("#0B1A2E")).toBe(true);
   });
@@ -205,10 +158,5 @@ describe("shouldForceDarkBodyFallback (shared helper)", () => {
 
   it("false for invalid hex", () => {
     expect(shouldForceDarkBodyFallback("not-a-hex")).toBe(false);
-  });
-
-  it("false when v2 flag is off", () => {
-    vi.stubEnv("VITE_CLIENT_THEME_V2", "");
-    expect(shouldForceDarkBodyFallback("#0B1A2E")).toBe(false);
   });
 });
