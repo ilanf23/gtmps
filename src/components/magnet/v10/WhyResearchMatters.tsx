@@ -26,7 +26,7 @@ export default function WhyResearchMatters({ primary }: Props) {
       id="v10-section-6"
       data-v10-section="6"
       className="py-14 md:py-20 border-y border-black/10 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-6 md:px-10 overflow-hidden"
-      style={{ backgroundColor: "#FFFFFF", color: MABBLY_DARK }}
+      style={{ backgroundColor: "#FAF9F5", color: MABBLY_DARK }}
     >
       {/* Imagery layers (behind content) */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>

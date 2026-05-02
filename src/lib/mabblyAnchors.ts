@@ -6,7 +6,11 @@
 // For everything else (firm name highlight, CTA buttons, orbit accent, share
 // buttons, primary section H2 accents) keep using the firm's extracted
 // `primary` color from `clientTheme`.
+//
+// Updated 2026-05-02 to Mabbly brand v2 (docs/07-design-system.md): olive
+// gold replaces the warmer legacy gold; Deep Forest replaces the near-black
+// ink; Sage Light replaces the warm cream.
 
-export const MABBLY_GOLD = "#B8933A";
-export const MABBLY_DARK = "#1C1008";
-export const MABBLY_CREAM = "#F5EFE0";
+export const MABBLY_GOLD = "#A8923A";   // Olive Gold — primary brand accent
+export const MABBLY_DARK = "#0F1E1D";   // Deep Forest — dark anchor
+export const MABBLY_CREAM = "#EDF5EC";  // Sage Light — light anchor

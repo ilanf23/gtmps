@@ -113,7 +113,7 @@ export default function CompactCtaCard({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@yourfirm.com"
               disabled={submitting}
-              className="flex-1 h-12 min-h-[48px] px-4 text-base bg-white text-[#1C1008] placeholder:text-black/30 border border-black/10 focus:outline-none focus:ring-0 rounded-none disabled:opacity-50"
+              className="flex-1 h-12 min-h-[48px] px-4 text-base bg-white text-[#0F1E1D] placeholder:text-black/30 border border-black/10 focus:outline-none focus:ring-0 rounded-none disabled:opacity-50"
               style={{ borderColor: "rgba(0,0,0,0.15)" }}
             />
             <button
@@ -122,7 +122,7 @@ export default function CompactCtaCard({
               className="inline-flex items-center justify-center gap-2 h-12 min-h-[48px] px-6 font-semibold tracking-wide uppercase text-base sm:text-sm transition-opacity hover:opacity-90 disabled:opacity-50"
               style={{
                 backgroundColor: `var(--brand-bg, ${primary})`,
-                color: `var(--brand-bg-fg, #fff)`,
+                color: `var(--brand-bg-fg, #EDF5EC)`,
               }}
             >
               {submitting ? "Sending…" : (

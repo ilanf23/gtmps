@@ -202,7 +202,7 @@ export default function MagnetSite() {
             className="sticky top-0 z-40 px-4 py-3 text-center text-sm font-semibold border-b"
             style={{
               backgroundColor: '#1B5E20',
-              color: '#FBF8F4',
+              color: '#EDF5EC',
               borderColor: 'rgba(0,0,0,0.15)',
             }}
           >

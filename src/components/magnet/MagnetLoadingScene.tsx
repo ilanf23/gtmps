@@ -373,7 +373,7 @@ export default function MagnetLoadingScene({
                       x={lx}
                       y={ly + 3}
                       textAnchor={anchor}
-                      fontFamily="'Inter Tight', system-ui, sans-serif"
+                      fontFamily="var(--font-sans)"
                       fontSize={9}
                       fontWeight={500}
                       letterSpacing={1.2}

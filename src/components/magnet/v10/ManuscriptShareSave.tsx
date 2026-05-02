@@ -140,7 +140,7 @@ export default function ManuscriptShareSave({
       {/* Share + Save cards */}
       <div className="grid gap-4 md:grid-cols-2">
         {/* SHARE */}
-        <div className="bg-[#FBF8F4] text-[#1C1008] border border-black/10 p-5 md:p-6 flex flex-col">
+        <div className="bg-[#EDF5EC] text-[#0F1E1D] border border-black/10 p-5 md:p-6 flex flex-col">
           <p
             className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-2"
             style={{ color: primary }}
@@ -186,7 +186,7 @@ export default function ManuscriptShareSave({
         </div>
 
         {/* SAVE */}
-        <div className="bg-[#FBF8F4] text-[#1C1008] border border-black/10 p-5 md:p-6 flex flex-col">
+        <div className="bg-[#EDF5EC] text-[#0F1E1D] border border-black/10 p-5 md:p-6 flex flex-col">
           <p
             className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-2"
             style={{ color: primary }}
@@ -224,12 +224,12 @@ export default function ManuscriptShareSave({
 
       {/* Save dialog */}
       <Dialog open={emailOpen} onOpenChange={setEmailOpen}>
-        <DialogContent className="sm:max-w-md bg-[#FBF8F4] text-[#1C1008] border border-black/10 rounded-none">
+        <DialogContent className="sm:max-w-md bg-[#EDF5EC] text-[#0F1E1D] border border-black/10 rounded-none">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold leading-tight">
               {emailSent ? "Sent." : emailSubject}
             </DialogTitle>
-            <DialogDescription className="text-[#1C1008]/70">
+            <DialogDescription className="text-[#0F1E1D]/70">
               {emailSent
                 ? `We'll send the ${customerName} map to ${emailValue.trim()} shortly. The map stays here either way.`
                 : "We'll send a copy to your inbox. No newsletter, no follow-up sequence. Just the map."}
@@ -244,7 +244,7 @@ export default function ManuscriptShareSave({
                 value={emailValue}
                 onChange={(e) => setEmailValue(e.target.value)}
                 placeholder="you@yourfirm.com"
-                className="w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 focus:outline-none focus:ring-0 rounded-none h-12 px-4 text-base"
+                className="w-full bg-white border border-black/10 text-[#0F1E1D] placeholder:text-black/30 focus:outline-none focus:ring-0 rounded-none h-12 px-4 text-base"
                 style={{ borderColor: "rgba(0,0,0,0.15)" }}
               />
               <DialogFooter>

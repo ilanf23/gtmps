@@ -355,7 +355,7 @@ export default function FiveOrbitsViz({
                   type="button"
                   onClick={() => openCalendlyPopup(calendlyCtx)}
                   className="inline-flex items-center gap-2 px-4 py-2 text-[12px] uppercase tracking-[0.14em] font-semibold transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: accentBorder, color: "#fff" }}
+                  style={{ backgroundColor: accentBorder, color: "#EDF5EC" }}
                 >
                   Learn more <span aria-hidden>→</span>
                 </button>
@@ -419,7 +419,7 @@ export default function FiveOrbitsViz({
                 <div
                   className="w-11 h-11 shrink-0 rounded-full border flex items-center justify-center font-semibold text-sm tabular-nums self-center"
                   style={{
-                    color: `var(--brand-bg-fg, #fff)`,
+                    color: `var(--brand-bg-fg, #EDF5EC)`,
                     borderColor: tokens.border,
                     backgroundColor: `var(--brand-bg, ${tokens.fg})`,
                   }}

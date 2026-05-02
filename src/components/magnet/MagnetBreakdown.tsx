@@ -217,7 +217,7 @@ export default function MagnetBreakdown({
   const rawBrand = {
     primary: pick(p.primary, "#A8923A"),
     background: pick(p.background, "#EDF5EC"),
-    surface: pick(p.surface, "#FFFFFF"),
+    surface: pick(p.surface, "#FAF9F5"),
     text: pick(p.text, "#0F1E1D"),
     textMuted: pick(p.textMuted, "#0F1E1D"),
   };
@@ -231,7 +231,7 @@ export default function MagnetBreakdown({
   // force the body bg to Mabbly cream + ink text. The firm's `primary`
   // accent stays intact for links, button text, and accent rules.
   const brand = shouldForceDarkBodyFallback(readableBrand.background)
-    ? { ...readableBrand, background: "#EDF5EC", surface: "#FFFFFF", text: "#0F1E1D", textMuted: "rgba(15, 30, 29,0.6)" }
+    ? { ...readableBrand, background: "#EDF5EC", surface: "#FAF9F5", text: "#0F1E1D", textMuted: "rgba(15, 30, 29,0.6)" }
     : readableBrand;
 
   // "Built X seconds ago" — only meaningful for first 5 minutes

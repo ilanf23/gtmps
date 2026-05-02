@@ -88,7 +88,7 @@ export default function ObservedHypothesisQuestion({
   return (
     <div>
       <div className={`grid grid-cols-1 ${gridCols} gap-px bg-black/10 border border-black/10`}>
-        <div className="bg-[#FBF8F4] text-[#1C1008] p-5">
+        <div className="bg-[#EDF5EC] text-[#0F1E1D] p-5">
           <p
             className="text-[12px] md:text-[13px] uppercase tracking-[0.12em] font-medium mb-2"
             style={{ color: primary }}
@@ -101,7 +101,7 @@ export default function ObservedHypothesisQuestion({
             toggleColor={primary}
           />
         </div>
-        <div className="bg-[#FBF8F4] text-[#1C1008] p-5 relative">
+        <div className="bg-[#EDF5EC] text-[#0F1E1D] p-5 relative">
           <span
             className="absolute left-0 top-0 bottom-0 w-[2px]"
             style={{ backgroundColor: primary }}
@@ -122,7 +122,7 @@ export default function ObservedHypothesisQuestion({
           </div>
         </div>
         {hasQuestion && (
-          <div className="bg-[#FBF8F4] text-[#1C1008] p-5 relative">
+          <div className="bg-[#EDF5EC] text-[#0F1E1D] p-5 relative">
             <span
               className="absolute left-0 top-0 bottom-0 w-[2px]"
               style={{ backgroundColor: MAGENTA }}

@@ -647,7 +647,7 @@ export default function MagnetShell({
           background-color: color-mix(in srgb, var(--brand-bg-fg, currentColor) 8%, transparent);
         }
         .wayfinder-cta:hover {
-          background-color: color-mix(in srgb, var(--brand-accent, ${MABBLY_GOLD}) 88%, #000000);
+          background-color: color-mix(in srgb, var(--brand-accent, ${MABBLY_GOLD}) 88%, #0F1E1D);
         }
         .wayfinder-item[data-highlighted] {
           background-color: color-mix(in srgb, var(--brand-accent, ${MABBLY_GOLD}) 14%, transparent);

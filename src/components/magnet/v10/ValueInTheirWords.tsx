@@ -58,7 +58,7 @@ export default function ValueInTheirWords({ primary }: Props) {
         {CASES.map((c) => (
           <figure
             key={c.client}
-            className="bg-[#FBF8F4] text-[#1C1008] border border-black/10 p-5 flex flex-col"
+            className="bg-[#EDF5EC] text-[#0F1E1D] border border-black/10 p-5 flex flex-col"
           >
             <p
               className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-3"
