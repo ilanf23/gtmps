@@ -39,13 +39,33 @@ export default function Authors() {
       id="authors"
       className="px-6 md:px-10"
       style={{
-        background: '#EDF5EC',
-        borderTop: '2px solid rgba(168, 146, 58,0.15)',
+        background: '#FFFFFF',
+        borderTop: '1px solid #D5DEC2',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
     >
       <style>{`
+        .au-hero-figure {
+          margin: 0 0 64px;
+        }
+        .au-hero-photo {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          object-fit: cover;
+          display: block;
+          border: 1px solid #D5DEC2;
+          border-radius: 4px;
+          filter: grayscale(0.35) sepia(0.18) brightness(1.04);
+        }
+        .au-hero-caption {
+          font-family: 'DM Mono', ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(15,30,29,0.5);
+          margin: 14px 0 0;
+        }
         .au-badge {
           border: 1px solid rgba(168, 146, 58,0.28);
           border-radius: 3px;

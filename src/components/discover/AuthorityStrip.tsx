@@ -111,8 +111,8 @@ export default function AuthorityStrip() {
 
         .as-root {
           width: 100%;
-          background: #EDF5EC;
-          border-top: 2px solid rgba(168, 146, 58, 0.22);
+          background: #FFFFFF;
+          border-top: 1px solid #D5DEC2;
           padding: clamp(64px, 12vw, 144px) 24px;
         }
         @media (min-width: 768px) {

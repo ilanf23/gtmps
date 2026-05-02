@@ -1,9 +1,8 @@
 // Slot 03 — ReceiptsStrip.
 //
 // First-quarter editorial moment: named firms with quantified results.
-// "Receipts beat claims." Aligned to the brand spec
-// (docs/07-design-system.md): Deep Forest ground, Sage Light text,
-// Gold for stat callouts, Burnt Orange for interactive elements.
+// "Receipts beat claims." Light editorial pacing — cream ground, ink text,
+// warm gold for stat callouts, mint hairline borders.
 //
 // Numbers are sourced from existing surfaces (AuthorityStrip stats,
 // WarStory's Madcraft outcome) so this strip never fabricates a figure.
@@ -43,9 +42,9 @@ export default function ReceiptsStrip() {
       id="receipts"
       className="px-6 md:px-10"
       style={{
-        background: "#0F1E1D",
-        borderTop: "1px solid rgba(237, 245, 236, 0.06)",
-        borderBottom: "1px solid rgba(237, 245, 236, 0.06)",
+        background: "#FBF8F4",
+        borderTop: "1px solid rgba(15, 30, 29, 0.08)",
+        borderBottom: "1px solid rgba(15, 30, 29, 0.08)",
         paddingTop: "clamp(72px, 10vw, 128px)",
         paddingBottom: "clamp(72px, 10vw, 128px)",
       }}
@@ -55,7 +54,7 @@ export default function ReceiptsStrip() {
           display: grid;
           gap: 0;
           grid-template-columns: repeat(1, minmax(0, 1fr));
-          border-top: 1px solid rgba(237, 245, 236, 0.10);
+          border-top: 1px solid #D5DEC2;
         }
         @media (min-width: 640px) {
           .rcpt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -65,11 +64,11 @@ export default function ReceiptsStrip() {
         }
         .rcpt-cell {
           padding: 36px 28px 32px;
-          border-bottom: 1px solid rgba(237, 245, 236, 0.10);
-          border-right: 1px solid rgba(237, 245, 236, 0.10);
+          border-bottom: 1px solid #D5DEC2;
+          border-right: 1px solid #D5DEC2;
           transition: background 220ms ease;
         }
-        .rcpt-cell:last-child { border-right: 1px solid rgba(237, 245, 236, 0.10); }
+        .rcpt-cell:last-child { border-right: 1px solid #D5DEC2; }
         @media (max-width: 639px) {
           .rcpt-cell { border-right: none; }
         }
@@ -80,7 +79,7 @@ export default function ReceiptsStrip() {
           .rcpt-cell:last-child { border-right: none; }
         }
         .rcpt-cell:hover {
-          background: rgba(255, 186, 26, 0.04);
+          background: #EDF5EC;
         }
       `}</style>
 
@@ -92,7 +91,7 @@ export default function ReceiptsStrip() {
               fontSize: 14,
               letterSpacing: "0.32em",
               textTransform: "uppercase",
-              color: "#FFBA1A",
+              color: "#A8923A",
               margin: 0,
               fontWeight: 500,
             }}
@@ -104,7 +103,7 @@ export default function ReceiptsStrip() {
             style={{
               width: 44,
               height: 2,
-              background: "linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3))",
+              background: "linear-gradient(90deg, #A8923A, #C4AC4A)",
               margin: "18px auto 28px",
               animation: "growRule 0.8s ease both",
             }}
@@ -114,7 +113,7 @@ export default function ReceiptsStrip() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: "clamp(40px, 6vw, 72px)",
               fontWeight: 500,
-              color: "#EDF5EC",
+              color: "#0F1E1D",
               lineHeight: 1.0,
               letterSpacing: "-0.035em",
               margin: "0 0 18px",
@@ -127,7 +126,7 @@ export default function ReceiptsStrip() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: "clamp(17px, 1.6vw, 20px)",
               lineHeight: 1.55,
-              color: "rgba(237, 245, 236, 0.62)",
+              color: "rgba(15, 30, 29, 0.66)",
               margin: 0,
               fontWeight: 400,
             }}
@@ -152,7 +151,7 @@ export default function ReceiptsStrip() {
                   fontSize: 11,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
-                  color: "rgba(237, 245, 236, 0.55)",
+                  color: "rgba(15, 30, 29, 0.5)",
                   margin: "0 0 18px",
                   fontWeight: 500,
                 }}
@@ -164,7 +163,7 @@ export default function ReceiptsStrip() {
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: "clamp(28px, 2.6vw, 36px)",
                   fontWeight: 700,
-                  color: "#FFBA1A",
+                  color: "#A8923A",
                   margin: "0 0 10px",
                   lineHeight: 1.0,
                   letterSpacing: "-0.025em",
@@ -178,7 +177,7 @@ export default function ReceiptsStrip() {
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 13,
                   lineHeight: 1.5,
-                  color: "rgba(237, 245, 236, 0.7)",
+                  color: "rgba(15, 30, 29, 0.66)",
                   margin: 0,
                   fontWeight: 400,
                 }}

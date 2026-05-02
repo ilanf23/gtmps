@@ -13,8 +13,8 @@ export default function MapSection() {
       id="map"
       className="px-6 md:px-10"
       style={{
-        background: '#EDF5EC',
-        borderTop: '1px solid rgba(213, 222, 212, 0.6)',
+        background: '#FFFFFF',
+        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
@@ -43,7 +43,7 @@ export default function MapSection() {
               fontSize: 14,
               letterSpacing: '0.32em',
               textTransform: 'uppercase',
-              color: '#FFBA1A',
+              color: '#A8923A',
               margin: 0,
               fontWeight: 500,
             }}
@@ -55,7 +55,7 @@ export default function MapSection() {
             style={{
               width: 44,
               height: 2,
-              background: 'linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3))',
+              background: 'linear-gradient(90deg, #A8923A, #C4AC4A)',
               margin: '18px 0 28px',
               animation: 'growRule 0.8s ease both',
             }}

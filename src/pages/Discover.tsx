@@ -125,11 +125,11 @@ const TopNav = () => {
                 role="menu"
                 className="absolute top-full mt-2 left-1/2 -translate-x-1/2 min-w-[280px]"
                 style={{
-                  background: "#0F1E1D",
-                  border: "1px solid rgba(168, 146, 58,0.25)",
+                  background: "#FFFFFF",
+                  border: "1px solid #D5DEC2",
                   borderRadius: 6,
                   padding: 8,
-                  boxShadow: "0 16px 48px -12px rgba(0,0,0,0.4)",
+                  boxShadow: "0 16px 48px -12px rgba(15,30,29,0.18)",
                 }}
               >
                 {NAV_VERTICAL_LINKS.map((v) => {
@@ -149,17 +149,17 @@ const TopNav = () => {
                         padding: "12px 16px",
                         fontFamily: "'Inter Tight', sans-serif",
                         fontSize: 14,
-                        color: "#EDF5EC",
+                        color: "#0F1E1D",
                         textDecoration: "none",
                         borderRadius: 4,
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(168, 146, 58,0.12)";
+                        e.currentTarget.style.background = "#EDF5EC";
                         e.currentTarget.style.color = "#A8923A";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "#EDF5EC";
+                        e.currentTarget.style.color = "#0F1E1D";
                       }}
                     >
                       <Icon size={16} color="#A8923A" strokeWidth={1.7} />

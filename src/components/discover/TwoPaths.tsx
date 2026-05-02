@@ -4,8 +4,8 @@ export default function TwoPaths() {
       id="two-paths"
       className="px-6 md:px-10"
       style={{
-        background: '#EDF5EC',
-        borderTop: '1px solid rgba(168, 146, 58,0.12)',
+        background: '#FBF8F4',
+        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
         paddingTop: 144,
         paddingBottom: 144,
       }}

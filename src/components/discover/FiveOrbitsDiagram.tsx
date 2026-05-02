@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Props {
@@ -10,510 +10,556 @@ interface Props {
 }
 
 /**
- * Five concentric gold rings with pill-style labels positioned trigonometrically
- * around each ring at distinct clock angles. Mobile (<768px) renders a vertical
- * orbit list instead of the SVG diagram.
+ * Horizontal pipeline: SIGNAL → CAPTURE → CADENCE → RESPONSE.
+ * Editorial / geometric / light. Replaces the old five-orbit diagram.
  */
 
-type Orbit = {
+type Stage = {
+  key: string;
   n: string;
-  title: string;
-  desc: string;
-  r: number;
-  angle: number;
-  emphasis?: boolean;
-  detail: string;
-  chapter: number;
+  label: string;
+  subtitle: string;
+  output: string;
+  Icon: (props: { active: boolean }) => JSX.Element;
 };
 
-const orbits: Orbit[] = [
-  { n: "01", title: "Core Proof",     desc: "Best stories",       r: 50,  angle: 270, chapter: 2,
-    detail: "Your existing clients, case studies, named outcomes. The proof base every other orbit references." },
-  { n: "02", title: "Active",         desc: "Current pipeline",   r: 100, angle: 342, chapter: 3,
-    detail: "Pipeline that is currently engaged. Where most firms over-invest." },
-  { n: "03", title: "The Dead Zone",  desc: "Highest ROI layer",  r: 150, angle: 54,  emphasis: true, chapter: 1,
-    detail: "Dormant relationships. The framework reactivated $400K at Madcraft in 7 minutes." },
-  { n: "04", title: "Warm Adjacency", desc: "Referral network",   r: 200, angle: 126, chapter: 4,
-    detail: "Referrals already inside reach. The network of networks." },
-  { n: "05", title: "New Gravity",    desc: "ICP matched market", r: 250, angle: 198, chapter: 5,
-    detail: "New firms pulled by your authority. The category creation play." },
+const INK = "#0F1E1D";
+const INK_60 = "rgba(15,30,29,0.66)";
+const INK_50 = "rgba(15,30,29,0.5)";
+const INK_18 = "rgba(15,30,29,0.18)";
+const INK_10 = "rgba(15,30,29,0.10)";
+const CREAM = "#FBF8F4";
+const MINT_BORDER = "#D5DEC2";
+const MINT_FILL = "#EDF5EC";
+const GOLD = "#A8923A";
+const GOLD_LIGHT = "#C4AC4A";
+const RUST = "#BF461A";
+
+/* ── Geometric stage icons ── */
+const SignalIcon = ({ active }: { active: boolean }) => {
+  const c = active ? RUST : INK;
+  return (
+    <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke={c} strokeWidth={1.4} strokeLinecap="round">
+      {/* antenna mast */}
+      <line x1="20" y1="14" x2="20" y2="32" />
+      <circle cx="20" cy="12" r="2.2" fill={c} stroke="none" />
+      {/* signal arcs */}
+      <path d="M11 18 Q 20 8 29 18" />
+      <path d="M14 21 Q 20 13 26 21" opacity="0.7" />
+    </svg>
+  );
+};
+
+const CaptureIcon = ({ active }: { active: boolean }) => {
+  const c = active ? RUST : INK;
+  return (
+    <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke={c} strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
+      {/* tray / inbox */}
+      <path d="M8 22 L8 30 L32 30 L32 22" />
+      <path d="M8 22 L13 12 L27 12 L32 22 Z" />
+      <path d="M8 22 L15 22 L17 25 L23 25 L25 22 L32 22" />
+    </svg>
+  );
+};
+
+const CadenceIcon = ({ active }: { active: boolean }) => {
+  const c = active ? RUST : INK;
+  return (
+    <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke={c} strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
+      {/* metronome */}
+      <path d="M14 32 L26 32 L24 12 L16 12 Z" />
+      <line x1="20" y1="30" x2="13" y2="14" />
+      <circle cx="13" cy="14" r="1.6" fill={c} stroke="none" />
+    </svg>
+  );
+};
+
+const ResponseIcon = ({ active }: { active: boolean }) => {
+  const c = active ? RUST : INK;
+  return (
+    <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke={c} strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
+      {/* paper plane */}
+      <path d="M8 20 L32 10 L24 32 L20 22 Z" />
+      <line x1="20" y1="22" x2="32" y2="10" />
+    </svg>
+  );
+};
+
+const stages: Stage[] = [
+  { key: "signal",   n: "01", label: "Signal",   subtitle: "A trigger from a relationship you already own.",      output: "Trigger detected",     Icon: SignalIcon },
+  { key: "capture",  n: "02", label: "Capture",  subtitle: "Logged in context, not lost in inbox.",                output: "Logged with context",  Icon: CaptureIcon },
+  { key: "cadence",  n: "03", label: "Cadence",  subtitle: "A response sequence the firm runs, not the partner.",  output: "Scheduled outreach",   Icon: CadenceIcon },
+  { key: "response", n: "04", label: "Response", subtitle: "A real conversation, never a pitch.",                  output: "Conversation opened",  Icon: ResponseIcon },
 ];
-
-const layers = ["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"];
-const formulaTokens = ["Signal", "+", "Proof", "+", "Context", "="];
-
-const CENTER = 300;
-const GOLD = "#FFBA1A";
-const GOLD_DIM = "rgba(255, 186, 26, 0.4)";
 
 const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Props) => {
   const isMobile = useIsMobile();
   const playing = triggered || staticMode;
-  const [active, setActive] = useState<Orbit | null>(null);
-  const [expanded, setExpanded] = useState<string | null>(null); // mobile inline
+  const [hovered, setHovered] = useState<string | null>(null);
 
-  // ESC to dismiss modal
-  useEffect(() => {
-    if (!active) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActive(null);
-    };
-    window.addEventListener("keydown", onKey);
-    // lock scroll
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [active]);
-
-
-  // Ring draw timing
-  const ringDur = 800;
-  const ringStep = 150;
-  const labelDelayAfterRing = 200;
-  const totalRingsDur = ringDur + (orbits.length - 1) * ringStep; // ~1400ms
-  const layersStart = totalRingsDur + 400;
-  const layerStep = 70;
-  const formulaStart = layersStart + layerStep * layers.length + 200;
-  const formulaTokenStep = 80;
+  const animate = playing && !staticMode;
 
   return (
     <div className={`relative w-full ${className}`}>
       <style>{`
-        @keyframes orbitDraw {
-          to { stroke-dashoffset: 0; }
-        }
-        @keyframes orbitPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.55; }
-        }
-        @keyframes orbitLabelFade {
-          from { opacity: 0; transform: translateY(4px); }
+        @keyframes pipeNodeIn {
+          from { opacity: 0; transform: translateY(14px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes orbitChipFade {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @keyframes pipeConnectorIn {
+          from { stroke-dashoffset: 100; opacity: 0; }
+          to   { stroke-dashoffset: 0; opacity: 1; }
         }
-        .orbit-03-pulse { animation: orbitPulse 1.5s ease-in-out infinite; }
-        .orbit-hit {
-          cursor: pointer;
-          transition: stroke-width 180ms ease, opacity 180ms ease, filter 180ms ease;
+        @keyframes pipeDiamondTravel {
+          0%   { offset-distance: 0%; opacity: 0; }
+          15%  { opacity: 1; }
+          85%  { opacity: 1; }
+          100% { offset-distance: 100%; opacity: 0; }
         }
-        .orbit-hit:hover { stroke-width: 2.6 !important; filter: drop-shadow(0 0 6px rgba(255, 186, 26, 0.55)); }
-        .orbit-hit-emph:hover { stroke-width: 3 !important; }
-        .orbit-label-g { cursor: pointer; }
-        .orbit-label-g rect {
-          transition: fill 180ms ease, stroke 180ms ease;
+        @keyframes pipeDotPulse {
+          0%, 100% { transform: scale(1); opacity: 0.85; }
+          50%      { transform: scale(1.25); opacity: 1; }
         }
-        .orbit-label-g:hover rect { fill: rgba(255, 186, 26, 0.18); stroke: #FFBA1A; }
-        .orbit-label-g:focus-visible { outline: none; }
-        .orbit-label-g:focus-visible rect { stroke: #EDF5EC; stroke-width: 2; }
-
-        @keyframes orbitModalSlide {
-          from { transform: translateX(100%); }
-          to   { transform: translateX(0); }
-        }
-        @keyframes orbitModalFade {
+        @keyframes pipeFadeIn {
           from { opacity: 0; }
           to   { opacity: 1; }
         }
-        @media (prefers-reduced-motion: reduce) {
-          .orbit-modal-panel { animation: orbitModalFade 200ms ease forwards !important; transform: none !important; }
+
+        .pipe-node {
+          background: ${CREAM};
+          border: 1px solid ${MINT_BORDER};
+          border-radius: 6px;
+          padding: 22px 20px 20px;
+          transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), border-color 280ms ease, box-shadow 280ms ease;
+          position: relative;
         }
+        .pipe-node:hover,
+        .pipe-node[data-active="true"] {
+          transform: translateY(-3px);
+          border-color: ${GOLD};
+          box-shadow: 0 12px 32px -18px rgba(15,30,29,0.22);
+        }
+        .pipe-node-icon-frame {
+          width: 56px; height: 56px;
+          border: 1px solid ${INK_18};
+          border-radius: 4px;
+          display: inline-flex; align-items: center; justify-content: center;
+          background: ${MINT_FILL};
+          transition: border-color 280ms ease, background 280ms ease;
+        }
+        .pipe-node:hover .pipe-node-icon-frame,
+        .pipe-node[data-active="true"] .pipe-node-icon-frame {
+          border-color: ${RUST};
+        }
+
+        .pipe-card {
+          background: ${CREAM};
+          border: 1px solid ${MINT_BORDER};
+          border-radius: 4px;
+          padding: 16px 18px 18px;
+          transition: border-color 280ms ease;
+        }
+        .pipe-card[data-active="true"] {
+          border-color: ${GOLD};
+        }
+        .pipe-mvbar {
+          width: 28px; height: 1px; background: ${INK_18};
+          margin-top: 10px;
+          transition: background 280ms ease;
+        }
+        .pipe-card[data-active="true"] .pipe-mvbar { background: ${RUST}; }
       `}</style>
 
+      {/* Caption strip */}
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: 32,
+          opacity: animate ? 0 : 1,
+          animation: animate ? "pipeFadeIn 480ms 80ms ease-out forwards" : undefined,
+        }}
+      >
+        <span
+          className="font-mono"
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 11,
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            color: GOLD,
+            fontWeight: 500,
+          }}
+        >
+          From Signal to Response
+          <span style={{ color: RUST }}>.</span>
+          <span style={{ marginLeft: 10, color: INK_50 }}>Not Pitch.</span>
+        </span>
+      </div>
+
       {isMobile ? (
-        // ── Mobile: vertical orbit list with tap-to-expand ───────────────
-        <ul className="mx-auto w-full max-w-[420px] flex flex-col gap-3 px-2">
-          {orbits.map((o) => {
-            const isDZ = !!o.emphasis;
-            const isOpen = expanded === o.n;
+        // Mobile: vertical stack
+        <div className="flex flex-col" style={{ gap: 0 }}>
+          {stages.map((s, i) => {
+            const Icon = s.Icon;
+            const active = hovered === s.key;
+            const delay = 120 + i * 110;
             return (
-              <li key={o.n}>
-                <button
-                  type="button"
-                  onClick={() => setExpanded(isOpen ? null : o.n)}
-                  aria-expanded={isOpen}
+              <div key={s.key}>
+                <div
+                  className="pipe-node"
+                  data-active={active || undefined}
+                  onMouseEnter={() => setHovered(s.key)}
+                  onMouseLeave={() => setHovered(null)}
                   style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 14,
-                    padding: "14px 16px",
-                    background: isDZ ? "rgba(255, 186, 26, 0.08)" : "rgba(255,253,248,0.02)",
-                    borderLeft: `2px solid ${isDZ ? GOLD : "rgba(255, 186, 26, 0.25)"}`,
-                    borderTop: 'none', borderRight: 'none', borderBottom: 'none',
-                    borderRadius: 4,
-                    textAlign: "left",
-                    cursor: "pointer",
-                    minHeight: 48,
+                    opacity: animate ? 0 : 1,
+                    animation: animate ? `pipeNodeIn 520ms ${delay}ms cubic-bezier(0.16, 1, 0.3, 1) forwards` : undefined,
                   }}
                 >
-                  <span
-                    className="font-mono"
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <div className="pipe-node-icon-frame">
+                      <Icon active={active} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p
+                        style={{
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: 10,
+                          letterSpacing: "0.28em",
+                          textTransform: "uppercase",
+                          color: INK_50,
+                          margin: 0,
+                          marginBottom: 6,
+                        }}
+                      >
+                        {s.n} · Stage
+                      </p>
+                      <h4
+                        style={{
+                          fontFamily: "'Inter Tight', sans-serif",
+                          fontSize: 22,
+                          fontWeight: 500,
+                          letterSpacing: "-0.02em",
+                          color: INK,
+                          margin: 0,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {s.label}
+                        <span style={{ color: RUST }}>.</span>
+                      </h4>
+                    </div>
+                  </div>
+                  <p
                     style={{
-                      fontSize: 11,
-                      letterSpacing: 1.4,
-                      color: GOLD,
-                      paddingTop: 2,
-                      minWidth: 22,
+                      marginTop: 14,
+                      marginBottom: 0,
+                      fontFamily: "'Inter Tight', sans-serif",
+                      fontSize: 14,
+                      lineHeight: 1.5,
+                      color: INK_60,
                     }}
                   >
-                    {o.n}
-                  </span>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-                    <span
-                      className="font-display"
-                      style={{
-                        fontSize: 15,
-                        fontWeight: isDZ ? 600 : 500,
-                        color: isDZ ? GOLD : "#EDF5EC",
-                        letterSpacing: "-0.01em",
-                      }}
-                    >
-                      {o.title}
-                    </span>
-                    <span
-                      className="font-display"
-                      style={{ fontSize: 12, color: "rgba(245,241,232,0.55)", fontWeight: 300 }}
-                    >
-                      {o.desc}
-                    </span>
-                  </div>
-                  <span aria-hidden style={{ color: GOLD, fontSize: 14, paddingTop: 2 }}>
-                    {isOpen ? "−" : "+"}
-                  </span>
-                </button>
-                {isOpen && (
+                    {s.subtitle}
+                  </p>
                   <div
-                    style={{
-                      padding: "12px 16px 16px 36px",
-                      borderLeft: `2px solid ${isDZ ? GOLD : "rgba(255, 186, 26, 0.25)"}`,
-                      borderRadius: "0 0 4px 4px",
-                      background: "rgba(237, 245, 236,0.03)",
-                    }}
+                    className="pipe-card"
+                    data-active={active || undefined}
+                    style={{ marginTop: 14, padding: "10px 14px" }}
                   >
                     <p
                       style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: 15,
-                        lineHeight: 1.55,
-                        color: "rgba(237, 245, 236,0.78)",
-                        margin: "0 0 12px",
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 10,
+                        letterSpacing: "0.24em",
+                        textTransform: "uppercase",
+                        color: INK_50,
+                        margin: 0,
+                        marginBottom: 4,
                       }}
                     >
-                      {o.detail}
+                      Output
                     </p>
-                    <a
-                      href={`/manuscript#chapter-${o.chapter}`}
+                    <p
                       style={{
                         fontFamily: "'Inter Tight', sans-serif",
-                        fontSize: 12,
-                        letterSpacing: "0.16em",
-                        textTransform: "uppercase",
-                        color: GOLD,
-                        textDecoration: "none",
-                        borderBottom: `1px solid ${GOLD_DIM}`,
-                        paddingBottom: 2,
+                        fontSize: 14,
+                        color: INK,
+                        margin: 0,
+                        fontWeight: 500,
                       }}
                     >
-                      Read Chapter {o.chapter} →
-                    </a>
+                      {s.output}
+                    </p>
+                  </div>
+                </div>
+                {i < stages.length - 1 && (
+                  <div
+                    aria-hidden
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 32,
+                    }}
+                  >
+                    <div style={{ width: 1, height: 28, background: INK_18 }} />
+                    <span style={{ position: "absolute", marginTop: 26, color: RUST, fontSize: 14, transform: "rotate(90deg)" }}>›</span>
                   </div>
                 )}
-              </li>
+              </div>
             );
           })}
-        </ul>
-      ) : (
-        // ── Desktop: SVG diagram ──────────────────────────────────────────
-        <svg
-          viewBox="0 0 600 600"
-          className="block w-full mx-auto"
-          style={{ maxWidth: 600, aspectRatio: "1 / 1" }}
-          aria-label="The Relationship Revenue OS — Five Orbits diagram"
-        >
-          <defs>
-            <radialGradient id="orbit-center-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"   stopColor="rgba(212,174,72,0.45)" />
-              <stop offset="60%"  stopColor="rgba(255, 186, 26, 0.08)" />
-              <stop offset="100%" stopColor="rgba(255, 186, 26, 0)" />
-            </radialGradient>
-          </defs>
-
-          {/* Center glow + marker */}
-          <circle cx={CENTER} cy={CENTER} r={36} fill="url(#orbit-center-glow)" />
-          <circle cx={CENTER} cy={CENTER} r={4} fill={GOLD} />
-
-          {/* Rings — draw sequentially on trigger */}
-          {orbits.map((o, i) => {
-            const circ = 2 * Math.PI * o.r;
-            const isDZ = !!o.emphasis;
-            const stroke = isDZ ? GOLD : GOLD_DIM;
-            const strokeWidth = isDZ ? 2 : 1;
-
-            const ringStyle: React.CSSProperties = staticMode
-              ? { opacity: 1 }
-              : {
-                  strokeDasharray: circ,
-                  strokeDashoffset: playing ? undefined : circ,
-                  transformOrigin: `${CENTER}px ${CENTER}px`,
-                  transform: "rotate(-90deg)",
-                  animation: playing
-                    ? `orbitDraw ${ringDur}ms ${i * ringStep}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
-                    : undefined,
-                };
-
-            return (
-              <circle
-                key={`ring-${o.n}`}
-                cx={CENTER}
-                cy={CENTER}
-                r={o.r}
-                fill="none"
-                stroke={stroke}
-                strokeWidth={strokeWidth}
-                className={`${isDZ && !staticMode ? "orbit-03-pulse " : ""}orbit-hit${isDZ ? " orbit-hit-emph" : ""}`}
-                style={{ ...ringStyle, pointerEvents: "stroke" }}
-                onClick={() => setActive(o)}
-              />
-            );
-          })}
-
-          {/* Labels — pill background + centered text */}
-          {orbits.map((o, i) => {
-            const angleRad = ((o.angle - 90) * Math.PI) / 180;
-            const x = CENTER + o.r * Math.cos(angleRad);
-            const y = CENTER + o.r * Math.sin(angleRad);
-            const isDZ = !!o.emphasis;
-
-            const labelText = `${o.n}  ${o.title}`;
-            // Approx pill width from text length
-            const pillW = Math.max(96, labelText.length * 7.2 + 24);
-            const pillH = 26;
-
-            const labelDelay = ringDur + i * ringStep + labelDelayAfterRing;
-
-            const groupStyle: React.CSSProperties = staticMode
-              ? { opacity: 1 }
-              : {
-                  opacity: playing ? undefined : 0,
-                  animation: playing
-                    ? `orbitLabelFade 380ms ${labelDelay}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
-                    : undefined,
-                  transformOrigin: `${x}px ${y}px`,
-                };
-
-            return (
-              <g
-                key={`label-${o.n}`}
-                className="orbit-label-g"
-                style={groupStyle}
-                role="button"
-                tabIndex={0}
-                onClick={() => setActive(o)}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(o); } }}
-              >
-                <rect
-                  x={x - pillW / 2}
-                  y={y - pillH / 2}
-                  width={pillW}
-                  height={pillH}
-                  rx={pillH / 2}
-                  fill="#0A0807"
-                  stroke={isDZ ? GOLD : GOLD_DIM}
-                  strokeWidth={isDZ ? 1.5 : 1}
-                  className={isDZ && !staticMode ? "orbit-03-pulse" : undefined}
-                />
-                <text
-                  x={x}
-                  y={y}
-                  textAnchor="middle"
-                  dy="0.35em"
-                  fontFamily="'Inter Tight', sans-serif"
-                  fontSize={12}
-                  fontWeight={isDZ ? 600 : 500}
-                  fill={isDZ ? GOLD : "#EDF5EC"}
-                  letterSpacing={isDZ ? 0.2 : 0}
-                  style={{ whiteSpace: "pre", pointerEvents: "none" }}
-                >
-                  {labelText}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-      )}
-
-      {/* Layer flow */}
-      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-3 mt-16">
-        {layers.map((l, i) => (
-          <div key={l} className="flex items-center gap-2">
-            <span
-              className="font-display uppercase rounded-full"
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.22em",
-                color: "#EDF5EC",
-                padding: "8px 16px",
-                border: "1px solid rgba(255, 186, 26, 0.45)",
-                background: "rgba(255,253,248,0.02)",
-                fontWeight: 500,
-                opacity: playing ? undefined : 0,
-                animation:
-                  playing && !staticMode
-                    ? `orbitChipFade 360ms ${layersStart + i * layerStep}ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
-                    : undefined,
-                ...(staticMode ? { opacity: 1 } : {}),
-              }}
-            >
-              {l}
-            </span>
-            {i < layers.length - 1 && (
-              <span
-                style={{
-                  color: "rgba(212,174,72,0.7)",
-                  fontSize: 14,
-                  opacity: playing ? undefined : 0,
-                  animation:
-                    playing && !staticMode
-                      ? `orbitChipFade 360ms ${layersStart + i * layerStep + 35}ms ease-out forwards`
-                      : undefined,
-                  ...(staticMode ? { opacity: 1 } : {}),
-                }}
-              >
-                →
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Formula */}
-      <div className="text-center mx-auto mt-14 px-4" style={{ maxWidth: 800 }}>
-        <p
-          className="font-mono uppercase mb-3"
-          style={{ fontSize: 10, letterSpacing: "0.28em", color: "rgba(212,174,72,0.7)" }}
-        >
-          The Formula
-        </p>
-        <p
-          className="font-display"
-          style={{
-            color: "#EDF5EC",
-            fontSize: "clamp(22px, 2.4vw, 32px)",
-            lineHeight: 1.35,
-            fontWeight: 500,
-            letterSpacing: "-0.012em",
-          }}
-        >
-          {formulaTokens.map((t, i) => (
-            <span
-              key={i}
-              style={{
-                marginRight: 8,
-                display: "inline-block",
-                opacity: playing ? undefined : 0,
-                animation:
-                  playing && !staticMode
-                    ? `orbitChipFade 320ms ${formulaStart + i * formulaTokenStep}ms ease-out forwards`
-                    : undefined,
-                ...(staticMode ? { opacity: 1 } : {}),
-              }}
-            >
-              {t}
-            </span>
-          ))}
-          <span
-            style={{
-              color: GOLD,
-              fontStyle: "italic",
-              opacity: playing ? undefined : 0,
-              animation:
-                playing && !staticMode
-                  ? `orbitChipFade 360ms ${formulaStart + formulaTokens.length * formulaTokenStep + 80}ms ease-out forwards`
-                  : undefined,
-              ...(staticMode ? { opacity: 1 } : {}),
-            }}
-          >
-            Response, Not Pitch.
-          </span>
-        </p>
-      </div>
-
-      {/* Desktop modal — slide-in from right */}
-      {!isMobile && active && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="orbit-modal-title"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 200,
-            background: 'rgba(8,6,4,0.6)',
-            animation: 'orbitModalFade 240ms ease forwards',
-          }}
-          onClick={() => setActive(null)}
-        >
-          <div
-            className="orbit-modal-panel"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              height: '100%',
-              width: 480,
-              maxWidth: '92vw',
-              background: '#EDF5EC',
-              borderLeft: '1px solid #FFBA1A',
-              boxShadow: '-20px 0 60px -20px rgba(0,0,0,0.5)',
-              padding: '56px 40px 40px',
-              overflowY: 'auto',
-              animation: 'orbitModalSlide 400ms cubic-bezier(0.22,1,0.36,1) forwards',
-              fontFamily: "'Inter Tight', sans-serif",
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setActive(null)}
-              aria-label="Close"
-              style={{
-                position: 'absolute', top: 16, right: 16,
-                width: 40, height: 40, border: 'none', background: 'transparent',
-                fontSize: 22, color: 'rgba(15, 30, 29, 0.55)', cursor: 'pointer', lineHeight: 1,
-              }}
-            >×</button>
-            <p style={{
-              fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: '0.32em',
-              textTransform: 'uppercase', color: '#FFBA1A', margin: 0,
-            }}>Orbit {active.n}</p>
-            <h3 id="orbit-modal-title" style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 500, color: '#0F1E1D',
-              lineHeight: 1.1, letterSpacing: '-0.02em', margin: '14px 0 24px',
-            }}>{active.title}</h3>
-            <p style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 18, lineHeight: 1.6, color: 'rgba(15, 30, 29, 0.78)', margin: '0 0 36px',
-            }}>{active.detail}</p>
-            <a
-              href={`/manuscript#chapter-${active.chapter}`}
-              style={{
-                display: 'inline-block', padding: '12px 24px',
-                background: '#BF461A', color: '#EDF5EC', textDecoration: 'none',
-                fontSize: 13, letterSpacing: '0.12em', fontWeight: 600,
-                textTransform: 'uppercase',
-                borderRadius: 25,
-              }}
-            >Read the chapter →</a>
-          </div>
         </div>
+      ) : (
+        // Desktop: horizontal SVG pipeline + below cards grid
+        <>
+          <div style={{ position: "relative", width: "100%" }}>
+            <svg
+              viewBox="0 0 1100 200"
+              width="100%"
+              preserveAspectRatio="xMidYMid meet"
+              style={{ display: "block", overflow: "visible" }}
+              aria-hidden
+            >
+              <defs>
+                <marker id="pipe-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 Z" fill={RUST} />
+                </marker>
+              </defs>
+
+              {/* Three connectors between four nodes. Node centers at x = 137.5, 412.5, 687.5, 962.5 */}
+              {[0, 1, 2].map((i) => {
+                const x1 = 137.5 + i * 275 + 95; // node center + half node width (~95) for right edge
+                const x2 = 137.5 + (i + 1) * 275 - 95;
+                const y = 100;
+                const delay = 320 + i * 110;
+                return (
+                  <g key={`connector-${i}`}>
+                    <line
+                      x1={x1}
+                      y1={y}
+                      x2={x2}
+                      y2={y}
+                      stroke={INK_18}
+                      strokeWidth={1}
+                      strokeDasharray={animate ? 100 : undefined}
+                      style={{
+                        animation: animate ? `pipeConnectorIn 520ms ${delay}ms ease-out forwards` : undefined,
+                        opacity: animate ? 0 : 1,
+                      }}
+                    />
+                    {/* arrowhead */}
+                    <line
+                      x1={x2 - 8}
+                      y1={y}
+                      x2={x2}
+                      y2={y}
+                      stroke={RUST}
+                      strokeWidth={1.2}
+                      markerEnd="url(#pipe-arrow)"
+                      style={{
+                        animation: animate ? `pipeFadeIn 320ms ${delay + 380}ms ease-out forwards` : undefined,
+                        opacity: animate ? 0 : 1,
+                      }}
+                    />
+                    {/* traveling diamond */}
+                    {!staticMode && (
+                      <rect
+                        x={-3}
+                        y={-3}
+                        width={6}
+                        height={6}
+                        fill={RUST}
+                        transform="rotate(45)"
+                        style={{
+                          offsetPath: `path('M ${x1} ${y} L ${x2 - 8} ${y}')`,
+                          animation: `pipeDiamondTravel 2400ms ${delay + 600}ms cubic-bezier(0.45, 0, 0.55, 1) infinite`,
+                          opacity: 0,
+                        } as React.CSSProperties}
+                      />
+                    )}
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Nodes overlaid with absolute positioning anchored to the same viewBox math. Use a container at 100% width and 4 equal columns. */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: 0,
+                pointerEvents: "none",
+              }}
+            >
+              {stages.map((s, i) => {
+                const Icon = s.Icon;
+                const active = hovered === s.key;
+                const delay = 200 + i * 110;
+                return (
+                  <div
+                    key={s.key}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      pointerEvents: "auto",
+                    }}
+                  >
+                    <div
+                      className="pipe-node"
+                      data-active={active || undefined}
+                      onMouseEnter={() => setHovered(s.key)}
+                      onMouseLeave={() => setHovered(null)}
+                      style={{
+                        width: "min(190px, 86%)",
+                        opacity: animate ? 0 : 1,
+                        animation: animate ? `pipeNodeIn 520ms ${delay}ms cubic-bezier(0.16, 1, 0.3, 1) forwards` : undefined,
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                        <div className="pipe-node-icon-frame" style={{ width: 44, height: 44 }}>
+                          <div style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Icon active={active} />
+                          </div>
+                        </div>
+                        <span
+                          style={{
+                            fontFamily: "'DM Mono', monospace",
+                            fontSize: 10,
+                            letterSpacing: "0.28em",
+                            color: INK_50,
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {s.n}
+                        </span>
+                      </div>
+                      <h4
+                        style={{
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: 12,
+                          letterSpacing: "0.22em",
+                          textTransform: "uppercase",
+                          color: INK,
+                          margin: 0,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {s.label}
+                        <span style={{ color: RUST }}>.</span>
+                      </h4>
+                      <p
+                        style={{
+                          marginTop: 8,
+                          marginBottom: 0,
+                          fontFamily: "'Inter Tight', sans-serif",
+                          fontSize: 13,
+                          lineHeight: 1.45,
+                          color: INK_60,
+                        }}
+                      >
+                        {s.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Output cards */}
+          <div
+            style={{
+              marginTop: 36,
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 14,
+            }}
+          >
+            {stages.map((s, i) => {
+              const active = hovered === s.key;
+              const delay = 520 + i * 80;
+              return (
+                <div
+                  key={`out-${s.key}`}
+                  className="pipe-card"
+                  data-active={active || undefined}
+                  onMouseEnter={() => setHovered(s.key)}
+                  onMouseLeave={() => setHovered(null)}
+                  style={{
+                    opacity: animate ? 0 : 1,
+                    animation: animate ? `pipeFadeIn 460ms ${delay}ms ease-out forwards` : undefined,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 10,
+                      letterSpacing: "0.24em",
+                      textTransform: "uppercase",
+                      color: INK_50,
+                      margin: 0,
+                      marginBottom: 6,
+                    }}
+                  >
+                    {s.label} produces
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'Inter Tight', sans-serif",
+                      fontSize: 15,
+                      color: INK,
+                      margin: 0,
+                      fontWeight: 500,
+                      letterSpacing: "-0.005em",
+                    }}
+                  >
+                    {s.output}
+                    <span style={{ color: RUST }}>.</span>
+                  </p>
+                  <div className="pipe-mvbar" />
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
+
+      {/* Footer thesis line */}
+      <div
+        style={{
+          marginTop: 40,
+          textAlign: "center",
+          opacity: animate ? 0 : 1,
+          animation: animate ? "pipeFadeIn 520ms 1100ms ease-out forwards" : undefined,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            fontSize: "clamp(18px, 2vw, 22px)",
+            color: INK_60,
+            margin: 0,
+            letterSpacing: "-0.005em",
+          }}
+        >
+          Every relationship is a signal you can act on
+          <span style={{ color: RUST, fontStyle: "normal" }}>.</span>
+        </p>
+        <div
+          aria-hidden
+          style={{
+            width: 36,
+            height: 1,
+            background: `linear-gradient(90deg, ${GOLD}, ${GOLD_LIGHT})`,
+            margin: "14px auto 0",
+          }}
+        />
+      </div>
     </div>
   );
 };
