@@ -19,6 +19,7 @@ import { shouldForceDarkBodyFallback } from "@/lib/clientTheme";
 import { assertReadableBrand } from "@/lib/clientTheme";
 
 import PersonalizedHeader from "./v10/PersonalizedHeader";
+import CohortRankCard from "./v10/CohortRankCard";
 import FiveOrbitsViz from "./v10/FiveOrbitsViz";
 import CoreAnalysisSection from "./v10/CoreAnalysisSection";
 import ProofAnalysisSection from "./v10/ProofAnalysisSection";
@@ -319,6 +320,12 @@ export default function MagnetBreakdown({
           firmName={customerName}
           buildSecondsAgo={buildSecondsAgo}
           bandOverall={scores.bandOverall}
+          primary={brand.primary}
+        />
+
+        <CohortRankCard
+          firmId={slug}
+          cohortKey={verticalSlug ?? "default"}
           primary={brand.primary}
         />
 
