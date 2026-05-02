@@ -4,6 +4,7 @@ import type { VerticalContent } from '@/content/verticals';
 import { NAV_VERTICAL_LINKS } from '@/content/verticals';
 import { INDUSTRY_ICONS } from '@/content/industryIcons';
 import { INDUSTRY_STATS } from '@/content/industryStats';
+import HeroUrlField from '@/components/discover/HeroUrlField';
 import VerticalNav from './VerticalNav';
 import VerticalFooter from './VerticalFooter';
 import VerticalStickyCta from './VerticalStickyCta';
@@ -796,15 +797,14 @@ export default function VerticalLanding({ vertical }: Props) {
             <p className="vl-sub" style={{ margin: '0 auto 36px', textAlign: 'center' }}>
               {vertical.diagnostic.sub}
             </p>
-            <a
-              href={`/assess?vertical=${vertical.slug}`}
-              className="vl-cta-primary"
-              data-vertical={vertical.slug}
-              data-cta="add-your-firm"
-            >
-              {ctaLabel}
-            </a>
-            <p className="vl-diag-foot">Free. 90 seconds to build. 10 minutes to read. Most decisions within 48 hours.</p>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <HeroUrlField
+                vertical={vertical.slug}
+                variant="light"
+                submitLabel={ctaLabel}
+                foot="Free. 90 seconds to build. 10 minutes to read. Most decisions within 48 hours."
+              />
+            </div>
           </div>
         </section>
 
@@ -862,17 +862,14 @@ export default function VerticalLanding({ vertical }: Props) {
             <h2 className="vl-h2" style={{ color: '#F5EFE0', textAlign: 'center' }}>
               {vertical.hero.headline}
             </h2>
-            <a
-              href={`/assess?vertical=${vertical.slug}`}
-              className="vl-cta-primary"
-              data-vertical={vertical.slug}
-              data-cta="add-your-firm"
-            >
-              {ctaLabel}
-            </a>
-            <p className="vl-diag-foot" style={{ color: 'rgba(245,239,224,0.5)' }}>
-              {vertical.hero.cohortLine}
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+              <HeroUrlField
+                vertical={vertical.slug}
+                variant="dark"
+                submitLabel={ctaLabel}
+                foot={vertical.hero.cohortLine}
+              />
+            </div>
           </div>
         </section>
 
