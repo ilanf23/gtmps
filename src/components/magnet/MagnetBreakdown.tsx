@@ -224,13 +224,13 @@ export default function MagnetBreakdown({
   };
   const { brand: readableBrand } = assertReadableBrand(rawBrand, data.client_company_name);
 
-  // ── Dark-body guard (v2) — applied to MagnetBreakdown's brand path ─────
+  // ── Dark-body guard — applied to MagnetBreakdown's brand path ──────────
   // assertReadableBrand only rejects when WCAG contrast fails. A dark navy
   // bg with white text passes contrast but still produces an unreadable
-  // editorial body (cream-on-ink-designed sections). When VITE_CLIENT_THEME_V2
-  // is on AND the extracted bg is below the dark-body luminance threshold,
-  // force the body bg to Mabbly cream + ink text. The firm's `primary`
-  // accent stays intact for links, button text, and accent rules.
+  // editorial body (cream-on-ink-designed sections). When the extracted bg
+  // is below the dark-body luminance threshold, force body bg to Mabbly
+  // cream + ink text. The firm's `primary` accent stays intact for links,
+  // button text, and accent rules.
   const brand = shouldForceDarkBodyFallback(readableBrand.background)
     ? { ...readableBrand, background: "#EDF5EC", surface: "#FAF9F5", text: "#0F1E1D", textMuted: "rgba(15, 30, 29,0.6)" }
     : readableBrand;

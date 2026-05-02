@@ -41,40 +41,16 @@ export const INDUSTRY_FALLBACK_BG = "#1B3A6B"; // consulting navy
  * The Cravath failure mode: client_background = #0B1A2E (navy, lum ≈ 0.02).
  * Body sections (orbit viz, two-column proof, gold pull-quote, "Activate your
  * Dead Zone") were designed for cream-on-ink and collapse contrast on navy.
- *
- * Gated behind VITE_CLIENT_THEME_V2 so the fix can be smoke-tested before
- * flipping for all live microsites. Default off in prod.
  */
 export const DARK_BODY_LUMINANCE_THRESHOLD = 0.35;
 
 /**
- * Read the v2 flag with sensible fallbacks for non-Vite contexts (Vitest,
- * SSR, eventual edge-function reuse).
- */
-export function clientThemeV2Enabled(): boolean {
-  // Vite injects import.meta.env; guard for non-browser builds.
-  try {
-    const env = (import.meta as unknown as { env?: Record<string, string> }).env;
-    if (env && typeof env.VITE_CLIENT_THEME_V2 === "string") {
-      return env.VITE_CLIENT_THEME_V2 === "true";
-    }
-  } catch {
-    /* non-Vite context */
-  }
-  if (typeof process !== "undefined" && process.env) {
-    return process.env.VITE_CLIENT_THEME_V2 === "true";
-  }
-  return false;
-}
-
-/**
- * Returns true when the v2 dark-body guard should activate for the given
+ * Returns true when the dark-body guard should activate for the given
  * extracted background color. Shared between `buildClientTheme` and the
  * MagnetBreakdown brand-resolution path so both surfaces apply the same
  * cream-fallback rule without diverging.
  */
 export function shouldForceDarkBodyFallback(extractedBgHex: string): boolean {
-  if (!clientThemeV2Enabled()) return false;
   if (!isHex(extractedBgHex)) return false;
   return relLuminance(expandHex(extractedBgHex)) < DARK_BODY_LUMINANCE_THRESHOLD;
 }
@@ -203,21 +179,18 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     ? expandHex(raw.client_background_color)
     : MABBLY_DEFAULTS.background;
 
-  // ── Dark-body guard (v2) ────────────────────────────────────────────────
+  // ── Dark-body guard ─────────────────────────────────────────────────────
   // Cravath failure mode: extracted background is deep navy → editorial body
   // sections (cream-designed) lose contrast. Force cream body bg when the
   // extracted color falls below the luminance threshold; preserve the
   // extracted dark color via `brandBackground` below for chrome use.
-  // Gated behind VITE_CLIENT_THEME_V2 — defaults off, no behavior change for
-  // existing live microsites until the flag is flipped.
-  const v2 = clientThemeV2Enabled();
   const extractedIsTooDark = relLuminance(extractedBackground) < DARK_BODY_LUMINANCE_THRESHOLD;
-  const background = (v2 && extractedIsTooDark)
+  const background = extractedIsTooDark
     ? MABBLY_DEFAULTS.background
     : extractedBackground;
 
-  if (v2 && extractedIsTooDark && typeof console !== "undefined") {
-    console.info("[client-theme-v2] dark-body guard: forcing cream body bg", {
+  if (extractedIsTooDark && typeof console !== "undefined") {
+    console.info("[client-theme] dark-body guard: forcing cream body bg", {
       extracted: extractedBackground,
       luminance: relLuminance(extractedBackground).toFixed(3),
       threshold: DARK_BODY_LUMINANCE_THRESHOLD,
