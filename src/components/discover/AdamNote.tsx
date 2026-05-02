@@ -38,8 +38,8 @@ export default function AdamNote() {
         </p>
 
         <div
+          className="font-serif"
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: 'clamp(20px, 2.4vw, 26px)',
             fontStyle: 'italic',
             color: 'rgba(237, 245, 236,0.85)',

@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import AletheiaSectionReveal from "./AletheiaSectionReveal";
 
-const NAVY = "#0B1A2E";
-const GOLD = "#C8963E";
-const OFFWHITE = "#F5F1E8";
-const SLATE = "#7A8AA0";
+const NAVY = "var(--color-surface-page)";       // dark theme: Deep Forest
+const GOLD = "var(--color-accent-primary)";    // dark theme: lifted Olive Gold
+const OFFWHITE = "var(--color-text-primary)";   // dark theme: Sage Light
+const SLATE = "var(--color-text-tertiary)";    // dark theme: Sage Muted
 
 const fmt = (n: number) => {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;

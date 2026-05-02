@@ -135,7 +135,7 @@ export default function Results() {
           margin: 0 0 20px;
         }
         .rs-quote {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 16px;
           color: rgba(237, 245, 236,0.85);
           font-style: italic;

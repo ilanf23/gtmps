@@ -166,7 +166,7 @@ export default function VerticalNav({ currentSlug }: Props) {
         .vn-mobile-link {
           display: block;
           padding: 14px 0;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-serif);
           font-size: 22px;
           color: #F5EFE0;
           text-decoration: none;

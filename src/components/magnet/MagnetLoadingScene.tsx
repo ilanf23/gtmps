@@ -411,7 +411,7 @@ export default function MagnetLoadingScene({
               <text
                 x={CENTER + RING_RADII[2] + 28}
                 y={CENTER - 8}
-                fontFamily="'Cormorant Garamond', serif"
+                fontFamily="var(--font-serif)"
                 fontStyle="italic"
                 fontSize={13}
                 fill="var(--ms-accent, #A8923A)"
@@ -444,7 +444,7 @@ export default function MagnetLoadingScene({
                       x={x - 6}
                       y={y + 4}
                       textAnchor="end"
-                      fontFamily="'Cormorant Garamond', serif"
+                      fontFamily="var(--font-serif)"
                       fontStyle="italic"
                       fontSize={10}
                       fill="var(--ms-text, #0F1E1D)"
@@ -486,7 +486,7 @@ export default function MagnetLoadingScene({
             <foreignObject x={MANU.x} y={MANU.y - 14} width={MANU.w} height={28}>
               <div
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--font-serif)",
                   fontStyle: "italic",
                   fontSize: 16,
                   color: "var(--ms-text, #0F1E1D)",
@@ -590,7 +590,7 @@ export default function MagnetLoadingScene({
               y={CENTER + 7}
               textAnchor="middle"
               fill="var(--ms-accent, #A8923A)"
-              fontFamily="'Cormorant Garamond', serif"
+              fontFamily="var(--font-serif)"
               fontStyle="italic"
               fontSize={22}
               style={{
@@ -612,7 +612,7 @@ export default function MagnetLoadingScene({
         <h1
           className="text-[#0F1E1D] mb-7"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--font-serif)",
             fontStyle: "italic",
             fontSize: "clamp(26px, 4.5vw, 36px)",
             lineHeight: 1.15,

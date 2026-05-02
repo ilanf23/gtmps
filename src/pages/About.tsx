@@ -327,7 +327,7 @@ const bodyLight: React.CSSProperties = {
 };
 
 const pullQuoteDark: React.CSSProperties = {
-  fontFamily: "'Cormorant Garamond', Georgia, serif",
+  fontFamily: "var(--font-serif)",
   fontStyle: "italic",
   fontSize: "clamp(20px, 2.2vw, 26px)",
   lineHeight: 1.55,
@@ -404,7 +404,7 @@ const S6E1AudioBlock = () => {
       <p style={{ ...eyebrowStyle, marginBottom: 18 }}>Hear the Thesis · 30 Seconds</p>
       <blockquote
         style={{
-          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontFamily: "var(--font-serif)",
           fontStyle: "italic",
           fontSize: "clamp(18px, 2vw, 22px)",
           lineHeight: 1.5,
@@ -485,7 +485,7 @@ const PullQuoteBlock = ({
       >
         <blockquote
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontFamily: "var(--font-serif)",
             fontStyle: "italic",
             fontSize: "clamp(24px, 3vw, 36px)",
             lineHeight: 1.55,
@@ -1296,7 +1296,7 @@ const About = () => {
             <figure style={{ margin: "32px 0 0", padding: 0 }}>
               <blockquote
                 style={{
-                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontFamily: "var(--font-serif)",
                   fontSize: "clamp(24px, 3vw, 36px)",
                   lineHeight: 1.4,
                   fontWeight: 500,
