@@ -3,7 +3,7 @@ export default function WhyNow() {
     <section
       id="why-now"
       className="py-24 md:py-32 px-6 md:px-10"
-      style={{ background: '#08070a', borderTop: '1px solid rgba(168, 146, 58,0.1)' }}
+      style={{ background: '#FFFFFF', borderTop: '1px solid rgba(15, 30, 29, 0.08)' }}
     >
       <div
         style={{
@@ -30,7 +30,7 @@ export default function WhyNow() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, #C4AC4A)',
             margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
@@ -40,7 +40,7 @@ export default function WhyNow() {
             fontFamily: "var(--font-display)",
             fontSize: 'clamp(40px, 6.5vw, 68px)',
             fontWeight: 400,
-            color: '#EDF5EC',
+            color: '#0F1E1D',
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
             margin: 0,
@@ -53,7 +53,7 @@ export default function WhyNow() {
           style={{
             width: '100%',
             height: 1,
-            background: 'rgba(168, 146, 58,0.12)',
+            background: 'rgba(15, 30, 29, 0.08)',
             margin: '28px 0',
           }}
         />
@@ -62,8 +62,8 @@ export default function WhyNow() {
           <div
             style={{
               flex: '1 1 240px',
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(168, 146, 58,0.15)',
+              background: '#EDF5EC',
+              border: '1px solid #D5DEC2',
               borderRadius: 3,
               padding: '18px 20px',
             }}
@@ -84,7 +84,7 @@ export default function WhyNow() {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 13,
-                color: 'rgba(237, 245, 236,0.6)',
+                color: 'rgba(15, 30, 29, 0.66)',
                 lineHeight: 1.5,
                 marginTop: 10,
               }}
@@ -103,7 +103,7 @@ export default function WhyNow() {
           style={{
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 12,
-            color: 'rgba(237, 245, 236,0.55)',
+            color: 'rgba(15, 30, 29, 0.5)',
             margin: '4px 0 28px',
             lineHeight: 1.5,
           }}
@@ -116,7 +116,7 @@ export default function WhyNow() {
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(16px, 1.4vw, 18px)',
             lineHeight: 1.65,
-            color: 'rgba(237, 245, 236,0.78)',
+            color: 'rgba(15, 30, 29, 0.78)',
             maxWidth: 640,
             margin: '0 0 36px',
             fontWeight: 400,
@@ -128,7 +128,7 @@ export default function WhyNow() {
 
         <div
           style={{
-            borderTop: '1px solid rgba(168, 146, 58,0.15)',
+            borderTop: '1px solid rgba(15, 30, 29, 0.08)',
             paddingTop: 24,
           }}
         >
@@ -148,7 +148,7 @@ export default function WhyNow() {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: 'clamp(18px, 2.8vw, 28px)',
-              color: '#EDF5EC',
+              color: '#0F1E1D',
               margin: 0,
             }}
           >
