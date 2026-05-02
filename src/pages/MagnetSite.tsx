@@ -31,6 +31,7 @@ export default function MagnetSite() {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
   const [vertical, setVertical] = useState<string>(() => resolveVerticalSlug(urlVertical));
+  const [retryNonce, setRetryNonce] = useState(0);
   const timeoutRef = useRef<number | null>(null);
   // Theme is loaded via the shell, but the loading scene also needs accent.
   const theme = useClientTheme(slug);
@@ -162,7 +163,12 @@ export default function MagnetSite() {
       cancelled = true;
       clearPending();
     };
-  }, [slug]);
+  }, [slug, retryNonce]);
+
+  const retryEnrichment = () => {
+    setStatus('loading');
+    setRetryNonce((n) => n + 1);
+  };
 
   // (Step rotation is now handled internally by MagnetWaitTheater.)
 
@@ -239,28 +245,95 @@ export default function MagnetSite() {
   }
 
   if (status === 'error') {
+    const websiteUrl = navState.websiteUrl ?? slug ?? 'unknown';
+    const mailtoSubject = encodeURIComponent(`Map for ${websiteUrl} is stuck`);
+    const mailtoBody = encodeURIComponent(
+      `Hi Mabbly team,\n\nMy map at /m/${slug} didn't finish generating. Please email me when it's ready.\n\nWebsite: ${websiteUrl}\nFirst name: ${firstName ?? '—'}\n\nThanks.`,
+    );
+    const mailtoHref = `mailto:beta@mabbly.com?subject=${mailtoSubject}&body=${mailtoBody}`;
     return (
       <MagnetShell firstName={firstName}>
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
-          <p
-            className="text-xs uppercase tracking-[0.32em] mb-4"
-            style={{ color: theme.accent }}
+          <div
+            className="w-full max-w-[520px] flex flex-col items-center text-center"
           >
-            SOMETHING WENT WRONG
-          </p>
-          <p className="text-lg text-center max-w-md mb-8 opacity-80">
-            We couldn't generate your breakdown. Please try again.
-          </p>
-          <button
-            onClick={() => navigate('/#hero')}
-            className="h-12 px-8 font-semibold tracking-wide uppercase text-sm transition-colors"
-            style={{
-              backgroundColor: theme.accent,
-              color: theme.accentForeground,
-            }}
-          >
-            Try Again
-          </button>
+            <p
+              className="text-xs uppercase tracking-[0.32em] mb-5"
+              style={{ color: theme.accent }}
+            >
+              Something held this up
+            </p>
+            <h1
+              className="font-display mb-4"
+              style={{
+                fontSize: 'clamp(28px, 4vw, 40px)',
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                color: theme.text,
+                fontWeight: 500,
+              }}
+            >
+              Your map isn't ready yet.
+            </h1>
+            <p
+              className="mb-10"
+              style={{
+                fontFamily: "'Inter Tight', system-ui, sans-serif",
+                fontSize: 16,
+                lineHeight: 1.55,
+                color: theme.text,
+                opacity: 0.72,
+                fontWeight: 400,
+              }}
+            >
+              Enrichment took longer than expected. This usually means the site
+              we read needed a closer look. We'll keep working on it &mdash; you
+              can retry now, or have us email you the moment it's ready.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-stretch sm:items-center justify-center mb-6">
+              <button
+                type="button"
+                onClick={retryEnrichment}
+                className="h-12 px-7 font-semibold tracking-[0.12em] uppercase text-[13px] transition-colors"
+                style={{
+                  backgroundColor: theme.accent,
+                  color: theme.accentForeground,
+                  borderRadius: 25,
+                }}
+              >
+                Try again now
+              </button>
+              <a
+                href={mailtoHref}
+                className="h-12 px-7 inline-flex items-center justify-center font-semibold tracking-[0.12em] uppercase text-[13px] transition-colors"
+                style={{
+                  background: 'transparent',
+                  color: theme.text,
+                  border: `1px solid ${theme.text}1a`,
+                  borderRadius: 25,
+                  textDecoration: 'none',
+                }}
+              >
+                Email me when ready
+              </a>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate('/#hero')}
+              className="text-[13px] underline underline-offset-4 transition-opacity hover:opacity-100"
+              style={{
+                color: theme.text,
+                opacity: 0.55,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              Back to the homepage
+            </button>
+          </div>
         </div>
       </MagnetShell>
     );
