@@ -11,6 +11,7 @@ import {
   buildClientTheme,
   MABBLY_DEFAULTS,
   DARK_BODY_LUMINANCE_THRESHOLD,
+  INDUSTRY_FALLBACK_BG,
   type RawBranding,
 } from "../clientTheme";
 
@@ -64,34 +65,55 @@ describe("buildClientTheme — v2 dark-body guard ON (Cravath fix)", () => {
     vi.unstubAllEnvs();
   });
 
-  it("Cravath case: forces cream body bg, keeps brand chrome dark", () => {
+  it("Cravath case: forces cream body bg, switches chrome to safe navy", () => {
     const raw: RawBranding = {
       client_company_name: "Cravath, Swaine & Moore",
       client_brand_color: "#A99054",
       client_background_color: "#0B1A2E",
-      brand_background: "#0B1A2E", // chrome bg stays dark
+      brand_background: "#0B1A2E",
     };
     const theme = buildClientTheme(raw);
     // Body bg now Mabbly cream.
     expect(theme.background.toLowerCase()).toBe(MABBLY_DEFAULTS.background.toLowerCase());
     // Text flips to ink (cream + ink AA: 16:1).
     expect(theme.text).toBe(MABBLY_DEFAULTS.text);
-    // Chrome bg preserved as the extracted navy.
-    expect(theme.brandBackground.toLowerCase()).toBe("#0b1a2e");
+    // Chrome bg switched to design-system fallback navy (cream-compatible
+    // via the existing color-mix logic in MagnetShell). The firm's accent
+    // color stays in brandAccent for links and accent rules.
+    expect(theme.brandBackground.toLowerCase()).toBe(INDUSTRY_FALLBACK_BG.toLowerCase());
+    expect(theme.brandAccent.toLowerCase()).toBe("#a99054");
   });
 
-  it("Slalom case: medium-blue body bg also forced cream when below threshold", () => {
-    // 0066CC luminance ≈ 0.13, below threshold (0.35), so v2 forces cream.
+  it("Slalom case (light body, blue chrome): no override, brand colors preserved", () => {
+    // Realistic Slalom extraction: body bg already light (cream-ish), chrome
+    // bg navy-blue. v2 dark-body guard does NOT trigger because body is light.
     const raw: RawBranding = {
       client_company_name: "Slalom",
       client_brand_color: "#0066CC",
-      client_background_color: "#0066CC",
+      client_background_color: "#FBF8F4",
       brand_background: "#0066CC",
     };
     const theme = buildClientTheme(raw);
-    expect(theme.background.toLowerCase()).toBe(MABBLY_DEFAULTS.background.toLowerCase());
-    // Brand chrome retains the extracted blue.
+    expect(theme.background.toLowerCase()).toBe("#fbf8f4");
     expect(theme.brandBackground.toLowerCase()).toBe("#0066cc");
+    expect(theme.brandAccent.toLowerCase()).toBe("#0066cc");
+  });
+
+  it("Both body AND chrome dark: chrome-safety swaps brandBackground to fallback navy", () => {
+    // Cravath-class: extracted body is deep navy AND brand_background is also
+    // deep navy. v2 forces body cream AND swaps chrome to INDUSTRY_FALLBACK_BG
+    // so the inner-section color-mix logic in MagnetShell remains legible.
+    const raw: RawBranding = {
+      client_company_name: "DeepNavyCo",
+      client_brand_color: "#A99054",
+      client_background_color: "#002554",
+      brand_background: "#001a3d",
+    };
+    const theme = buildClientTheme(raw);
+    expect(theme.background.toLowerCase()).toBe(MABBLY_DEFAULTS.background.toLowerCase());
+    expect(theme.brandBackground.toLowerCase()).toBe(INDUSTRY_FALLBACK_BG.toLowerCase());
+    // Firm's accent color stays — links, button text, accent rules use this.
+    expect(theme.brandAccent.toLowerCase()).toBe("#a99054");
   });
 
   it("Light-bg firm: above threshold, body bg untouched", () => {

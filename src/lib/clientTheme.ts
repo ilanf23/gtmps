@@ -276,6 +276,20 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
     brandBackground = INDUSTRY_FALLBACK_BG;
   }
 
+  // ── Dark-chrome safety (v2) ─────────────────────────────────────────────
+  // brandBackground powers `--brand-bg` which MagnetShell consumes via
+  // color-mix() for nested section surfaces (line 415, 519, etc.). When the
+  // extracted brand bg is *very* dark (Cravath's #002554, lum ≈ 0.02),
+  // those nested surfaces ship as near-pure-black with editorial cream-on-
+  // ink content rendered illegibly on top. Substitute the consulting
+  // INDUSTRY_FALLBACK_BG which the color-mix logic was originally designed
+  // around — keeps a navy chrome register but preserves contrast on the
+  // section cards. The firm's actual brand color stays as `brandAccent` for
+  // links, button text, and accent rules.
+  if (v2 && extractedIsTooDark && relLuminance(brandBackground) < DARK_BODY_LUMINANCE_THRESHOLD) {
+    brandBackground = INDUSTRY_FALLBACK_BG;
+  }
+
   return {
     logoUrl: raw.client_logo_url ?? null,
     companyName: raw.client_company_name ?? null,
