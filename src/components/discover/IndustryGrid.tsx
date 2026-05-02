@@ -10,59 +10,64 @@ export default function IndustryGrid() {
         .ig-root {
           width: 100%;
           background: #FAF9F5;
-          border-top: 1px solid rgba(168, 146, 58,0.15);
+          border-top: 1px solid rgba(213, 222, 212, 0.7);
           padding: 96px 24px;
         }
         @media (min-width: 768px) {
           .ig-root { padding: 112px 40px; }
         }
-        .ig-inner { max-width: 1180px; margin: 0 auto; }
+        .ig-inner {
+          max-width: 1180px;
+          margin: 0 auto;
+          text-align: center;
+        }
+        .ig-header {
+          max-width: 720px;
+          margin: 0 auto 48px;
+        }
         .ig-eyebrow {
-          font-family: 'DM Mono', 'Courier New', monospace;
-          font-size: 11px;
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 14px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #A8923A;
+          color: #FFBA1A;
           margin: 0 0 18px;
+          font-weight: 500;
         }
         .ig-rule {
           width: 44px; height: 2px;
-          background: linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3));
-          margin: 0 0 28px;
+          background: linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3));
+          margin: 0 auto 28px;
         }
         .ig-h2 {
-          font-family: var(--font-display);
-          font-weight: 900;
-          text-transform: uppercase;
-          font-size: clamp(32px, 4.4vw, 52px);
+          font-family: 'Inter Tight', sans-serif;
+          font-size: clamp(40px, 6vw, 72px);
           font-weight: 500;
-          line-height: 1.05;
-          letter-spacing: -0.025em;
-          color: #2A1A08;
+          line-height: 1.02;
+          letter-spacing: -0.035em;
+          color: #0F1E1D;
           margin: 0 0 18px;
         }
         .ig-sub {
-          font-family: var(--font-display);
-          font-weight: 900;
-          text-transform: uppercase;
-          font-size: clamp(17px, 1.5vw, 20px);
-          font-weight: 300;
-          color: rgba(42,26,8,0.65);
-          line-height: 1.5;
-          margin: 0 0 48px;
-          max-width: 560px;
+          font-family: 'Inter Tight', sans-serif;
+          font-size: clamp(17px, 1.6vw, 20px);
+          color: rgba(15, 30, 29, 0.62);
+          line-height: 1.55;
+          margin: 0;
+          font-weight: 400;
         }
 
         .ig-grid {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 16px;
+          gap: 14px;
+          text-align: left;
         }
         @media (min-width: 640px) {
-          .ig-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+          .ig-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
         }
         @media (min-width: 1024px) {
-          .ig-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+          .ig-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
         }
 
         .ig-card {
@@ -72,32 +77,32 @@ export default function IndustryGrid() {
           gap: 18px;
           padding: 28px 24px;
           background: #EDF5EC;
-          border: 1px solid rgba(168, 146, 58,0.18);
-          border-radius: 6px;
-          color: #2A1A08;
+          border: 1px solid rgba(213, 222, 212, 0.9);
+          border-radius: 4px;
+          color: #0F1E1D;
           text-decoration: none;
-          transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+          transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
           min-height: 140px;
         }
         .ig-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 18px 36px -16px rgba(168, 146, 58,0.45);
-          border-color: rgba(168, 146, 58,0.55);
+          transform: translateY(-3px);
+          border-color: #BF461A;
+          background: #FFFFFF;
         }
         .ig-card-icon {
-          color: #A8923A;
+          color: #225351;
           transition: color 220ms ease, transform 220ms ease;
         }
         .ig-card:hover .ig-card-icon {
-          color: #C4AC4A;
+          color: #BF461A;
           transform: scale(1.05);
         }
         .ig-card-name {
           font-family: 'Inter Tight', sans-serif;
           font-size: 16px;
-          font-weight: 500;
+          font-weight: 600;
           line-height: 1.25;
-          color: #2A1A08;
+          color: #0F1E1D;
           margin: 0;
           letter-spacing: -0.005em;
         }
@@ -111,40 +116,41 @@ export default function IndustryGrid() {
           text-align: center;
         }
         .ig-foot-text {
-          font-family: var(--font-display);
-          font-weight: 900;
-          text-transform: uppercase;
-          font-size: 18px;
-          font-weight: 300;
-          color: rgba(42,26,8,0.65);
+          font-family: 'Inter Tight', sans-serif;
+          font-size: 17px;
+          color: rgba(15, 30, 29, 0.62);
           margin: 0;
+          font-weight: 400;
+          line-height: 1.55;
         }
-        .ig-foot-text em { color: #A8923A; font-style: normal; font-weight: 500; }
+        .ig-foot-text em { color: #BF461A; font-style: normal; font-weight: 600; }
         .ig-cta {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          background: linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%);
-          color: #0F1E1D;
+          background: #BF461A;
+          color: #EDF5EC;
           font-family: 'Inter Tight', sans-serif;
           font-weight: 600;
           font-size: 14px;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
           padding: 14px 28px;
-          border-radius: 999px;
+          border-radius: 25px;
           text-decoration: none;
-          transition: transform 180ms ease, box-shadow 180ms ease;
-          box-shadow: 0 6px 20px -8px rgba(168, 146, 58,0.55);
+          transition: transform 180ms ease, background 180ms ease;
         }
-        .ig-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(168, 146, 58,0.7); }
+        .ig-cta:hover { transform: translateY(-1px); background: #803402; }
       `}</style>
 
       <section id="industries" className="ig-root">
         <div className="ig-inner">
-          <p className="ig-eyebrow">07 · Find Your Industry</p>
-          <div className="ig-rule" aria-hidden />
-          <h2 className="ig-h2">Built for relationship-driven firms.</h2>
-          <p className="ig-sub">One framework. Eight verticals. Pick yours.</p>
+          <div className="ig-header">
+            <p className="ig-eyebrow">07 · Find Your Industry</p>
+            <div className="ig-rule" aria-hidden />
+            <h2 className="ig-h2">Built for relationship-driven firms.</h2>
+            <p className="ig-sub">One framework. Eight verticals. Pick yours.</p>
+          </div>
 
           <div className="ig-grid">
             {NAV_VERTICAL_LINKS.map((v) => {

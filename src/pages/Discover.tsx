@@ -350,36 +350,53 @@ const SectionPromisedLand = () => {
       }}
     >
       <div className="max-w-[1100px] mx-auto">
-        <div className="text-center mx-auto" style={{ maxWidth: 720 }}>
+        <div className="mx-auto" style={{ maxWidth: 760, textAlign: "center" }}>
           <p
-            className="font-mono uppercase"
-            style={{ fontSize: 11, letterSpacing: "0.32em", color: "#8B7F3F" }}
-          >
-            The System
-          </p>
-          <h2
-            className="font-display mx-auto"
             style={{
-              marginTop: 24,
-              color: "#0F1E1D",
-              fontSize: "clamp(40px, 5vw, 64px)",
-              lineHeight: 1.02,
-              letterSpacing: "-0.025em",
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 14,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: "#FFBA1A",
+              margin: 0,
               fontWeight: 500,
+            }}
+          >
+            04 · The System
+          </p>
+          <div
+            aria-hidden
+            style={{
+              width: 44,
+              height: 2,
+              background: "linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3))",
+              margin: "18px auto 28px",
+            }}
+          />
+          <h2
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              color: "#0F1E1D",
+              fontSize: "clamp(40px, 6vw, 72px)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.035em",
+              fontWeight: 500,
+              margin: 0,
             }}
           >
             The Relationship Revenue OS
           </h2>
           <p
-            className="font-display mx-auto"
             style={{
-              marginTop: 24,
-              color: "rgba(26,24,20,0.7)",
-              fontSize: 18,
+              marginTop: 18,
+              color: "rgba(15, 30, 29, 0.62)",
+              fontSize: "clamp(17px, 1.6vw, 20px)",
               lineHeight: 1.55,
-              fontWeight: 300,
+              fontWeight: 400,
+              fontFamily: "'Inter Tight', sans-serif",
               maxWidth: 600,
-              letterSpacing: "-0.005em",
+              marginLeft: "auto",
+              marginRight: "auto",
             }}
           >
             Map every relationship you own. Start with the ones you know. From Signal to Response, not Pitch.
@@ -390,8 +407,9 @@ const SectionPromisedLand = () => {
           style={{
             marginTop: 72,
             marginBottom: 16,
-            background: "#0A0807",
-            border: "1px solid rgba(15, 30, 29,0.10)",
+            background: "#0F1E1D",
+            border: "1px solid rgba(34, 83, 81, 0.4)",
+            borderRadius: 4,
             padding: "56px 32px",
           }}
         >

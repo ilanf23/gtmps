@@ -65,8 +65,8 @@ export default function Results() {
           .rs-grid { grid-template-columns: repeat(3, 1fr); }
         }
         .rs-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(168, 146, 58,0.18);
+          background: #1A2B2A;
+          border: 1px solid rgba(213, 222, 212, 0.10);
           border-radius: 4px;
           padding: 36px 28px;
           position: relative;
@@ -82,8 +82,8 @@ export default function Results() {
           left: 0;
           width: 16px;
           height: 16px;
-          border-top: 2px solid rgba(168, 146, 58,0.55);
-          border-left: 2px solid rgba(168, 146, 58,0.55);
+          border-top: 2px solid rgba(255, 186, 26, 0.6);
+          border-left: 2px solid rgba(255, 186, 26, 0.6);
         }
         .rs-card::after {
           content: '';
@@ -92,19 +92,19 @@ export default function Results() {
           right: 0;
           width: 16px;
           height: 16px;
-          border-bottom: 2px solid rgba(168, 146, 58,0.55);
-          border-right: 2px solid rgba(168, 146, 58,0.55);
+          border-bottom: 2px solid rgba(255, 186, 26, 0.6);
+          border-right: 2px solid rgba(255, 186, 26, 0.6);
         }
         .rs-card:hover {
-          background: rgba(255,255,255,0.06);
-          border-color: rgba(168, 146, 58,0.45);
+          background: #213635;
+          border-color: rgba(213, 222, 212, 0.20);
           transform: translateY(-3px);
         }
         .rs-industry {
           font-family: 'Inter Tight', sans-serif;
           font-size: 11px;
           letter-spacing: 0.18em;
-          color: rgba(168, 146, 58,0.85);
+          color: rgba(255, 186, 26, 0.90);
           font-weight: 500;
           margin: 0 0 20px;
           line-height: 1.4;
@@ -112,8 +112,8 @@ export default function Results() {
         .rs-bignum {
           font-family: 'Inter Tight', sans-serif;
           font-size: clamp(48px, 5vw, 64px);
-          font-weight: 600;
-          color: #A8923A;
+          font-weight: 700;
+          color: #FFBA1A;
           line-height: 1;
           letter-spacing: -0.04em;
           margin: 0 0 12px;
@@ -121,7 +121,7 @@ export default function Results() {
         .rs-label {
           font-family: 'Inter Tight', sans-serif;
           font-size: 14px;
-          color: rgba(237, 245, 236,0.7);
+          color: rgba(237, 245, 236,0.78);
           line-height: 1.5;
           font-weight: 400;
           margin: 0 0 16px;
@@ -129,18 +129,18 @@ export default function Results() {
         .rs-detail {
           font-family: 'Inter Tight', sans-serif;
           font-size: 13.5px;
-          color: rgba(237, 245, 236,0.5);
+          color: rgba(237, 245, 236,0.55);
           line-height: 1.6;
-          font-weight: 300;
+          font-weight: 400;
           margin: 0 0 20px;
         }
         .rs-quote {
           font-family: 'Cormorant Garamond', Georgia, serif;
           font-size: 16px;
-          color: rgba(237, 245, 236,0.85);
+          color: rgba(237, 245, 236,0.88);
           font-style: italic;
           line-height: 1.5;
-          border-left: 2px solid #A8923A;
+          border-left: 2px solid #FFBA1A;
           padding-left: 14px;
           margin: 0 0 12px;
         }
@@ -149,7 +149,7 @@ export default function Results() {
           font-size: 11px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(168, 146, 58,0.75);
+          color: rgba(213, 222, 212, 0.65);
           font-weight: 500;
           margin: 0 0 18px;
         }
@@ -158,65 +158,68 @@ export default function Results() {
           font-size: 12px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #A8923A;
+          color: #BF461A;
           text-decoration: none;
           margin-top: auto;
           padding-top: 12px;
-          border-top: 1px solid rgba(168, 146, 58,0.18);
+          border-top: 1px solid rgba(213, 222, 212, 0.12);
           transition: color 0.18s;
+          font-weight: 600;
         }
-        .rs-link:hover { color: #C4AC4A; }
+        .rs-link:hover { color: #D8633A; }
       `}</style>
 
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <p
-          style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 14,
-            letterSpacing: '0.32em',
-            textTransform: 'uppercase',
-            color: '#A8923A',
-            margin: 0,
-            fontWeight: 500,
-          }}
-        >
-          12 · PROOF
-        </p>
-        <div
-          aria-hidden
-          style={{
-            width: 44,
-            height: 2,
-            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
-            margin: '18px 0 28px',
-            animation: 'growRule 0.8s ease both',
-          }}
-        />
-        <h2
-          style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 'clamp(48px, 7vw, 88px)',
-            fontWeight: 500,
-            color: '#EDF5EC',
-            lineHeight: 0.98,
-            letterSpacing: '-0.035em',
-            margin: '0 0 18px',
-          }}
-        >
-          The framework works in the field.
-        </h2>
-        <p
-          style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 'clamp(18px, 1.8vw, 22px)',
-            color: 'rgba(237, 245, 236,0.5)',
-            margin: '0 0 56px',
-            fontWeight: 300,
-            lineHeight: 1.5,
-          }}
-        >
-          Three documented cases. Real firms. Real outcomes. Real quotes.
-        </p>
+        <div style={{ maxWidth: 760, margin: '0 auto 56px', textAlign: 'center' }}>
+          <p
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 14,
+              letterSpacing: '0.32em',
+              textTransform: 'uppercase',
+              color: '#FFBA1A',
+              margin: 0,
+              fontWeight: 500,
+            }}
+          >
+            12 · Proof
+          </p>
+          <div
+            aria-hidden
+            style={{
+              width: 44,
+              height: 2,
+              background: 'linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26,0.3))',
+              margin: '18px auto 28px',
+              animation: 'growRule 0.8s ease both',
+            }}
+          />
+          <h2
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 'clamp(40px, 6vw, 72px)',
+              fontWeight: 500,
+              color: '#EDF5EC',
+              lineHeight: 1.0,
+              letterSpacing: '-0.035em',
+              margin: '0 0 18px',
+            }}
+          >
+            The framework works in the field.
+          </h2>
+          <p
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 'clamp(17px, 1.6vw, 20px)',
+              color: 'rgba(237, 245, 236,0.62)',
+              margin: 0,
+              fontWeight: 400,
+              lineHeight: 1.55,
+            }}
+          >
+            Three documented cases. Real firms. Real outcomes. Real quotes.
+          </p>
+        </div>
 
         <div className="rs-grid">
           {CASES.map((c) => (
