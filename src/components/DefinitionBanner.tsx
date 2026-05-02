@@ -16,9 +16,8 @@ const DefinitionBanner = () => {
           THE DEFINITION THAT CHANGES EVERYTHING
         </p>
         <p
-          className="scroll-reveal"
+          className="scroll-reveal font-serif"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
             fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)",
             lineHeight: 1.6,

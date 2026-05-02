@@ -130,8 +130,8 @@ export default function WhyNow() {
           }}
         >
           <p
+            className="font-serif"
             style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: 'clamp(18px, 2.8vw, 28px)',
               fontStyle: 'italic',
               color: '#A8923A',

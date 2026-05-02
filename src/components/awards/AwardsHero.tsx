@@ -95,7 +95,7 @@ export default function AwardsHero() {
           margin: 0 0 28px;
         }
         .ah-sub {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-style: italic;
           font-size: clamp(18px, 2.4vw, 24px);
           line-height: 1.5;

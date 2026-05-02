@@ -67,7 +67,7 @@ export default function VerticalLanding({ vertical }: Props) {
           margin: 0 0 28px;
         }
         .vl-h2 {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: clamp(36px, 5.4vw, 64px);
           font-weight: 500;
           line-height: 1.04;
@@ -76,7 +76,7 @@ export default function VerticalLanding({ vertical }: Props) {
           margin: 0 0 24px;
         }
         .vl-sub {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: clamp(18px, 1.7vw, 22px);
           font-weight: 300;
           color: rgba(42,26,8,0.65);
@@ -170,7 +170,7 @@ export default function VerticalLanding({ vertical }: Props) {
           gap: 10px;
         }
         .vl-sizing-num {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: clamp(36px, 4.5vw, 56px);
           font-weight: 500;
           line-height: 1;
@@ -260,7 +260,7 @@ export default function VerticalLanding({ vertical }: Props) {
           padding: 28px 26px;
         }
         .vl-pain-card-title {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 24px;
           font-weight: 500;
           line-height: 1.2;
@@ -285,7 +285,7 @@ export default function VerticalLanding({ vertical }: Props) {
         }
         .vl-q-inner { max-width: 900px; margin: 0 auto; }
         .vl-q-h {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: clamp(32px, 4.5vw, 52px);
           font-weight: 400;
           line-height: 1.08;
@@ -303,7 +303,7 @@ export default function VerticalLanding({ vertical }: Props) {
           counter-increment: vlq;
           padding: 24px 0;
           border-bottom: 1px solid rgba(184,147,58,0.18);
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: clamp(20px, 2.4vw, 28px);
           font-weight: 400;
           line-height: 1.32;
@@ -347,7 +347,7 @@ export default function VerticalLanding({ vertical }: Props) {
         }
         .vl-case:last-child { margin-bottom: 0; }
         .vl-case-firm {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 28px;
           font-weight: 500;
           color: #2A1A08;
@@ -377,7 +377,7 @@ export default function VerticalLanding({ vertical }: Props) {
         .vl-case-quote {
           border-left: 2px solid #B8933A;
           padding: 8px 0 8px 20px;
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 20px;
           line-height: 1.4;
           font-style: italic;
@@ -399,7 +399,7 @@ export default function VerticalLanding({ vertical }: Props) {
           border: 1px dashed rgba(184,147,58,0.35);
           border-radius: 4px;
           padding: 36px 32px;
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 20px;
           line-height: 1.5;
           color: #2A1A08;
@@ -446,7 +446,7 @@ export default function VerticalLanding({ vertical }: Props) {
           padding: 24px 0;
         }
         .vl-author-name {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 24px;
           font-weight: 500;
           color: #2A1A08;
@@ -485,7 +485,7 @@ export default function VerticalLanding({ vertical }: Props) {
           padding: 24px 0;
         }
         .vl-faq-q {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-size: 22px;
           font-weight: 500;
           color: #2A1A08;
@@ -723,8 +723,8 @@ export default function VerticalLanding({ vertical }: Props) {
                       {o.id}
                     </span>
                     <span
+                      className="font-serif"
                       style={{
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
                         fontSize: 'clamp(20px, 2.2vw, 26px)',
                         fontWeight: 500,
                         color: '#F5EFE0',

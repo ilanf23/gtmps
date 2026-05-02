@@ -30,7 +30,13 @@ const Aletheia = () => {
   }, []);
 
   return (
-    <main style={{ backgroundColor: "#0B1A2E", color: "#F5F1E8" }}>
+    <main
+      data-theme="dark"
+      style={{
+        backgroundColor: "var(--color-surface-page)",
+        color: "var(--color-text-primary)",
+      }}
+    >
       <AletheiaNav />
       <AletheiaHero />
       <AletheiaCore />

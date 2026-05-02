@@ -24,7 +24,7 @@ export default function AwardsManuscriptQuote() {
           margin: 0 0 32px;
         }
         .amq-quote {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-serif);
           font-style: italic;
           font-weight: 400;
           font-size: clamp(28px, 4vw, 44px);
