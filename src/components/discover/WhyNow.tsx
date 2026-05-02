@@ -14,23 +14,24 @@ export default function WhyNow() {
       >
         <p
           style={{
-            fontFamily: "'DM Mono', 'Courier New', monospace",
-            fontSize: 9,
+            fontFamily: "'Inter Tight', sans-serif",
+            fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
             color: '#A8923A',
             margin: 0,
+            fontWeight: 500,
           }}
         >
-          05 · WHY NOW
+          05 · Why Now
         </p>
         <div
           aria-hidden
           style={{
-            width: 28,
-            height: 1,
+            width: 44,
+            height: 2,
             background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
-            margin: '12px 0 18px',
+            margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
         />
@@ -69,28 +70,29 @@ export default function WhyNow() {
           >
             <div
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 48,
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 56,
                 fontWeight: 700,
                 color: '#A8923A',
                 lineHeight: 1,
+                letterSpacing: '-0.02em',
               }}
             >
               73%
             </div>
             <div
               style={{
-                fontFamily: "'Inter Tight', system-ui, sans-serif",
-                fontSize: 11,
-                color: 'rgba(237, 245, 236,0.4)',
+                fontFamily: "'Inter Tight', sans-serif",
+                fontSize: 13,
+                color: 'rgba(237, 245, 236,0.6)',
                 lineHeight: 1.5,
-                marginTop: 8,
+                marginTop: 10,
               }}
             >
               of PS buyers say they will evaluate an AI-native firm before 2026
               <span
                 title="Source: Mabbly cohort survey, n=30 PS firms, 2025."
-                style={{ marginLeft: 4, opacity: 0.6, cursor: 'help' }}
+                style={{ marginLeft: 4, opacity: 0.7, cursor: 'help' }}
               >
                 ¹
               </span>
@@ -99,10 +101,11 @@ export default function WhyNow() {
         </div>
         <p
           style={{
-            fontFamily: "'Inter Tight', system-ui, sans-serif",
-            fontSize: 10,
-            color: 'rgba(237, 245, 236,0.35)',
-            margin: '4px 0 24px',
+            fontFamily: "'Inter Tight', sans-serif",
+            fontSize: 12,
+            color: 'rgba(237, 245, 236,0.55)',
+            margin: '4px 0 28px',
+            lineHeight: 1.5,
           }}
         >
           ¹ Source: Mabbly cohort survey, n=30 PS firms, 2025.
@@ -110,13 +113,13 @@ export default function WhyNow() {
 
         <p
           style={{
-            fontFamily: "'Inter Tight', system-ui, sans-serif",
-            fontSize: 14,
-            lineHeight: 1.75,
-            color: 'rgba(237, 245, 236,0.65)',
+            fontFamily: "'Inter Tight', sans-serif",
+            fontSize: 'clamp(16px, 1.4vw, 18px)',
+            lineHeight: 1.65,
+            color: 'rgba(237, 245, 236,0.78)',
             maxWidth: 640,
-            marginBottom: 28,
-            margin: '0 0 28px',
+            margin: '0 0 36px',
+            fontWeight: 400,
           }}
         >
           The firms building a relationship system now will own the categories
