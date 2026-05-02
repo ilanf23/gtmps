@@ -6,6 +6,7 @@ import MagnetShell from '@/components/magnet/MagnetShell';
 import MagnetWaitTheater from '@/components/magnet/MagnetWaitTheater';
 import { useClientTheme } from '@/hooks/useClientTheme';
 import { resolveVerticalSlug } from '@/content/verticalFlow';
+import { displayNameFromSlug, isCanonicalNameMismatch } from '@/lib/magnetSlug';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
@@ -184,6 +185,15 @@ export default function MagnetSite() {
 
   if (status === 'complete') {
     const booked = searchParams.get('booked') === 'true';
+    // Disambiguation: if the slug-derived name diverges from the canonical
+    // name resolved by enrichment (e.g. user submitted "marcum.com" but the
+    // domain now redirects to CBIZ post-acquisition), surface that explicitly
+    // so the page doesn't silently rebrand the URL the user typed.
+    const submittedName = displayNameFromSlug(slug);
+    const showDisambiguation =
+      !!submittedName &&
+      !!companyName &&
+      isCanonicalNameMismatch(submittedName, companyName);
     return (
       <MagnetShell firstName={firstName}>
         {booked && (
@@ -198,6 +208,25 @@ export default function MagnetSite() {
           >
             Booked. Adam will see you on the call. Check your email for the
             confirmation.
+          </div>
+        )}
+        {showDisambiguation && (
+          <div
+            role="status"
+            aria-live="polite"
+            data-testid="magnet-name-disambiguation"
+            className="px-4 py-2.5 text-center text-xs sm:text-sm border-b"
+            style={{
+              backgroundColor: `color-mix(in srgb, ${theme.accent} 10%, transparent)`,
+              color: theme.text,
+              borderColor: `color-mix(in srgb, ${theme.accent} 24%, transparent)`,
+            }}
+          >
+            <span className="opacity-70">Submitted as</span>{' '}
+            <span className="font-semibold">{submittedName}</span>{' '}
+            <span className="opacity-70">·</span>{' '}
+            <span className="opacity-70">resolved to</span>{' '}
+            <span className="font-semibold">{companyName}</span>
           </div>
         )}
         <MagnetBreakdown

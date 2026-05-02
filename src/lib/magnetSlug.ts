@@ -80,3 +80,57 @@ export function displayNameFromSlug(slug: string | null | undefined): string | n
     .join(' ');
 }
 
+/**
+ * Normalize a firm name for equivalence checks: strip whitespace, punctuation,
+ * common legal/marketing suffixes, and lowercase. Used to decide whether the
+ * slug-derived "submitted name" and the enrichment-derived "canonical name"
+ * are meaningfully different.
+ *
+ * Examples:
+ *   'Marcum LLP'        → 'marcum'
+ *   'CBIZ, Inc.'        → 'cbiz'
+ *   'Foo & Bar Group'   → 'foobar'
+ *   'foo-bar'           → 'foobar'
+ */
+export function normalizeFirmName(input: string | null | undefined): string {
+  const raw = (input ?? '').toString().trim().toLowerCase();
+  if (!raw) return '';
+  // Drop common corporate suffixes — these often appear on the canonical
+  // name from enrichment but never on a slug.
+  const suffixStripped = raw
+    .replace(
+      /\b(llp|llc|inc|incorporated|ltd|limited|plc|pllc|pc|pa|corp|corporation|company|co|group|partners|partnership|holdings|consulting|advisors|advisory|associates|the)\b/g,
+      ' ',
+    )
+    .replace(/&/g, ' and ');
+  // Strip every non-alphanumeric char (handles spaces, hyphens, commas, dots).
+  return suffixStripped.replace(/[^a-z0-9]/g, '');
+}
+
+/**
+ * True when the submitted (slug-derived) firm name and the canonical firm
+ * name from enrichment refer to substantially different firms.
+ *
+ * Returns false (i.e. "no disambiguation needed") when:
+ *   - either name is empty
+ *   - normalized strings are equal
+ *   - one normalized string is a prefix/substring of the other (e.g. slug
+ *     'aarete' vs canonical 'AArete Consulting' → still the same firm)
+ *
+ * Returns true when the names diverge meaningfully — this is the signal
+ * for the disambiguation banner (e.g. user submitted "marcum" but
+ * enrichment resolved to "CBIZ" because Marcum was acquired).
+ */
+export function isCanonicalNameMismatch(
+  submittedName: string | null | undefined,
+  canonicalName: string | null | undefined,
+): boolean {
+  const a = normalizeFirmName(submittedName);
+  const b = normalizeFirmName(canonicalName);
+  if (!a || !b) return false;
+  if (a === b) return false;
+  // Treat as same firm when one is contained in the other.
+  if (a.includes(b) || b.includes(a)) return false;
+  return true;
+}
+
