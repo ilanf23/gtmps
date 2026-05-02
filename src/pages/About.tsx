@@ -13,7 +13,7 @@ import { useRevealRef, revealStyle } from "@/hooks/useRevealRef";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const ADD_YOUR_FIRM_HREF = "/#hero";
-const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
+const ADD_YOUR_FIRM_LABEL = "Get MY Map →";
 const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
 
 /* ─────────────────────────────────────────────
@@ -337,7 +337,7 @@ const pullQuoteDark: React.CSSProperties = {
 };
 const pullQuoteLight: React.CSSProperties = { ...pullQuoteDark, color: "rgba(15, 30, 29,0.92)" };
 
-/* Outline gold CTA (secondary). Primary gold pill stays exclusive to "Add Your Firm". */
+/* Outline gold CTA (secondary). Primary gold pill stays exclusive to "Get MY Map". */
 const outlineCtaBase: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",

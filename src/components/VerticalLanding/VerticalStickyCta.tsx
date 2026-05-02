@@ -4,7 +4,7 @@ import { useInlineCtaVisible } from '@/hooks/useInlineCtaVisible';
 
 type Props = { label?: string; vertical?: string };
 
-export default function VerticalStickyCta({ label = 'Add Your Firm →', vertical }: Props) {
+export default function VerticalStickyCta({ label = 'Get MY Map →', vertical }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const footerVisible = useFooterVisible(0.05);
   const inlineVisible = useInlineCtaVisible(0.5);

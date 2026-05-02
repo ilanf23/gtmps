@@ -183,19 +183,6 @@ export default function DeadZone() {
           .dz-root { padding: 24px 18px; }
         }
 
-        .dz-blob {
-          position: absolute;
-          top: 80px;
-          right: -120px;
-          width: 480px;
-          height: 510px;
-          opacity: 0.18;
-          pointer-events: none;
-          z-index: 0;
-        }
-        .dz-blob svg { width: 100%; height: 100%; display: block; }
-        @media (max-width: 979px) { .dz-blob { display: none; } }
-
         .dz-section-meta {
           font-family: 'DM Mono', 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace;
           font-size: 11px;
@@ -796,15 +783,6 @@ export default function DeadZone() {
       `}</style>
 
       <div className="dz-root">
-        <div className="dz-blob" aria-hidden="true">
-          <svg viewBox="0 0 576 610" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M537.319 540.412L227.81 609.6L34.3851 540.412L0 302.629L34.3851 34.5832L270.807 0L537.319 34.5832L576 259.406L537.319 540.412Z"
-              fill="#CBD3CA"
-            />
-          </svg>
-        </div>
-
         <p className="dz-section-meta">
           05 / The Problem
           <span className="dz-section-meta-rule" aria-hidden="true" />

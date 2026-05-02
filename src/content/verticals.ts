@@ -75,7 +75,7 @@ export type VerticalContent = {
   };
   faq: FaqItem[];
   // Optional vertical-specific overrides (currently used by /law)
-  ctaLabel?: string;            // overrides "Add Your Firm →"
+  ctaLabel?: string;            // overrides "Get MY Map →"
   sizingEyebrow?: string;       // overrides "B · INDUSTRY REALITY"
   deadZoneTooltip?: string;     // first-use Dead Zone explainer
   rrosTooltip?: string;         // first-use RROS explainer

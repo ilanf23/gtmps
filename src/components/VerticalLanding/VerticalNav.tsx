@@ -239,7 +239,7 @@ export default function VerticalNav({ currentSlug }: Props) {
               href="#add-your-firm"
               className="vn-cta"
             >
-              Add Your Firm →
+              Get MY Map →
             </a>
           </div>
 
@@ -290,7 +290,7 @@ export default function VerticalNav({ currentSlug }: Props) {
             className="vn-mobile-cta"
             onClick={() => setOpen(false)}
           >
-            Add Your Firm →
+            Get MY Map →
           </a>
         </div>
       )}

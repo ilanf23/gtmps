@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
  * Watches the DOM for any element tagged `data-cta="add-your-firm"` and
  * returns true while one or more of them are intersecting the viewport.
  *
- * Used by the sticky bottom "Add Your Firm" pill to suppress itself when
+ * Used by the sticky bottom "Get MY Map" pill to suppress itself when
  * the user already has an inline equivalent on screen.
  */
 const SELECTOR = '[data-cta="add-your-firm"]';

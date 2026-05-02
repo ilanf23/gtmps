@@ -11,7 +11,7 @@ import VerticalStickyCta from './VerticalStickyCta';
 
 type Props = { vertical: VerticalContent };
 
-const DEFAULT_CTA = 'Add Your Firm →';
+const DEFAULT_CTA = 'Get MY Map →';
 
 export default function VerticalLanding({ vertical }: Props) {
   const ctaLabel = vertical.ctaLabel ?? DEFAULT_CTA;

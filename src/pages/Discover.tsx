@@ -28,7 +28,7 @@ import FinalCta from '@/components/discover/FinalCta';
 import AdamNote from '@/components/discover/AdamNote';
 import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
 
-const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
+const ADD_YOUR_FIRM_LABEL = "Get MY Map →";
 
 const handleAddYourFirmClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault();
