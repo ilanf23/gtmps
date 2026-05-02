@@ -35,6 +35,17 @@ export default function MapSection() {
         .ms-right { animation: fadeUp 0.7s ease 0.25s both; }
       `}</style>
 
+      <div
+        style={{
+          maxWidth: 1280,
+          margin: '0 auto',
+          background: '#FBF8F4',
+          borderRadius: 6,
+          border: '1px solid #D5DEC2',
+          boxShadow: '0 4px 24px -8px rgba(15, 30, 29, 0.08)',
+          padding: 'clamp(36px, 4vw, 56px) clamp(28px, 3.5vw, 48px)',
+        }}
+      >
       <div className="ms-grid">
         <div className="ms-left">
           <p
@@ -179,15 +190,9 @@ export default function MapSection() {
         <div className="ms-right">
           <div
             style={{
-              background: '#FBF8F4',
-              borderRadius: 6,
-              padding: 'clamp(36px, 4vw, 56px) clamp(28px, 3.5vw, 48px)',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
-              overflow: 'hidden',
-              border: '1px solid #D5DEC2',
-              boxShadow: '0 4px 24px -8px rgba(15, 30, 29, 0.08)',
             }}
           >
             {/* Compass illustration */}
@@ -343,6 +348,7 @@ export default function MapSection() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

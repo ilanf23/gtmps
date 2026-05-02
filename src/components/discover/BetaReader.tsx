@@ -1,264 +1,256 @@
-import { Link } from 'react-router-dom';
 import { scrollToHero } from '@/lib/scrollToHero';
-
-const BADGES = ['AArete', 'West Monroe', 'Kearney', 'Accenture', 'Madcraft'];
-
-const eyebrow: React.CSSProperties = {
-  fontFamily: "'Inter Tight', sans-serif",
-  fontSize: 14,
-  letterSpacing: '0.32em',
-  textTransform: 'uppercase',
-  color: '#A8923A',
-  margin: 0,
-  fontWeight: 500,
-};
-
-const goldRule: React.CSSProperties = {
-  width: 44,
-  height: 2,
-  background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
-  margin: '18px 0 28px',
-  animation: 'growRule 0.8s ease both',
-};
-
-const inputStyle: React.CSSProperties = {
-  background: '#FBF8F4',
-  border: '1px solid #D5DEC2',
-  borderRadius: 3,
-  padding: '16px 20px',
-  fontFamily: "'Inter Tight', sans-serif",
-  fontSize: 18,
-  color: '#0F1E1D',
-  marginBottom: 14,
-  width: '100%',
-  outline: 'none',
-  fontWeight: 400,
-};
 
 export default function BetaReader() {
   return (
     <section
       id="beta-reader"
-      className="px-6 md:px-10"
-      style={{
-        background: '#FBF8F4',
-        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
-        paddingTop: "clamp(64px, 12vw, 144px)",
-        paddingBottom: "clamp(64px, 12vw, 144px)",
-      }}
+      className="ea-band"
+      aria-label="Early Access"
     >
       <style>{`
-        .br-input::placeholder { color: rgba(15, 30, 29, 0.4); }
-        .br-input:focus { border-color: rgba(168, 146, 58,0.65); }
-        .br-grid {
+        .ea-band {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+          background: #0F1E1D;
+          padding: 38px 67px;
+          animation: eaBandIn 700ms cubic-bezier(0.13, 0.28, 0.3, 1) both;
+        }
+        .ea-band::before {
+          content: "";
+          position: absolute;
+          top: -120px; left: -120px;
+          width: 360px; height: 360px;
+          background: radial-gradient(circle, rgba(255, 186, 26, 0.10) 0%, transparent 60%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .ea-band::after {
+          content: "";
+          position: absolute;
+          bottom: -100px; right: -100px;
+          width: 320px; height: 320px;
+          background: radial-gradient(circle, rgba(191, 70, 26, 0.14) 0%, transparent 60%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .ea-row {
+          position: relative;
+          z-index: 1;
           max-width: 1280px;
           margin: 0 auto;
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 56px;
-          align-items: start;
+          grid-template-columns: 1.4fr 1fr;
+          gap: 58px;
+          align-items: center;
         }
-        @media (min-width: 1024px) {
-          .br-grid { grid-template-columns: 52% 48%; gap: 72px; }
+        .ea-left {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
         }
-        .br-left { animation: fadeUp 0.7s ease 0.1s both; }
-        .br-right { animation: fadeUp 0.7s ease 0.3s both; }
-        .br-badge {
-          border: 1px solid #D5DEC2;
-          border-radius: 3px;
-          padding: 8px 16px;
-          font-family: 'Inter Tight', sans-serif;
-          font-size: 12.5px;
-          letter-spacing: 0.12em;
-          color: #6A5038;
+        .ea-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 6px 14px;
+          background: rgba(255, 186, 26, 0.12);
+          border: 1px solid rgba(255, 186, 26, 0.45);
+          border-radius: 100px;
+          width: fit-content;
+          font-family: 'DM Mono', 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 12px;
+          letter-spacing: 0.22em;
           text-transform: uppercase;
-          cursor: default;
-          font-weight: 500;
-          transition: border-color 0.18s, color 0.18s, background 0.18s;
+          color: #FFBA1A;
         }
-        .br-badge:hover {
-          border-color: rgba(168, 146, 58,0.65);
-          color: #9A7020;
-          background: rgba(168, 146, 58,0.08);
+        .ea-pill .ea-num {
+          color: #EDF5EC;
+          margin-right: 4px;
+        }
+        .ea-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #FFBA1A;
+          box-shadow: 0 0 10px rgba(255, 186, 26, 0.7);
+          animation: eaPulseDot 1.6s ease-in-out infinite;
+        }
+        .ea-headline {
+          font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+          font-weight: 900;
+          font-size: clamp(34px, 4.1vw, 53px);
+          line-height: 1.04;
+          letter-spacing: -0.02em;
+          color: #EDF5EC;
+          max-width: 22ch;
+          margin: 0;
+        }
+        .ea-headline .ea-period {
+          color: #FFBA1A;
+        }
+        .ea-form {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin: 0;
+        }
+        .ea-input-row {
+          display: flex;
+          gap: 12px;
+          align-items: stretch;
+        }
+        .ea-input {
+          flex: 1;
+          font-family: 'DM Mono', 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 17px;
+          letter-spacing: -0.01em;
+          color: #EDF5EC;
+          padding: 17px 19px;
+          background: rgba(237, 245, 236, 0.06);
+          border: 1.5px solid rgba(237, 245, 236, 0.18);
+          border-radius: 10px;
+          outline: none;
+          transition: border-color 200ms, background 200ms, box-shadow 200ms;
+        }
+        .ea-input::placeholder {
+          color: rgba(237, 245, 236, 0.45);
+        }
+        .ea-input:focus {
+          border-color: #BF461A;
+          background: rgba(237, 245, 236, 0.1);
+          box-shadow: 0 0 0 3px rgba(191, 70, 26, 0.18);
+        }
+        .ea-submit {
+          position: relative;
+          overflow: hidden;
+          font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+          font-weight: 900;
+          font-size: 16px;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #EDF5EC;
+          background: #BF461A;
+          padding: 17px 26px;
+          border-radius: 10px;
+          border: none;
+          cursor: pointer;
+          box-shadow: 0 6px 16px -6px rgba(191, 70, 26, 0.55);
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          white-space: nowrap;
+          transition: background 200ms, color 200ms, transform 200ms;
+        }
+        .ea-submit:hover {
+          background: #EDF5EC;
+          color: #0F1E1D;
+          transform: translateY(-1px);
+        }
+        .ea-submit .ea-arrow {
+          display: inline-block;
+          transition: transform 350ms cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        .ea-submit:hover .ea-arrow {
+          transform: translateX(4px);
+        }
+        .ea-submit::before {
+          content: "";
+          position: absolute;
+          top: 0; left: -100%;
+          width: 60%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(237, 245, 236, 0.22), transparent);
+          animation: eaShimmer 3.5s ease-in-out infinite;
+          pointer-events: none;
+        }
+        .ea-trust {
+          font-family: 'DM Mono', 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 13px;
+          letter-spacing: 0.04em;
+          color: #EDF5EC;
+          opacity: 0.55;
+          margin: 0;
+        }
+        .ea-trust .ea-sep {
+          color: #FFBA1A;
+          margin: 0 8px;
+          opacity: 0.85;
+        }
+
+        @keyframes eaBandIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes eaPulseDot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%      { opacity: 0.5; transform: scale(1.2); }
+        }
+        @keyframes eaShimmer {
+          0%   { left: -100%; }
+          50%  { left: 200%; }
+          100% { left: 200%; }
+        }
+
+        @media (max-width: 900px) {
+          .ea-band { padding: 34px 38px; }
+          .ea-row { grid-template-columns: 1fr; gap: 29px; }
+          .ea-headline { font-size: clamp(29px, 6.6vw, 38px); }
+        }
+        @media (max-width: 540px) {
+          .ea-input-row { flex-direction: column; }
+          .ea-submit { justify-content: center; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ea-band,
+          .ea-dot,
+          .ea-submit::before {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+          }
+          .ea-submit:hover { transform: none; }
+          .ea-submit:hover .ea-arrow { transform: none; }
         }
       `}</style>
 
-      <div className="br-grid">
-        <div className="br-left">
-          <p style={eyebrow}>15 · EARLY ACCESS</p>
-          <div aria-hidden style={goldRule} />
-          <h2
-            style={{
-              fontFamily: "'Inter Tight', sans-serif",
-              fontSize: 'clamp(48px, 7vw, 84px)',
-              fontWeight: 500,
-              color: '#0F1E1D',
-              lineHeight: 1.0,
-              letterSpacing: '-0.035em',
-              margin: '0 0 20px',
-            }}
-          >
-            Get this system 90 days before launch.
+      <div className="ea-row">
+        <div className="ea-left">
+          <span className="ea-pill">
+            <span className="ea-dot" aria-hidden />
+            <span>
+              <span className="ea-num">15 ·</span>Early Access · Open
+            </span>
+          </span>
+          <h2 className="ea-headline">
+            Get this system 90 days before launch<span className="ea-period">.</span>
           </h2>
-          <p
-            style={{
-              fontFamily: "'Inter Tight', sans-serif",
-              fontSize: 'clamp(18px, 1.8vw, 22px)',
-              color: 'rgba(15, 30, 29, 0.66)',
-              margin: '0 0 14px',
-              lineHeight: 1.5,
-              fontWeight: 300,
-            }}
-          >
-            Apply the method now, ahead of public launch. Active PS BD teams approved priority.
-          </p>
-          <p
-            style={{
-              fontFamily: "'Inter Tight', sans-serif",
-              fontSize: 15,
-              fontStyle: 'italic',
-              color: 'rgba(15, 30, 29, 0.55)',
-              margin: '0 0 36px',
-              lineHeight: 1.5,
-              fontWeight: 300,
-            }}
-          >
-            30 chapters. Three frameworks (Dead Zone, Five Orbits, MAP). Available now to Early Access readers.
-          </p>
-
-          <div style={{ display: 'flex', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
-            <Link
-              to="/manuscript"
-              className="br-badge"
-              aria-label="See all 30 chapters in the manuscript"
-            >
-              30 chapters
-            </Link>
-            <span className="br-badge">Three frameworks</span>
-            <span className="br-badge">Approved by application</span>
-          </div>
-
-          <div
-            style={{
-              borderLeft: '4px solid #A8923A',
-              paddingLeft: 24,
-              marginBottom: 32,
-            }}
-          >
-            <p
-              style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 'clamp(18px, 1.7vw, 22px)',
-                lineHeight: 1.55,
-                color: 'rgba(15, 30, 29, 0.82)',
-                margin: 0,
-                fontWeight: 300,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              "Lead nurturing agent created a customized note that reactivated a $400,000
-              opportunity for us."
-            </p>
-            <p
-              style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 13,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: '#A8923A',
-                marginTop: 14,
-                margin: '14px 0 0',
-                fontWeight: 500,
-              }}
-            >
-              Stephen Cuccio · Head of New Client Strategy, Madcraft
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
-            {BADGES.map((b) => (
-              <span key={b} className="br-badge">
-                {b}
-              </span>
-            ))}
-          </div>
         </div>
 
-        <div className="br-right">
-          <form
-            action="mailto:beta@mabbly.com"
-            style={{
-              background: '#FBF8F4',
-              border: '1px solid #D5DEC2',
-              borderRadius: 6,
-              padding: '40px 36px',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 13,
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: 'rgba(15, 30, 29, 0.55)',
-                marginBottom: 24,
-                fontWeight: 500,
-              }}
-            >
-              Early Access Application
-            </div>
+        <form
+          className="ea-form"
+          action="mailto:beta@mabbly.com"
+          onSubmit={(e) => {
+            e.preventDefault();
+            scrollToHero();
+          }}
+        >
+          <div className="ea-input-row">
             <input
-              className="br-input"
-              type="text"
-              name="firm"
-              placeholder="Firm name"
-              style={inputStyle}
-            />
-            <input
-              className="br-input"
               type="email"
               name="email"
-              placeholder="Work email"
-              style={inputStyle}
+              className="ea-input"
+              placeholder="you@firm.com"
+              aria-label="Work email"
+              autoComplete="email"
             />
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToHero();
-              }}
-              style={{
-                background: '#A8923A',
-                color: '#FBF8F4',
-                borderRadius: 3,
-                padding: '16px',
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 15,
-                letterSpacing: '0.08em',
-                width: '100%',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 500,
-              }}
-              data-cta="add-your-firm"
-            >
-              Add Your Firm →
+            <button type="submit" className="ea-submit" data-cta="add-your-firm">
+              Add Your Firm
+              <span className="ea-arrow" aria-hidden>→</span>
             </button>
-            <p
-              style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 13,
-                color: 'rgba(15, 30, 29, 0.45)',
-                textAlign: 'center',
-                marginTop: 14,
-                margin: '14px 0 0',
-                fontWeight: 400,
-              }}
-            >
-              Free. Approved by application. Most decisions within 48 hours.
-            </p>
-          </form>
-        </div>
+          </div>
+          <p className="ea-trust">
+            Free<span className="ea-sep">·</span>By application<span className="ea-sep">·</span>48hr decisions
+          </p>
+        </form>
       </div>
     </section>
   );

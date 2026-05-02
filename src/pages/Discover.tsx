@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { scrollToHero } from "@/lib/scrollToHero";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useFooterVisible } from "@/hooks/useFooterVisible";
 import { useInlineCtaVisible } from "@/hooks/useInlineCtaVisible";
 import { NAV_VERTICAL_LINKS } from "@/content/verticals";
@@ -12,7 +11,6 @@ import Footer from "@/components/Footer";
 import PaperGrain from "@/components/discover/PaperGrain";
 import AuthorityStrip from "@/components/discover/AuthorityStrip";
 import ReceiptsStrip from "@/components/discover/ReceiptsStrip";
-import FiveOrbitsDiagram from "@/components/discover/FiveOrbitsDiagram";
 import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
 import SectionRail from "@/components/discover/SectionRail";
 import DiscoverHero from '@/components/discover/DiscoverHero';
@@ -22,14 +20,13 @@ import FloatingHeroVideo from '@/components/discover/FloatingHeroVideo';
 import DeadZone from '@/components/discover/DeadZone';
 import WhyNow from '@/components/discover/WhyNow';
 import BetaReader from '@/components/discover/BetaReader';
-import Authors from '@/components/discover/Authors';
 import Results from '@/components/discover/Results';
 import MapSection from '@/components/discover/MapSection';
 import TwoPaths from '@/components/discover/TwoPaths';
 import Faq from '@/components/discover/Faq';
 import FinalCta from '@/components/discover/FinalCta';
 import AdamNote from '@/components/discover/AdamNote';
-import WarStory from '@/components/discover/WarStory';
+import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
 
 const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
 
@@ -48,14 +45,45 @@ const navItems = [
   { label: "Podcast", href: PODCAST_HREF, external: true },
 ];
 
+// Section ids whose background reads as DARK — nav above them flips to a
+// dark fill with sage text. Anything not listed reads as a light section.
+const DARK_NAV_SECTION_IDS = new Set<string>([
+  "hero",
+  "authority",
+  "dead-zone",
+  "industries",
+  "results",
+]);
+
 const TopNav = () => {
   const [open, setOpen] = useState(false);
-  const [pastHero, setPastHero] = useState(false);
+  const [navTheme, setNavTheme] = useState<"dark" | "light">("dark");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setPastHero(window.scrollY > window.innerHeight - 120);
+    const NAV_PROBE_OFFSET = 32; // px from top — sample just below the nav
+    const onScroll = () => {
+      // Walk known sections; the one whose vertical range contains the probe
+      // line wins. Default to dark (the page opens on the dark hero).
+      let next: "dark" | "light" = "dark";
+      const ids = [
+        "hero", "authority", "receipts", "two-paths", "dead-zone",
+        "map", "industries", "why-now", "adam-note",
+        "results", "manuscript", "beta-reader",
+        "faq", "final",
+      ];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (r.top <= NAV_PROBE_OFFSET && r.bottom > NAV_PROBE_OFFSET) {
+          next = DARK_NAV_SECTION_IDS.has(id) ? "dark" : "light";
+          break;
+        }
+      }
+      setNavTheme((prev) => (prev === next ? prev : next));
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -71,22 +99,24 @@ const TopNav = () => {
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
-  const onHero = !pastHero;
-  const linkColor = onHero ? "rgba(245,241,232,0.7)" : "rgba(15, 30, 29,0.6)";
-  const linkHover = onHero ? "#EDF5EC" : "#0F1E1D";
-  const wordColor = onHero ? "rgba(245,241,232,0.85)" : "#0F1E1D";
+  const isDark = navTheme === "dark";
+  // Always-visible nav: pick contrast colors based on the section behind it.
+  const linkColor = isDark ? "rgba(237,245,236,0.78)" : "rgba(15,30,29,0.7)";
+  const linkHover = isDark ? "#EDF5EC" : "#0F1E1D";
+  const wordColor = isDark ? "#EDF5EC" : "#0F1E1D";
 
   return (
     <>
       <nav
         className="fixed top-0 left-0 w-full z-[100] flex items-center justify-between px-6 md:px-10 transition-all duration-500"
         style={{
-          background: onHero ? "rgba(10,8,7,0)" : "rgba(251,248,244,0.92)",
-          backdropFilter: onHero ? "none" : "blur(20px)",
+          background: isDark ? "rgba(15,30,29,0.88)" : "rgba(251,248,244,0.92)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
           height: 64,
-          borderBottom: onHero
-            ? "1px solid rgba(168, 146, 58,0)"
-            : "1px solid rgba(15, 30, 29,0.08)",
+          borderBottom: isDark
+            ? "1px solid rgba(237,245,236,0.10)"
+            : "1px solid rgba(15,30,29,0.08)",
         }}
       >
         <a href="#hero" className="flex items-baseline gap-2 group">
@@ -218,7 +248,7 @@ const TopNav = () => {
           className="lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
-          style={{ color: onHero ? "#EDF5EC" : "#0F1E1D", transition: "color 500ms ease" }}
+          style={{ color: isDark ? "#EDF5EC" : "#0F1E1D", transition: "color 500ms ease" }}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -312,104 +342,6 @@ const TopNav = () => {
         </div>
       )}
     </>
-  );
-};
-
-/* ─────────────────────────────────────────────
-   SECTION 04 · THE RELATIONSHIP REVENUE OS
-   ───────────────────────────────────────────── */
-const SectionPromisedLand = () => {
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
-  const [triggered, setTriggered] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTriggered(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.25 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <section
-      ref={ref}
-      id="promised-land"
-      className="relative px-6 md:px-10"
-      style={{
-        background: "#FFFFFF",
-        paddingTop: "clamp(56px, 11vw, 128px)",
-        paddingBottom: "clamp(56px, 11vw, 128px)",
-      }}
-    >
-      <div className="max-w-[1100px] mx-auto">
-        <div className="mx-auto" style={{ maxWidth: 760, textAlign: "center" }}>
-          <p
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 12,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: "#A8923A",
-              margin: 0,
-              fontWeight: 500,
-            }}
-          >
-            04 · The System
-          </p>
-          <div
-            aria-hidden
-            style={{
-              width: 44,
-              height: 2,
-              background: "linear-gradient(90deg, #A8923A, #C4AC4A)",
-              margin: "18px auto 28px",
-            }}
-          />
-          <h2
-            style={{
-              fontFamily: "'Inter Tight', sans-serif",
-              color: "#0F1E1D",
-              fontSize: "clamp(40px, 6vw, 72px)",
-              lineHeight: 1.02,
-              letterSpacing: "-0.035em",
-              fontWeight: 500,
-              margin: 0,
-            }}
-          >
-            The Relationship Revenue OS
-            <span style={{ color: "#BF461A" }}>.</span>
-          </h2>
-          <p
-            style={{
-              marginTop: 18,
-              color: "rgba(15, 30, 29, 0.66)",
-              fontSize: "clamp(17px, 1.6vw, 20px)",
-              lineHeight: 1.55,
-              fontWeight: 400,
-              fontFamily: "'Inter Tight', sans-serif",
-              maxWidth: 620,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            Four stages. Every relationship you own becomes a signal the firm can act on — not a pitch.
-          </p>
-        </div>
-
-        <div style={{ marginTop: 72, marginBottom: 16 }}>
-          <FiveOrbitsDiagram triggered={triggered} staticMode={reduced} />
-        </div>
-      </div>
-    </section>
   );
 };
 
@@ -515,20 +447,17 @@ const Discover = () => {
     { id: "hero", label: "01 · Hero" },
     { id: "authority", label: "02 · Built By" },
     { id: "receipts", label: "03 · Receipts" },
-    { id: "promised-land", label: "04 · The System" },
+    { id: "two-paths", label: "04 · After the Map" },
     { id: "dead-zone", label: "05 · Dead Zone" },
     { id: "map", label: "06 · GTM Score" },
     { id: "industries", label: "07 · Industries" },
-    { id: "two-paths", label: "08 · Paths" },
-    { id: "why-now", label: "09 · Why Now" },
-    { id: "war-story", label: "10 · One Story" },
-    { id: "adam-note", label: "11 · Note" },
-    { id: "results", label: "12 · Proof" },
-    { id: "authors", label: "13 · Authors" },
-    { id: "manuscript", label: "14 · Manuscript" },
-    { id: "beta-reader", label: "15 · Early Access" },
-    { id: "faq", label: "16 · FAQ" },
-    { id: "final", label: "17 · Final" },
+    { id: "why-now", label: "08 · Why Now" },
+    { id: "adam-note", label: "09 · Note" },
+    { id: "results", label: "10 · Proof" },
+    { id: "manuscript", label: "11 · Manuscript" },
+    { id: "beta-reader", label: "12 · Early Access" },
+    { id: "faq", label: "13 · FAQ" },
+    { id: "final", label: "14 · Final" },
   ];
 
   return (
@@ -541,16 +470,13 @@ const Discover = () => {
         </div>
         <AuthorityStrip />
         <ReceiptsStrip />
-        <SectionPromisedLand />
+        <TwoPaths />
         <DeadZone />
         <MapSection />
         <IndustryGrid />
-        <TwoPaths />
         <WhyNow />
-        <WarStory />
         <AdamNote />
         <Results />
-        <Authors />
         <ManuscriptAnchor />
         <BetaReader />
         <Faq />

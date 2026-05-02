@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { submitMagnetUrl } from '@/lib/magnetSubmit';
+import { GooeyText } from '@/components/ui/gooey-text-morphing';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const ROTATOR_WORDS = ['client', 'partner', 'retainer', 'deal', 'case', 'mandate'];
-const VERTICALS = ['consulting', 'law', 'accounting', 'msp', 'advisory', 'a&e', 'recruiting', 'agency'];
 
 const PROOF_STATS = [
   { value: 500, label: 'Practitioner Interviews' },
@@ -18,49 +19,13 @@ export default function DiscoverHero() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const [rotatorIdx, setRotatorIdx] = useState(0);
-  const [rotatorPhase, setRotatorPhase] = useState<'in' | 'out'>('in');
-  const [verticalIdx, setVerticalIdx] = useState(0);
-  const [verticalVisible, setVerticalVisible] = useState(true);
-
+  const reduceMotion = useReducedMotion();
   const proofRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  // Rotating headline word
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    let intervalId: number | undefined;
-    const start = window.setTimeout(() => {
-      intervalId = window.setInterval(() => {
-        setRotatorPhase('out');
-        window.setTimeout(() => {
-          setRotatorIdx((i) => (i + 1) % ROTATOR_WORDS.length);
-          setRotatorPhase('in');
-        }, 700);
-      }, 2800);
-    }, 3000);
-    return () => {
-      window.clearTimeout(start);
-      if (intervalId) window.clearInterval(intervalId);
-    };
-  }, []);
-
-  // Vertical name cycler in eyebrow
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    const id = window.setInterval(() => {
-      setVerticalVisible(false);
-      window.setTimeout(() => {
-        setVerticalIdx((i) => (i + 1) % VERTICALS.length);
-        setVerticalVisible(true);
-      }, 200);
-    }, 1800);
-    return () => window.clearInterval(id);
-  }, []);
 
   // Count-up on proof numbers
   useEffect(() => {
     const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    let rafIds: number[] = [];
+    const rafIds: number[] = [];
     const start = window.setTimeout(() => {
       proofRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -184,15 +149,6 @@ export default function DiscoverHero() {
           border-radius: 50%;
           animation: klPulseDot 1.6s ease-in-out infinite;
         }
-        .kl-eyebrow-vert {
-          color: var(--kl-care);
-          font-weight: 700;
-          transition: opacity 200ms ease;
-          min-width: 80px;
-          display: inline-block;
-          text-align: left;
-        }
-
         /* Headline */
         .kl-h1 {
           margin: 28px 0 24px;
@@ -220,34 +176,39 @@ export default function DiscoverHero() {
 
         .kl-rotator {
           position: relative;
+          display: inline-block;
+          vertical-align: baseline;
           color: var(--kl-care);
           background: linear-gradient(to top, rgba(191, 70, 26, 0.16) 22%, transparent 22%);
-          padding: 0 0.06em;
-          perspective: 600px;
-          min-width: 4ch;
+          padding: 0 0.12em;
+          width: 5.4em;
+          height: 0.95em;
         }
-        .kl-rotator-word {
+        .kl-rotator-static {
           display: inline-block;
-          transform-origin: center;
-          will-change: transform, opacity, filter;
-          transition:
-            transform 700ms cubic-bezier(0.65, 0, 0.2, 1),
-            opacity   500ms cubic-bezier(0.5, 0, 0.4, 1),
-            filter    700ms cubic-bezier(0.65, 0, 0.2, 1);
+          width: 100%;
+          text-align: center;
+          line-height: 1;
         }
-        .kl-rotator-word.out {
-          transform: translateY(-55%) scaleY(0.72) scaleX(1.08);
-          opacity: 0;
-          filter: blur(10px);
+        .kl-gooey {
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          line-height: 1;
         }
-        .kl-rotator-word.in {
-          animation: klRotatorEnter 800ms cubic-bezier(0.4, 0.05, 0.2, 1) both;
+        .kl-gooey > span:last-child {
+          width: 100%;
+          height: 100%;
         }
-        @keyframes klRotatorEnter {
-          0%   { transform: translateY(55%)  scaleY(0.72) scaleX(1.08); opacity: 0; filter: blur(10px); }
-          45%  { opacity: 1; filter: blur(0); }
-          70%  { transform: translateY(-3%)  scaleY(1.05) scaleX(0.98); }
-          100% { transform: translateY(0)    scaleY(1)    scaleX(1);    opacity: 1; filter: blur(0); }
+        .kl-gooey-text {
+          font: inherit;
+          color: inherit;
+          letter-spacing: inherit;
+          text-transform: inherit;
+          line-height: 1;
+        }
+        @media (max-width: 540px) {
+          .kl-rotator { width: 5em; }
         }
 
         .kl-period {
@@ -552,8 +513,7 @@ export default function DiscoverHero() {
         @media (prefers-reduced-motion: reduce) {
           .kl-eyebrow, .kl-h1 .word, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof,
           .kl-eyebrow-dot, .kl-period, .kl-blob.big, .kl-blob.small,
-          .orbit, .map-dot, .map-pulse, .connector, .kl-submit::after,
-          .kl-rotator-word {
+          .orbit, .map-dot, .map-pulse, .connector, .kl-submit::after {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
@@ -585,22 +545,21 @@ export default function DiscoverHero() {
           </svg>
 
           <div className="kl-inner">
-            <div className="kl-eyebrow">
-              <span className="kl-eyebrow-dot" aria-hidden />
-              <span>Live · Diagnosing</span>
-              <span className="kl-eyebrow-vert" style={{ opacity: verticalVisible ? 1 : 0 }}>
-                {VERTICALS[verticalIdx]}
-              </span>
-              <span>firms now</span>
-            </div>
-
             <h1 className="kl-h1">
               <span className="word w1">Your</span>
               <span className="word w2">next</span>
               <span className="word w3 kl-rotator">
-                <span className={`kl-rotator-word ${rotatorPhase}`} key={rotatorIdx}>
-                  {ROTATOR_WORDS[rotatorIdx]}
-                </span>
+                {reduceMotion ? (
+                  <span className="kl-rotator-static">{ROTATOR_WORDS[0]}</span>
+                ) : (
+                  <GooeyText
+                    texts={ROTATOR_WORDS}
+                    morphTime={0.55}
+                    cooldownTime={1.6}
+                    className="kl-gooey"
+                    textClassName="kl-gooey-text"
+                  />
+                )}
               </span>
               <br />
               <span className="word w4">already</span>
