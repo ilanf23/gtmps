@@ -206,9 +206,15 @@ export default function MagnetShell({
     const el = document.getElementById(id);
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollIntoView({
-      behavior: reduce ? "auto" : "smooth",
-      block: "start",
+    // Defer one frame so Radix's dropdown close + focus-restore on the trigger
+    // doesn't interrupt the smooth scroll. Without this, the trigger's focus()
+    // call fires the browser's scroll-into-view algorithm and the page never
+    // moves.
+    requestAnimationFrame(() => {
+      el.scrollIntoView({
+        behavior: reduce ? "auto" : "smooth",
+        block: "start",
+      });
     });
   };
 
@@ -403,6 +409,7 @@ export default function MagnetShell({
             <DropdownMenuContent
               align="center"
               sideOffset={10}
+              onCloseAutoFocus={(e) => e.preventDefault()}
               className="wayfinder-menu w-[min(92vw,360px)] p-1.5"
               style={{
                 backgroundColor: `color-mix(in srgb, var(--brand-bg, ${theme.background}) 92%, #ffffff)`,
@@ -506,6 +513,7 @@ export default function MagnetShell({
               <DropdownMenuContent
                 align="end"
                 sideOffset={10}
+                onCloseAutoFocus={(e) => e.preventDefault()}
                 className="wayfinder-menu w-[min(92vw,320px)] p-1.5"
                 style={{
                   backgroundColor: `color-mix(in srgb, var(--brand-bg, ${theme.background}) 92%, #ffffff)`,
@@ -613,6 +621,9 @@ export default function MagnetShell({
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Anchor offset so jump-to-section lands below the sticky 56px nav. */
+        [id^="v10-section-"] { scroll-margin-top: 72px; }
 
         /* ── Wayfinder nav ──────────────────────────────────────────────── */
         .wayfinder-progress {
