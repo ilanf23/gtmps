@@ -9,6 +9,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   buildClientTheme,
+  shouldForceDarkBodyFallback,
   MABBLY_DEFAULTS,
   DARK_BODY_LUMINANCE_THRESHOLD,
   INDUSTRY_FALLBACK_BG,
@@ -175,5 +176,39 @@ describe("DARK_BODY_LUMINANCE_THRESHOLD", () => {
   it("is exported and within a sensible range", () => {
     expect(DARK_BODY_LUMINANCE_THRESHOLD).toBeGreaterThan(0.2);
     expect(DARK_BODY_LUMINANCE_THRESHOLD).toBeLessThan(0.5);
+  });
+});
+
+describe("shouldForceDarkBodyFallback (shared helper)", () => {
+  beforeEach(() => {
+    vi.stubEnv("VITE_CLIENT_THEME_V2", "true");
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("true for deep navy", () => {
+    expect(shouldForceDarkBodyFallback("#0B1A2E")).toBe(true);
+  });
+
+  it("true for medium-dark blue below threshold", () => {
+    expect(shouldForceDarkBodyFallback("#0066CC")).toBe(true);
+  });
+
+  it("false for cream", () => {
+    expect(shouldForceDarkBodyFallback("#F5F1E8")).toBe(false);
+  });
+
+  it("false for white", () => {
+    expect(shouldForceDarkBodyFallback("#FFFFFF")).toBe(false);
+  });
+
+  it("false for invalid hex", () => {
+    expect(shouldForceDarkBodyFallback("not-a-hex")).toBe(false);
+  });
+
+  it("false when v2 flag is off", () => {
+    vi.stubEnv("VITE_CLIENT_THEME_V2", "");
+    expect(shouldForceDarkBodyFallback("#0B1A2E")).toBe(false);
   });
 });
