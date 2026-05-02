@@ -15,6 +15,7 @@ import { pickVariant } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
 import { displayNameFromSlug } from "@/lib/magnetSlug";
 import { getDisplayName } from "@/lib/companyName";
+import { shouldForceDarkBodyFallback } from "@/lib/clientTheme";
 import { assertReadableBrand } from "@/lib/clientTheme";
 
 import PersonalizedHeader from "./v10/PersonalizedHeader";
@@ -220,7 +221,18 @@ export default function MagnetBreakdown({
     text: pick(p.text, "#1C1008"),
     textMuted: pick(p.textMuted, "#1C1008"),
   };
-  const { brand } = assertReadableBrand(rawBrand, data.client_company_name);
+  const { brand: readableBrand } = assertReadableBrand(rawBrand, data.client_company_name);
+
+  // ── Dark-body guard (v2) — applied to MagnetBreakdown's brand path ─────
+  // assertReadableBrand only rejects when WCAG contrast fails. A dark navy
+  // bg with white text passes contrast but still produces an unreadable
+  // editorial body (cream-on-ink-designed sections). When VITE_CLIENT_THEME_V2
+  // is on AND the extracted bg is below the dark-body luminance threshold,
+  // force the body bg to Mabbly cream + ink text. The firm's `primary`
+  // accent stays intact for links, button text, and accent rules.
+  const brand = shouldForceDarkBodyFallback(readableBrand.background)
+    ? { ...readableBrand, background: "#FBF8F4", surface: "#FFFFFF", text: "#1C1008", textMuted: "rgba(28,16,8,0.6)" }
+    : readableBrand;
 
   // "Built X seconds ago" — only meaningful for first 5 minutes
   const buildSecondsAgo = createdAt
