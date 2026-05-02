@@ -23,7 +23,7 @@ export default function WhyNow() {
             fontWeight: 500,
           }}
         >
-          05 · Why Now
+          09 · Why Now
         </p>
         <div
           aria-hidden

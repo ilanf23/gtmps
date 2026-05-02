@@ -11,6 +11,7 @@ import { INDUSTRY_ICONS } from "@/content/industryIcons";
 import Footer from "@/components/Footer";
 import PaperGrain from "@/components/discover/PaperGrain";
 import AuthorityStrip from "@/components/discover/AuthorityStrip";
+import ReceiptsStrip from "@/components/discover/ReceiptsStrip";
 import FiveOrbitsDiagram from "@/components/discover/FiveOrbitsDiagram";
 import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
 import SectionRail from "@/components/discover/SectionRail";
@@ -499,21 +500,22 @@ const Discover = () => {
 
   const railItems = [
     { id: "hero", label: "01 · Hero" },
-    { id: "industries", label: "02 · Industries" },
-    { id: "manuscript", label: "03 · Manuscript" },
-    { id: "authority", label: "— · Built By" },
-    { id: "dead-zone", label: "04 · Dead Zone" },
-    { id: "adam-note", label: "— · Note" },
-    { id: "promised-land", label: "— · The System" },
-    { id: "why-now", label: "05 · Why Now" },
-    { id: "beta-reader", label: "06 · Early Access" },
-    { id: "authors", label: "07 · Authors" },
-    { id: "results", label: "08 · Proof" },
-    { id: "war-story", label: "09 · One Story" },
-    { id: "map", label: "10 · GTM Score" },
-    { id: "two-paths", label: "11 · Paths" },
-    { id: "faq", label: "12 · FAQ" },
-    { id: "final", label: "13 · Final" },
+    { id: "authority", label: "02 · Built By" },
+    { id: "receipts", label: "03 · Receipts" },
+    { id: "promised-land", label: "04 · The System" },
+    { id: "dead-zone", label: "05 · Dead Zone" },
+    { id: "map", label: "06 · GTM Score" },
+    { id: "industries", label: "07 · Industries" },
+    { id: "two-paths", label: "08 · Paths" },
+    { id: "why-now", label: "09 · Why Now" },
+    { id: "war-story", label: "10 · One Story" },
+    { id: "adam-note", label: "11 · Note" },
+    { id: "results", label: "12 · Proof" },
+    { id: "authors", label: "13 · Authors" },
+    { id: "manuscript", label: "14 · Manuscript" },
+    { id: "beta-reader", label: "15 · Early Access" },
+    { id: "faq", label: "16 · FAQ" },
+    { id: "final", label: "17 · Final" },
   ];
 
   return (
@@ -524,19 +526,20 @@ const Discover = () => {
         <div id="hero">
           <DiscoverHero />
         </div>
-        <IndustryGrid />
-        <ManuscriptAnchor />
         <AuthorityStrip />
-        <DeadZone />
-        <AdamNote />
+        <ReceiptsStrip />
         <SectionPromisedLand />
-        <WhyNow />
-        <BetaReader />
-        <Authors />
-        <Results />
-        <WarStory />
+        <DeadZone />
         <MapSection />
+        <IndustryGrid />
         <TwoPaths />
+        <WhyNow />
+        <WarStory />
+        <AdamNote />
+        <Results />
+        <Authors />
+        <ManuscriptAnchor />
+        <BetaReader />
         <Faq />
         <FinalCta />
       </main>

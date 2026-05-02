@@ -28,7 +28,7 @@ export default function WarStory() {
             fontWeight: 500,
           }}
         >
-          09 · One Story In Full
+          10 · One Story In Full
         </p>
         <div
           aria-hidden

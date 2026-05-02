@@ -85,7 +85,7 @@ export default function BetaReader() {
 
       <div className="br-grid">
         <div className="br-left">
-          <p style={eyebrow}>06 · EARLY ACCESS</p>
+          <p style={eyebrow}>15 · EARLY ACCESS</p>
           <div aria-hidden style={goldRule} />
           <h2
             style={{

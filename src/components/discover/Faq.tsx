@@ -66,7 +66,7 @@ export default function Faq() {
             fontWeight: 500,
           }}
         >
-          12 · COMMON QUESTIONS
+          16 · COMMON QUESTIONS
         </p>
         <div
           aria-hidden

@@ -133,7 +133,7 @@ export default function ManuscriptAnchor() {
       <div className="ma-glow" aria-hidden />
 
       <div className="ma-inner">
-        <p className="ma-eyebrow">03 · The Manuscript</p>
+        <p className="ma-eyebrow">14 · The Manuscript</p>
         <div className="ma-book-wrap">
           <img
             src={bookCover}

@@ -180,7 +180,7 @@ export default function Results() {
             fontWeight: 500,
           }}
         >
-          08 · PROOF
+          12 · PROOF
         </p>
         <div
           aria-hidden

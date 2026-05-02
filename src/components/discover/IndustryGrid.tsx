@@ -141,7 +141,7 @@ export default function IndustryGrid() {
 
       <section id="industries" className="ig-root">
         <div className="ig-inner">
-          <p className="ig-eyebrow">02 · Find Your Industry</p>
+          <p className="ig-eyebrow">07 · Find Your Industry</p>
           <div className="ig-rule" aria-hidden />
           <h2 className="ig-h2">Built for relationship-driven firms.</h2>
           <p className="ig-sub">One framework. Eight verticals. Pick yours.</p>

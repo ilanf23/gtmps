@@ -151,7 +151,7 @@ export default function Authors() {
             fontWeight: 500,
           }}
         >
-          07 · THE AUTHORS
+          13 · THE AUTHORS
         </p>
         <div
           aria-hidden
