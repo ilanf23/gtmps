@@ -30,8 +30,14 @@ import About from "./pages/About.tsx";
 import Aletheia from "./pages/Aletheia.tsx";
 import Ops from "./pages/Ops.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
+import useScrollRestoration from "./hooks/useScrollRestoration.ts";
 
 const queryClient = new QueryClient();
+
+const ScrollRestoration = () => {
+  useScrollRestoration();
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -39,6 +45,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollRestoration />
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Discover />} />
