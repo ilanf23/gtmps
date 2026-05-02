@@ -44,15 +44,26 @@ export default function AwardsHero() {
           animation: ahSpin 60s linear infinite;
         }
         .ah-ring.r2 {
-          inset: 14%;
-          border-color: rgba(168, 146, 58,0.55);
-          animation-duration: 80s;
+          inset: 10%;
+          border-color: rgba(168, 146, 58,0.7);
+          animation-duration: 75s;
           animation-direction: reverse;
         }
         .ah-ring.r3 {
-          inset: 30%;
-          border-color: rgba(168, 146, 58,0.3);
-          animation-duration: 100s;
+          inset: 22%;
+          border-color: rgba(168, 146, 58,0.5);
+          animation-duration: 90s;
+        }
+        .ah-ring.r4 {
+          inset: 32%;
+          border-color: rgba(168, 146, 58,0.32);
+          animation-duration: 105s;
+          animation-direction: reverse;
+        }
+        .ah-ring.r5 {
+          inset: 40%;
+          border-color: rgba(168, 146, 58,0.2);
+          animation-duration: 120s;
         }
         @keyframes ahSpin { to { transform: rotate(360deg); } }
         .ah-dot {
@@ -138,6 +149,8 @@ export default function AwardsHero() {
           <div className="ah-ring r1" />
           <div className="ah-ring r2" />
           <div className="ah-ring r3" />
+          <div className="ah-ring r4" />
+          <div className="ah-ring r5" />
           <div className="ah-dot core" />
           <div className="ah-dot d1" />
           <div className="ah-dot d2" />
