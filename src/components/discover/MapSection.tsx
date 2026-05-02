@@ -179,14 +179,15 @@ export default function MapSection() {
         <div className="ms-right">
           <div
             style={{
-              background: '#0F1E1D',
+              background: '#FBF8F4',
               borderRadius: 6,
               padding: 'clamp(36px, 4vw, 56px) clamp(28px, 3.5vw, 48px)',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
               overflow: 'hidden',
-              border: '1px solid rgba(34, 83, 81, 0.4)',
+              border: '1px solid #D5DEC2',
+              boxShadow: '0 4px 24px -8px rgba(15, 30, 29, 0.08)',
             }}
           >
             {/* Compass illustration */}
@@ -202,8 +203,8 @@ export default function MapSection() {
                 {/* outer hex shape */}
                 <polygon
                   points="120,20 200,60 200,180 120,220 40,180 40,60"
-                  fill="rgba(237, 245, 236, 0.04)"
-                  stroke="rgba(237, 245, 236, 0.12)"
+                  fill="rgba(15, 30, 29, 0.03)"
+                  stroke="rgba(15, 30, 29, 0.18)"
                   strokeWidth="1"
                 />
                 {/* concentric circles */}
@@ -214,34 +215,34 @@ export default function MapSection() {
                     cy="120"
                     r={r}
                     fill="none"
-                    stroke="rgba(237, 245, 236, 0.16)"
+                    stroke="rgba(15, 30, 29, 0.18)"
                     strokeWidth="0.8"
                   />
                 ))}
                 {/* diagonal cross lines */}
-                <line x1="50" y1="50" x2="190" y2="190" stroke="rgba(237, 245, 236, 0.10)" strokeWidth="0.6" />
-                <line x1="190" y1="50" x2="50" y2="190" stroke="rgba(237, 245, 236, 0.10)" strokeWidth="0.6" />
+                <line x1="50" y1="50" x2="190" y2="190" stroke="rgba(15, 30, 29, 0.12)" strokeWidth="0.6" />
+                <line x1="190" y1="50" x2="50" y2="190" stroke="rgba(15, 30, 29, 0.12)" strokeWidth="0.6" />
                 {/* horizontal needle */}
                 <polygon
                   points="40,120 120,116 200,120 120,124"
-                  fill="rgba(237, 245, 236, 0.32)"
+                  fill="rgba(15, 30, 29, 0.4)"
                 />
                 {/* vertical needle (longer / brighter) */}
                 <polygon
                   points="120,30 116,120 120,210 124,120"
-                  fill="#EDF5EC"
+                  fill="#0F1E1D"
                 />
                 {/* center dot */}
                 <circle cx="120" cy="120" r="6" fill="#BF461A" />
-                <circle cx="120" cy="120" r="3" fill="#0F1E1D" />
+                <circle cx="120" cy="120" r="3" fill="#FBF8F4" />
                 {/* cardinal letters */}
-                <text x="120" y="14" textAnchor="middle" fill="rgba(237, 245, 236, 0.75)"
+                <text x="120" y="14" textAnchor="middle" fill="rgba(15, 30, 29, 0.6)"
                   fontFamily="'DM Mono', monospace" fontSize="10" letterSpacing="2">N</text>
-                <text x="120" y="234" textAnchor="middle" fill="rgba(237, 245, 236, 0.75)"
+                <text x="120" y="234" textAnchor="middle" fill="rgba(15, 30, 29, 0.6)"
                   fontFamily="'DM Mono', monospace" fontSize="10" letterSpacing="2">S</text>
-                <text x="14" y="124" textAnchor="middle" fill="rgba(237, 245, 236, 0.75)"
+                <text x="14" y="124" textAnchor="middle" fill="rgba(15, 30, 29, 0.6)"
                   fontFamily="'DM Mono', monospace" fontSize="10" letterSpacing="2">W</text>
-                <text x="226" y="124" textAnchor="middle" fill="rgba(237, 245, 236, 0.75)"
+                <text x="226" y="124" textAnchor="middle" fill="rgba(15, 30, 29, 0.6)"
                   fontFamily="'DM Mono', monospace" fontSize="10" letterSpacing="2">E</text>
               </svg>
             </div>
@@ -250,7 +251,7 @@ export default function MapSection() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
               <span
                 aria-hidden
-                style={{ width: 24, height: 1, background: '#FFBA1A' }}
+                style={{ width: 24, height: 1, background: '#A8923A' }}
               />
               <span
                 style={{
@@ -258,7 +259,7 @@ export default function MapSection() {
                   fontSize: 11,
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
-                  color: '#FFBA1A',
+                  color: '#A8923A',
                   fontWeight: 500,
                 }}
               >
@@ -272,7 +273,7 @@ export default function MapSection() {
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 'clamp(32px, 4.2vw, 52px)',
                 fontWeight: 700,
-                color: '#EDF5EC',
+                color: '#0F1E1D',
                 lineHeight: 1.02,
                 letterSpacing: '-0.02em',
                 textTransform: 'uppercase',
@@ -289,7 +290,7 @@ export default function MapSection() {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 14,
-                color: 'rgba(237, 245, 236, 0.78)',
+                color: 'rgba(15, 30, 29, 0.66)',
                 lineHeight: 1.6,
                 margin: '0 0 32px',
                 fontWeight: 400,
@@ -316,7 +317,7 @@ export default function MapSection() {
                   alignItems: 'center',
                   gap: 10,
                   background: '#BF461A',
-                  color: '#EDF5EC',
+                  color: '#FFFFFF',
                   borderRadius: 25,
                   padding: '14px 26px',
                   fontFamily: "'Inter Tight', sans-serif",
@@ -333,7 +334,7 @@ export default function MapSection() {
                 style={{
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 12,
-                  color: 'rgba(237, 245, 236, 0.55)',
+                  color: 'rgba(15, 30, 29, 0.5)',
                   fontWeight: 400,
                 }}
               >

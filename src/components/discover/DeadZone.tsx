@@ -15,8 +15,8 @@ const BREAKDOWN: Array<{ label: string; pct: number }> = [
 
 // Editorial chart: cumulative loss vs. partial recovery, year over year
 const CHART_YEARS = [1, 2, 3, 4, 5];
-const LOSS_SERIES = [1, 2.1, 3.3, 4.6, 6.0]; // unrecovered loss (multiples)
-const RECOVERY_SERIES = [0.38, 0.78, 1.18, 1.58, 1.95]; // ~62% recovery line trails
+const LOSS_SERIES = [1, 2.1, 3.3, 4.6, 6.0];
+const RECOVERY_SERIES = [0.38, 0.78, 1.18, 1.58, 1.95];
 
 type ChartProps = { triggered: boolean; reducedMotion: boolean };
 
@@ -49,7 +49,6 @@ function DeadZoneChart({ triggered, reducedMotion }: ChartProps) {
         role="img"
         aria-label="Cumulative loss versus partial recovery, year over year"
       >
-        {/* horizontal gridlines */}
         {[0.25, 0.5, 0.75, 1].map((t) => {
           const y = padY + t * (height - padY * 2);
           return (
@@ -65,7 +64,6 @@ function DeadZoneChart({ triggered, reducedMotion }: ChartProps) {
           );
         })}
 
-        {/* loss line (rust) */}
         <path
           d={lossPath}
           fill="none"
@@ -76,7 +74,6 @@ function DeadZoneChart({ triggered, reducedMotion }: ChartProps) {
           className={animate ? 'dz-line dz-line-on' : 'dz-line'}
           style={{ animationDelay: '0.1s' }}
         />
-        {/* recovery line (ink) */}
         <path
           d={recoveryPath}
           fill="none"
@@ -89,7 +86,6 @@ function DeadZoneChart({ triggered, reducedMotion }: ChartProps) {
           style={{ animationDelay: '0.4s' }}
         />
 
-        {/* end-point dots */}
         <circle
           cx={xFor(CHART_YEARS.length - 1)}
           cy={yFor(LOSS_SERIES[LOSS_SERIES.length - 1])}
@@ -103,7 +99,6 @@ function DeadZoneChart({ triggered, reducedMotion }: ChartProps) {
           fill="#0F1E1D"
         />
 
-        {/* x-axis labels */}
         {CHART_YEARS.map((y, i) => (
           <text
             key={y}
@@ -562,7 +557,7 @@ export default function DeadZone() {
 
       <div className="dz-content">
         <div className="dz-grid">
-          {/* LEFT COLUMN: eyebrow, headline, estimate, comparison strip */}
+          {/* LEFT: eyebrow, headline, estimate, comparison strip */}
           <div>
             <p className="dz-eyebrow">05 / The Problem</p>
             <div
@@ -579,9 +574,7 @@ export default function DeadZone() {
 
             <div className="dz-estimate-card">
               <p className="dz-estimate-label">Your Dead Zone estimate</p>
-              <p className="dz-estimate-num">
-                {formatMoney(displayResult)}
-              </p>
+              <p className="dz-estimate-num">{formatMoney(displayResult)}</p>
               <div className="dz-estimate-meta">
                 <span>
                   <b>{targetContacts.toLocaleString()}</b> dormant contacts
@@ -630,7 +623,7 @@ export default function DeadZone() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: where the money goes + editorial chart */}
+          {/* RIGHT: where the money goes + editorial chart */}
           <div>
             <div className="dz-breakdown">
               <p className="dz-breakdown-title">Where the money goes</p>
@@ -658,7 +651,7 @@ export default function DeadZone() {
           </div>
         </div>
 
-        {/* QUOTE CARD: full-width below */}
+        {/* QUOTE: full-width below */}
         <div className="dz-quote">
           <p className="dz-quote-text">
             "We knew we were leaving money on the table. We didn't know it was an

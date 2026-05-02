@@ -42,8 +42,8 @@ export default function Faq() {
       id="faq"
       className="px-6 md:px-10"
       style={{
-        background: '#EDF5EC',
-        borderTop: '1px solid rgba(168, 146, 58,0.12)',
+        background: '#FFFFFF',
+        borderTop: '1px solid rgba(15, 30, 29, 0.08)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
@@ -83,7 +83,7 @@ export default function Faq() {
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(44px, 6vw, 76px)',
             fontWeight: 500,
-            color: '#2A1A08',
+            color: '#0F1E1D',
             lineHeight: 1.0,
             letterSpacing: '-0.035em',
             margin: '0 0 18px',
@@ -95,7 +95,7 @@ export default function Faq() {
           style={{
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(18px, 1.8vw, 22px)',
-            color: 'rgba(42,26,8,0.55)',
+            color: 'rgba(15, 30, 29, 0.66)',
             margin: '0 0 56px',
             lineHeight: 1.5,
             fontWeight: 300,
@@ -104,7 +104,7 @@ export default function Faq() {
           Straight answers. No sales language.
         </p>
 
-        <div style={{ borderTop: '1px solid rgba(42,26,8,0.14)' }}>
+        <div style={{ borderTop: '1px solid #D5DEC2' }}>
           {ITEMS.map((item, i) => {
             const open = openIdx === i;
             return (
@@ -130,7 +130,7 @@ export default function Faq() {
                     style={{
                       fontFamily: "'Inter Tight', sans-serif",
                       fontSize: 'clamp(20px, 2.2vw, 28px)',
-                      color: '#2A1A08',
+                      color: '#0F1E1D',
                       flex: 1,
                       paddingRight: 24,
                       lineHeight: 1.3,
@@ -165,7 +165,7 @@ export default function Faq() {
                       fontFamily: "'Inter Tight', sans-serif",
                       fontSize: 'clamp(17px, 1.6vw, 20px)',
                       lineHeight: 1.65,
-                      color: 'rgba(42,26,8,0.7)',
+                      color: 'rgba(15, 30, 29, 0.78)',
                       fontWeight: 300,
                       maxWidth: 820,
                     }}

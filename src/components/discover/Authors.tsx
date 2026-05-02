@@ -160,6 +160,19 @@ export default function Authors() {
       `}</style>
 
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <figure className="au-hero-figure">
+          <img
+            src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80"
+            alt="The Mabbly editorial team in studio"
+            loading="lazy"
+            decoding="async"
+            className="au-hero-photo"
+          />
+          <figcaption className="au-hero-caption">
+            Mabbly editorial team — Chicago, 2026.
+          </figcaption>
+        </figure>
+
         <p
           style={{
             fontFamily: "'Inter Tight', sans-serif",
@@ -188,19 +201,19 @@ export default function Authors() {
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(48px, 7vw, 88px)',
             fontWeight: 500,
-            color: '#2A1A08',
+            color: '#0F1E1D',
             lineHeight: 1.0,
             letterSpacing: '-0.035em',
             margin: '0 0 18px',
           }}
         >
-          Built from inside the arena.
+          Built from inside the arena<span style={{ color: '#BF461A' }}>.</span>
         </h2>
         <p
           style={{
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(18px, 1.8vw, 22px)',
-            color: 'rgba(42,26,8,0.55)',
+            color: 'rgba(15,30,29,0.66)',
             margin: '0 0 64px',
             lineHeight: 1.5,
             fontWeight: 300,
@@ -217,14 +230,14 @@ export default function Authors() {
               style={{ animation: `fadeUp 0.7s ease ${a.delay} both` }}
             >
               <div className="au-portrait-wrap">
-                <img src={a.photo} alt={a.name} className="au-portrait" loading="lazy" />
+                <img src={a.photo} alt={a.name} className="au-portrait" loading="lazy" decoding="async" />
               </div>
               <p
                 style={{
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 'clamp(28px, 3vw, 38px)',
                   fontWeight: 600,
-                  color: '#2A1A08',
+                  color: '#0F1E1D',
                   margin: '0 0 6px',
                   letterSpacing: '-0.025em',
                   lineHeight: 1.1,
@@ -260,7 +273,7 @@ export default function Authors() {
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 'clamp(18px, 1.7vw, 22px)',
                   lineHeight: 1.5,
-                  color: 'rgba(42,26,8,0.78)',
+                  color: 'rgba(15,30,29,0.78)',
                   borderLeft: '3px solid rgba(168, 146, 58,0.45)',
                   paddingLeft: 20,
                   margin: '0 0 28px',
