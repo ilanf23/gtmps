@@ -383,7 +383,7 @@ function FounderVideoCard({
                 muted={muted}
                 loop
                 playsInline
-                autoPlay={!reducedMotion}
+                controls
                 preload="metadata"
               />
               <button
