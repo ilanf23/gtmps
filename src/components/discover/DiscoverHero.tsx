@@ -1,571 +1,724 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
-import HeroUrlField from './HeroUrlField';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { submitMagnetUrl } from '@/lib/magnetSubmit';
+
+const ROTATOR_WORDS = ['client', 'partner', 'retainer', 'deal', 'case', 'mandate'];
+const VERTICALS = ['consulting', 'law', 'accounting', 'msp', 'advisory', 'a&e', 'recruiting', 'agency'];
+
+const PROOF_STATS = [
+  { value: 500, label: 'Practitioner Interviews' },
+  { value: 30, label: 'Firms in Cohort' },
+  { value: 8, label: 'Verticals Translated' },
+];
 
 export default function DiscoverHero() {
-  // Video state for the Hero phone-frame S6E1 clip
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoFailed, setVideoFailed] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const reducedMotion = useReducedMotion();
+  const navigate = useNavigate();
+  const [website, setWebsite] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Audit feedback: autoplay on mount made users miss the first ~5 seconds
-  // while scanning the page. Default to paused with poster visible. The phone
-  // tap-control (handleVideoTap below) starts playback when the user is
-  // ready, with sound on by default since the click is an explicit gesture.
-  // Reduced-motion users get the same paused-with-poster default.
+  const [rotatorIdx, setRotatorIdx] = useState(0);
+  const [rotatorPhase, setRotatorPhase] = useState<'in' | 'out'>('in');
+  const [verticalIdx, setVerticalIdx] = useState(0);
+  const [verticalVisible, setVerticalVisible] = useState(true);
 
-  const handleVideoTap = useCallback(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      v.muted = false;
-      v.play().then(() => {
-        setIsPlaying(true);
-        setIsMuted(false);
-      }).catch(() => {
-        v.muted = true;
-        v.play().then(() => {
-          setIsPlaying(true);
-          setIsMuted(true);
-        }).catch(() => setIsPlaying(false));
-      });
-    } else {
-      v.muted = !v.muted;
-      setIsMuted(v.muted);
-    }
+  const proofRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
+  // Rotating headline word
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    let intervalId: number | undefined;
+    const start = window.setTimeout(() => {
+      intervalId = window.setInterval(() => {
+        setRotatorPhase('out');
+        window.setTimeout(() => {
+          setRotatorIdx((i) => (i + 1) % ROTATOR_WORDS.length);
+          setRotatorPhase('in');
+        }, 700);
+      }, 2800);
+    }, 3000);
+    return () => {
+      window.clearTimeout(start);
+      if (intervalId) window.clearInterval(intervalId);
+    };
   }, []);
+
+  // Vertical name cycler in eyebrow
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const id = window.setInterval(() => {
+      setVerticalVisible(false);
+      window.setTimeout(() => {
+        setVerticalIdx((i) => (i + 1) % VERTICALS.length);
+        setVerticalVisible(true);
+      }, 200);
+    }, 1800);
+    return () => window.clearInterval(id);
+  }, []);
+
+  // Count-up on proof numbers
+  useEffect(() => {
+    const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    let rafIds: number[] = [];
+    const start = window.setTimeout(() => {
+      proofRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const target = PROOF_STATS[i]?.value ?? 0;
+        if (reduced) {
+          el.textContent = String(target);
+          return;
+        }
+        const duration = 1400;
+        const t0 = performance.now();
+        const step = (now: number) => {
+          const t = Math.min(1, (now - t0) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = String(Math.round(eased * target));
+          if (t < 1) rafIds.push(requestAnimationFrame(step));
+        };
+        rafIds.push(requestAnimationFrame(step));
+      });
+    }, 2400);
+    return () => {
+      window.clearTimeout(start);
+      rafIds.forEach((id) => cancelAnimationFrame(id));
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      const result = await submitMagnetUrl(website, { verticalSlug: 'general' });
+      if (!result.ok) {
+        if (result.validation) setError(result.error);
+        else toast.error(result.error);
+        setSubmitting(false);
+        return;
+      }
+      navigate(result.destination, { state: { websiteUrl: result.normalizedUrl } });
+    } catch (err) {
+      console.error('Hero submit error:', err);
+      toast.error('Something went wrong — please try again.');
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
       <style>{`
-        .dh-root {
-          width: 100%;
-          min-height: 100vh;
-          background: #0F1E1D;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        :root {
+          --kl-elevation: #EDF5EC;
+          --kl-depth: #0F1E1D;
+          --kl-care: #BF461A;
+          --kl-energy: #FFBA1A;
+          --kl-purpose: #A79014;
+          --kl-olive: #CBD3CA;
+          --kl-transparency: #D5DED4;
+        }
+
+        .kl-root {
           position: relative;
-          overflow: hidden;
-          font-family: 'Inter Tight', 'Inter', sans-serif;
-          padding: 96px 40px;
-        }
-        .dh-glow {
-          position: absolute;
-          width: 640px;
-          height: 640px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(168, 146, 58,.12) 0%, transparent 70%);
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          pointer-events: none;
-        }
-        .dh-inner {
-          display: flex;
-          align-items: center;
-          gap: 64px;
-          max-width: 1180px;
           width: 100%;
+          background: var(--kl-elevation);
+          overflow: hidden;
+          font-family: 'Inter Tight', 'Arial Black', 'Helvetica Neue', Impact, system-ui, sans-serif;
+        }
+
+        /* ── Hero body ── */
+        .kl-hero {
+          position: relative;
+          padding: 96px 24px 72px;
+          z-index: 2;
+        }
+        .kl-inner {
+          max-width: 1100px;
+          margin: 0 auto;
+          text-align: center;
           position: relative;
           z-index: 2;
         }
-        .dh-phone-wrap {
-          flex: 0 0 40%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 14px;
+
+        /* Watermark blobs */
+        .kl-blob {
+          position: absolute;
+          pointer-events: none;
+          z-index: 1;
         }
-        .dh-copy { flex: 1; min-width: 0; }
-        @media (max-width: 1023px) {
-          .dh-inner { gap: 40px; }
+        .kl-blob.big {
+          top: 50%; left: 50%;
+          width: 1100px; height: 1100px;
+          margin: -550px 0 0 -550px;
+          opacity: 0.55;
+          animation: klRotateBlob 90s linear infinite;
         }
-        @media (max-width: 768px) {
-          .dh-root { padding: 80px 24px; }
-          .dh-inner { flex-direction: column; gap: 36px; }
-          .dh-copy { text-align: center; }
-          .dh-ctas { justify-content: center; }
-          .dh-phone-wrap { order: -1; width: 100%; flex: 0 0 auto; }
-          .dh-mini-calc { margin-left: auto; margin-right: auto; }
+        .kl-blob.small {
+          top: 18%; right: -200px;
+          width: 600px; height: 600px;
+          opacity: 0.45;
+          animation: klRotateBlob2 60s linear infinite;
         }
 
-        /* ── Industry strip eyebrow ── */
-        .dh-industry {
-          display: flex;
+        /* Eyebrow chip */
+        .kl-eyebrow {
+          display: inline-flex;
           align-items: center;
-          flex-wrap: wrap;
-          gap: 6px 10px;
-          font-family: 'DM Mono', 'Courier New', monospace;
-          font-size: 11px;
-          letter-spacing: 0.18em;
+          gap: 10px;
+          padding: 8px 16px;
+          background: rgba(255,255,255,0.6);
+          border: 1px solid rgba(15,30,29,0.18);
+          border-radius: 999px;
+          font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 12px;
+          letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #A8923A;
-          margin: 0 0 24px;
+          color: var(--kl-depth);
+          opacity: 0;
+          animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 400ms forwards;
         }
-        .dh-industry-lead {
-          color: #A8923A;
-          opacity: 0.85;
-        }
-        .dh-industry-dot {
-          color: rgba(168, 146, 58,0.5);
-          padding: 0 2px;
-        }
-        @media (max-width: 768px) {
-          .dh-industry {
-            font-size: 10px;
-            justify-content: center;
-            letter-spacing: 0.16em;
-          }
-        }
-
-        /* ── S6E1 Hero phone frame + video ── */
-        .dh-phone {
-          position: relative;
-          width: 220px;
-          height: 460px;
-          border-radius: 44px;
-          background: linear-gradient(155deg, #2A2A2E 0%, #0A0A0C 100%);
-          padding: 6px;
-          box-shadow:
-            0 30px 60px -20px rgba(0, 0, 0, 0.7),
-            0 0 0 1px rgba(168, 146, 58, 0.12),
-            0 0 80px -20px rgba(168, 146, 58, 0.18);
-        }
-        .dh-phone-screen {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          border-radius: 38px;
-          overflow: hidden;
-          background: #000;
-        }
-        .dh-phone-island {
-          position: absolute;
-          top: 12px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 88px;
-          height: 24px;
-          background: #000;
-          border-radius: 14px;
-          z-index: 3;
-        }
-        .dh-phone-video {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        .dh-phone-btn-side {
-          position: absolute;
-          right: -2px;
-          top: 110px;
-          width: 3px;
-          height: 56px;
-          background: linear-gradient(90deg, #1A1A1C, #2A2A2E);
-          border-radius: 2px;
-        }
-        .dh-phone-btn-vol1 {
-          position: absolute;
-          left: -2px;
-          top: 90px;
-          width: 3px;
-          height: 32px;
-          background: linear-gradient(90deg, #2A2A2E, #1A1A1C);
-          border-radius: 2px;
-        }
-        .dh-phone-btn-vol2 {
-          position: absolute;
-          left: -2px;
-          top: 134px;
-          width: 3px;
-          height: 56px;
-          background: linear-gradient(90deg, #2A2A2E, #1A1A1C);
-          border-radius: 2px;
-        }
-        .dh-phone-control {
-          position: absolute;
-          bottom: 18px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 48px;
-          height: 48px;
-          min-width: 48px;
-          min-height: 48px;
+        .kl-eyebrow-dot {
+          width: 8px; height: 8px;
+          background: var(--kl-care);
           border-radius: 50%;
-          border: none;
-          background: #A8923A;
-          color: #0A0807;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          z-index: 4;
-          box-shadow: 0 0 22px rgba(168, 146, 58, 0.55), 0 4px 12px rgba(0, 0, 0, 0.4);
-          transition: transform 200ms ease, background 200ms ease;
+          animation: klPulseDot 1.6s ease-in-out infinite;
         }
-        .dh-phone-control:hover,
-        .dh-phone-control:focus-visible {
-          background: #C4AC4A;
-          transform: translateX(-50%) scale(1.06);
-          outline: none;
-        }
-        .dh-phone-caption {
-          font-family: 'DM Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #A8923A;
-          text-align: center;
-          margin: 0;
-          max-width: 280px;
-          line-height: 1.5;
-        }
-
-        /* Mobile: full-width video, no phone frame */
-        @media (max-width: 768px) {
-          .dh-phone {
-            width: 100%;
-            max-width: 420px;
-            height: auto;
-            aspect-ratio: 9 / 16;
-            border-radius: 18px;
-            padding: 0;
-            background: #000;
-            box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6);
-          }
-          .dh-phone-screen { border-radius: 18px; }
-          .dh-phone-island,
-          .dh-phone-btn-side,
-          .dh-phone-btn-vol1,
-          .dh-phone-btn-vol2 { display: none; }
-          .dh-phone-control {
-            bottom: 14px;
-            left: auto;
-            right: 14px;
-            transform: none;
-          }
-          .dh-phone-control:hover,
-          .dh-phone-control:focus-visible {
-            transform: scale(1.06);
-          }
-        }
-
-        /* Audio fallback styling */
-        .dh-audio-fallback {
-          width: 220px;
-          padding: 24px 20px;
-          background: rgba(237, 245, 236, 0.04);
-          border: 1px solid rgba(168, 146, 58, 0.25);
-          border-radius: 12px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          align-items: center;
-          text-align: center;
-        }
-        .dh-audio-fallback p {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          color: #A8923A;
-          margin: 0;
-        }
-        .dh-audio-fallback audio {
-          width: 100%;
-          min-height: 48px;
-        }
-        @media (max-width: 768px) {
-          .dh-audio-fallback { width: 100%; max-width: 420px; }
-        }
-
-        /* ── Headline + sub ── */
-        .dh-headline {
-          font-size: clamp(36px, 5vw, 64px);
-          font-weight: 900;
-          line-height: 1.05;
-          letter-spacing: -0.005em;
-          color: #EDF5EC;
-          margin-bottom: 24px;
-          font-family: var(--font-display);
-          font-weight: 900;
-          text-transform: uppercase;
-          text-transform: uppercase;
-        }
-        .dh-headline em { font-style: normal; color: #A8923A; font-weight: 900; }
-        .dh-sub {
-          font-size: 20px;
-          font-weight: 400;
-          line-height: 1.5;
-          letter-spacing: -0.005em;
-          color: rgba(237, 245, 236, 0.78);
-          max-width: 520px;
-          margin: 0 0 32px;
-          font-family: var(--font-sans);
-        }
-        @media (max-width: 768px) {
-          .dh-sub { margin-left: auto; margin-right: auto; }
-        }
-
-        /* ── CTA pair ── */
-        .dh-ctas {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 14px;
-          align-items: center;
-          margin-bottom: 28px;
-        }
-        /* Primary conversion CTA — reserved Burnt Orange per brand spec.
-           Differentiated from olive-gold accents to mark the highest-stakes action. */
-        .dh-cta-primary {
+        .kl-eyebrow-vert {
+          color: var(--kl-care);
+          font-weight: 700;
+          transition: opacity 200ms ease;
+          min-width: 80px;
           display: inline-block;
-          background: linear-gradient(135deg, #BF461A 0%, #D45525 100%);
-          color: #EDF5EC;
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 600;
-          font-size: 14px;
-          letter-spacing: 0.04em;
-          padding: 14px 28px;
-          border-radius: 999px;
-          text-decoration: none;
-          transition: transform 180ms ease, box-shadow 180ms ease;
-          box-shadow: 0 6px 24px -8px rgba(191, 70, 26, 0.55);
-        }
-        .dh-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 28px -8px rgba(191, 70, 26, 0.7); }
-        .dh-cta-secondary {
-          display: inline-block;
-          background: transparent;
-          color: #A8923A;
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 500;
-          font-size: 14px;
-          letter-spacing: 0.04em;
-          padding: 13px 26px;
-          border: 1px solid rgba(168, 146, 58,0.55);
-          border-radius: 999px;
-          text-decoration: none;
-          transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
-        }
-        .dh-cta-secondary:hover {
-          background: rgba(168, 146, 58,0.12);
-          color: #EDF5EC;
-          border-color: #A8923A;
+          text-align: left;
         }
 
-        /* ── Mini calculator ── */
-        .dh-mini-or {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.32em;
+        /* Headline */
+        .kl-h1 {
+          margin: 28px 0 24px;
+          font-weight: 900;
+          font-size: clamp(58px, 8.4vw, 144px);
+          line-height: 0.9;
+          letter-spacing: -0.025em;
           text-transform: uppercase;
-          color: rgba(168, 146, 58,0.65);
-          margin: 0 0 8px;
+          color: var(--kl-depth);
         }
-        .dh-mini-calc {
-          max-width: 400px;
-          width: 100%;
+        .kl-h1 .word {
+          display: inline-block;
+          opacity: 0;
+          transform: translateY(40px);
+          animation: klWordIn 800ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards;
+          margin: 0 0.18em 0 0;
+        }
+        .kl-h1 .word:last-child { margin-right: 0; }
+        .kl-h1 .word.w1 { animation-delay: 600ms; }
+        .kl-h1 .word.w2 { animation-delay: 700ms; }
+        .kl-h1 .word.w3 { animation-delay: 800ms; }
+        .kl-h1 .word.w4 { animation-delay: 900ms; }
+        .kl-h1 .word.w5 { animation-delay: 1000ms; }
+        .kl-h1 .word.w6 { animation-delay: 1100ms; }
+
+        .kl-rotator {
+          position: relative;
+          color: var(--kl-care);
+          background: linear-gradient(to top, rgba(191, 70, 26, 0.16) 22%, transparent 22%);
+          padding: 0 0.06em;
+          perspective: 600px;
+          min-width: 4ch;
+        }
+        .kl-rotator-word {
+          display: inline-block;
+          transform-origin: center;
+          will-change: transform, opacity, filter;
+          transition:
+            transform 700ms cubic-bezier(0.65, 0, 0.2, 1),
+            opacity   500ms cubic-bezier(0.5, 0, 0.4, 1),
+            filter    700ms cubic-bezier(0.65, 0, 0.2, 1);
+        }
+        .kl-rotator-word.out {
+          transform: translateY(-55%) scaleY(0.72) scaleX(1.08);
+          opacity: 0;
+          filter: blur(10px);
+        }
+        .kl-rotator-word.in {
+          animation: klRotatorEnter 800ms cubic-bezier(0.4, 0.05, 0.2, 1) both;
+        }
+        @keyframes klRotatorEnter {
+          0%   { transform: translateY(55%)  scaleY(0.72) scaleX(1.08); opacity: 0; filter: blur(10px); }
+          45%  { opacity: 1; filter: blur(0); }
+          70%  { transform: translateY(-3%)  scaleY(1.05) scaleX(0.98); }
+          100% { transform: translateY(0)    scaleY(1)    scaleX(1);    opacity: 1; filter: blur(0); }
+        }
+
+        .kl-period {
+          color: var(--kl-energy);
+          animation: klBlink 1.4s ease-in-out 1500ms infinite;
+        }
+
+        /* Sub */
+        .kl-sub {
+          max-width: 60ch;
+          margin: 0 auto 32px;
+          font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 19px;
+          line-height: 1.55;
+          letter-spacing: -0.025em;
+          color: var(--kl-depth);
+          opacity: 0;
+          animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 1300ms forwards;
+        }
+        .kl-sub-inner { opacity: 0.78; }
+        .kl-hl {
+          background: linear-gradient(to top, rgba(255, 186, 26, 0.45) 38%, transparent 38%);
+          font-weight: 700;
+        }
+
+        /* Form */
+        .kl-form {
+          max-width: 580px;
+          margin: 0 auto 16px;
           display: flex;
           flex-direction: column;
           gap: 8px;
+          opacity: 0;
+          animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 1500ms forwards;
         }
-        .dh-mini-label {
-          font-family: 'Inter Tight', sans-serif;
-          font-size: 13px;
-          color: rgba(237, 245, 236,0.7);
-        }
-        .dh-mini-row {
+        .kl-form-row {
           display: flex;
-          gap: 8px;
+          gap: 10px;
           align-items: stretch;
         }
-        .dh-mini-input {
+        .kl-input-wrap {
           flex: 1;
-          min-width: 0;
-          background: rgba(237, 245, 236,0.05);
-          border: 1px solid rgba(168, 146, 58,0.35);
-          border-radius: 6px;
-          padding: 12px 14px;
-          color: #EDF5EC;
-          font-family: 'Inter Tight', sans-serif;
-          font-size: 14px;
-          outline: none;
-          transition: border-color 180ms ease, background 180ms ease;
-          min-height: 48px;
-        }
-        .dh-mini-input::placeholder { color: rgba(237, 245, 236,0.35); }
-        .dh-mini-input:focus { border-color: #A8923A; background: rgba(168, 146, 58,0.06); }
-        .dh-mini-go {
-          background: transparent;
-          border: 1px solid rgba(168, 146, 58,0.55);
-          color: #A8923A;
-          padding: 0 18px;
-          font-family: 'Inter Tight', sans-serif;
-          font-size: 13px;
-          letter-spacing: 0.04em;
-          font-weight: 500;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: background 180ms ease, color 180ms ease;
-          min-height: 48px;
-        }
-        .dh-mini-go:hover { background: rgba(168, 146, 58,0.12); color: #EDF5EC; }
-        .dh-mini-foot {
-          font-family: 'Inter Tight', sans-serif;
-          font-size: 12px;
-          color: rgba(237, 245, 236,0.55);
-          margin: 0;
-        }
-        .dh-mini-foot strong {
-          color: #A8923A;
-          font-weight: 600;
-        }
-        .dh-mini-link {
-          background: none;
-          border: none;
-          padding: 0;
-          color: #A8923A;
-          font-family: 'Inter Tight', sans-serif;
-          font-size: 13px;
-          text-decoration: underline;
-          text-underline-offset: 3px;
-          cursor: pointer;
-          margin-top: 4px;
-          align-self: flex-start;
-        }
-        @media (max-width: 768px) {
-          .dh-mini-row { flex-direction: column; }
-          .dh-mini-go { padding: 14px 18px; }
-          .dh-mini-link { align-self: center; }
-        }
-
-        /* ── Vertical chips row ── */
-        .dh-chip-row {
+          position: relative;
           display: flex;
-          flex-wrap: wrap;
+          align-items: center;
+        }
+        .kl-input {
+          width: 100%;
+          background: rgba(255,255,255,0.85);
+          border: 1px solid rgba(15,30,29,0.22);
+          border-radius: 8px;
+          padding: 14px 16px;
+          font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 16px;
+          letter-spacing: -0.02em;
+          color: var(--kl-depth);
+          outline: none;
+          transition: border-color 250ms ease, box-shadow 250ms ease, background 250ms ease;
+          min-height: 54px;
+        }
+        .kl-input::placeholder { color: rgba(15,30,29,0.42); }
+        .kl-input:focus {
+          border-color: var(--kl-care);
+          background: #fff;
+          box-shadow: 0 0 0 4px rgba(191, 70, 26, 0.12);
+        }
+        .kl-submit {
+          position: relative;
+          background: var(--kl-care);
+          color: var(--kl-elevation);
+          font-family: 'Inter Tight', 'Arial Black', sans-serif;
+          font-weight: 900;
+          font-size: 16px;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+          border: none;
+          border-radius: 999px;
+          padding: 0 28px;
+          min-height: 54px;
+          cursor: pointer;
+          overflow: hidden;
+          transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+          white-space: nowrap;
+          display: inline-flex;
+          align-items: center;
           gap: 8px;
+          justify-content: center;
+        }
+        .kl-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .kl-submit-arrow {
+          display: inline-block;
+          transition: transform 350ms cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        .kl-submit::after {
+          content: '';
+          position: absolute;
+          top: -50%; left: -60%;
+          width: 60%; height: 200%;
+          background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+          transform: rotate(8deg);
+          animation: klShimmer 3.5s ease-in-out infinite;
+          pointer-events: none;
+        }
+        .kl-submit:hover:not(:disabled) {
+          background: var(--kl-depth);
+          transform: translateY(-1px);
+        }
+        .kl-submit:hover:not(:disabled) .kl-submit-arrow {
+          transform: translateX(6px);
+        }
+        .kl-spin {
+          width: 14px; height: 14px;
+          border-radius: 50%;
+          border: 2px solid rgba(237,245,236,0.35);
+          border-top-color: var(--kl-elevation);
+          animation: klSpin 700ms linear infinite;
+        }
+        .kl-error {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 13px;
+          color: var(--kl-care);
           margin: 4px 0 0;
         }
-        .dh-chip {
-          font-family: 'Inter Tight', sans-serif;
+
+        /* Trust line */
+        .kl-trust {
+          font-family: 'IBM Plex Mono', monospace;
           font-size: 13px;
-          letter-spacing: 0.04em;
-          padding: 8px 16px;
-          border: 1px solid rgba(168, 146, 58,0.55);
-          border-radius: 999px;
-          color: #A8923A;
-          text-decoration: none;
-          background: transparent;
-          transition: background 180ms, color 180ms, border-color 180ms;
+          letter-spacing: -0.02em;
+          color: var(--kl-depth);
+          opacity: 0;
+          animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 1700ms forwards;
+          margin: 0 auto 56px;
         }
-        .dh-chip:hover {
-          background: #A8923A;
-          color: #0F1E1D;
-          border-color: #A8923A;
+        .kl-trust-sep {
+          color: var(--kl-care);
+          padding: 0 8px;
+          font-weight: 700;
         }
-        @media (max-width: 768px) {
-          .dh-chip-row {
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            justify-content: flex-start;
-            scrollbar-width: none;
-            margin: 4px -24px 0;
-            padding: 4px 24px;
+
+        /* Map */
+        .kl-map-wrap {
+          position: relative;
+          margin: 24px auto 56px;
+          max-width: 760px;
+          padding: 16px 8px 12px;
+          opacity: 0;
+          animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 2000ms forwards;
+        }
+        .kl-map-svg {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .kl-map-tl, .kl-map-br {
+          position: absolute;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--kl-depth);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .kl-map-tl { top: -4px; left: 8px; }
+        .kl-map-br { bottom: -2px; right: 8px; opacity: 0.7; }
+        .kl-map-tl-dot {
+          width: 6px; height: 6px;
+          background: var(--kl-care);
+          border-radius: 50%;
+          animation: klPulseDot 1.6s ease-in-out infinite;
+        }
+
+        /* Map SVG animations */
+        .orbit { fill: none; stroke: var(--kl-depth); stroke-dasharray: 1600; stroke-dashoffset: 1600; animation: klDrawOrbit 2200ms cubic-bezier(0.45, 0, 0.2, 1) forwards; }
+        .orbit.o1 { animation-delay: 2100ms; opacity: 0.3;  stroke-width: 1.5; }
+        .orbit.o2 { animation-delay: 2300ms; opacity: 0.45; stroke-width: 1.7; }
+        .orbit.o3 { animation-delay: 2500ms; opacity: 0.6;  stroke-width: 1.9; }
+        .orbit.o4 { animation-delay: 2700ms; opacity: 0.85; stroke-width: 2.1; }
+        @keyframes klDrawOrbit { to { stroke-dashoffset: 0; } }
+
+        .map-dot { opacity: 0; transform-origin: center; transform-box: fill-box; animation: klDotIn 600ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards; }
+        .map-dot.you    { animation-delay: 3000ms; }
+        .map-dot.signal { animation-delay: 3400ms; }
+        .map-dot.q1     { animation-delay: 3700ms; }
+        .map-dot.q2     { animation-delay: 3900ms; }
+        .map-dot.q3     { animation-delay: 4100ms; }
+        @keyframes klDotIn {
+          0%   { opacity: 0; transform: scale(0.2); }
+          60%  { transform: scale(1.3); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+
+        .map-pulse { transform-origin: center; transform-box: fill-box; animation: klRingPulse 2.4s ease-out 3200ms infinite; }
+        @keyframes klRingPulse {
+          0%   { transform: scale(0.4); opacity: 1; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .connector {
+          fill: none;
+          stroke: var(--kl-care);
+          stroke-width: 1.6;
+          stroke-dasharray: 4 5;
+          opacity: 0;
+          animation:
+            klConnectorIn 800ms ease-out 3600ms forwards,
+            klDashShift 8s linear 3600ms infinite;
+        }
+        @keyframes klConnectorIn { to { opacity: 1; } }
+        @keyframes klDashShift  { to { stroke-dashoffset: -90; } }
+
+        /* Proof strip */
+        .kl-proof {
+          position: relative;
+          width: 100%;
+          background: rgba(255,255,255,0.4);
+          border-top: 1px solid rgba(15,30,29,0.08);
+          border-bottom: 1px solid rgba(15,30,29,0.08);
+          padding: 28px 24px;
+          opacity: 0;
+          animation: klFadeIn 700ms ease-out 2400ms forwards;
+          z-index: 2;
+        }
+        .kl-proof-inner {
+          max-width: 1100px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+        }
+        .kl-proof-col {
+          padding-left: 16px;
+          border-left: 3px solid var(--kl-care);
+          text-align: left;
+        }
+        .kl-proof-num {
+          font-family: 'Inter Tight', 'Arial Black', sans-serif;
+          font-weight: 900;
+          font-size: clamp(28px, 3vw, 42px);
+          letter-spacing: -0.025em;
+          line-height: 1;
+          color: var(--kl-depth);
+        }
+        .kl-proof-num .unit { color: var(--kl-purpose); }
+        .kl-proof-label {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 12px;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          opacity: 0.7;
+          color: var(--kl-depth);
+          margin: 8px 0 0;
+        }
+
+        /* Keyframes */
+        @keyframes klFadeIn { to { opacity: 1; } }
+        @keyframes klFadeUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes klWordIn {
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes klBlink {
+          0%, 100% { opacity: 1; }
+          80%      { opacity: 0.25; }
+        }
+        @keyframes klPulseDot {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50%      { transform: scale(1.18); opacity: 0.5; }
+        }
+        @keyframes klShimmer {
+          0%   { left: -60%; }
+          50%  { left: 120%; }
+          100% { left: 120%; }
+        }
+        @keyframes klRotateBlob {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes klRotateBlob2 {
+          to { transform: rotate(-360deg); }
+        }
+        @keyframes klSpin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+          .kl-hero { padding: 72px 20px 56px; }
+          .kl-proof-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+          .kl-form-row { flex-direction: column; }
+          .kl-submit { width: 100%; }
+          .kl-blob.small { display: none; }
+          .kl-trust { font-size: 12px; }
+        }
+        @media (max-width: 540px) {
+          .kl-proof-inner { grid-template-columns: 1fr; }
+          .kl-marquee-item { font-size: 11px; padding: 0 18px; gap: 18px; }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .kl-eyebrow, .kl-h1 .word, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof,
+          .kl-eyebrow-dot, .kl-period, .kl-blob.big, .kl-blob.small,
+          .orbit, .map-dot, .map-pulse, .connector, .kl-submit::after,
+          .kl-rotator-word {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
           }
-          .dh-chip-row::-webkit-scrollbar { display: none; }
-          .dh-chip { flex-shrink: 0; }
+          .kl-h1 .word { opacity: 1; transform: none; }
+          .kl-eyebrow, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof { opacity: 1; }
+          .orbit { stroke-dashoffset: 0; }
+          .map-dot, .connector { opacity: 1; transform: none; }
         }
       `}</style>
 
-      <section className="dh-root">
-        <div className="dh-glow" />
-        <div className="dh-inner">
-          {/* S6E1 phone-frame video — left of headline on desktop, top on mobile */}
-          <div className="dh-phone-wrap">
-            {videoFailed ? (
-              <div className="dh-audio-fallback">
-                <p>Cold open · S6E1</p>
-                <audio
-                  src="/s6e1-cold-open.mp3"
-                  controls
-                  preload="metadata"
-                  aria-label="S6E1 cold open audio"
-                />
-              </div>
-            ) : (
-              <div className="dh-phone" role="group" aria-label="S6E1 video player">
-                <span aria-hidden className="dh-phone-btn-side" />
-                <span aria-hidden className="dh-phone-btn-vol1" />
-                <span aria-hidden className="dh-phone-btn-vol2" />
-                <div className="dh-phone-screen">
-                  <span aria-hidden className="dh-phone-island" />
-                  <video
-                    ref={videoRef}
-                    className="dh-phone-video"
-                    src="/s6e1-hero-vertical.mp4"
-                    poster="/s6e1-poster.jpg"
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    controls={typeof window !== 'undefined' && window.innerWidth < 769}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onError={() => setVideoFailed(true)}
-                  />
-                  <button
-                    type="button"
-                    className="dh-phone-control"
-                    onClick={(e) => { e.stopPropagation(); handleVideoTap(); }}
-                    aria-label={
-                      !isPlaying
-                        ? 'Play with sound'
-                        : isMuted
-                        ? 'Unmute'
-                        : 'Mute'
-                    }
-                  >
-                    {!isPlaying ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    ) : isMuted ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-                      </svg>
-                    ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
-            <p className="dh-phone-caption">
-              Adam Fridman, S6E1 of GTM for Professional Services
-            </p>
-          </div>
+      <section className="kl-root" aria-label="Hero">
+        <div className="kl-hero">
+          <svg
+            className="kl-blob big"
+            viewBox="0 0 576 610"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+          >
+            <path d="M537.319 540.412L227.81 609.6L34.3851 540.412L0 302.629L34.3851 34.5832L270.807 0L537.319 34.5832L576 259.406L537.319 540.412Z" fill="#CBD3CA" />
+          </svg>
+          <svg
+            className="kl-blob small"
+            viewBox="0 0 576 610"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+          >
+            <path d="M537.319 540.412L227.81 609.6L34.3851 540.412L0 302.629L34.3851 34.5832L270.807 0L537.319 34.5832L576 259.406L537.319 540.412Z" fill="#D5DED4" />
+          </svg>
 
-          <div className="dh-copy">
-            <p className="dh-industry">
-              <span className="dh-industry-lead">The First Research on How PS Firms Grow</span>
-            </p>
-            <h1 className="dh-headline">
-              Your next client already knows you<em>.</em>
+          <div className="kl-inner">
+            <div className="kl-eyebrow">
+              <span className="kl-eyebrow-dot" aria-hidden />
+              <span>Live · Diagnosing</span>
+              <span className="kl-eyebrow-vert" style={{ opacity: verticalVisible ? 1 : 0 }}>
+                {VERTICALS[verticalIdx]}
+              </span>
+              <span>firms now</span>
+            </div>
+
+            <h1 className="kl-h1">
+              <span className="word w1">Your</span>
+              <span className="word w2">next</span>
+              <span className="word w3 kl-rotator">
+                <span className={`kl-rotator-word ${rotatorPhase}`} key={rotatorIdx}>
+                  {ROTATOR_WORDS[rotatorIdx]}
+                </span>
+              </span>
+              <br />
+              <span className="word w4">already</span>
+              <span className="word w5">knows</span>
+              <span className="word w6">
+                you<span className="kl-period">.</span>
+              </span>
             </h1>
-            <p className="dh-sub">
-              The largest research on GTM in professional services. 500 practitioner interviews. Validated by Copulsky. Take the 10 min diagnostic. Peer benchmark. The chapter that fixes your biggest gap.
+
+            <p className="kl-sub">
+              <span className="kl-sub-inner">
+                The largest research on GTM in professional services.{' '}
+                <span className="kl-hl">500 practitioner interviews.</span> Validated by Copulsky.
+                The map shows where your firm sits in the <span className="kl-hl">Dead Zone</span>{' '}
+                — and the one chapter that fixes your biggest gap.
+              </span>
             </p>
 
-            <div className="dh-ctas">
-              <HeroUrlField
-                variant="dark"
-                submitLabel="Build My Map →"
-                foot="Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer firms."
-              />
+            <form className="kl-form" onSubmit={handleSubmit} noValidate data-cta="add-your-firm">
+              <div className="kl-form-row">
+                <div className="kl-input-wrap">
+                  <input
+                    type="url"
+                    autoComplete="url"
+                    className="kl-input"
+                    placeholder="yourfirm.com"
+                    aria-label="Your firm's website URL"
+                    value={website}
+                    onChange={(e) => {
+                      setWebsite(e.target.value);
+                      if (error) setError(null);
+                    }}
+                  />
+                </div>
+                <button type="submit" disabled={submitting} className="kl-submit">
+                  {submitting ? (
+                    <>
+                      <span className="kl-spin" aria-hidden />
+                      Building…
+                    </>
+                  ) : (
+                    <>
+                      Get My Map <span className="kl-submit-arrow" aria-hidden>→</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              {error && <p className="kl-error">{error}</p>}
+            </form>
+
+            <p className="kl-trust">
+              Free<span className="kl-trust-sep">·</span>90 seconds
+              <span className="kl-trust-sep">·</span>No email required
+              <span className="kl-trust-sep">·</span>Confidential
+              <span className="kl-trust-sep">·</span>Peer-benchmarked
+            </p>
+
+            <div className="kl-map-wrap">
+              <span className="kl-map-tl">
+                <span className="kl-map-tl-dot" aria-hidden />
+                Building map · 30-firm cohort
+              </span>
+              <span className="kl-map-br">Preview · Five Orbits framework</span>
+              <svg className="kl-map-svg" viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <line x1="40" y1="120" x2="680" y2="120" stroke="#0F1E1D" strokeWidth="0.5" opacity="0.15" />
+                <line x1="360" y1="20" x2="360" y2="220" stroke="#0F1E1D" strokeWidth="0.5" opacity="0.15" />
+                <g stroke="#0F1E1D" strokeWidth="0.8" opacity="0.3">
+                  <line x1="120" y1="118" x2="120" y2="122" />
+                  <line x1="240" y1="118" x2="240" y2="122" />
+                  <line x1="480" y1="118" x2="480" y2="122" />
+                  <line x1="600" y1="118" x2="600" y2="122" />
+                </g>
+                <ellipse className="orbit o1" cx="360" cy="120" rx="300" ry="100" />
+                <ellipse className="orbit o2" cx="360" cy="120" rx="225" ry="78" />
+                <ellipse className="orbit o3" cx="360" cy="120" rx="150" ry="55" />
+                <ellipse className="orbit o4" cx="360" cy="120" rx="80" ry="32" />
+                <g className="map-dot you">
+                  <circle cx="360" cy="120" r="9" fill="#FFBA1A" stroke="#0F1E1D" strokeWidth="2" />
+                  <circle className="map-pulse" cx="360" cy="120" r="9" fill="none" stroke="#FFBA1A" strokeWidth="1.5" />
+                </g>
+                <g className="map-dot signal">
+                  <circle cx="540" cy="155" r="7" fill="#BF461A" />
+                  <circle className="map-pulse" cx="540" cy="155" r="7" fill="none" stroke="#BF461A" strokeWidth="1.5" />
+                </g>
+                <circle className="map-dot q1" cx="180" cy="80" r="5" fill="#0F1E1D" opacity="0.5" />
+                <circle className="map-dot q2" cx="565" cy="68" r="4" fill="#0F1E1D" opacity="0.4" />
+                <circle className="map-dot q3" cx="200" cy="170" r="5" fill="#0F1E1D" opacity="0.45" />
+                <path className="connector" d="M 360 120 Q 450 115, 540 155" />
+                <g fontFamily="'IBM Plex Mono', monospace" fontSize="10" letterSpacing="0.5">
+                  <g className="map-dot you">
+                    <text x="360" y="105" textAnchor="middle" fill="#0F1E1D" fontWeight="700">YOUR FIRM</text>
+                  </g>
+                  <g className="map-dot signal">
+                    <text x="555" y="148" fill="#BF461A" fontWeight="700">DORMANT · $400K</text>
+                  </g>
+                </g>
+                <text x="40" y="232" fontFamily="'IBM Plex Mono', monospace" fontSize="9" fill="#0F1E1D" opacity="0.55" letterSpacing="1.5">RELATIONSHIP DEPTH →</text>
+                <text x="680" y="232" fontFamily="'IBM Plex Mono', monospace" fontSize="9" fill="#0F1E1D" opacity="0.55" letterSpacing="1.5" textAnchor="end">REVENUE OPPORTUNITY →</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="kl-proof">
+          <div className="kl-proof-inner">
+            {PROOF_STATS.map((stat, i) => (
+              <div className="kl-proof-col" key={stat.label}>
+                <div className="kl-proof-num">
+                  <span ref={(el) => { proofRefs.current[i] = el; }}>0</span>
+                </div>
+                <p className="kl-proof-label">{stat.label}</p>
+              </div>
+            ))}
+            <div className="kl-proof-col">
+              <div className="kl-proof-num">
+                $1.2<span className="unit">M</span>
+              </div>
+              <p className="kl-proof-label">Verified · AArete reactivation</p>
             </div>
           </div>
         </div>
