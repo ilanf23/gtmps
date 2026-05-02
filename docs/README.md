@@ -49,6 +49,7 @@ Six docs, ordered for reading top-to-bottom on first read, but each is independe
 | [`04-roadmap.md`](./04-roadmap.md) | The NEXT. Audit findings. P0/P1/P2 priority queue. Week 1–4 ship plan. Email capture strategy. Ops dashboard plan. | You're deciding what to build next or status-checking the trajectory |
 | [`05-playbook.md`](./05-playbook.md) | The DAILY. Local dev setup. Common tasks (add vertical, add microsite, edit copy, deploy). Lovable→Vercel migration plan. | You're sitting down to work today |
 | [`06-references.md`](./06-references.md) | The SOURCES. Notion link library. Lovable prompt archive. Glossary. Killed-stats list. Recommended reading order. | You need a citation or a backstop |
+| [`07-design-system.md`](./07-design-system.md) | The BRAND. Mabbly.com design system (palette, typography, visual language) extracted 2026-03-29 + migration map for `discover.mabbly.com`. Cross-property source of truth. | You're touching color, typography, CTAs, slides/social, or planning the brand-system migration |
 
 ---
 
