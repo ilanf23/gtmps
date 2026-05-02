@@ -570,7 +570,7 @@ export default function DiscoverHero() {
               </a>
             </div>
             <p className="dh-mini-foot" style={{ marginTop: -10, marginBottom: 0 }}>
-              Free. 10 minutes. Confidential. Benchmarked against peer firms.
+              Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer firms.
             </p>
           </div>
         </div>

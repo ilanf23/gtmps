@@ -49,7 +49,7 @@ export type VerticalContent = {
   hero: {
     headline: string;
     sub: string;
-    cohortLine: string;    // Free. 10 minutes. N consulting firms in the cohort.
+    cohortLine: string;    // Free. 90 seconds to build. 10 minutes to read. N consulting firms in the cohort.
   };
   reality: {
     title: string;
@@ -95,7 +95,7 @@ const consulting: VerticalContent = {
   hero: {
     headline: 'Your next consulting client already knows you.',
     sub: 'The first research on practice growth in management consulting. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant accounts and benchmark your firm\'s origination capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer management consulting firms.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer management consulting firms.',
   },
   ctaLabel: 'See Your Firm\'s Practice Growth Profile →',
   researchLabel: 'Practice Growth Research',
@@ -171,7 +171,7 @@ const law: VerticalContent = {
   hero: {
     headline: 'Your next matter already knows you.',
     sub: 'The first research on origination strategy in law. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant client relationships and benchmark your firm\'s origination capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against 20+ independent law firms.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against 20+ independent law firms.',
   },
   ctaLabel: 'See Your Firm\'s Origination Profile →',
   researchLabel: 'Origination Strategy Research',
@@ -247,7 +247,7 @@ const accounting: VerticalContent = {
   hero: {
     headline: 'Your next client already knows you.',
     sub: 'The first research on client development in accounting. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant clients, identify cross-sell gaps, and benchmark your firm\'s advisory expansion capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer accounting firms.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer accounting firms.',
   },
   ctaLabel: 'See Your Firm\'s Client Development Profile →',
   researchLabel: 'Client Development Research',
@@ -323,7 +323,7 @@ const msp: VerticalContent = {
   hero: {
     headline: 'Your next renewal already knows you.',
     sub: 'The first research on GTM in MSPs and IT services. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant accounts, lapsed POCs, and benchmark your firm\'s land-and-expand capability. SPR (Chicago technology consulting) identified 150 dormant enterprise contacts and restarted 3 conversations from 43 sends.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer MSPs.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer MSPs.',
   },
   ctaLabel: 'See Your Firm\'s GTM Profile →',
   sizingEyebrow: 'B · THE PIPELINE GAP',
@@ -403,7 +403,7 @@ const advisory: VerticalContent = {
   hero: {
     headline: 'Your next client already knows you.',
     sub: 'The first research on prospecting strategy in financial advisory. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant prospects, activate wealth event triggers, and benchmark your firm\'s practice growth capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer financial advisory firms.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer financial advisory firms.',
   },
   ctaLabel: 'See Your Firm\'s Prospecting Strategy Profile →',
   researchLabel: 'Prospecting Research',
@@ -477,7 +477,7 @@ const ae: VerticalContent = {
   hero: {
     headline: 'Your next project already knows you.',
     sub: 'The first research on business development in A&E. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant pursuits, activate repeat-client opportunities, and benchmark your firm\'s BD capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer A&E firms.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer A&E firms.',
   },
   ctaLabel: 'See Your Firm\'s BD Profile →',
   researchLabel: 'BD Research',
@@ -552,7 +552,7 @@ const recruiting: VerticalContent = {
   hero: {
     headline: 'Your next mandate already knows you.',
     sub: 'The first research on mandate origination in executive search. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Designed to surface dormant clients, retrack placed candidates, and benchmark your firm\'s origination capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer executive search firms.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer executive search firms.',
   },
   ctaLabel: 'See Your Firm\'s Mandate Origination Profile →',
   researchLabel: 'Mandate Origination Research',
@@ -626,7 +626,7 @@ const agency: VerticalContent = {
   hero: {
     headline: 'Your next account already knows you.',
     sub: 'The first research on new business in marketing and creative agencies. 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). Madcraft (digital agency) reactivated a $400K dormant proposal in 7 minutes. Calliope (B2B healthcare content) sent 2 emails to dormants and got 2 replies. Designed to surface lost pitches, activate dormant prospects, and benchmark your firm\'s new business capability.',
-    cohortLine: 'Free. 10 minutes. Confidential. Benchmarked against peer agencies.',
+    cohortLine: 'Free. 90 seconds to build. 10 minutes to read. Confidential. Benchmarked against peer agencies.',
   },
   ctaLabel: 'See Your Firm\'s New Business Profile →',
   researchLabel: 'New Business Research',
