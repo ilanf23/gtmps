@@ -35,7 +35,7 @@ export default function FeedbackDialog({
   onOpenChange,
   slug,
   context,
-  primary = "#B8933A",
+  primary = "#A8923A",
 }: Props) {
   const { toast } = useToast();
   const [name, setName] = useState("");
@@ -96,7 +96,7 @@ export default function FeedbackDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg bg-[#FBF8F4] text-[#1C1008] border border-black/10 rounded-none">
+      <DialogContent className="sm:max-w-lg bg-[#EDF5EC] text-[#0F1E1D] border border-black/10 rounded-none">
         {submitted ? (
           <div className="py-8 text-center">
             <div
@@ -117,9 +117,9 @@ export default function FeedbackDialog({
             <h2 className="text-2xl font-semibold mb-3">
               Thanks. Adam reads every one.
             </h2>
-            <p className="text-[#1C1008]/60 leading-relaxed">
+            <p className="text-[#0F1E1D]/60 leading-relaxed">
               If your note needs a reply, you'll hear back at{" "}
-              <span className="text-[#1C1008]/80">{email}</span>.
+              <span className="text-[#0F1E1D]/80">{email}</span>.
             </p>
           </div>
         ) : (
@@ -136,7 +136,7 @@ export default function FeedbackDialog({
               <DialogTitle className="text-2xl font-semibold leading-tight">
                 What worked. What didn't. What's missing.
               </DialogTitle>
-              <DialogDescription className="text-[#1C1008]/70">
+              <DialogDescription className="text-[#0F1E1D]/70">
                 Direct line to Adam. Every note is read.
               </DialogDescription>
             </DialogHeader>
@@ -145,7 +145,7 @@ export default function FeedbackDialog({
               <div>
                 <label
                   htmlFor="fbd-name"
-                  className="block text-xs uppercase tracking-wider text-[#1C1008]/60 mb-2"
+                  className="block text-xs uppercase tracking-wider text-[#0F1E1D]/60 mb-2"
                 >
                   Your name
                 </label>
@@ -156,7 +156,7 @@ export default function FeedbackDialog({
                   onChange={(e) => setName(e.target.value)}
                   maxLength={100}
                   disabled={submitting}
-                  className="w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors"
+                  className="w-full bg-white border border-black/10 text-[#0F1E1D] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#A8923A]/50 transition-colors"
                   placeholder="Jane Smith"
                 />
                 {errors.name && (
@@ -167,7 +167,7 @@ export default function FeedbackDialog({
               <div>
                 <label
                   htmlFor="fbd-email"
-                  className="block text-xs uppercase tracking-wider text-[#1C1008]/60 mb-2"
+                  className="block text-xs uppercase tracking-wider text-[#0F1E1D]/60 mb-2"
                 >
                   Email
                 </label>
@@ -178,7 +178,7 @@ export default function FeedbackDialog({
                   onChange={(e) => setEmail(e.target.value)}
                   maxLength={255}
                   disabled={submitting}
-                  className="w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors"
+                  className="w-full bg-white border border-black/10 text-[#0F1E1D] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#A8923A]/50 transition-colors"
                   placeholder="jane@firm.com"
                 />
                 {errors.email && (
@@ -189,7 +189,7 @@ export default function FeedbackDialog({
               <div>
                 <label
                   htmlFor="fbd-message"
-                  className="block text-xs uppercase tracking-wider text-[#1C1008]/60 mb-2"
+                  className="block text-xs uppercase tracking-wider text-[#0F1E1D]/60 mb-2"
                 >
                   Feedback
                 </label>
@@ -200,7 +200,7 @@ export default function FeedbackDialog({
                   maxLength={2000}
                   disabled={submitting}
                   rows={5}
-                  className="w-full bg-white border border-black/10 text-[#1C1008] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#B8933A]/50 transition-colors resize-y"
+                  className="w-full bg-white border border-black/10 text-[#0F1E1D] placeholder:text-black/30 px-3 py-2.5 text-sm rounded focus:outline-none focus:border-[#A8923A]/50 transition-colors resize-y"
                   placeholder="What stood out? What was confusing? What would have made this more useful?"
                 />
                 <div className="flex justify-between mt-1.5">
@@ -213,7 +213,7 @@ export default function FeedbackDialog({
                 type="submit"
                 disabled={submitting}
                 className="self-start font-semibold uppercase tracking-wider text-sm px-8 py-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
-                style={{ backgroundColor: primary, color: "#120D05" }}
+                style={{ backgroundColor: primary, color: "#0F1E1D" }}
               >
                 {submitting ? "Sending…" : "Send feedback"}
               </button>

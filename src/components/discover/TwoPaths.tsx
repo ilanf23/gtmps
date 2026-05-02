@@ -4,8 +4,8 @@ export default function TwoPaths() {
       id="two-paths"
       className="px-6 md:px-10"
       style={{
-        background: '#F5EFE0',
-        borderTop: '1px solid rgba(184,147,58,0.12)',
+        background: '#EDF5EC',
+        borderTop: '1px solid rgba(168, 146, 58,0.12)',
         paddingTop: 144,
         paddingBottom: 144,
       }}
@@ -26,7 +26,7 @@ export default function TwoPaths() {
         }
         .tp-card-ii:hover {
           transform: translateY(-4px);
-          border-color: rgba(184,147,58,0.6);
+          border-color: rgba(168, 146, 58,0.6);
         }
         .tp-anim-i { animation: fadeUp 0.7s ease 0.1s both; }
         .tp-anim-ii { animation: fadeUp 0.7s ease 0.2s both; }
@@ -39,7 +39,7 @@ export default function TwoPaths() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
           }}
@@ -51,7 +51,7 @@ export default function TwoPaths() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
@@ -156,8 +156,8 @@ export default function TwoPaths() {
           <div
             className="tp-card tp-card-ii tp-anim-ii"
             style={{
-              background: 'rgba(184,147,58,0.05)',
-              border: '2px solid rgba(184,147,58,0.4)',
+              background: 'rgba(168, 146, 58,0.05)',
+              border: '2px solid rgba(168, 146, 58,0.4)',
               borderRadius: 6,
               padding: '40px 36px',
             }}
@@ -168,7 +168,7 @@ export default function TwoPaths() {
                 fontSize: 13,
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',
-                color: '#B8933A',
+                color: '#A8923A',
                 marginBottom: 18,
                 fontWeight: 500,
               }}
@@ -180,7 +180,7 @@ export default function TwoPaths() {
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 'clamp(80px, 10vw, 128px)',
                 fontWeight: 700,
-                color: 'rgba(184,147,58,0.18)',
+                color: 'rgba(168, 146, 58,0.18)',
                 lineHeight: 1,
                 marginBottom: 18,
                 letterSpacing: '-0.05em',
@@ -203,7 +203,7 @@ export default function TwoPaths() {
             </p>
             <div
               style={{
-                borderTop: '1px solid rgba(184,147,58,0.22)',
+                borderTop: '1px solid rgba(168, 146, 58,0.22)',
                 margin: '24px 0',
               }}
             />
@@ -211,7 +211,7 @@ export default function TwoPaths() {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 'clamp(20px, 2vw, 26px)',
-                color: '#B8933A',
+                color: '#A8923A',
                 margin: 0,
                 fontWeight: 500,
                 letterSpacing: '-0.015em',

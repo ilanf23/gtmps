@@ -5,7 +5,7 @@ export default function WarStory() {
       className="px-6 md:px-10"
       style={{
         background: '#0F0A05',
-        borderTop: '1px solid rgba(184,147,58,0.1)',
+        borderTop: '1px solid rgba(168, 146, 58,0.1)',
         paddingTop: 144,
         paddingBottom: 144,
       }}
@@ -23,7 +23,7 @@ export default function WarStory() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
           }}
@@ -35,7 +35,7 @@ export default function WarStory() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '18px 0 28px',
           }}
         />
@@ -44,7 +44,7 @@ export default function WarStory() {
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(48px, 7vw, 84px)',
             fontWeight: 500,
-            color: '#F5EFE0',
+            color: '#EDF5EC',
             lineHeight: 0.98,
             letterSpacing: '-0.035em',
             margin: '0 0 18px',
@@ -56,7 +56,7 @@ export default function WarStory() {
           style={{
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(18px, 1.8vw, 22px)',
-            color: 'rgba(245,239,224,0.55)',
+            color: 'rgba(237, 245, 236,0.55)',
             margin: '0 0 48px',
             fontWeight: 300,
             lineHeight: 1.5,
@@ -67,9 +67,9 @@ export default function WarStory() {
 
         <div
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontFamily: "var(--font-display)",
             fontSize: 'clamp(17px, 1.5vw, 19px)',
-            color: 'rgba(245,239,224,0.78)',
+            color: 'rgba(237, 245, 236,0.78)',
             lineHeight: 1.75,
             fontWeight: 400,
           }}
@@ -88,7 +88,7 @@ export default function WarStory() {
             style={{
               margin: '0 0 20px',
               fontStyle: 'italic',
-              color: '#B8933A',
+              color: '#A8923A',
               fontSize: 'clamp(20px, 2vw, 24px)',
             }}
           >
@@ -121,7 +121,7 @@ export default function WarStory() {
           style={{
             marginTop: 48,
             paddingTop: 24,
-            borderTop: '1px solid rgba(184,147,58,0.18)',
+            borderTop: '1px solid rgba(168, 146, 58,0.18)',
           }}
         >
           <a
@@ -133,9 +133,9 @@ export default function WarStory() {
               fontSize: 13,
               letterSpacing: '0.16em',
               textTransform: 'uppercase',
-              color: '#B8933A',
+              color: '#A8923A',
               textDecoration: 'none',
-              borderBottom: '1px solid rgba(184,147,58,0.4)',
+              borderBottom: '1px solid rgba(168, 146, 58,0.4)',
               paddingBottom: 4,
             }}
           >

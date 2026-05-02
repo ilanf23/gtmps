@@ -22,8 +22,8 @@ const DuotonePortrait = ({
     className={`relative overflow-hidden ${className}`}
     style={{
       aspectRatio: ratio,
-      border: "1px solid rgba(184,147,58,0.45)",
-      boxShadow: "0 24px 48px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,147,58,0.15) inset",
+      border: "1px solid rgba(168, 146, 58,0.45)",
+      boxShadow: "0 24px 48px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(168, 146, 58,0.15) inset",
       background: "#0A0A0A",
     }}
   >

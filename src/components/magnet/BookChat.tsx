@@ -251,23 +251,23 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
                 className="flex gap-3 sm:gap-4 items-start"
               >
                 <span
-                  className="mt-1 w-6 h-6 rounded-full bg-[#B8933A]/15 border border-[#B8933A]/40 text-[#B8933A] text-xs flex items-center justify-center shrink-0"
+                  className="mt-1 w-6 h-6 rounded-full bg-[#A8923A]/15 border border-[#A8923A]/40 text-[#A8923A] text-xs flex items-center justify-center shrink-0"
                   aria-hidden
                 >
                   ⊙
                 </span>
-                <div className="text-[15px] leading-relaxed text-[#1C1008]/90 prose prose-sm max-w-none prose-headings:text-[#1C1008] prose-strong:text-[#1C1008] prose-a:text-[#B8933A]">
+                <div className="text-[15px] leading-relaxed text-[#0F1E1D]/90 prose prose-sm max-w-none prose-headings:text-[#0F1E1D] prose-strong:text-[#0F1E1D] prose-a:text-[#A8923A]">
                   {m.content ? (
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   ) : (
                     <span className="inline-flex gap-1.5 items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#B8933A] animate-pulse" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#A8923A] animate-pulse" />
                       <span
-                        className="w-1.5 h-1.5 rounded-full bg-[#B8933A] animate-pulse"
+                        className="w-1.5 h-1.5 rounded-full bg-[#A8923A] animate-pulse"
                         style={{ animationDelay: "150ms" }}
                       />
                       <span
-                        className="w-1.5 h-1.5 rounded-full bg-[#B8933A] animate-pulse"
+                        className="w-1.5 h-1.5 rounded-full bg-[#A8923A] animate-pulse"
                         style={{ animationDelay: "300ms" }}
                       />
                     </span>
@@ -276,7 +276,7 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
               </div>
             ) : (
               <div key={i} className="flex justify-end">
-                <div className="max-w-[85%] bg-black/5 border border-black/10 rounded-lg px-4 py-3 text-[15px] leading-relaxed text-[#1C1008]/90">
+                <div className="max-w-[85%] bg-black/5 border border-black/10 rounded-lg px-4 py-3 text-[15px] leading-relaxed text-[#0F1E1D]/90">
                   {m.content}
                 </div>
               </div>
@@ -291,22 +291,22 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
             >
               <div className="flex items-start gap-3 sm:gap-4">
                 <span
-                  className="mt-0.5 w-6 h-6 rounded-full bg-[#B8933A]/15 border border-[#B8933A]/40 text-[#B8933A] text-[10px] font-mono uppercase tracking-[0.14em] flex items-center justify-center shrink-0"
+                  className="mt-0.5 w-6 h-6 rounded-full bg-[#A8923A]/15 border border-[#A8923A]/40 text-[#A8923A] text-[10px] font-mono uppercase tracking-[0.14em] flex items-center justify-center shrink-0"
                   aria-hidden
                 >
                   A
                 </span>
                 <div className="flex flex-col gap-1">
-                  <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#B8933A]/90">
+                  <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#A8923A]/90">
                     Ask Adam
                   </p>
-                  <p className="text-[14px] sm:text-[15px] leading-relaxed text-[#1C1008]/70">
+                  <p className="text-[14px] sm:text-[15px] leading-relaxed text-[#0F1E1D]/70">
                     Adam co-wrote the book. Pick a starter or ask anything in your own
                     words
                     {firmName ? (
                       <>
                         {" "}— answers are framed for{" "}
-                        <span className="font-medium text-[#1C1008]">
+                        <span className="font-medium text-[#0F1E1D]">
                           {firmName}
                         </span>
                       </>
@@ -326,12 +326,12 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
                       type="button"
                       onClick={() => sendMessage(prompt)}
                       disabled={isLoading}
-                      className="group w-full text-left rounded-lg border border-black/10 bg-black/[0.02] hover:bg-black/[0.04] hover:border-[#B8933A]/40 px-3.5 py-2.5 text-[14px] leading-snug text-[#1C1008]/85 hover:text-[#1C1008] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-between gap-3"
+                      className="group w-full text-left rounded-lg border border-black/10 bg-black/[0.02] hover:bg-black/[0.04] hover:border-[#A8923A]/40 px-3.5 py-2.5 text-[14px] leading-snug text-[#0F1E1D]/85 hover:text-[#0F1E1D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-between gap-3"
                     >
                       <span>{prompt}</span>
                       <span
                         aria-hidden
-                        className="text-[#B8933A]/60 group-hover:text-[#B8933A] transition-colors text-[1.05em] leading-none shrink-0"
+                        className="text-[#A8923A]/60 group-hover:text-[#A8923A] transition-colors text-[1.05em] leading-none shrink-0"
                       >
                         →
                       </span>
@@ -345,9 +345,9 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
       </div>
 
       {/* Input bar */}
-      <div className="border-t border-black/10 bg-[#FBF8F4]/95 backdrop-blur sticky bottom-0">
+      <div className="border-t border-black/10 bg-[#EDF5EC]/95 backdrop-blur sticky bottom-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex gap-2 items-end bg-black/5 border border-black/10 rounded-xl px-3 py-2 focus-within:border-[#B8933A]/50 transition-colors">
+          <div className="flex gap-2 items-end bg-black/5 border border-black/10 rounded-xl px-3 py-2 focus-within:border-[#A8923A]/50 transition-colors">
             <textarea
               ref={textareaRef}
               value={input}
@@ -360,13 +360,13 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
                   : "Ask Adam about the GTM book…"
               }
               rows={1}
-              className="flex-1 bg-transparent text-[15px] text-[#1C1008] placeholder:text-black/30 focus:outline-none resize-none py-1.5 max-h-[200px]"
+              className="flex-1 bg-transparent text-[15px] text-[#0F1E1D] placeholder:text-black/30 focus:outline-none resize-none py-1.5 max-h-[200px]"
             />
             <button
               type="button"
               onClick={() => sendMessage()}
               disabled={isLoading || !input.trim()}
-              className="bg-[#B8933A] hover:bg-[#a07c2e] text-[#120D05] w-9 h-9 rounded-lg shrink-0 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+              className="bg-[#A8923A] hover:bg-[#8F7C2F] text-[#0F1E1D] w-9 h-9 rounded-lg shrink-0 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
               aria-label="Send message"
             >
               <SendHorizontal className="w-4 h-4" />

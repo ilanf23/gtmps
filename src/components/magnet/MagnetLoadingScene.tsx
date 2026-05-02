@@ -207,7 +207,7 @@ export default function MagnetLoadingScene({
                   cx={d.x}
                   cy={d.y}
                   r={d.r}
-                  fill="var(--ms-accent, #B8933A)"
+                  fill="var(--ms-accent, #A8923A)"
                   opacity={reduced ? 0.4 : 0}
                   style={{ animation }}
                 />
@@ -234,7 +234,7 @@ export default function MagnetLoadingScene({
                 height={DOC.h}
                 rx={4}
                 fill="none"
-                stroke="var(--ms-text, #1C1008)"
+                stroke="var(--ms-text, #0F1E1D)"
                 strokeOpacity={0.18}
                 strokeWidth={1}
                 strokeDasharray={2 * (DOC.w + DOC.h)}
@@ -257,7 +257,7 @@ export default function MagnetLoadingScene({
                     width={w}
                     height={3}
                     rx={1}
-                    fill="var(--ms-text, #1C1008)"
+                    fill="var(--ms-text, #0F1E1D)"
                     opacity={0}
                     style={{
                       animation: reduced
@@ -282,7 +282,7 @@ export default function MagnetLoadingScene({
                       x2={DOC.x + DOC.w}
                       y1={DOC.y}
                       y2={DOC.y}
-                      stroke="var(--ms-accent, #B8933A)"
+                      stroke="var(--ms-accent, #A8923A)"
                       strokeWidth={1}
                       strokeOpacity={0.9}
                     />
@@ -299,8 +299,8 @@ export default function MagnetLoadingScene({
               )}
               <defs>
                 <linearGradient id="scanFade" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stopColor="var(--ms-accent, #B8933A)" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="var(--ms-accent, #B8933A)" stopOpacity="0" />
+                  <stop offset="0%" stopColor="var(--ms-accent, #A8923A)" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="var(--ms-accent, #A8923A)" stopOpacity="0" />
                 </linearGradient>
               </defs>
             </g>
@@ -320,7 +320,7 @@ export default function MagnetLoadingScene({
                     cy={CENTER}
                     r={r}
                     fill="none"
-                    stroke="var(--ms-text, #1C1008)"
+                    stroke="var(--ms-text, #0F1E1D)"
                     strokeOpacity={0.12}
                     strokeWidth={1}
                     strokeDasharray={circumference}
@@ -358,14 +358,14 @@ export default function MagnetLoadingScene({
                       cx={p.x}
                       cy={p.y}
                       r={3}
-                      fill="var(--ms-accent, #B8933A)"
+                      fill="var(--ms-accent, #A8923A)"
                     />
                     <circle
                       cx={p.x}
                       cy={p.y}
                       r={6}
                       fill="none"
-                      stroke="var(--ms-accent, #B8933A)"
+                      stroke="var(--ms-accent, #A8923A)"
                       strokeOpacity={0.4}
                       strokeWidth={1}
                     />
@@ -377,7 +377,7 @@ export default function MagnetLoadingScene({
                       fontSize={9}
                       fontWeight={500}
                       letterSpacing={1.2}
-                      fill="var(--ms-text, #1C1008)"
+                      fill="var(--ms-text, #0F1E1D)"
                       fillOpacity={0.55}
                       style={{ textTransform: "uppercase" }}
                     >
@@ -401,9 +401,9 @@ export default function MagnetLoadingScene({
             >
               <path
                 d={wedgePath}
-                fill="var(--ms-accent, #B8933A)"
+                fill="var(--ms-accent, #A8923A)"
                 fillOpacity={0.12}
-                stroke="var(--ms-accent, #B8933A)"
+                stroke="var(--ms-accent, #A8923A)"
                 strokeOpacity={0.5}
                 strokeWidth={1}
                 strokeDasharray="3 3"
@@ -414,7 +414,7 @@ export default function MagnetLoadingScene({
                 fontFamily="'Cormorant Garamond', serif"
                 fontStyle="italic"
                 fontSize={13}
-                fill="var(--ms-accent, #B8933A)"
+                fill="var(--ms-accent, #A8923A)"
                 fillOpacity={0.85}
               >
                 Dead Zone
@@ -447,7 +447,7 @@ export default function MagnetLoadingScene({
                       fontFamily="'Cormorant Garamond', serif"
                       fontStyle="italic"
                       fontSize={10}
-                      fill="var(--ms-text, #1C1008)"
+                      fill="var(--ms-text, #0F1E1D)"
                       fillOpacity={0.5}
                     >
                       L{i + 1}
@@ -458,7 +458,7 @@ export default function MagnetLoadingScene({
                       width={trackW}
                       height={2}
                       rx={1}
-                      fill="var(--ms-text, #1C1008)"
+                      fill="var(--ms-text, #0F1E1D)"
                       fillOpacity={0.1}
                     />
                     <rect
@@ -467,7 +467,7 @@ export default function MagnetLoadingScene({
                       width={fillW}
                       height={2}
                       rx={1}
-                      fill="var(--ms-accent, #B8933A)"
+                      fill="var(--ms-accent, #A8923A)"
                       style={{
                         transformOrigin: `${x}px ${y}px`,
                         animation: reduced
@@ -489,7 +489,7 @@ export default function MagnetLoadingScene({
                   fontFamily: "'Cormorant Garamond', serif",
                   fontStyle: "italic",
                   fontSize: 16,
-                  color: "var(--ms-text, #1C1008)",
+                  color: "var(--ms-text, #0F1E1D)",
                   opacity: 0.75,
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -513,7 +513,7 @@ export default function MagnetLoadingScene({
                     display: "inline-block",
                     width: 1,
                     height: 14,
-                    background: "var(--ms-accent, #B8933A)",
+                    background: "var(--ms-accent, #A8923A)",
                     animation: "magnet-caret 0.9s steps(1) infinite",
                   }}
                 />
@@ -527,8 +527,8 @@ export default function MagnetLoadingScene({
               cx={CENTER}
               cy={CENTER}
               r={36}
-              fill="var(--ms-bg, #FBF8F4)"
-              stroke="var(--ms-accent, #B8933A)"
+              fill="var(--ms-bg, #EDF5EC)"
+              stroke="var(--ms-accent, #A8923A)"
               strokeOpacity={0.7}
               strokeWidth={1}
             />
@@ -546,7 +546,7 @@ export default function MagnetLoadingScene({
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  stroke="var(--ms-accent, #B8933A)"
+                  stroke="var(--ms-accent, #A8923A)"
                   strokeOpacity={0.6}
                   strokeWidth={1}
                 />
@@ -568,7 +568,7 @@ export default function MagnetLoadingScene({
                     L ${CENTER - 5} ${CENTER}
                     Z`}
                 fill="none"
-                stroke="var(--ms-accent, #B8933A)"
+                stroke="var(--ms-accent, #A8923A)"
                 strokeOpacity={0.35}
                 strokeWidth={0.75}
               />
@@ -579,7 +579,7 @@ export default function MagnetLoadingScene({
                     L ${CENTER} ${CENTER - 5}
                     Z`}
                 fill="none"
-                stroke="var(--ms-accent, #B8933A)"
+                stroke="var(--ms-accent, #A8923A)"
                 strokeOpacity={0.35}
                 strokeWidth={0.75}
               />
@@ -589,7 +589,7 @@ export default function MagnetLoadingScene({
               x={CENTER}
               y={CENTER + 7}
               textAnchor="middle"
-              fill="var(--ms-accent, #B8933A)"
+              fill="var(--ms-accent, #A8923A)"
               fontFamily="'Cormorant Garamond', serif"
               fontStyle="italic"
               fontSize={22}
@@ -605,12 +605,12 @@ export default function MagnetLoadingScene({
 
       {/* Layer 5 — editorial text block */}
       <div className="relative z-10 w-full max-w-xl flex flex-col items-center text-center -mt-4 sm:-mt-8">
-        <p className="text-[#B8933A] text-[11px] uppercase tracking-[0.32em] font-semibold mb-4">
+        <p className="text-[#A8923A] text-[11px] uppercase tracking-[0.32em] font-semibold mb-4">
           Building Your Map
         </p>
 
         <h1
-          className="text-[#1C1008] mb-7"
+          className="text-[#0F1E1D] mb-7"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
@@ -627,28 +627,28 @@ export default function MagnetLoadingScene({
         <div className="w-full max-w-sm" aria-live="polite">
           <p
             key={stepIndex}
-            className="text-[#1C1008]/70 text-xs sm:text-sm uppercase tracking-[0.22em] min-h-[1.25rem] transition-opacity duration-500"
+            className="text-[#0F1E1D]/70 text-xs sm:text-sm uppercase tracking-[0.22em] min-h-[1.25rem] transition-opacity duration-500"
             style={{ opacity: stepVisible ? 1 : 0 }}
           >
             {steps[stepIndex]}
           </p>
 
-          <div className="mt-4 w-full h-px bg-[#1C1008]/10 overflow-hidden">
+          <div className="mt-4 w-full h-px bg-[#0F1E1D]/10 overflow-hidden">
             <div
               key={stepIndex}
-              className="h-full bg-[#B8933A]"
+              className="h-full bg-[#A8923A]"
               style={{
                 width: reduced ? "100%" : "0%",
                 animation: reduced
                   ? "none"
                   : `magnet-bar-grow ${STEP_DURATION_MS}ms linear forwards`,
-                boxShadow: "0 0 12px rgba(184,147,58,0.6)",
+                boxShadow: "0 0 12px rgba(168, 146, 58,0.6)",
               }}
             />
           </div>
         </div>
 
-        <p className="mt-10 text-[10px] uppercase tracking-[0.32em] text-[#1C1008]/40">
+        <p className="mt-10 text-[10px] uppercase tracking-[0.32em] text-[#0F1E1D]/40">
           This usually takes 60 to 90 seconds
         </p>
       </div>

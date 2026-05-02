@@ -148,9 +148,9 @@ export default function MagnetBreakdown({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FBF8F4] flex items-center justify-center">
+      <div className="min-h-screen bg-[#EDF5EC] flex items-center justify-center">
         <div
-          className="w-10 h-10 rounded-full border-2 border-[#B8933A]/30 border-t-[#B8933A] animate-spin"
+          className="w-10 h-10 rounded-full border-2 border-[#A8923A]/30 border-t-[#A8923A] animate-spin"
           aria-label="Loading"
         />
       </div>
@@ -159,7 +159,7 @@ export default function MagnetBreakdown({
 
   if (error || !data || !scores) {
     return (
-      <div className="min-h-screen bg-[#FBF8F4] text-[#1C1008] flex items-center justify-center px-6">
+      <div className="min-h-screen bg-[#EDF5EC] text-[#0F1E1D] flex items-center justify-center px-6">
         <p className="text-sm opacity-60 text-center max-w-md">
           We couldn't load your breakdown. {error ?? ""}
         </p>
@@ -215,11 +215,11 @@ export default function MagnetBreakdown({
   // primary accent when it still reads. See assertReadableBrand for detail.
   const p = data.client_brand_profile?.palette ?? {};
   const rawBrand = {
-    primary: pick(p.primary, "#B8933A"),
-    background: pick(p.background, "#FBF8F4"),
+    primary: pick(p.primary, "#A8923A"),
+    background: pick(p.background, "#EDF5EC"),
     surface: pick(p.surface, "#FFFFFF"),
-    text: pick(p.text, "#1C1008"),
-    textMuted: pick(p.textMuted, "#1C1008"),
+    text: pick(p.text, "#0F1E1D"),
+    textMuted: pick(p.textMuted, "#0F1E1D"),
   };
   const { brand: readableBrand } = assertReadableBrand(rawBrand, data.client_company_name);
 
@@ -231,7 +231,7 @@ export default function MagnetBreakdown({
   // force the body bg to Mabbly cream + ink text. The firm's `primary`
   // accent stays intact for links, button text, and accent rules.
   const brand = shouldForceDarkBodyFallback(readableBrand.background)
-    ? { ...readableBrand, background: "#FBF8F4", surface: "#FFFFFF", text: "#1C1008", textMuted: "rgba(28,16,8,0.6)" }
+    ? { ...readableBrand, background: "#EDF5EC", surface: "#FFFFFF", text: "#0F1E1D", textMuted: "rgba(15, 30, 29,0.6)" }
     : readableBrand;
 
   // "Built X seconds ago" — only meaningful for first 5 minutes
@@ -312,8 +312,8 @@ export default function MagnetBreakdown({
           }
           /* Re-left-align dense card bodies so OHQ panels and share/save cards
              don't read as ransom-notes when text wraps. */
-          .ms-centered [class*="bg-[#FBF8F4]"] { text-align: left; }
-          .ms-centered [class*="bg-[#FBF8F4]"] .flex.items-center.gap-2 { justify-content: flex-start; }
+          .ms-centered [class*="bg-[#EDF5EC]"] { text-align: left; }
+          .ms-centered [class*="bg-[#EDF5EC]"] .flex.items-center.gap-2 { justify-content: flex-start; }
         `}</style>
         <PersonalizedHeader
           firmName={customerName}

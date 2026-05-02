@@ -49,9 +49,9 @@ const TopNav = () => {
   }, []);
 
   const onHero = !scrolled;
-  const linkColor = onHero ? "rgba(245,241,232,0.7)" : "rgba(13,17,23,0.6)";
-  const linkHover = onHero ? "#F5F1E8" : "#0D1117";
-  const wordColor = onHero ? "rgba(245,241,232,0.85)" : "#0D1117";
+  const linkColor = onHero ? "rgba(245,241,232,0.7)" : "rgba(15, 30, 29,0.6)";
+  const linkHover = onHero ? "#EDF5EC" : "#0F1E1D";
+  const wordColor = onHero ? "rgba(245,241,232,0.85)" : "#0F1E1D";
 
   return (
     <>
@@ -62,8 +62,8 @@ const TopNav = () => {
           backdropFilter: onHero ? "none" : "blur(20px)",
           height: 64,
           borderBottom: onHero
-            ? "1px solid rgba(184,147,58,0)"
-            : "1px solid rgba(13,17,23,0.08)",
+            ? "1px solid rgba(168, 146, 58,0)"
+            : "1px solid rgba(15, 30, 29,0.08)",
         }}
       >
         <Link to="/discover" className="flex items-baseline gap-2 group">
@@ -101,8 +101,8 @@ const TopNav = () => {
                 role="menu"
                 className="absolute top-full mt-2 left-1/2 -translate-x-1/2 min-w-[280px]"
                 style={{
-                  background: "#1C1008",
-                  border: "1px solid rgba(184,147,58,0.25)",
+                  background: "#0F1E1D",
+                  border: "1px solid rgba(168, 146, 58,0.25)",
                   borderRadius: 6,
                   padding: 8,
                   boxShadow: "0 16px 48px -12px rgba(0,0,0,0.4)",
@@ -124,20 +124,20 @@ const TopNav = () => {
                         padding: "12px 16px",
                         fontFamily: "'Inter Tight', sans-serif",
                         fontSize: 14,
-                        color: "#F5EFE0",
+                        color: "#EDF5EC",
                         textDecoration: "none",
                         borderRadius: 4,
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(184,147,58,0.12)";
-                        e.currentTarget.style.color = "#B8933A";
+                        e.currentTarget.style.background = "rgba(168, 146, 58,0.12)";
+                        e.currentTarget.style.color = "#A8923A";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "#F5EFE0";
+                        e.currentTarget.style.color = "#EDF5EC";
                       }}
                     >
-                      <Icon size={16} color="#B8933A" strokeWidth={1.7} />
+                      <Icon size={16} color="#A8923A" strokeWidth={1.7} />
                       {v.label}
                     </Link>
                   );
@@ -179,8 +179,8 @@ const TopNav = () => {
             style={{
               fontSize: 13,
               padding: "9px 22px",
-              background: "linear-gradient(135deg, #B8933A 0%, #D4AE48 100%)",
-              color: "#0D1117",
+              background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
+              color: "#0F1E1D",
               border: "none",
               fontWeight: 600,
             }}
@@ -193,7 +193,7 @@ const TopNav = () => {
           className="lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
-          style={{ color: onHero ? "#F5F1E8" : "#0D1117", transition: "color 500ms ease" }}
+          style={{ color: onHero ? "#EDF5EC" : "#0F1E1D", transition: "color 500ms ease" }}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -218,13 +218,13 @@ const TopNav = () => {
                     alignItems: "center",
                     gap: 12,
                     fontSize: 19,
-                    color: "#F5F1E8",
+                    color: "#EDF5EC",
                     padding: "12px 0",
-                    borderBottom: "1px solid rgba(184,147,58,0.15)",
+                    borderBottom: "1px solid rgba(168, 146, 58,0.15)",
                     textDecoration: "none",
                   }}
                 >
-                  <Icon size={18} color="#B8933A" strokeWidth={1.7} />
+                  <Icon size={18} color="#A8923A" strokeWidth={1.7} />
                   {v.label}
                 </Link>
               );
@@ -260,8 +260,8 @@ const TopNav = () => {
             onClick={() => setOpen(false)}
             className="font-sans font-semibold rounded-full mt-3 px-8 py-3"
             style={{
-              background: "linear-gradient(135deg, #B8933A 0%, #D4AE48 100%)",
-              color: "#0D1117",
+              background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
+              color: "#0F1E1D",
               fontSize: 14,
             }}
           >
@@ -281,7 +281,7 @@ const eyebrowStyle: React.CSSProperties = {
   fontSize: 11,
   letterSpacing: "0.18em",
   textTransform: "uppercase",
-  color: "#B8933A",
+  color: "#A8923A",
   margin: 0,
 };
 
@@ -298,22 +298,22 @@ const VERTICAL_TAGLINES: Record<VerticalSlug, string> = {
 
 /* Headline + body presets */
 const h2Dark: React.CSSProperties = {
-  fontFamily: "'Cormorant Garamond', Georgia, serif",
+  fontFamily: "var(--font-display)",
   fontSize: "clamp(32px, 4.4vw, 52px)",
   lineHeight: 1.05,
   letterSpacing: "-0.02em",
   fontWeight: 500,
-  color: "#F5EFE0",
+  color: "#EDF5EC",
   margin: "20px 0 28px",
   maxWidth: 820,
 };
-const h2Light: React.CSSProperties = { ...h2Dark, color: "#0D1117" };
+const h2Light: React.CSSProperties = { ...h2Dark, color: "#0F1E1D" };
 
 const bodyDark: React.CSSProperties = {
   fontFamily: "'Inter Tight', sans-serif",
   fontSize: 17,
   lineHeight: 1.7,
-  color: "rgba(245,239,224,0.78)",
+  color: "rgba(237, 245, 236,0.78)",
   margin: 0,
   maxWidth: 720,
 };
@@ -321,7 +321,7 @@ const bodyLight: React.CSSProperties = {
   fontFamily: "'Inter Tight', sans-serif",
   fontSize: 17,
   lineHeight: 1.7,
-  color: "rgba(13,17,23,0.78)",
+  color: "rgba(15, 30, 29,0.78)",
   margin: 0,
   maxWidth: 720,
 };
@@ -331,11 +331,11 @@ const pullQuoteDark: React.CSSProperties = {
   fontStyle: "italic",
   fontSize: "clamp(20px, 2.2vw, 26px)",
   lineHeight: 1.55,
-  color: "rgba(245,239,224,0.92)",
+  color: "rgba(237, 245, 236,0.92)",
   margin: 0,
   maxWidth: 760,
 };
-const pullQuoteLight: React.CSSProperties = { ...pullQuoteDark, color: "rgba(13,17,23,0.92)" };
+const pullQuoteLight: React.CSSProperties = { ...pullQuoteDark, color: "rgba(15, 30, 29,0.92)" };
 
 /* Outline gold CTA (secondary). Primary gold pill stays exclusive to "Add Your Firm". */
 const outlineCtaBase: React.CSSProperties = {
@@ -346,24 +346,24 @@ const outlineCtaBase: React.CSSProperties = {
   fontWeight: 600,
   fontSize: 13,
   letterSpacing: "0.04em",
-  color: "#B8933A",
+  color: "#A8923A",
   padding: "12px 22px",
   borderRadius: 999,
-  border: "1px solid rgba(184,147,58,0.55)",
+  border: "1px solid rgba(168, 146, 58,0.55)",
   background: "transparent",
   textDecoration: "none",
   transition: "background 180ms ease, color 180ms ease, border-color 180ms ease",
   marginTop: 32,
 };
 const outlineHoverIn = (e: React.MouseEvent<HTMLElement>) => {
-  e.currentTarget.style.background = "rgba(184,147,58,0.12)";
-  e.currentTarget.style.color = "#D4AE48";
-  e.currentTarget.style.borderColor = "#D4AE48";
+  e.currentTarget.style.background = "rgba(168, 146, 58,0.12)";
+  e.currentTarget.style.color = "#C4AC4A";
+  e.currentTarget.style.borderColor = "#C4AC4A";
 };
 const outlineHoverOut = (e: React.MouseEvent<HTMLElement>) => {
   e.currentTarget.style.background = "transparent";
-  e.currentTarget.style.color = "#B8933A";
-  e.currentTarget.style.borderColor = "rgba(184,147,58,0.55)";
+  e.currentTarget.style.color = "#A8923A";
+  e.currentTarget.style.borderColor = "rgba(168, 146, 58,0.55)";
 };
 
 const railItems = [
@@ -408,10 +408,10 @@ const S6E1AudioBlock = () => {
           fontStyle: "italic",
           fontSize: "clamp(18px, 2vw, 22px)",
           lineHeight: 1.5,
-          color: "rgba(13,17,23,0.82)",
+          color: "rgba(15, 30, 29,0.82)",
           margin: "0 0 24px",
           paddingLeft: 20,
-          borderLeft: "4px solid #B8933A",
+          borderLeft: "4px solid #A8923A",
           maxWidth: 600,
         }}
       >
@@ -420,7 +420,7 @@ const S6E1AudioBlock = () => {
       <div
         style={{
           background: "#FFFFFF",
-          border: "1px solid rgba(184,147,58,0.28)",
+          border: "1px solid rgba(168, 146, 58,0.28)",
           borderRadius: 6,
           padding: "16px 18px",
           boxShadow: "0 6px 20px -10px rgba(0,0,0,0.12)",
@@ -469,8 +469,8 @@ const PullQuoteBlock = ({
     <section
       id={id}
       style={{
-        background: "#FBF8F4",
-        color: "#0D1117",
+        background: "#EDF5EC",
+        color: "#0F1E1D",
         padding: "96px 24px",
       }}
     >
@@ -490,10 +490,10 @@ const PullQuoteBlock = ({
             fontSize: "clamp(24px, 3vw, 36px)",
             lineHeight: 1.55,
             fontWeight: 400,
-            color: "#0D1117",
+            color: "#0F1E1D",
             margin: 0,
             paddingLeft: 24,
-            borderLeft: "4px solid #B8933A",
+            borderLeft: "4px solid #A8923A",
             letterSpacing: "-0.005em",
           }}
         >
@@ -505,7 +505,7 @@ const PullQuoteBlock = ({
             fontSize: 13,
             letterSpacing: "0.16em",
             textTransform: "uppercase",
-            color: "rgba(184,147,58,0.7)",
+            color: "rgba(168, 146, 58,0.7)",
             marginTop: 20,
             paddingLeft: 26,
           }}
@@ -537,7 +537,7 @@ const FounderMarks = ({ name }: { name: string }) => {
             width: 60,
             height: 90,
             objectFit: "cover",
-            border: "1px solid rgba(184,147,58,0.25)",
+            border: "1px solid rgba(168, 146, 58,0.25)",
             boxShadow: "0 8px 16px -8px rgba(0,0,0,0.5)",
             borderRadius: 2,
             display: "block",
@@ -549,7 +549,7 @@ const FounderMarks = ({ name }: { name: string }) => {
             fontSize: 10,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: "rgba(184,147,58,0.6)",
+            color: "rgba(168, 146, 58,0.6)",
           }}
         >
           Science of Story · 2014
@@ -563,9 +563,9 @@ const FounderMarks = ({ name }: { name: string }) => {
       fontSize: 10,
       letterSpacing: "0.18em",
       textTransform: "uppercase",
-      color: "rgba(184,147,58,0.85)",
+      color: "rgba(168, 146, 58,0.85)",
       padding: "6px 12px",
-      border: "1px solid rgba(184,147,58,0.35)",
+      border: "1px solid rgba(168, 146, 58,0.35)",
       borderRadius: 2,
       whiteSpace: "nowrap",
     };
@@ -605,8 +605,8 @@ const About = () => {
         <section
           id="hero"
           style={{
-            background: "#1C1008",
-            color: "#F5EFE0",
+            background: "#0F1E1D",
+            color: "#EDF5EC",
             padding: "144px 24px 96px",
             position: "relative",
             overflow: "hidden",
@@ -619,7 +619,7 @@ const About = () => {
               width: 720,
               height: 720,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(184,147,58,0.10) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(168, 146, 58,0.10) 0%, transparent 70%)",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
@@ -630,12 +630,12 @@ const About = () => {
             <p style={eyebrowStyle}>About Mabbly</p>
             <h1
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(40px, 5.5vw, 72px)",
                 lineHeight: 1.05,
                 letterSpacing: "-0.02em",
                 fontWeight: 500,
-                color: "#F5EFE0",
+                color: "#EDF5EC",
                 margin: "24px 0 24px",
               }}
             >
@@ -643,10 +643,10 @@ const About = () => {
             </h1>
             <p
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 20,
                 lineHeight: 1.55,
-                color: "rgba(245,239,224,0.7)",
+                color: "rgba(237, 245, 236,0.7)",
                 maxWidth: 640,
                 fontWeight: 300,
                 margin: 0,
@@ -658,7 +658,7 @@ const About = () => {
         </section>
 
         {/* ── 02 — THE MISSION (cream) ── */}
-        <section id="mission" style={{ background: "#FBF8F4", color: "#0D1117", padding: "112px 24px" }}>
+        <section id="mission" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>Why We Exist</p>
             <h2 style={h2Light}>
@@ -674,7 +674,7 @@ const About = () => {
         </section>
 
         {/* ── 03 — WHAT IS GTM FOR PS (dark) ── */}
-        <section id="definition" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
+        <section id="definition" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>A Definition</p>
             <h2 style={h2Dark}>What is GTM for Professional Services?</h2>
@@ -688,7 +688,7 @@ const About = () => {
         </section>
 
         {/* ── 04 — THE THREE ROOMS (cream) ── */}
-        <section id="rooms" style={{ background: "#FBF8F4", color: "#0D1117", padding: "112px 24px" }}>
+        <section id="rooms" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div className="max-w-[1100px] mx-auto">
             <p style={eyebrowStyle}>How We Are Built</p>
             <h2 style={{ ...h2Light, margin: "20px 0 56px", maxWidth: 720 }}>
@@ -720,7 +720,7 @@ const About = () => {
                   key={r.eyebrow}
                   style={{
                     background: "#FFFFFF",
-                    border: "1px solid rgba(184,147,58,0.25)",
+                    border: "1px solid rgba(168, 146, 58,0.25)",
                     padding: 32,
                     borderRadius: 4,
                     display: "flex",
@@ -738,13 +738,13 @@ const About = () => {
                         fontFamily: "'Inter Tight', sans-serif",
                         fontSize: 18,
                         fontWeight: 600,
-                        color: "#0D1117",
+                        color: "#0F1E1D",
                         textDecoration: "none",
                         letterSpacing: "-0.01em",
                         transition: "color 180ms ease",
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = "#B8933A")}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "#0D1117")}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "#A8923A")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "#0F1E1D")}
                     >
                       {r.name}
                     </a>
@@ -754,9 +754,9 @@ const About = () => {
                         fontFamily: "'Inter Tight', sans-serif",
                         fontSize: 18,
                         fontWeight: 600,
-                        color: "#0D1117",
+                        color: "#0F1E1D",
                         letterSpacing: "-0.01em",
-                        borderBottom: "1px solid rgba(184,147,58,0.6)",
+                        borderBottom: "1px solid rgba(168, 146, 58,0.6)",
                         alignSelf: "flex-start",
                         paddingBottom: 2,
                       }}
@@ -769,7 +769,7 @@ const About = () => {
                       fontFamily: "'Inter Tight', sans-serif",
                       fontSize: 14,
                       lineHeight: 1.6,
-                      color: "rgba(13,17,23,0.7)",
+                      color: "rgba(15, 30, 29,0.7)",
                       margin: 0,
                     }}
                   >
@@ -789,7 +789,7 @@ const About = () => {
         />
 
         {/* ── 05 — THE MANUSCRIPT (dark) ── */}
-        <section id="manuscript" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
+        <section id="manuscript" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[1100px] mx-auto manuscript-grid">
             <style>{`
               .manuscript-grid {
@@ -815,7 +815,7 @@ const About = () => {
                 transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
                 box-shadow:
                   0 30px 60px -20px rgba(0,0,0,0.4),
-                  0 0 80px -20px rgba(184,147,58,0.25);
+                  0 0 80px -20px rgba(168, 146, 58,0.25);
               }
               @media (min-width: 768px) {
                 .about-book { width: 240px; }
@@ -852,7 +852,7 @@ const About = () => {
         </section>
 
         {/* ── 06 — THE AWARDS (cream) — text + trophy mini-sculpture ── */}
-        <section id="awards" style={{ background: "#FBF8F4", color: "#0D1117", padding: "120px 24px" }}>
+        <section id="awards" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "120px 24px" }}>
           <div className="max-w-[1100px] mx-auto awards-grid">
             <style>{`
               .awards-grid {
@@ -880,7 +880,7 @@ const About = () => {
                 position: relative;
                 width: 140px;
                 height: 140px;
-                filter: drop-shadow(0 24px 48px rgba(184,147,58,0.28));
+                filter: drop-shadow(0 24px 48px rgba(168, 146, 58,0.28));
               }
               @media (min-width: 768px) {
                 .at-mini { width: 200px; height: 200px; }
@@ -889,18 +889,18 @@ const About = () => {
                 position: absolute;
                 inset: 0;
                 border-radius: 50%;
-                border: 1px solid rgba(184,147,58,0.9);
+                border: 1px solid rgba(168, 146, 58,0.9);
                 animation: atSpin 60s linear infinite;
               }
               .at-ring.r2 {
                 inset: 14%;
-                border-color: rgba(184,147,58,0.55);
+                border-color: rgba(168, 146, 58,0.55);
                 animation-duration: 80s;
                 animation-direction: reverse;
               }
               .at-ring.r3 {
                 inset: 30%;
-                border-color: rgba(184,147,58,0.3);
+                border-color: rgba(168, 146, 58,0.3);
                 animation-duration: 100s;
               }
               @keyframes atSpin { to { transform: rotate(360deg); } }
@@ -909,7 +909,7 @@ const About = () => {
                 width: 8px;
                 height: 8px;
                 border-radius: 50%;
-                background: linear-gradient(135deg, #D4AE48, #B8933A);
+                background: linear-gradient(135deg, #C4AC4A, #A8923A);
                 box-shadow: 0 0 12px rgba(212,174,72,0.6);
               }
               .at-dot.d1 { top: -4px; left: 50%; transform: translateX(-50%); }
@@ -918,7 +918,7 @@ const About = () => {
                 inset: 44%;
                 width: auto;
                 height: auto;
-                background: radial-gradient(circle, #F5EFE0, #B8933A 70%);
+                background: radial-gradient(circle, #EDF5EC, #A8923A 70%);
                 box-shadow: 0 0 24px rgba(212,174,72,0.75);
               }
               @media (prefers-reduced-motion: reduce) {
@@ -934,16 +934,16 @@ const About = () => {
               </p>
               <Link
                 to="/awards"
-                style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(184,147,58,0.65)" }}
+                style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(168, 146, 58,0.65)" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(184,147,58,0.12)";
+                  e.currentTarget.style.background = "rgba(168, 146, 58,0.12)";
                   e.currentTarget.style.color = "#5E4810";
-                  e.currentTarget.style.borderColor = "#B8933A";
+                  e.currentTarget.style.borderColor = "#A8923A";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = "transparent";
                   e.currentTarget.style.color = "#8A6B1F";
-                  e.currentTarget.style.borderColor = "rgba(184,147,58,0.65)";
+                  e.currentTarget.style.borderColor = "rgba(168, 146, 58,0.65)";
                 }}
               >
                 See the awards →
@@ -970,7 +970,7 @@ const About = () => {
         />
 
         {/* ── 07 — THE AGENCY (dark) ── */}
-        <section id="agency" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
+        <section id="agency" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>When You Need Hands-On Help</p>
             <h2 style={{ ...h2Dark, fontFamily: "'Inter Tight', sans-serif", fontWeight: 600, fontSize: "clamp(32px, 4vw, 48px)" }}>
@@ -993,7 +993,7 @@ const About = () => {
         </section>
 
         {/* ── 08 — THE PRODUCT (cream) ── */}
-        <section id="product" style={{ background: "#FBF8F4", color: "#0D1117", padding: "120px 24px" }}>
+        <section id="product" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>When You Need Scale</p>
             <h2 style={{ ...h2Light, fontFamily: "'Inter Tight', sans-serif", fontWeight: 600, fontSize: "clamp(32px, 4vw, 48px)" }}>
@@ -1006,16 +1006,16 @@ const About = () => {
               href="https://mabbly.ai"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(184,147,58,0.65)" }}
+              style={{ ...outlineCtaBase, color: "#8A6B1F", borderColor: "rgba(168, 146, 58,0.65)" }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(184,147,58,0.12)";
+                e.currentTarget.style.background = "rgba(168, 146, 58,0.12)";
                 e.currentTarget.style.color = "#5E4810";
-                e.currentTarget.style.borderColor = "#B8933A";
+                e.currentTarget.style.borderColor = "#A8923A";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
                 e.currentTarget.style.color = "#8A6B1F";
-                e.currentTarget.style.borderColor = "rgba(184,147,58,0.65)";
+                e.currentTarget.style.borderColor = "rgba(168, 146, 58,0.65)";
               }}
             >
               Visit mabbly.ai →
@@ -1024,7 +1024,7 @@ const About = () => {
         </section>
 
         {/* ── 09 — BUILT FOR THESE VERTICALS (dark) ── */}
-        <section id="verticals" style={{ background: "#1C1008", color: "#F5EFE0", padding: "120px 24px" }}>
+        <section id="verticals" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[1180px] mx-auto">
             <p style={eyebrowStyle}>Who This Is For</p>
             <h2 style={h2Dark}>Eight verticals. One framework.</h2>
@@ -1050,10 +1050,10 @@ const About = () => {
                 .v-chip { transition: transform 220ms ease, border-color 220ms ease, background 220ms ease; }
                 .v-chip:hover {
                   transform: translateY(-3px);
-                  border-color: rgba(184,147,58,0.55) !important;
-                  background: rgba(245,239,224,0.06) !important;
+                  border-color: rgba(168, 146, 58,0.55) !important;
+                  background: rgba(237, 245, 236,0.06) !important;
                 }
-                .v-chip:hover .v-chip-icon { color: #D4AE48 !important; }
+                .v-chip:hover .v-chip-icon { color: #C4AC4A !important; }
               `}</style>
               {NAV_VERTICAL_LINKS.map((v) => {
                 const Icon = INDUSTRY_ICONS[v.slug];
@@ -1068,21 +1068,21 @@ const About = () => {
                       alignItems: "flex-start",
                       gap: 14,
                       padding: 24,
-                      background: "rgba(245,239,224,0.04)",
-                      border: "1px solid rgba(184,147,58,0.2)",
+                      background: "rgba(237, 245, 236,0.04)",
+                      border: "1px solid rgba(168, 146, 58,0.2)",
                       borderRadius: 6,
                       textDecoration: "none",
                       minHeight: 148,
                     }}
                   >
-                    <Icon className="v-chip-icon" size={36} color="#B8933A" strokeWidth={1.6} />
+                    <Icon className="v-chip-icon" size={36} color="#A8923A" strokeWidth={1.6} />
                     <div>
                       <h3
                         style={{
                           fontFamily: "'Inter Tight', sans-serif",
                           fontSize: 16,
                           fontWeight: 500,
-                          color: "#F5EFE0",
+                          color: "#EDF5EC",
                           margin: 0,
                           letterSpacing: "-0.005em",
                         }}
@@ -1093,7 +1093,7 @@ const About = () => {
                         style={{
                           fontFamily: "'Inter Tight', sans-serif",
                           fontSize: 13,
-                          color: "rgba(184,147,58,0.6)",
+                          color: "rgba(168, 146, 58,0.6)",
                           margin: "6px 0 0",
                           letterSpacing: "0.01em",
                         }}
@@ -1109,7 +1109,7 @@ const About = () => {
         </section>
 
         {/* ── 10 — THE VISION (cream) ── */}
-        <section id="vision" style={{ background: "#FBF8F4", color: "#0D1117", padding: "120px 24px" }}>
+        <section id="vision" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>Where This Goes</p>
             <h2 style={h2Light}>GTM for Professional Services becomes a category.</h2>
@@ -1130,7 +1130,7 @@ const About = () => {
         />
 
         {/* ── 11 — THE FOUNDERS (dark) ── */}
-        <section id="founders" style={{ background: "#0A0807", color: "#F5EFE0", padding: "112px 24px" }}>
+        <section id="founders" style={{ background: "#0A0807", color: "#EDF5EC", padding: "112px 24px" }}>
           <div className="max-w-[1100px] mx-auto">
             <p style={eyebrowStyle}>Who Is Building This</p>
             <h2 style={{ ...h2Dark, margin: "20px 0 56px", maxWidth: 760 }}>
@@ -1171,17 +1171,17 @@ const About = () => {
                       height: 140,
                       borderRadius: "50%",
                       objectFit: "cover",
-                      border: "3px solid rgba(184,147,58,0.4)",
+                      border: "3px solid rgba(168, 146, 58,0.4)",
                     }}
                   />
                   <div>
                     <h3
                       style={{
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontFamily: "var(--font-display)",
                         fontSize: 32,
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
-                        color: "#F5EFE0",
+                        color: "#EDF5EC",
                         margin: 0,
                         display: "inline-flex",
                         alignItems: "center",
@@ -1195,7 +1195,7 @@ const About = () => {
                         rel="noopener noreferrer"
                         aria-label={`${p.name} on LinkedIn`}
                         style={{
-                          color: "#B8933A",
+                          color: "#A8923A",
                           display: "inline-flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -1203,11 +1203,11 @@ const About = () => {
                           transition: "color 180ms ease, transform 180ms ease",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#D4AE48";
+                          e.currentTarget.style.color = "#C4AC4A";
                           e.currentTarget.style.transform = "scale(1.1)";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "#B8933A";
+                          e.currentTarget.style.color = "#A8923A";
                           e.currentTarget.style.transform = "scale(1)";
                         }}
                       >
@@ -1233,7 +1233,7 @@ const About = () => {
                           fontFamily: "'Inter Tight', sans-serif",
                           fontSize: 15,
                           lineHeight: 1.55,
-                          color: "rgba(245,239,224,0.78)",
+                          color: "rgba(237, 245, 236,0.78)",
                           paddingLeft: 18,
                           position: "relative",
                         }}
@@ -1246,7 +1246,7 @@ const About = () => {
                             top: "0.6em",
                             width: 6,
                             height: 6,
-                            background: "#B8933A",
+                            background: "#A8923A",
                             borderRadius: "50%",
                           }}
                         />
@@ -1262,7 +1262,7 @@ const About = () => {
         </section>
 
         {/* ── 12 — PRESS + CONTACT (cream) ── */}
-        <section id="press" style={{ background: "#FBF8F4", color: "#0D1117", padding: "112px 24px" }}>
+        <section id="press" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <p style={eyebrowStyle}>Inquiries</p>
             <h2 style={{ ...h2Light, fontSize: "clamp(28px, 3.4vw, 40px)" }}>
@@ -1272,15 +1272,15 @@ const About = () => {
               style={{
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 17,
-                color: "rgba(13,17,23,0.78)",
+                color: "rgba(15, 30, 29,0.78)",
                 margin: 0,
               }}
             >
               <a
                 href="mailto:adam@mabbly.com"
-                style={{ color: "#0D1117", textDecoration: "none", borderBottom: "1px solid rgba(184,147,58,0.6)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#B8933A")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#0D1117")}
+                style={{ color: "#0F1E1D", textDecoration: "none", borderBottom: "1px solid rgba(168, 146, 58,0.6)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#A8923A")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#0F1E1D")}
               >
                 adam@mabbly.com
               </a>
@@ -1290,7 +1290,7 @@ const About = () => {
         </section>
 
         {/* ── 13 — THE ORIGIN / CONFESSION (dark) ── */}
-        <section id="origin" style={{ background: "#1C1008", color: "#F5EFE0", padding: "112px 24px" }}>
+        <section id="origin" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "112px 24px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <p style={eyebrowStyle}>Why This Book Exists</p>
             <figure style={{ margin: "32px 0 0", padding: 0 }}>
@@ -1301,10 +1301,10 @@ const About = () => {
                   lineHeight: 1.4,
                   fontWeight: 500,
                   fontStyle: "italic",
-                  color: "#F5EFE0",
+                  color: "#EDF5EC",
                   margin: 0,
                   paddingLeft: 28,
-                  borderLeft: "2px solid rgba(184,147,58,0.65)",
+                  borderLeft: "2px solid rgba(168, 146, 58,0.65)",
                   letterSpacing: "-0.012em",
                 }}
               >
@@ -1320,7 +1320,7 @@ const About = () => {
                 fontFamily: "'Inter Tight', sans-serif",
                 fontSize: 17,
                 lineHeight: 1.7,
-                color: "rgba(245,239,224,0.78)",
+                color: "rgba(237, 245, 236,0.78)",
                 marginTop: 48,
               }}
             >
@@ -1330,19 +1330,19 @@ const About = () => {
         </section>
 
         {/* ── 14 — FOREWORD (cream) ── */}
-        <section id="foreword" style={{ background: "#FBF8F4", color: "#0D1117", padding: "112px 24px" }}>
+        <section id="foreword" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <p style={eyebrowStyle}>Foreword</p>
             <blockquote
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(22px, 2.6vw, 30px)",
                 lineHeight: 1.5,
                 fontWeight: 400,
-                color: "#0D1117",
+                color: "#0F1E1D",
                 margin: "32px 0 0",
                 paddingLeft: 28,
-                borderLeft: "2px solid rgba(184,147,58,0.65)",
+                borderLeft: "2px solid rgba(168, 146, 58,0.65)",
                 letterSpacing: "-0.01em",
               }}
             >
@@ -1354,7 +1354,7 @@ const About = () => {
                   fontFamily: "'Inter Tight', sans-serif",
                   fontSize: 16,
                   fontWeight: 600,
-                  color: "#0D1117",
+                  color: "#0F1E1D",
                   margin: 0,
                   letterSpacing: "-0.005em",
                 }}
@@ -1373,7 +1373,7 @@ const About = () => {
           id="cta"
           style={{
             background: "#0A0807",
-            color: "#F5EFE0",
+            color: "#EDF5EC",
             padding: "128px 24px",
             textAlign: "center",
           }}
@@ -1381,12 +1381,12 @@ const About = () => {
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <h2
               style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(28px, 3.5vw, 44px)",
                 lineHeight: 1.15,
                 letterSpacing: "-0.02em",
                 fontWeight: 500,
-                color: "#F5EFE0",
+                color: "#EDF5EC",
                 margin: "0 0 36px",
               }}
             >
@@ -1396,8 +1396,8 @@ const About = () => {
               href={ADD_YOUR_FIRM_HREF}
               style={{
                 display: "inline-block",
-                background: "linear-gradient(135deg, #B8933A 0%, #D4AE48 100%)",
-                color: "#0D1117",
+                background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
+                color: "#0F1E1D",
                 fontFamily: "'Inter Tight', sans-serif",
                 fontWeight: 600,
                 fontSize: 14,
@@ -1405,16 +1405,16 @@ const About = () => {
                 padding: "16px 32px",
                 borderRadius: 999,
                 textDecoration: "none",
-                boxShadow: "0 6px 24px -8px rgba(184,147,58,0.55)",
+                boxShadow: "0 6px 24px -8px rgba(168, 146, 58,0.55)",
                 transition: "transform 180ms ease, box-shadow 180ms ease",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-1px)";
-                e.currentTarget.style.boxShadow = "0 10px 28px -8px rgba(184,147,58,0.7)";
+                e.currentTarget.style.boxShadow = "0 10px 28px -8px rgba(168, 146, 58,0.7)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 6px 24px -8px rgba(184,147,58,0.55)";
+                e.currentTarget.style.boxShadow = "0 6px 24px -8px rgba(168, 146, 58,0.55)";
               }}
             >
               {ADD_YOUR_FIRM_LABEL}

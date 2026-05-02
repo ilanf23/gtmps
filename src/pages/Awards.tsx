@@ -34,10 +34,10 @@ function AwardsNav() {
           position: fixed;
           top: 0; left: 0; right: 0;
           z-index: 100;
-          background: rgba(28,16,8,0.85);
+          background: rgba(15, 30, 29,0.85);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(184,147,58,0.15);
+          border-bottom: 1px solid rgba(168, 146, 58,0.15);
           height: 64px;
           display: flex;
           align-items: center;
@@ -48,70 +48,70 @@ function AwardsNav() {
         .an-brand {
           font-family: 'Inter Tight', sans-serif;
           font-size: 14px; letter-spacing: 0.22em; font-weight: 600;
-          color: rgba(245,239,224,0.85); text-transform: uppercase; text-decoration: none;
+          color: rgba(237, 245, 236,0.85); text-transform: uppercase; text-decoration: none;
         }
         .an-links { display: none; align-items: center; gap: 28px; }
         @media (min-width: 1024px) { .an-links { display: flex; } }
         .an-trigger {
           background: none; border: none;
           font-family: 'Inter Tight', sans-serif;
-          font-size: 13px; color: rgba(245,239,224,0.7);
+          font-size: 13px; color: rgba(237, 245, 236,0.7);
           cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 8px 0;
           transition: color 200ms;
         }
-        .an-trigger:hover { color: #F5EFE0; }
+        .an-trigger:hover { color: #EDF5EC; }
         .an-link {
           font-family: 'Inter Tight', sans-serif;
-          font-size: 13px; color: rgba(245,239,224,0.7);
+          font-size: 13px; color: rgba(237, 245, 236,0.7);
           text-decoration: none; transition: color 200ms;
         }
-        .an-link:hover { color: #F5EFE0; }
-        .an-link[data-active="true"] { color: #B8933A; }
+        .an-link:hover { color: #EDF5EC; }
+        .an-link[data-active="true"] { color: #A8923A; }
         .an-dropdown-wrap { position: relative; }
         .an-dropdown {
           position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-          min-width: 280px; background: #1C1008;
-          border: 1px solid rgba(184,147,58,0.25); border-radius: 6px; padding: 8px;
+          min-width: 280px; background: #0F1E1D;
+          border: 1px solid rgba(168, 146, 58,0.25); border-radius: 6px; padding: 8px;
           box-shadow: 0 16px 48px -12px rgba(0,0,0,0.4);
         }
         .an-dropdown-link {
           display: inline-flex; align-items: center; gap: 12px; width: 100%;
           padding: 12px 16px; font-family: 'Inter Tight', sans-serif; font-size: 14px;
-          color: #F5EFE0; text-decoration: none; border-radius: 4px;
+          color: #EDF5EC; text-decoration: none; border-radius: 4px;
           transition: background 180ms, color 180ms;
         }
-        .an-dropdown-link svg { color: #B8933A; flex-shrink: 0; }
-        .an-dropdown-link:hover { background: rgba(184,147,58,0.12); color: #B8933A; }
+        .an-dropdown-link svg { color: #A8923A; flex-shrink: 0; }
+        .an-dropdown-link:hover { background: rgba(168, 146, 58,0.12); color: #A8923A; }
         .an-cta {
           font-family: 'Inter Tight', sans-serif; font-weight: 600;
           font-size: 13px; letter-spacing: 0.04em; padding: 10px 22px;
-          background: linear-gradient(135deg, #B8933A 0%, #D4AE48 100%);
-          color: #1C1008; border-radius: 999px; text-decoration: none;
+          background: linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%);
+          color: #0F1E1D; border-radius: 999px; text-decoration: none;
           transition: transform 180ms, box-shadow 180ms;
         }
-        .an-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -4px rgba(184,147,58,0.5); }
-        .an-burger { display: inline-flex; background: none; border: none; color: #F5EFE0; cursor: pointer; }
+        .an-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -4px rgba(168, 146, 58,0.5); }
+        .an-burger { display: inline-flex; background: none; border: none; color: #EDF5EC; cursor: pointer; }
         @media (min-width: 1024px) { .an-burger { display: none; } }
         .an-mobile {
           position: fixed; inset: 0; z-index: 99;
-          background: rgba(28,16,8,0.97); backdrop-filter: blur(20px);
+          background: rgba(15, 30, 29,0.97); backdrop-filter: blur(20px);
           padding: 88px 24px 40px; overflow-y: auto;
         }
         .an-mobile-eyebrow {
           font-family: 'DM Mono', monospace; font-size: 10px;
-          letter-spacing: 0.32em; text-transform: uppercase; color: #B8933A;
+          letter-spacing: 0.32em; text-transform: uppercase; color: #A8923A;
           margin: 0 0 14px;
         }
         .an-mobile-link {
           display: flex; align-items: center; gap: 12px;
-          padding: 14px 0; font-family: 'Cormorant Garamond', serif;
-          font-size: 22px; color: #F5EFE0; text-decoration: none;
-          border-bottom: 1px solid rgba(184,147,58,0.15);
+          padding: 14px 0; font-family: var(--font-display);
+          font-size: 22px; color: #EDF5EC; text-decoration: none;
+          border-bottom: 1px solid rgba(168, 146, 58,0.15);
         }
-        .an-mobile-link svg { color: #B8933A; flex-shrink: 0; }
+        .an-mobile-link svg { color: #A8923A; flex-shrink: 0; }
         .an-mobile-cta {
           display: inline-block; margin-top: 24px; padding: 14px 28px;
-          background: #B8933A; color: #1C1008; border-radius: 999px;
+          background: #A8923A; color: #0F1E1D; border-radius: 999px;
           font-family: 'Inter Tight', sans-serif; font-weight: 600;
           font-size: 14px; text-decoration: none;
         }
@@ -178,7 +178,7 @@ function AwardsNav() {
           <Link to="/about" className="an-mobile-link" onClick={() => setOpen(false)}>
             About
           </Link>
-          <Link to="/awards" className="an-mobile-link" style={{ color: '#B8933A' }} onClick={() => setOpen(false)}>
+          <Link to="/awards" className="an-mobile-link" style={{ color: '#A8923A' }} onClick={() => setOpen(false)}>
             Awards
           </Link>
           <a href={PODCAST_HREF} target="_blank" rel="noopener noreferrer" className="an-mobile-link" onClick={() => setOpen(false)}>
@@ -210,7 +210,7 @@ export default function Awards() {
   }, []);
 
   return (
-    <main style={{ background: '#1C1008', minHeight: '100vh' }}>
+    <main style={{ background: '#0F1E1D', minHeight: '100vh' }}>
       <AwardsNav />
       <AwardsHero />
       <AwardsManuscriptQuote />

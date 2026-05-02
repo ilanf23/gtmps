@@ -12,11 +12,11 @@ const Footer = () => {
     >
       <style>{`
         .mf-am-link { transition: color 180ms ease; }
-        .mf-am-link:hover { color: #B8933A !important; }
+        .mf-am-link:hover { color: #A8923A !important; }
         .mf-am-link:hover + .mf-am-desc { opacity: 0.4 !important; }
         .mf-am-desc { transition: opacity 180ms ease; }
         .mf-legal { transition: color 180ms ease; }
-        .mf-legal:hover { color: #F5EFE0 !important; }
+        .mf-legal:hover { color: #EDF5EC !important; }
         @media (max-width: 767px) {
           .mf-root { padding: 48px 24px 32px !important; }
         }
@@ -32,7 +32,7 @@ const Footer = () => {
           style={{
             fontSize: 11,
             letterSpacing: "0.18em",
-            color: "#B8933A",
+            color: "#A8923A",
             margin: 0,
             marginBottom: 24,
           }}
@@ -48,8 +48,8 @@ const Footer = () => {
               style={{
                 fontSize: 18,
                 fontWeight: 500,
-                color: "#F5EFE0",
-                borderBottom: "1px solid rgba(184,147,58,0.6)",
+                color: "#EDF5EC",
+                borderBottom: "1px solid rgba(168, 146, 58,0.6)",
                 paddingBottom: 2,
                 alignSelf: "flex-start",
               }}
@@ -60,7 +60,7 @@ const Footer = () => {
               className="font-display"
               style={{
                 fontSize: 13,
-                color: "rgba(245,239,224,0.55)",
+                color: "rgba(237, 245, 236,0.55)",
                 lineHeight: 1.5,
                 maxWidth: 240,
               }}
@@ -79,7 +79,7 @@ const Footer = () => {
               style={{
                 fontSize: 18,
                 fontWeight: 500,
-                color: "rgba(245,239,224,0.92)",
+                color: "rgba(237, 245, 236,0.92)",
                 textDecoration: "none",
                 alignSelf: "flex-start",
               }}
@@ -90,7 +90,7 @@ const Footer = () => {
               className="mf-am-desc font-display"
               style={{
                 fontSize: 13,
-                color: "rgba(245,239,224,0.55)",
+                color: "rgba(237, 245, 236,0.55)",
                 lineHeight: 1.5,
                 maxWidth: 240,
               }}
@@ -109,7 +109,7 @@ const Footer = () => {
               style={{
                 fontSize: 18,
                 fontWeight: 500,
-                color: "rgba(245,239,224,0.92)",
+                color: "rgba(237, 245, 236,0.92)",
                 textDecoration: "none",
                 alignSelf: "flex-start",
               }}
@@ -120,7 +120,7 @@ const Footer = () => {
               className="mf-am-desc font-display"
               style={{
                 fontSize: 13,
-                color: "rgba(245,239,224,0.55)",
+                color: "rgba(237, 245, 236,0.55)",
                 lineHeight: 1.5,
                 maxWidth: 240,
               }}
@@ -139,7 +139,7 @@ const Footer = () => {
               style={{
                 fontSize: 18,
                 fontWeight: 500,
-                color: "rgba(245,239,224,0.92)",
+                color: "rgba(237, 245, 236,0.92)",
                 textDecoration: "none",
                 alignSelf: "flex-start",
               }}
@@ -150,7 +150,7 @@ const Footer = () => {
               className="mf-am-desc font-display"
               style={{
                 fontSize: 13,
-                color: "rgba(245,239,224,0.55)",
+                color: "rgba(237, 245, 236,0.55)",
                 lineHeight: 1.5,
                 maxWidth: 240,
               }}
@@ -166,7 +166,7 @@ const Footer = () => {
           style={{
             height: 1,
             width: "100%",
-            background: "rgba(184,147,58,0.2)",
+            background: "rgba(168, 146, 58,0.2)",
             margin: "56px 0 28px",
           }}
         />
@@ -182,7 +182,7 @@ const Footer = () => {
             </span>
             <span
               className="font-display block"
-              style={{ fontSize: 13, color: "rgba(245,239,224,0.45)", marginTop: 6 }}
+              style={{ fontSize: 13, color: "rgba(237, 245, 236,0.45)", marginTop: 6 }}
             >
               GTM for the market you already own.
             </span>
@@ -194,7 +194,7 @@ const Footer = () => {
           >
             <span
               className="font-display"
-              style={{ fontSize: 12, color: "rgba(245,239,224,0.45)" }}
+              style={{ fontSize: 12, color: "rgba(237, 245, 236,0.45)" }}
             >
               © 2026 Mabbly LLC
             </span>
@@ -202,27 +202,27 @@ const Footer = () => {
               <Link
                 to="/about"
                 className="mf-legal"
-                style={{ color: "rgba(184,147,58,0.7)", textDecoration: "none" }}
+                style={{ color: "rgba(168, 146, 58,0.7)", textDecoration: "none" }}
               >
                 About
               </Link>
-              <span style={{ color: "rgba(245,239,224,0.25)", margin: "0 8px" }}>·</span>
+              <span style={{ color: "rgba(237, 245, 236,0.25)", margin: "0 8px" }}>·</span>
               <a
                 href="https://mabbly.com/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mf-legal"
-                style={{ color: "rgba(184,147,58,0.7)", textDecoration: "none" }}
+                style={{ color: "rgba(168, 146, 58,0.7)", textDecoration: "none" }}
               >
                 Privacy Policy
               </a>
-              <span style={{ color: "rgba(245,239,224,0.25)", margin: "0 8px" }}>·</span>
+              <span style={{ color: "rgba(237, 245, 236,0.25)", margin: "0 8px" }}>·</span>
               <a
                 href="https://mabbly.com/terms"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mf-legal"
-                style={{ color: "rgba(184,147,58,0.7)", textDecoration: "none" }}
+                style={{ color: "rgba(168, 146, 58,0.7)", textDecoration: "none" }}
               >
                 Terms of Service
               </a>

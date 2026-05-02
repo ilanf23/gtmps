@@ -160,10 +160,10 @@ export default function MagnetWaitTheater({
   const headerName = companyName || domain || 'your firm';
 
   return (
-    <div className="flex-1 flex flex-col items-stretch px-4 py-6 sm:py-10 bg-[#FBF8F4] text-[#1C1008]">
+    <div className="flex-1 flex flex-col items-stretch px-4 py-6 sm:py-10 bg-[#EDF5EC] text-[#0F1E1D]">
       {/* ─── Persistent header ─────────────────────────────────────────── */}
       <header className="max-w-2xl w-full mx-auto px-2 sm:px-4">
-        <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
+        <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#A8923A]">
           Building your map
         </p>
         <h1 className="mt-2 text-xl sm:text-2xl font-serif leading-tight">
@@ -171,7 +171,7 @@ export default function MagnetWaitTheater({
           <span className="font-semibold not-italic">{headerName}</span>
         </h1>
 
-        <div className="mt-4 flex items-center justify-between text-[10px] font-mono text-[#1C1008]/55">
+        <div className="mt-4 flex items-center justify-between text-[10px] font-mono text-[#0F1E1D]/55">
           <span aria-live="polite">
             {formatTimer(elapsed)} / {formatTimer(TARGET_SECONDS)}
           </span>
@@ -179,7 +179,7 @@ export default function MagnetWaitTheater({
         </div>
         <div className="mt-1.5 h-1 w-full bg-black/10 overflow-hidden">
           <div
-            className="h-full bg-[#B8933A] transition-all duration-300 ease-out"
+            className="h-full bg-[#A8923A] transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -194,9 +194,9 @@ export default function MagnetWaitTheater({
                 key={s.index}
                 className={
                   active
-                    ? 'h-1.5 bg-[#B8933A]'
+                    ? 'h-1.5 bg-[#A8923A]'
                     : done
-                      ? 'h-1.5 bg-[#B8933A]/50'
+                      ? 'h-1.5 bg-[#A8923A]/50'
                       : 'h-1.5 bg-black/10'
                 }
                 aria-label={`Stage ${s.index + 1}: ${s.title}${active ? ' (in progress)' : done ? ' (complete)' : ''}`}
@@ -225,18 +225,18 @@ export default function MagnetWaitTheater({
       {/* ─── Trust callout — appears mid-Stage 3 ───────────────────────── */}
       {!reduced && currentStageIdx === 2 && elapsed >= 55 && (
         <aside className="max-w-2xl w-full mx-auto px-2 sm:px-4 mt-8 animate-in fade-in duration-500">
-          <div className="border border-[#B8933A]/30 bg-[#B8933A]/5 p-4 text-center">
-            <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[#B8933A]">
+          <div className="border border-[#A8923A]/30 bg-[#A8923A]/5 p-4 text-center">
+            <p className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[#A8923A]">
               While you wait
             </p>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#1C1008]/80 leading-relaxed">
+            <p className="mt-1.5 text-xs sm:text-sm text-[#0F1E1D]/80 leading-relaxed">
               60+ PS firms · $500M+ aggregate revenue · 4.8/5 avg insights rating
             </p>
           </div>
         </aside>
       )}
 
-      <p className="mt-10 text-[10px] uppercase tracking-[0.28em] text-[#1C1008]/40 text-center">
+      <p className="mt-10 text-[10px] uppercase tracking-[0.28em] text-[#0F1E1D]/40 text-center">
         This usually takes 60 to 90 seconds
       </p>
     </div>
@@ -247,13 +247,13 @@ export default function MagnetWaitTheater({
 function ReducedMotionStage({ stage, tick }: { stage: Stage; tick: string }) {
   return (
     <div className="text-center py-12">
-      <p className="text-xs uppercase tracking-[0.28em] font-semibold text-[#B8933A] mb-3">
+      <p className="text-xs uppercase tracking-[0.28em] font-semibold text-[#A8923A] mb-3">
         Stage {stage.index + 1} of 4
       </p>
-      <h2 className="text-2xl font-serif italic text-[#1C1008] mb-6">
+      <h2 className="text-2xl font-serif italic text-[#0F1E1D] mb-6">
         {stage.title}
       </h2>
-      <p className="text-sm text-[#1C1008]/65" aria-live="polite">
+      <p className="text-sm text-[#0F1E1D]/65" aria-live="polite">
         {tick}
       </p>
     </div>
@@ -276,10 +276,10 @@ function Stage1Homepage({
 
   return (
     <div className="text-center">
-      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
+      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#A8923A]">
         Stage 1 of 4
       </p>
-      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
+      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#0F1E1D]">
         {title}
       </h2>
 
@@ -295,10 +295,10 @@ function Stage1Homepage({
               onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
             />
           ) : (
-            <div className="w-8 h-8 rounded-sm bg-[#B8933A]/15" />
+            <div className="w-8 h-8 rounded-sm bg-[#A8923A]/15" />
           )}
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-widest text-[#1C1008]/40">
+            <p className="text-[10px] uppercase tracking-widest text-[#0F1E1D]/40">
               Source
             </p>
             <p className="text-sm font-semibold truncate">{domain ?? 'your-firm.com'}</p>
@@ -321,7 +321,7 @@ function Stage1Homepage({
         </div>
       </div>
 
-      <p className="mt-6 text-xs sm:text-sm text-[#1C1008]/65 min-h-[1.25rem]" aria-live="polite">
+      <p className="mt-6 text-xs sm:text-sm text-[#0F1E1D]/65 min-h-[1.25rem]" aria-live="polite">
         {tick}
       </p>
 
@@ -340,10 +340,10 @@ function Stage2Services({ tick, title }: { tick: string; title: string }) {
   const services = ['Strategy', 'Branding', 'Delivery', 'Growth'];
   return (
     <div className="text-center">
-      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
+      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#A8923A]">
         Stage 2 of 4
       </p>
-      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
+      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#0F1E1D]">
         {title}
       </h2>
 
@@ -356,7 +356,7 @@ function Stage2Services({ tick, title }: { tick: string; title: string }) {
               animation: `wt-fade-up 0.55s ease-out ${i * 0.55}s forwards`,
             }}
           >
-            <p className="text-[9px] uppercase tracking-widest text-[#B8933A]">
+            <p className="text-[9px] uppercase tracking-widest text-[#A8923A]">
               Service {String(i + 1).padStart(2, '0')}
             </p>
             <p className="text-sm font-semibold mt-1.5">{s}</p>
@@ -364,7 +364,7 @@ function Stage2Services({ tick, title }: { tick: string; title: string }) {
         ))}
       </div>
 
-      <p className="mt-8 text-xs sm:text-sm text-[#1C1008]/65 min-h-[1.25rem]" aria-live="polite">
+      <p className="mt-8 text-xs sm:text-sm text-[#0F1E1D]/65 min-h-[1.25rem]" aria-live="polite">
         {tick}
       </p>
 
@@ -386,10 +386,10 @@ function Stage3Orbits({ tick, title }: { tick: string; title: string }) {
 
   return (
     <div className="text-center">
-      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
+      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#A8923A]">
         Stage 3 of 4
       </p>
-      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
+      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#0F1E1D]">
         {title}
       </h2>
 
@@ -400,7 +400,7 @@ function Stage3Orbits({ tick, title }: { tick: string; title: string }) {
         className="mx-auto mt-6"
         aria-hidden
       >
-        <circle cx={C} cy={C} r={6} fill="#B8933A" />
+        <circle cx={C} cy={C} r={6} fill="#A8923A" />
         {rings.map((r, i) => {
           const circ = 2 * Math.PI * r;
           return (
@@ -410,7 +410,7 @@ function Stage3Orbits({ tick, title }: { tick: string; title: string }) {
               cy={C}
               r={r}
               fill="none"
-              stroke="#1C1008"
+              stroke="#0F1E1D"
               strokeOpacity={0.2}
               strokeWidth={1}
               strokeDasharray={circ}
@@ -423,7 +423,7 @@ function Stage3Orbits({ tick, title }: { tick: string; title: string }) {
         })}
       </svg>
 
-      <p className="mt-2 text-xs sm:text-sm text-[#1C1008]/65 min-h-[1.25rem]" aria-live="polite">
+      <p className="mt-2 text-xs sm:text-sm text-[#0F1E1D]/65 min-h-[1.25rem]" aria-live="polite">
         {tick}
       </p>
 
@@ -445,24 +445,24 @@ function Stage4Score({ tick, elapsed, title }: { tick: string; elapsed: number; 
 
   return (
     <div className="text-center">
-      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#B8933A]">
+      <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#A8923A]">
         Stage 4 of 4
       </p>
-      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#1C1008]">
+      <h2 className="mt-2 text-xl sm:text-2xl font-serif italic text-[#0F1E1D]">
         {title}
       </h2>
 
       <div className="mt-10 mx-auto inline-block">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-[#1C1008]/50">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-[#0F1E1D]/50">
           Relationship Revenue Score
         </p>
-        <p className="mt-2 font-serif text-[88px] leading-none text-[#B8933A] tabular-nums">
+        <p className="mt-2 font-serif text-[88px] leading-none text-[#A8923A] tabular-nums">
           {score}
-          <span className="text-[#1C1008]/30 text-[36px]"> / 100</span>
+          <span className="text-[#0F1E1D]/30 text-[36px]"> / 100</span>
         </p>
       </div>
 
-      <p className="mt-8 text-xs sm:text-sm text-[#1C1008]/65 min-h-[1.25rem]" aria-live="polite">
+      <p className="mt-8 text-xs sm:text-sm text-[#0F1E1D]/65 min-h-[1.25rem]" aria-live="polite">
         {tick}
       </p>
     </div>

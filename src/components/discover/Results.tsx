@@ -48,8 +48,8 @@ export default function Results() {
       id="results"
       className="px-6 md:px-10"
       style={{
-        background: '#120D05',
-        borderTop: '1px solid rgba(184,147,58,0.1)',
+        background: '#0F1E1D',
+        borderTop: '1px solid rgba(168, 146, 58,0.1)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
@@ -66,7 +66,7 @@ export default function Results() {
         }
         .rs-card {
           background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(184,147,58,0.18);
+          border: 1px solid rgba(168, 146, 58,0.18);
           border-radius: 4px;
           padding: 36px 28px;
           position: relative;
@@ -82,8 +82,8 @@ export default function Results() {
           left: 0;
           width: 16px;
           height: 16px;
-          border-top: 2px solid rgba(184,147,58,0.55);
-          border-left: 2px solid rgba(184,147,58,0.55);
+          border-top: 2px solid rgba(168, 146, 58,0.55);
+          border-left: 2px solid rgba(168, 146, 58,0.55);
         }
         .rs-card::after {
           content: '';
@@ -92,19 +92,19 @@ export default function Results() {
           right: 0;
           width: 16px;
           height: 16px;
-          border-bottom: 2px solid rgba(184,147,58,0.55);
-          border-right: 2px solid rgba(184,147,58,0.55);
+          border-bottom: 2px solid rgba(168, 146, 58,0.55);
+          border-right: 2px solid rgba(168, 146, 58,0.55);
         }
         .rs-card:hover {
           background: rgba(255,255,255,0.06);
-          border-color: rgba(184,147,58,0.45);
+          border-color: rgba(168, 146, 58,0.45);
           transform: translateY(-3px);
         }
         .rs-industry {
           font-family: 'Inter Tight', sans-serif;
           font-size: 11px;
           letter-spacing: 0.18em;
-          color: rgba(184,147,58,0.85);
+          color: rgba(168, 146, 58,0.85);
           font-weight: 500;
           margin: 0 0 20px;
           line-height: 1.4;
@@ -113,7 +113,7 @@ export default function Results() {
           font-family: 'Inter Tight', sans-serif;
           font-size: clamp(48px, 5vw, 64px);
           font-weight: 600;
-          color: #B8933A;
+          color: #A8923A;
           line-height: 1;
           letter-spacing: -0.04em;
           margin: 0 0 12px;
@@ -121,7 +121,7 @@ export default function Results() {
         .rs-label {
           font-family: 'Inter Tight', sans-serif;
           font-size: 14px;
-          color: rgba(245,239,224,0.7);
+          color: rgba(237, 245, 236,0.7);
           line-height: 1.5;
           font-weight: 400;
           margin: 0 0 16px;
@@ -129,7 +129,7 @@ export default function Results() {
         .rs-detail {
           font-family: 'Inter Tight', sans-serif;
           font-size: 13.5px;
-          color: rgba(245,239,224,0.5);
+          color: rgba(237, 245, 236,0.5);
           line-height: 1.6;
           font-weight: 300;
           margin: 0 0 20px;
@@ -137,10 +137,10 @@ export default function Results() {
         .rs-quote {
           font-family: 'Cormorant Garamond', Georgia, serif;
           font-size: 16px;
-          color: rgba(245,239,224,0.85);
+          color: rgba(237, 245, 236,0.85);
           font-style: italic;
           line-height: 1.5;
-          border-left: 2px solid #B8933A;
+          border-left: 2px solid #A8923A;
           padding-left: 14px;
           margin: 0 0 12px;
         }
@@ -149,7 +149,7 @@ export default function Results() {
           font-size: 11px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(184,147,58,0.75);
+          color: rgba(168, 146, 58,0.75);
           font-weight: 500;
           margin: 0 0 18px;
         }
@@ -158,14 +158,14 @@ export default function Results() {
           font-size: 12px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           text-decoration: none;
           margin-top: auto;
           padding-top: 12px;
-          border-top: 1px solid rgba(184,147,58,0.18);
+          border-top: 1px solid rgba(168, 146, 58,0.18);
           transition: color 0.18s;
         }
-        .rs-link:hover { color: #D4AE48; }
+        .rs-link:hover { color: #C4AC4A; }
       `}</style>
 
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -175,7 +175,7 @@ export default function Results() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
           }}
@@ -187,7 +187,7 @@ export default function Results() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
@@ -197,7 +197,7 @@ export default function Results() {
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(48px, 7vw, 88px)',
             fontWeight: 500,
-            color: '#F5EFE0',
+            color: '#EDF5EC',
             lineHeight: 0.98,
             letterSpacing: '-0.035em',
             margin: '0 0 18px',
@@ -209,7 +209,7 @@ export default function Results() {
           style={{
             fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(18px, 1.8vw, 22px)',
-            color: 'rgba(245,239,224,0.5)',
+            color: 'rgba(237, 245, 236,0.5)',
             margin: '0 0 56px',
             fontWeight: 300,
             lineHeight: 1.5,
@@ -244,7 +244,7 @@ export default function Results() {
             maxWidth: 680,
             margin: '64px auto 0',
             paddingTop: 32,
-            borderTop: '1px solid rgba(184,147,58,0.25)',
+            borderTop: '1px solid rgba(168, 146, 58,0.25)',
             textAlign: 'center',
           }}
         >
@@ -253,7 +253,7 @@ export default function Results() {
               fontFamily: "'Inter Tight', sans-serif",
               fontSize: 14,
               fontStyle: 'italic',
-              color: 'rgba(245,239,224,0.55)',
+              color: 'rgba(237, 245, 236,0.55)',
               lineHeight: 1.65,
               margin: 0,
               fontWeight: 300,

@@ -137,7 +137,7 @@ const SectionRail = ({ items }: { items: Item[] }) => {
           left: 50%;
           transform: translateX(-50%);
           width: 1px;
-          background: linear-gradient(to bottom, transparent, rgba(184,147,58,0.25), transparent);
+          background: linear-gradient(to bottom, transparent, rgba(168, 146, 58,0.25), transparent);
           pointer-events: none;
         }
 
@@ -155,16 +155,16 @@ const SectionRail = ({ items }: { items: Item[] }) => {
           border-radius: 50%;
           width: 8px;
           height: 8px;
-          border: 1px solid rgba(184,147,58,0.45);
+          border: 1px solid rgba(168, 146, 58,0.45);
           background: transparent;
           transition: width 300ms ease, height 300ms ease, background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
         }
         .sr-dot[data-active="true"] .sr-dot-mark {
           width: 12px;
           height: 12px;
-          background: #B8933A;
-          border-color: #B8933A;
-          box-shadow: 0 0 12px rgba(184,147,58,0.5);
+          background: #A8923A;
+          border-color: #A8923A;
+          box-shadow: 0 0 12px rgba(168, 146, 58,0.5);
         }
 
         .sr-tooltip {
@@ -172,8 +172,8 @@ const SectionRail = ({ items }: { items: Item[] }) => {
           left: 28px;
           top: 50%;
           transform: translateY(-50%);
-          background: rgba(28,16,8,0.92);
-          color: #B8933A;
+          background: rgba(15, 30, 29,0.92);
+          color: #A8923A;
           font-family: 'DM Mono', monospace;
           font-size: 11px;
           letter-spacing: 0.18em;

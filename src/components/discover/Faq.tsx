@@ -42,8 +42,8 @@ export default function Faq() {
       id="faq"
       className="px-6 md:px-10"
       style={{
-        background: '#F5EFE0',
-        borderTop: '1px solid rgba(184,147,58,0.12)',
+        background: '#EDF5EC',
+        borderTop: '1px solid rgba(168, 146, 58,0.12)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
@@ -61,7 +61,7 @@ export default function Faq() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#B8933A',
+            color: '#A8923A',
             margin: 0,
             fontWeight: 500,
           }}
@@ -73,7 +73,7 @@ export default function Faq() {
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
             margin: '18px 0 28px',
             animation: 'growRule 0.8s ease both',
           }}
@@ -143,7 +143,7 @@ export default function Faq() {
                   <ChevronDown
                     width={26}
                     height={26}
-                    color="#B8933A"
+                    color="#A8923A"
                     strokeWidth={2}
                     style={{
                       transform: open ? 'rotate(180deg)' : 'rotate(0deg)',

@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import HeroUrlField from './HeroUrlField';
 
@@ -43,7 +43,7 @@ export default function DiscoverHero() {
         .dh-root {
           width: 100%;
           min-height: 100vh;
-          background: #1C1008;
+          background: #0F1E1D;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -57,7 +57,7 @@ export default function DiscoverHero() {
           width: 640px;
           height: 640px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(184,147,58,.12) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(168, 146, 58,.12) 0%, transparent 70%);
           top: 50%; left: 50%;
           transform: translate(-50%, -50%);
           pointer-events: none;
@@ -101,15 +101,15 @@ export default function DiscoverHero() {
           font-size: 11px;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 24px;
         }
         .dh-industry-lead {
-          color: #B8933A;
+          color: #A8923A;
           opacity: 0.85;
         }
         .dh-industry-dot {
-          color: rgba(184,147,58,0.5);
+          color: rgba(168, 146, 58,0.5);
           padding: 0 2px;
         }
         @media (max-width: 768px) {
@@ -130,8 +130,8 @@ export default function DiscoverHero() {
           padding: 6px;
           box-shadow:
             0 30px 60px -20px rgba(0, 0, 0, 0.7),
-            0 0 0 1px rgba(184, 147, 58, 0.12),
-            0 0 80px -20px rgba(184, 147, 58, 0.18);
+            0 0 0 1px rgba(168, 146, 58, 0.12),
+            0 0 80px -20px rgba(168, 146, 58, 0.18);
         }
         .dh-phone-screen {
           position: relative;
@@ -196,19 +196,19 @@ export default function DiscoverHero() {
           min-height: 48px;
           border-radius: 50%;
           border: none;
-          background: #B8933A;
+          background: #A8923A;
           color: #0A0807;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           z-index: 4;
-          box-shadow: 0 0 22px rgba(184, 147, 58, 0.55), 0 4px 12px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 0 22px rgba(168, 146, 58, 0.55), 0 4px 12px rgba(0, 0, 0, 0.4);
           transition: transform 200ms ease, background 200ms ease;
         }
         .dh-phone-control:hover,
         .dh-phone-control:focus-visible {
-          background: #D4AE48;
+          background: #C4AC4A;
           transform: translateX(-50%) scale(1.06);
           outline: none;
         }
@@ -217,7 +217,7 @@ export default function DiscoverHero() {
           font-size: 11px;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           text-align: center;
           margin: 0;
           max-width: 280px;
@@ -257,8 +257,8 @@ export default function DiscoverHero() {
         .dh-audio-fallback {
           width: 220px;
           padding: 24px 20px;
-          background: rgba(245, 239, 224, 0.04);
-          border: 1px solid rgba(184, 147, 58, 0.25);
+          background: rgba(237, 245, 236, 0.04);
+          border: 1px solid rgba(168, 146, 58, 0.25);
           border-radius: 12px;
           display: flex;
           flex-direction: column;
@@ -271,7 +271,7 @@ export default function DiscoverHero() {
           font-size: 10px;
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0;
         }
         .dh-audio-fallback audio {
@@ -285,23 +285,26 @@ export default function DiscoverHero() {
         /* ── Headline + sub ── */
         .dh-headline {
           font-size: clamp(36px, 5vw, 64px);
-          font-weight: 500;
+          font-weight: 900;
           line-height: 1.05;
-          letter-spacing: -0.025em;
-          color: #F5EFE0;
+          letter-spacing: -0.005em;
+          color: #EDF5EC;
           margin-bottom: 24px;
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
+          text-transform: uppercase;
         }
-        .dh-headline em { font-style: normal; color: #B8933A; }
+        .dh-headline em { font-style: normal; color: #A8923A; font-weight: 900; }
         .dh-sub {
           font-size: 20px;
-          font-weight: 300;
+          font-weight: 400;
           line-height: 1.5;
           letter-spacing: -0.005em;
-          color: rgba(245,239,224,0.70);
+          color: rgba(237, 245, 236, 0.78);
           max-width: 520px;
           margin: 0 0 32px;
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-sans);
         }
         @media (max-width: 768px) {
           .dh-sub { margin-left: auto; margin-right: auto; }
@@ -315,10 +318,12 @@ export default function DiscoverHero() {
           align-items: center;
           margin-bottom: 28px;
         }
+        /* Primary conversion CTA — reserved Burnt Orange per brand spec.
+           Differentiated from olive-gold accents to mark the highest-stakes action. */
         .dh-cta-primary {
           display: inline-block;
-          background: linear-gradient(135deg, #B8933A 0%, #D4AE48 100%);
-          color: #0D1117;
+          background: linear-gradient(135deg, #BF461A 0%, #D45525 100%);
+          color: #EDF5EC;
           font-family: 'Inter Tight', sans-serif;
           font-weight: 600;
           font-size: 14px;
@@ -327,27 +332,27 @@ export default function DiscoverHero() {
           border-radius: 999px;
           text-decoration: none;
           transition: transform 180ms ease, box-shadow 180ms ease;
-          box-shadow: 0 6px 24px -8px rgba(184,147,58,0.55);
+          box-shadow: 0 6px 24px -8px rgba(191, 70, 26, 0.55);
         }
-        .dh-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 28px -8px rgba(184,147,58,0.7); }
+        .dh-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 28px -8px rgba(191, 70, 26, 0.7); }
         .dh-cta-secondary {
           display: inline-block;
           background: transparent;
-          color: #B8933A;
+          color: #A8923A;
           font-family: 'Inter Tight', sans-serif;
           font-weight: 500;
           font-size: 14px;
           letter-spacing: 0.04em;
           padding: 13px 26px;
-          border: 1px solid rgba(184,147,58,0.55);
+          border: 1px solid rgba(168, 146, 58,0.55);
           border-radius: 999px;
           text-decoration: none;
           transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
         }
         .dh-cta-secondary:hover {
-          background: rgba(184,147,58,0.12);
-          color: #F5EFE0;
-          border-color: #B8933A;
+          background: rgba(168, 146, 58,0.12);
+          color: #EDF5EC;
+          border-color: #A8923A;
         }
 
         /* ── Mini calculator ── */
@@ -356,7 +361,7 @@ export default function DiscoverHero() {
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: rgba(184,147,58,0.65);
+          color: rgba(168, 146, 58,0.65);
           margin: 0 0 8px;
         }
         .dh-mini-calc {
@@ -369,7 +374,7 @@ export default function DiscoverHero() {
         .dh-mini-label {
           font-family: 'Inter Tight', sans-serif;
           font-size: 13px;
-          color: rgba(245,239,224,0.7);
+          color: rgba(237, 245, 236,0.7);
         }
         .dh-mini-row {
           display: flex;
@@ -379,23 +384,23 @@ export default function DiscoverHero() {
         .dh-mini-input {
           flex: 1;
           min-width: 0;
-          background: rgba(245,239,224,0.05);
-          border: 1px solid rgba(184,147,58,0.35);
+          background: rgba(237, 245, 236,0.05);
+          border: 1px solid rgba(168, 146, 58,0.35);
           border-radius: 6px;
           padding: 12px 14px;
-          color: #F5EFE0;
+          color: #EDF5EC;
           font-family: 'Inter Tight', sans-serif;
           font-size: 14px;
           outline: none;
           transition: border-color 180ms ease, background 180ms ease;
           min-height: 48px;
         }
-        .dh-mini-input::placeholder { color: rgba(245,239,224,0.35); }
-        .dh-mini-input:focus { border-color: #B8933A; background: rgba(184,147,58,0.06); }
+        .dh-mini-input::placeholder { color: rgba(237, 245, 236,0.35); }
+        .dh-mini-input:focus { border-color: #A8923A; background: rgba(168, 146, 58,0.06); }
         .dh-mini-go {
           background: transparent;
-          border: 1px solid rgba(184,147,58,0.55);
-          color: #B8933A;
+          border: 1px solid rgba(168, 146, 58,0.55);
+          color: #A8923A;
           padding: 0 18px;
           font-family: 'Inter Tight', sans-serif;
           font-size: 13px;
@@ -406,22 +411,22 @@ export default function DiscoverHero() {
           transition: background 180ms ease, color 180ms ease;
           min-height: 48px;
         }
-        .dh-mini-go:hover { background: rgba(184,147,58,0.12); color: #F5EFE0; }
+        .dh-mini-go:hover { background: rgba(168, 146, 58,0.12); color: #EDF5EC; }
         .dh-mini-foot {
           font-family: 'Inter Tight', sans-serif;
           font-size: 12px;
-          color: rgba(245,239,224,0.55);
+          color: rgba(237, 245, 236,0.55);
           margin: 0;
         }
         .dh-mini-foot strong {
-          color: #B8933A;
+          color: #A8923A;
           font-weight: 600;
         }
         .dh-mini-link {
           background: none;
           border: none;
           padding: 0;
-          color: #B8933A;
+          color: #A8923A;
           font-family: 'Inter Tight', sans-serif;
           font-size: 13px;
           text-decoration: underline;
@@ -448,17 +453,17 @@ export default function DiscoverHero() {
           font-size: 13px;
           letter-spacing: 0.04em;
           padding: 8px 16px;
-          border: 1px solid rgba(184,147,58,0.55);
+          border: 1px solid rgba(168, 146, 58,0.55);
           border-radius: 999px;
-          color: #B8933A;
+          color: #A8923A;
           text-decoration: none;
           background: transparent;
           transition: background 180ms, color 180ms, border-color 180ms;
         }
         .dh-chip:hover {
-          background: #B8933A;
-          color: #0D1117;
-          border-color: #B8933A;
+          background: #A8923A;
+          color: #0F1E1D;
+          border-color: #A8923A;
         }
         @media (max-width: 768px) {
           .dh-chip-row {

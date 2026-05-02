@@ -16,7 +16,7 @@ const heights = [
   0.96, 0.72, 0.54, 0.36, 0.48, 0.62, 0.42, 0.30, 0.22, 0.16,
 ];
 
-const Waveform = ({ className = "", color = "#B8933A", height = 80 }: Props) => (
+const Waveform = ({ className = "", color = "#A8923A", height = 80 }: Props) => (
   <div
     aria-hidden
     className={`flex items-center gap-[3px] ${className}`}

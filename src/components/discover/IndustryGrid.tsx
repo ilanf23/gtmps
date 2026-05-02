@@ -10,8 +10,8 @@ export default function IndustryGrid() {
       <style>{`
         .ig-root {
           width: 100%;
-          background: #F5EFE0;
-          border-top: 1px solid rgba(184,147,58,0.15);
+          background: #EDF5EC;
+          border-top: 1px solid rgba(168, 146, 58,0.15);
           padding: 96px 24px;
         }
         @media (min-width: 768px) {
@@ -23,16 +23,18 @@ export default function IndustryGrid() {
           font-size: 11px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 18px;
         }
         .ig-rule {
           width: 44px; height: 2px;
-          background: linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3));
+          background: linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3));
           margin: 0 0 28px;
         }
         .ig-h2 {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-size: clamp(32px, 4.4vw, 52px);
           font-weight: 500;
           line-height: 1.05;
@@ -41,7 +43,9 @@ export default function IndustryGrid() {
           margin: 0 0 18px;
         }
         .ig-sub {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-size: clamp(17px, 1.5vw, 20px);
           font-weight: 300;
           color: rgba(42,26,8,0.65);
@@ -69,7 +73,7 @@ export default function IndustryGrid() {
           gap: 18px;
           padding: 28px 24px;
           background: #fff;
-          border: 1px solid rgba(184,147,58,0.18);
+          border: 1px solid rgba(168, 146, 58,0.18);
           border-radius: 6px;
           color: #2A1A08;
           text-decoration: none;
@@ -78,15 +82,15 @@ export default function IndustryGrid() {
         }
         .ig-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 18px 36px -16px rgba(184,147,58,0.45);
-          border-color: rgba(184,147,58,0.55);
+          box-shadow: 0 18px 36px -16px rgba(168, 146, 58,0.45);
+          border-color: rgba(168, 146, 58,0.55);
         }
         .ig-card-icon {
-          color: #B8933A;
+          color: #A8923A;
           transition: color 220ms ease, transform 220ms ease;
         }
         .ig-card:hover .ig-card-icon {
-          color: #D4AE48;
+          color: #C4AC4A;
           transform: scale(1.05);
         }
         .ig-card-name {
@@ -108,19 +112,21 @@ export default function IndustryGrid() {
           text-align: center;
         }
         .ig-foot-text {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-size: 18px;
           font-weight: 300;
           color: rgba(42,26,8,0.65);
           margin: 0;
         }
-        .ig-foot-text em { color: #B8933A; font-style: normal; font-weight: 500; }
+        .ig-foot-text em { color: #A8923A; font-style: normal; font-weight: 500; }
         .ig-cta {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          background: linear-gradient(135deg, #B8933A 0%, #D4AE48 100%);
-          color: #0D1117;
+          background: linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%);
+          color: #0F1E1D;
           font-family: 'Inter Tight', sans-serif;
           font-weight: 600;
           font-size: 14px;
@@ -129,9 +135,9 @@ export default function IndustryGrid() {
           border-radius: 999px;
           text-decoration: none;
           transition: transform 180ms ease, box-shadow 180ms ease;
-          box-shadow: 0 6px 20px -8px rgba(184,147,58,0.55);
+          box-shadow: 0 6px 20px -8px rgba(168, 146, 58,0.55);
         }
-        .ig-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(184,147,58,0.7); }
+        .ig-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(168, 146, 58,0.7); }
       `}</style>
 
       <section id="industries" className="ig-root">

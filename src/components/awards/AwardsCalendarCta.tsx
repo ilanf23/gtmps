@@ -10,7 +10,7 @@ export default function AwardsCalendarCta() {
       style={{
         background: '#0D0905',
         padding: '120px 24px',
-        borderTop: '1px solid rgba(184,147,58,0.08)',
+        borderTop: '1px solid rgba(168, 146, 58,0.08)',
       }}
     >
       <style>{`
@@ -24,16 +24,18 @@ export default function AwardsCalendarCta() {
           font-size: 10px;
           letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 20px;
         }
         .ac-headline {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-weight: 400;
           font-size: clamp(48px, 7vw, 72px);
           line-height: 1.05;
           letter-spacing: -0.02em;
-          color: #F5EFE0;
+          color: #EDF5EC;
           margin: 0;
         }
         .ac-timeline {
@@ -57,7 +59,7 @@ export default function AwardsCalendarCta() {
             left: 12%;
             right: 12%;
             height: 1px;
-            background: linear-gradient(90deg, rgba(184,147,58,0.1), rgba(184,147,58,0.4), rgba(184,147,58,0.1));
+            background: linear-gradient(90deg, rgba(168, 146, 58,0.1), rgba(168, 146, 58,0.4), rgba(168, 146, 58,0.1));
           }
         }
         .ac-marker {
@@ -74,21 +76,21 @@ export default function AwardsCalendarCta() {
           width: 14px;
           height: 14px;
           border-radius: 50%;
-          background: #B8933A;
-          box-shadow: 0 0 14px rgba(184,147,58,0.55);
+          background: #A8923A;
+          box-shadow: 0 0 14px rgba(168, 146, 58,0.55);
         }
         .ac-date {
           font-family: 'DM Mono', monospace;
           font-size: 11px;
           letter-spacing: 0.28em;
           text-transform: uppercase;
-          color: #B8933A;
+          color: #A8923A;
           margin: 0 0 8px;
         }
         .ac-label {
           font-family: 'Inter Tight', sans-serif;
           font-size: 15px;
-          color: rgba(245,239,224,0.75);
+          color: rgba(237, 245, 236,0.75);
           margin: 0;
         }
         .ac-cta-wrap {
@@ -97,19 +99,21 @@ export default function AwardsCalendarCta() {
           text-align: center;
         }
         .ac-cta-headline {
-          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-family: var(--font-display);
+          font-weight: 900;
+          text-transform: uppercase;
           font-weight: 400;
           font-size: clamp(32px, 5vw, 48px);
           line-height: 1.08;
           letter-spacing: -0.018em;
-          color: #F5EFE0;
+          color: #EDF5EC;
           margin: 0 0 20px;
         }
         .ac-cta-sub {
           font-family: 'Inter Tight', sans-serif;
           font-size: 15px;
           line-height: 1.6;
-          color: rgba(245,239,224,0.55);
+          color: rgba(237, 245, 236,0.55);
           margin: 0 0 32px;
         }
         .ac-cta {
@@ -119,15 +123,15 @@ export default function AwardsCalendarCta() {
           font-size: 14px;
           letter-spacing: 0.04em;
           padding: 16px 36px;
-          background: linear-gradient(135deg, #B8933A 0%, #D4AE48 100%);
-          color: #1C1008;
+          background: linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%);
+          color: #0F1E1D;
           border-radius: 999px;
           text-decoration: none;
           transition: transform 200ms, box-shadow 200ms;
         }
         .ac-cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 12px 32px -8px rgba(184,147,58,0.6);
+          box-shadow: 0 12px 32px -8px rgba(168, 146, 58,0.6);
         }
         @media (max-width: 640px) {
           .ac-cta { display: block; width: 100%; }
@@ -136,7 +140,7 @@ export default function AwardsCalendarCta() {
           margin-top: 20px;
           font-family: 'Inter Tight', sans-serif;
           font-size: 13px;
-          color: rgba(245,239,224,0.4);
+          color: rgba(237, 245, 236,0.4);
           letter-spacing: 0.01em;
         }
       `}</style>

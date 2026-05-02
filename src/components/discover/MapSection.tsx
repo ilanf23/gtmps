@@ -11,8 +11,8 @@ export default function MapSection() {
       id="map"
       className="px-6 md:px-10"
       style={{
-        background: '#F5EFE0',
-        borderTop: '1px solid rgba(184,147,58,0.12)',
+        background: '#EDF5EC',
+        borderTop: '1px solid rgba(168, 146, 58,0.12)',
         paddingTop: "clamp(64px, 12vw, 144px)",
         paddingBottom: "clamp(64px, 12vw, 144px)",
       }}
@@ -41,7 +41,7 @@ export default function MapSection() {
               fontSize: 14,
               letterSpacing: '0.32em',
               textTransform: 'uppercase',
-              color: '#B8933A',
+              color: '#A8923A',
               margin: 0,
               fontWeight: 500,
             }}
@@ -53,7 +53,7 @@ export default function MapSection() {
             style={{
               width: 44,
               height: 2,
-              background: 'linear-gradient(90deg, #B8933A, rgba(184,147,58,0.3))',
+              background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
               margin: '18px 0 28px',
               animation: 'growRule 0.8s ease both',
             }}
@@ -101,7 +101,7 @@ export default function MapSection() {
                       fontSize: 13,
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
-                      color: '#B8933A',
+                      color: '#A8923A',
                       fontWeight: 500,
                     }}
                   >
@@ -125,7 +125,7 @@ export default function MapSection() {
           <div
             style={{
               background: 'rgba(255,250,240,0.9)',
-              border: '1px solid rgba(184,147,58,0.22)',
+              border: '1px solid rgba(168, 146, 58,0.22)',
               borderRadius: 6,
               padding: '52px 36px',
               textAlign: 'center',
@@ -154,7 +154,7 @@ export default function MapSection() {
               style={{
                 display: 'block',
                 width: '100%',
-                background: '#B8933A',
+                background: '#A8923A',
                 color: '#fff',
                 borderRadius: 3,
                 padding: '18px',

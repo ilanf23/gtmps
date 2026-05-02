@@ -66,9 +66,9 @@ const TopNav = () => {
   }, []);
 
   const onHero = !pastHero;
-  const linkColor = onHero ? "rgba(245,241,232,0.7)" : "rgba(13,17,23,0.6)";
-  const linkHover = onHero ? "#F5F1E8" : "#0D1117";
-  const wordColor = onHero ? "rgba(245,241,232,0.85)" : "#0D1117";
+  const linkColor = onHero ? "rgba(245,241,232,0.7)" : "rgba(15, 30, 29,0.6)";
+  const linkHover = onHero ? "#EDF5EC" : "#0F1E1D";
+  const wordColor = onHero ? "rgba(245,241,232,0.85)" : "#0F1E1D";
 
   return (
     <>
@@ -79,11 +79,11 @@ const TopNav = () => {
           backdropFilter: onHero ? "none" : "blur(20px)",
           height: 64,
           borderBottom: onHero
-            ? "1px solid rgba(184,147,58,0)"
-            : "1px solid rgba(13,17,23,0.08)",
+            ? "1px solid rgba(168, 146, 58,0)"
+            : "1px solid rgba(15, 30, 29,0.08)",
         }}
       >
-        <a href="/" className="flex items-baseline gap-2 group">
+        <a href="#hero" className="flex items-baseline gap-2 group">
           <span
             className="font-display"
             style={{
@@ -119,8 +119,8 @@ const TopNav = () => {
                 role="menu"
                 className="absolute top-full mt-2 left-1/2 -translate-x-1/2 min-w-[280px]"
                 style={{
-                  background: "#1C1008",
-                  border: "1px solid rgba(184,147,58,0.25)",
+                  background: "#0F1E1D",
+                  border: "1px solid rgba(168, 146, 58,0.25)",
                   borderRadius: 6,
                   padding: 8,
                   boxShadow: "0 16px 48px -12px rgba(0,0,0,0.4)",
@@ -143,20 +143,20 @@ const TopNav = () => {
                         padding: "12px 16px",
                         fontFamily: "'Inter Tight', sans-serif",
                         fontSize: 14,
-                        color: "#F5EFE0",
+                        color: "#EDF5EC",
                         textDecoration: "none",
                         borderRadius: 4,
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(184,147,58,0.12)";
-                        e.currentTarget.style.color = "#B8933A";
+                        e.currentTarget.style.background = "rgba(168, 146, 58,0.12)";
+                        e.currentTarget.style.color = "#A8923A";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "#F5EFE0";
+                        e.currentTarget.style.color = "#EDF5EC";
                       }}
                     >
-                      <Icon size={16} color="#B8933A" strokeWidth={1.7} />
+                      <Icon size={16} color="#A8923A" strokeWidth={1.7} />
                       {v.label}
                     </Link>
                   );
@@ -197,8 +197,8 @@ const TopNav = () => {
             style={{
               fontSize: 13,
               padding: "9px 22px",
-              background: "linear-gradient(135deg, #B8933A 0%, #D4AE48 100%)",
-              color: "#0D1117",
+              background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
+              color: "#0F1E1D",
               border: "none",
               fontWeight: 600,
             }}
@@ -211,7 +211,7 @@ const TopNav = () => {
           className="lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
-          style={{ color: onHero ? "#F5F1E8" : "#0D1117", transition: "color 500ms ease" }}
+          style={{ color: onHero ? "#EDF5EC" : "#0F1E1D", transition: "color 500ms ease" }}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -228,7 +228,7 @@ const TopNav = () => {
               fontSize: 10,
               letterSpacing: "0.32em",
               textTransform: "uppercase",
-              color: "#B8933A",
+              color: "#A8923A",
               alignSelf: "stretch",
               textAlign: "left",
               maxWidth: 360,
@@ -251,13 +251,13 @@ const TopNav = () => {
                     alignItems: "center",
                     gap: 12,
                     fontSize: 19,
-                    color: "#F5F1E8",
+                    color: "#EDF5EC",
                     padding: "12px 0",
-                    borderBottom: "1px solid rgba(184,147,58,0.15)",
+                    borderBottom: "1px solid rgba(168, 146, 58,0.15)",
                     textDecoration: "none",
                   }}
                 >
-                  <Icon size={18} color="#B8933A" strokeWidth={1.7} />
+                  <Icon size={18} color="#A8923A" strokeWidth={1.7} />
                   {v.label}
                 </Link>
               );
@@ -292,8 +292,8 @@ const TopNav = () => {
             onClick={() => setOpen(false)}
             className="font-sans font-semibold rounded-full mt-3 px-8 py-3"
             style={{
-              background: "linear-gradient(135deg, #B8933A 0%, #D4AE48 100%)",
-              color: "#0D1117",
+              background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
+              color: "#0F1E1D",
               fontSize: 14,
             }}
           >
@@ -306,7 +306,7 @@ const TopNav = () => {
 };
 
 /* ─────────────────────────────────────────────
-   THE RELATIONSHIP REVENUE OS (unnumbered system section)
+   SECTION 04 · THE RELATIONSHIP REVENUE OS
    ───────────────────────────────────────────── */
 const SectionPromisedLand = () => {
   const ref = useRef<HTMLElement>(null);
@@ -351,7 +351,7 @@ const SectionPromisedLand = () => {
             className="font-display mx-auto"
             style={{
               marginTop: 24,
-              color: "#0D1117",
+              color: "#0F1E1D",
               fontSize: "clamp(40px, 5vw, 64px)",
               lineHeight: 1.02,
               letterSpacing: "-0.025em",
@@ -381,7 +381,7 @@ const SectionPromisedLand = () => {
             marginTop: 72,
             marginBottom: 16,
             background: "#0A0807",
-            border: "1px solid rgba(13,17,23,0.10)",
+            border: "1px solid rgba(15, 30, 29,0.10)",
             padding: "56px 32px",
           }}
         >
@@ -432,11 +432,11 @@ const StickyCTA = () => {
           href={ADD_YOUR_FIRM_HREF}
           className="pointer-events-auto rounded-full font-sans"
           style={{
-            background: "rgba(28,16,8,0.92)",
+            background: "rgba(15, 30, 29,0.92)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(184,147,58,0.3)",
-            color: "#B8933A",
+            border: "1px solid rgba(168, 146, 58,0.3)",
+            color: "#A8923A",
             height: 56,
             padding: "0 28px",
             fontSize: 14,
@@ -446,20 +446,20 @@ const StickyCTA = () => {
             alignItems: "center",
             justifyContent: "center",
             textDecoration: "none",
-            boxShadow: "0 4px 16px -8px rgba(184,147,58,0.25)",
+            boxShadow: "0 4px 16px -8px rgba(168, 146, 58,0.25)",
             pointerEvents: show ? "auto" : "none",
             transition: "color 200ms ease, background 200ms ease, box-shadow 200ms ease",
             maxWidth: "calc(100% - 16px)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#F5EFE0";
-            e.currentTarget.style.background = "#B8933A";
-            e.currentTarget.style.boxShadow = "0 6px 20px -6px rgba(184,147,58,0.4)";
+            e.currentTarget.style.color = "#EDF5EC";
+            e.currentTarget.style.background = "#A8923A";
+            e.currentTarget.style.boxShadow = "0 6px 20px -6px rgba(168, 146, 58,0.4)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#B8933A";
-            e.currentTarget.style.background = "rgba(28,16,8,0.92)";
-            e.currentTarget.style.boxShadow = "0 4px 16px -8px rgba(184,147,58,0.25)";
+            e.currentTarget.style.color = "#A8923A";
+            e.currentTarget.style.background = "rgba(15, 30, 29,0.92)";
+            e.currentTarget.style.boxShadow = "0 4px 16px -8px rgba(168, 146, 58,0.25)";
           }}
         >
           {ADD_YOUR_FIRM_LABEL}
