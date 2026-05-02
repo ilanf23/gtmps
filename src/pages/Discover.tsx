@@ -11,6 +11,7 @@ import { INDUSTRY_ICONS } from "@/content/industryIcons";
 import Footer from "@/components/Footer";
 import PaperGrain from "@/components/discover/PaperGrain";
 import AuthorityStrip from "@/components/discover/AuthorityStrip";
+import ReceiptsStrip from "@/components/discover/ReceiptsStrip";
 import FiveOrbitsDiagram from "@/components/discover/FiveOrbitsDiagram";
 import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
 import SectionRail from "@/components/discover/SectionRail";
@@ -349,36 +350,53 @@ const SectionPromisedLand = () => {
       }}
     >
       <div className="max-w-[1100px] mx-auto">
-        <div className="text-center mx-auto" style={{ maxWidth: 720 }}>
+        <div className="mx-auto" style={{ maxWidth: 760, textAlign: "center" }}>
           <p
-            className="font-mono uppercase"
-            style={{ fontSize: 11, letterSpacing: "0.32em", color: "#8B7F3F" }}
-          >
-            The System
-          </p>
-          <h2
-            className="font-display mx-auto"
             style={{
-              marginTop: 24,
-              color: "#0F1E1D",
-              fontSize: "clamp(40px, 5vw, 64px)",
-              lineHeight: 1.02,
-              letterSpacing: "-0.025em",
+              fontFamily: "'Inter Tight', sans-serif",
+              fontSize: 14,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: "#FFBA1A",
+              margin: 0,
               fontWeight: 500,
+            }}
+          >
+            04 · The System
+          </p>
+          <div
+            aria-hidden
+            style={{
+              width: 44,
+              height: 2,
+              background: "linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3))",
+              margin: "18px auto 28px",
+            }}
+          />
+          <h2
+            style={{
+              fontFamily: "'Inter Tight', sans-serif",
+              color: "#0F1E1D",
+              fontSize: "clamp(40px, 6vw, 72px)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.035em",
+              fontWeight: 500,
+              margin: 0,
             }}
           >
             The Relationship Revenue OS
           </h2>
           <p
-            className="font-display mx-auto"
             style={{
-              marginTop: 24,
-              color: "rgba(26,24,20,0.7)",
-              fontSize: 18,
+              marginTop: 18,
+              color: "rgba(15, 30, 29, 0.62)",
+              fontSize: "clamp(17px, 1.6vw, 20px)",
               lineHeight: 1.55,
-              fontWeight: 300,
+              fontWeight: 400,
+              fontFamily: "'Inter Tight', sans-serif",
               maxWidth: 600,
-              letterSpacing: "-0.005em",
+              marginLeft: "auto",
+              marginRight: "auto",
             }}
           >
             Map every relationship you own. Start with the ones you know. From Signal to Response, not Pitch.
@@ -389,8 +407,9 @@ const SectionPromisedLand = () => {
           style={{
             marginTop: 72,
             marginBottom: 16,
-            background: "#0A0807",
-            border: "1px solid rgba(15, 30, 29,0.10)",
+            background: "#0F1E1D",
+            border: "1px solid rgba(34, 83, 81, 0.4)",
+            borderRadius: 4,
             padding: "56px 32px",
           }}
         >
@@ -499,21 +518,22 @@ const Discover = () => {
 
   const railItems = [
     { id: "hero", label: "01 · Hero" },
-    { id: "industries", label: "02 · Industries" },
-    { id: "manuscript", label: "03 · Manuscript" },
-    { id: "authority", label: "— · Built By" },
-    { id: "dead-zone", label: "04 · Dead Zone" },
-    { id: "adam-note", label: "— · Note" },
-    { id: "promised-land", label: "— · The System" },
-    { id: "why-now", label: "05 · Why Now" },
-    { id: "beta-reader", label: "06 · Early Access" },
-    { id: "authors", label: "07 · Authors" },
-    { id: "results", label: "08 · Proof" },
-    { id: "war-story", label: "09 · One Story" },
-    { id: "map", label: "10 · GTM Score" },
-    { id: "two-paths", label: "11 · Paths" },
-    { id: "faq", label: "12 · FAQ" },
-    { id: "final", label: "13 · Final" },
+    { id: "authority", label: "02 · Built By" },
+    { id: "receipts", label: "03 · Receipts" },
+    { id: "promised-land", label: "04 · The System" },
+    { id: "dead-zone", label: "05 · Dead Zone" },
+    { id: "map", label: "06 · GTM Score" },
+    { id: "industries", label: "07 · Industries" },
+    { id: "two-paths", label: "08 · Paths" },
+    { id: "why-now", label: "09 · Why Now" },
+    { id: "war-story", label: "10 · One Story" },
+    { id: "adam-note", label: "11 · Note" },
+    { id: "results", label: "12 · Proof" },
+    { id: "authors", label: "13 · Authors" },
+    { id: "manuscript", label: "14 · Manuscript" },
+    { id: "beta-reader", label: "15 · Early Access" },
+    { id: "faq", label: "16 · FAQ" },
+    { id: "final", label: "17 · Final" },
   ];
 
   return (
@@ -524,19 +544,20 @@ const Discover = () => {
         <div id="hero">
           <DiscoverHero />
         </div>
-        <IndustryGrid />
-        <ManuscriptAnchor />
         <AuthorityStrip />
-        <DeadZone />
-        <AdamNote />
+        <ReceiptsStrip />
         <SectionPromisedLand />
-        <WhyNow />
-        <BetaReader />
-        <Authors />
-        <Results />
-        <WarStory />
+        <DeadZone />
         <MapSection />
+        <IndustryGrid />
         <TwoPaths />
+        <WhyNow />
+        <WarStory />
+        <AdamNote />
+        <Results />
+        <Authors />
+        <ManuscriptAnchor />
+        <BetaReader />
         <Faq />
         <FinalCta />
       </main>

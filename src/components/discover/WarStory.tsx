@@ -4,8 +4,8 @@ export default function WarStory() {
       id="war-story"
       className="px-6 md:px-10"
       style={{
-        background: '#0F0A05',
-        borderTop: '1px solid rgba(168, 146, 58,0.1)',
+        background: '#0F1E1D',
+        borderTop: '1px solid rgba(237, 245, 236,0.06)',
         paddingTop: 144,
         paddingBottom: 144,
       }}
@@ -23,19 +23,19 @@ export default function WarStory() {
             fontSize: 14,
             letterSpacing: '0.32em',
             textTransform: 'uppercase',
-            color: '#A8923A',
+            color: '#FFBA1A',
             margin: 0,
             fontWeight: 500,
           }}
         >
-          09 · One Story In Full
+          10 · One Story In Full
         </p>
         <div
           aria-hidden
           style={{
             width: 44,
             height: 2,
-            background: 'linear-gradient(90deg, #A8923A, rgba(168, 146, 58,0.3))',
+            background: 'linear-gradient(90deg, #FFBA1A, rgba(255, 186, 26, 0.3))',
             margin: '18px 0 28px',
           }}
         />
@@ -67,10 +67,10 @@ export default function WarStory() {
 
         <div
           style={{
-            fontFamily: "var(--font-display)",
+            fontFamily: "'Inter Tight', sans-serif",
             fontSize: 'clamp(17px, 1.5vw, 19px)',
-            color: 'rgba(237, 245, 236,0.78)',
-            lineHeight: 1.75,
+            color: 'rgba(237, 245, 236,0.82)',
+            lineHeight: 1.7,
             fontWeight: 400,
           }}
         >
@@ -88,8 +88,10 @@ export default function WarStory() {
             style={{
               margin: '0 0 20px',
               fontStyle: 'italic',
-              color: '#A8923A',
+              color: '#FFBA1A',
               fontSize: 'clamp(20px, 2vw, 24px)',
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontWeight: 400,
             }}
           >
             The buyer replied in 7 minutes.
@@ -121,7 +123,7 @@ export default function WarStory() {
           style={{
             marginTop: 48,
             paddingTop: 24,
-            borderTop: '1px solid rgba(168, 146, 58,0.18)',
+            borderTop: '1px solid rgba(237, 245, 236,0.12)',
           }}
         >
           <a
@@ -133,10 +135,11 @@ export default function WarStory() {
               fontSize: 13,
               letterSpacing: '0.16em',
               textTransform: 'uppercase',
-              color: '#A8923A',
+              color: '#BF461A',
               textDecoration: 'none',
-              borderBottom: '1px solid rgba(168, 146, 58,0.4)',
+              borderBottom: '1px solid rgba(191, 70, 26,0.45)',
               paddingBottom: 4,
+              fontWeight: 600,
             }}
           >
             Read the full case at mabbly.ai/case-study/madcraft →

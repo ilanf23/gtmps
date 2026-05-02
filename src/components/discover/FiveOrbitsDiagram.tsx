@@ -43,8 +43,8 @@ const layers = ["DISCOVER", "PROVE", "DESIGN", "ACTIVATE", "COMPOUND"];
 const formulaTokens = ["Signal", "+", "Proof", "+", "Context", "="];
 
 const CENTER = 300;
-const GOLD = "#A8923A";
-const GOLD_DIM = "rgba(168, 146, 58,0.4)";
+const GOLD = "#FFBA1A";
+const GOLD_DIM = "rgba(255, 186, 26, 0.4)";
 
 const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Props) => {
   const isMobile = useIsMobile();
@@ -102,13 +102,13 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
           cursor: pointer;
           transition: stroke-width 180ms ease, opacity 180ms ease, filter 180ms ease;
         }
-        .orbit-hit:hover { stroke-width: 2.6 !important; filter: drop-shadow(0 0 6px rgba(168, 146, 58,0.55)); }
+        .orbit-hit:hover { stroke-width: 2.6 !important; filter: drop-shadow(0 0 6px rgba(255, 186, 26, 0.55)); }
         .orbit-hit-emph:hover { stroke-width: 3 !important; }
         .orbit-label-g { cursor: pointer; }
         .orbit-label-g rect {
           transition: fill 180ms ease, stroke 180ms ease;
         }
-        .orbit-label-g:hover rect { fill: rgba(168, 146, 58,0.18); stroke: #A8923A; }
+        .orbit-label-g:hover rect { fill: rgba(255, 186, 26, 0.18); stroke: #FFBA1A; }
         .orbit-label-g:focus-visible { outline: none; }
         .orbit-label-g:focus-visible rect { stroke: #EDF5EC; stroke-width: 2; }
 
@@ -143,8 +143,8 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
                     alignItems: "flex-start",
                     gap: 14,
                     padding: "14px 16px",
-                    background: isDZ ? "rgba(168, 146, 58,0.08)" : "rgba(255,253,248,0.02)",
-                    borderLeft: `2px solid ${isDZ ? GOLD : "rgba(168, 146, 58,0.25)"}`,
+                    background: isDZ ? "rgba(255, 186, 26, 0.08)" : "rgba(255,253,248,0.02)",
+                    borderLeft: `2px solid ${isDZ ? GOLD : "rgba(255, 186, 26, 0.25)"}`,
                     borderTop: 'none', borderRight: 'none', borderBottom: 'none',
                     borderRadius: 4,
                     textAlign: "left",
@@ -191,7 +191,7 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
                   <div
                     style={{
                       padding: "12px 16px 16px 36px",
-                      borderLeft: `2px solid ${isDZ ? GOLD : "rgba(168, 146, 58,0.25)"}`,
+                      borderLeft: `2px solid ${isDZ ? GOLD : "rgba(255, 186, 26, 0.25)"}`,
                       borderRadius: "0 0 4px 4px",
                       background: "rgba(237, 245, 236,0.03)",
                     }}
@@ -239,8 +239,8 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
           <defs>
             <radialGradient id="orbit-center-glow" cx="50%" cy="50%" r="50%">
               <stop offset="0%"   stopColor="rgba(212,174,72,0.45)" />
-              <stop offset="60%"  stopColor="rgba(168, 146, 58,0.08)" />
-              <stop offset="100%" stopColor="rgba(168, 146, 58,0)" />
+              <stop offset="60%"  stopColor="rgba(255, 186, 26, 0.08)" />
+              <stop offset="100%" stopColor="rgba(255, 186, 26, 0)" />
             </radialGradient>
           </defs>
 
@@ -359,7 +359,7 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
                 letterSpacing: "0.22em",
                 color: "#EDF5EC",
                 padding: "8px 16px",
-                border: "1px solid rgba(168, 146, 58,0.45)",
+                border: "1px solid rgba(255, 186, 26, 0.45)",
                 background: "rgba(255,253,248,0.02)",
                 fontWeight: 500,
                 opacity: playing ? undefined : 0,
@@ -470,7 +470,7 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
               width: 480,
               maxWidth: '92vw',
               background: '#EDF5EC',
-              borderLeft: '1px solid #A8923A',
+              borderLeft: '1px solid #FFBA1A',
               boxShadow: '-20px 0 60px -20px rgba(0,0,0,0.5)',
               padding: '56px 40px 40px',
               overflowY: 'auto',
@@ -485,29 +485,30 @@ const FiveOrbitsDiagram = ({ triggered, staticMode = false, className = "" }: Pr
               style={{
                 position: 'absolute', top: 16, right: 16,
                 width: 40, height: 40, border: 'none', background: 'transparent',
-                fontSize: 22, color: '#6A5038', cursor: 'pointer', lineHeight: 1,
+                fontSize: 22, color: 'rgba(15, 30, 29, 0.55)', cursor: 'pointer', lineHeight: 1,
               }}
             >×</button>
             <p style={{
               fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: '0.32em',
-              textTransform: 'uppercase', color: '#A8923A', margin: 0,
+              textTransform: 'uppercase', color: '#FFBA1A', margin: 0,
             }}>Orbit {active.n}</p>
             <h3 id="orbit-modal-title" style={{
               fontFamily: "var(--font-display)",
-              fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 500, color: '#2A1A08',
+              fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 500, color: '#0F1E1D',
               lineHeight: 1.1, letterSpacing: '-0.02em', margin: '14px 0 24px',
             }}>{active.title}</h3>
             <p style={{
               fontFamily: "var(--font-display)",
-              fontSize: 18, lineHeight: 1.6, color: 'rgba(42,26,8,0.78)', margin: '0 0 36px',
+              fontSize: 18, lineHeight: 1.6, color: 'rgba(15, 30, 29, 0.78)', margin: '0 0 36px',
             }}>{active.detail}</p>
             <a
               href={`/manuscript#chapter-${active.chapter}`}
               style={{
-                display: 'inline-block', padding: '12px 22px',
-                background: '#A8923A', color: '#fff', textDecoration: 'none',
-                fontSize: 13, letterSpacing: '0.08em', fontWeight: 500,
-                borderRadius: 3,
+                display: 'inline-block', padding: '12px 24px',
+                background: '#BF461A', color: '#EDF5EC', textDecoration: 'none',
+                fontSize: 13, letterSpacing: '0.12em', fontWeight: 600,
+                textTransform: 'uppercase',
+                borderRadius: 25,
               }}
             >Read the chapter →</a>
           </div>
