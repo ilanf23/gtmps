@@ -282,6 +282,32 @@ export default function DiscoverHero() {
           .dh-audio-fallback { width: 100%; max-width: 420px; }
         }
 
+        /* ── Data-arrives reveal sequence ─────────────────────────
+           Industry lead → headline → em accent sweep → sub → CTAs.
+           Pure CSS, keyframes + animation-delay. Reduced-motion gets
+           an instant final state below. */
+        @keyframes dhArrive {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes dhAccentSweep {
+          0%   { color: rgba(237, 245, 236, 0.4); }
+          100% { color: #A8923A; }
+        }
+
+        .dh-industry { opacity: 0; animation: dhArrive 480ms cubic-bezier(0.22, 1, 0.36, 1) 80ms forwards; }
+        .dh-headline { opacity: 0; animation: dhArrive 520ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards; }
+        .dh-sub      { opacity: 0; animation: dhArrive 520ms cubic-bezier(0.22, 1, 0.36, 1) 720ms forwards; }
+        .dh-ctas     { opacity: 0; animation: dhArrive 520ms cubic-bezier(0.22, 1, 0.36, 1) 920ms forwards; }
+        .dh-headline em { animation: dhAccentSweep 600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms both; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .dh-industry, .dh-headline, .dh-sub, .dh-ctas {
+            opacity: 1 !important; animation: none !important; transform: none !important;
+          }
+          .dh-headline em { animation: none !important; color: #A8923A !important; }
+        }
+
         /* ── Headline + sub ── */
         .dh-headline {
           font-size: clamp(36px, 5vw, 64px);
