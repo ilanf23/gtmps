@@ -11,11 +11,11 @@ import type { CohortMetric } from "@/types/cohort";
 const eqInner = vi.fn();
 const eqOuter = vi.fn(() => ({ eq: eqInner }));
 const select = vi.fn(() => ({ eq: eqOuter }));
-const from = vi.fn(() => ({ select }));
+const from = vi.fn((_table?: string) => ({ select }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    from: (table: string) => from(table),
+    from: (table: string) => from(table as never),
   },
 }));
 
