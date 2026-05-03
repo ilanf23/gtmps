@@ -2,8 +2,7 @@
 // Three stacked editorial research cards (Signal Analysis / Cadence Read /
 // Research Flag) using the same research-card discipline as Sections 03/04.
 
-import { ReactNode, useEffect, useRef, useState } from "react";
-import FeedbackDialog from "./FeedbackDialog";
+import { ReactNode, useEffect, useRef } from "react";
 import "./DeeperFindings.css";
 
 interface Props {
@@ -30,7 +29,6 @@ export default function DeeperFindings({
   cadenceObserved,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
-  const [feedbackContext, setFeedbackContext] = useState<string | null>(null);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -203,42 +201,10 @@ export default function DeeperFindings({
                   </div>
                 </div>
               </div>
-
-              <div className="df-feedback-row">
-                <button
-                  type="button"
-                  className="df-feedback-chip"
-                  onClick={() => setFeedbackContext(`Section 10 · ${card.topic}`)}
-                >
-                  <span className="df-pulse" aria-hidden />
-                  <span>Did we get this right?</span>
-                </button>
-                <span className="df-feedback-question">
-                  Send us your{" "}
-                  <button
-                    type="button"
-                    className="df-feedback-link"
-                    onClick={() => setFeedbackContext(`Section 10 · ${card.topic}`)}
-                  >
-                    feedback
-                  </button>
-                  .
-                </span>
-              </div>
             </article>
           ))}
         </div>
       </div>
-
-      <FeedbackDialog
-        open={feedbackContext !== null}
-        onOpenChange={(open) => {
-          if (!open) setFeedbackContext(null);
-        }}
-        slug={slug}
-        context={feedbackContext ?? undefined}
-        primary={primary}
-      />
     </section>
   );
 }

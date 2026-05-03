@@ -67,7 +67,7 @@ const TableRows: Array<{ label: string; tool: string; partner: string }> = [
   { label: "Onboarding", tool: "14-day free pilot", partner: "Discovery audit" },
   { label: "Time to value", tool: "Days", partner: "Weeks to months" },
   { label: "Owner", tool: "Your team", partner: "Mabbly's team + your team" },
-  { label: "Audience", tool: "Broad B2B · 10K+ CRM contacts", partner: "PS firms $5M–$100M" },
+  { label: "Audience", tool: "Broad B2B · 100+ CRM contacts", partner: "PS firms $5M–$100M" },
   { label: "Commitment", tool: "Month-to-month · No contract", partner: "Long-term partnership" },
 ];
 
@@ -759,37 +759,25 @@ export default function TwoPaths() {
           opacity: 0;
           animation: atm-fadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 2700ms forwards;
         }
-        .atm-final-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 14px;
-          flex-wrap: wrap;
-          background: var(--color-card);
-          border: 1px solid rgba(15, 30, 29, 0.1);
-          border-radius: 100px;
-          padding: 14px 22px;
+        .atm-final-line {
           font-family: var(--atm-body);
           font-size: 14px;
           color: rgba(15, 30, 29, 0.78);
           line-height: 1.4;
-          text-decoration: none;
-          transition: border-color 200ms ease, box-shadow 200ms ease;
-        }
-        .atm-final-pill:hover {
-          border-color: var(--color-care);
-          box-shadow: 0 10px 28px -18px rgba(191,70,26,0.35);
-        }
-        .atm-final-pill strong {
-          color: var(--color-depth);
-          font-weight: 700;
+          margin: 0;
+          text-align: center;
         }
         .atm-final-link {
-          color: var(--color-care);
+          color: #BF461A;
           font-weight: 600;
-          transition: color 200ms ease;
+          text-decoration: none;
+          border-bottom: 1px solid #BF461A;
+          padding-bottom: 1px;
+          transition: color 200ms ease, border-color 200ms ease;
         }
-        .atm-final-pill:hover .atm-final-link {
+        .atm-final-link:hover {
           color: var(--color-depth);
+          border-bottom-color: var(--color-depth);
         }
 
         /* ── shared keyframes ─────────────────────── */
@@ -957,7 +945,7 @@ export default function TwoPaths() {
               <div className="atm-callout">
                 <p className="atm-callout-label" style={{ color: "var(--ai-green)" }}>Audience</p>
                 <p className="atm-callout-text">
-                  B2B sales, RevOps and ops teams with 10K+ CRM contacts who want a tool - not a vendor relationship.
+                  B2B sales, RevOps and ops teams with 100+ CRM contacts who want a tool - not a vendor relationship.
                 </p>
               </div>
             </div>
@@ -1125,12 +1113,18 @@ export default function TwoPaths() {
 
         {/* FINAL PILL */}
         <div className="atm-final">
-          <a className="atm-final-pill" href={PODCAST_S6E1_HREF} target="_blank" rel="noopener noreferrer">
-            <span>
-              Not sure which path? <strong>Listen to S6E1</strong> - Adam walks through both.
-            </span>
-            <span className="atm-final-link">Listen now →</span>
-          </a>
+          <p className="atm-final-line">
+            Want to learn more about GTM for PS?{' '}
+            <a
+              className="atm-final-link"
+              href={PODCAST_S6E1_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Check out recent episode
+            </a>
+            .
+          </p>
         </div>
       </div>
     </section>

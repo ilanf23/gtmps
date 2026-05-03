@@ -4,7 +4,11 @@ type CardSpec = {
   slug: 'madcraft' | 'calliope' | 'spr';
   clientName: string;
   sector: string;
-  metric: { kind: 'dollars'; target: number } | { kind: 'ratio'; target: number; denom: number } | { kind: 'count'; target: number };
+  metric:
+    | { kind: 'dollars'; target: number }
+    | { kind: 'ratio'; target: number; denom: number }
+    | { kind: 'count'; target: number }
+    | { kind: 'percent'; target: number };
   labelHTML: string;
   bodyHTML: string;
   quote: string;
@@ -41,10 +45,10 @@ const CARDS: CardSpec[] = [
     slug: 'spr',
     clientName: 'SPR',
     sector: 'Chicago Technology Consulting',
-    metric: { kind: 'count', target: 150 },
-    labelHTML: 'Dormant enterprise contacts identified. <strong>43 sent · 3 conversations restarted.</strong>',
+    metric: { kind: 'percent', target: 7 },
+    labelHTML: 'Reply rate on dormant enterprise outreach. <strong>43 sent · 3 conversations restarted.</strong>',
     bodyHTML:
-      '3-layer human review (enrichment, content, executive). 4 ICPs. Reply rate <strong>~7%</strong>. Kyle Gams (Managing Director) was final approver.',
+      '<strong>150 dormant enterprise contacts</strong> identified. 3-layer human review (enrichment, content, executive). 4 ICPs. Kyle Gams (Managing Director) was final approver.',
     quote: "Your guys' signal is the personalization piece.",
     attribution: 'Kristin Rosa · Creative & Content Manager',
     href: 'https://mabbly.ai/case-study/spr',
@@ -83,6 +87,8 @@ function MetricNum({
       if (spec.kind === 'dollars') el.textContent = formatDollars(spec.target);
       else if (spec.kind === 'ratio')
         el.innerHTML = `${spec.target}<span class="slash">/</span><span class="denom">${spec.denom}</span>`;
+      else if (spec.kind === 'percent')
+        el.innerHTML = `${spec.target}<span class="pct">%</span>`;
       else el.textContent = spec.target.toLocaleString();
     };
 
@@ -106,6 +112,8 @@ function MetricNum({
       if (spec.kind === 'dollars') el.textContent = formatDollars(v);
       else if (spec.kind === 'ratio')
         el.innerHTML = `${Math.round(v)}<span class="slash">/</span><span class="denom">${spec.denom}</span>`;
+      else if (spec.kind === 'percent')
+        el.innerHTML = `${Math.round(v)}<span class="pct">%</span>`;
       else el.textContent = Math.round(v).toLocaleString();
       if (p < 1) raf = requestAnimationFrame(step);
     };
@@ -113,20 +121,23 @@ function MetricNum({
     return () => cancelAnimationFrame(raf);
   }, [trigger, reduced, delayMs, spec]);
 
-  const initial =
-    spec.kind === 'dollars' ? '$0K' : spec.kind === 'ratio' ? `0/${spec.denom}` : '0';
-
+  if (spec.kind === 'ratio') {
+    return (
+      <span ref={ref} className="metric-num">
+        0<span className="slash">/</span><span className="denom">{spec.denom}</span>
+      </span>
+    );
+  }
+  if (spec.kind === 'percent') {
+    return (
+      <span ref={ref} className="metric-num">
+        0<span className="pct">%</span>
+      </span>
+    );
+  }
   return (
     <span ref={ref} className="metric-num">
-      {initial.includes('/') ? (
-        <>
-          {initial.split('/')[0]}
-          <span className="slash">/</span>
-          <span className="denom">{initial.split('/')[1]}</span>
-        </>
-      ) : (
-        initial
-      )}
+      {spec.kind === 'dollars' ? '$0K' : '0'}
     </span>
   );
 }
@@ -435,11 +446,11 @@ export default function Results() {
 
         .proof-section .metric-num {
           font-family: var(--pf-display);
-          font-size: clamp(40px, 4.4vw, 56px);
+          font-size: clamp(56px, 5.4vw, 76px);
           font-weight: 900;
           letter-spacing: -0.04em;
-          line-height: 0.94;
-          color: var(--depth);
+          line-height: 0.9;
+          color: #A79014;
           display: inline-block;
         }
         .proof-section .metric-num .slash {
@@ -451,6 +462,11 @@ export default function Results() {
           color: var(--muted);
           font-size: 0.7em;
           letter-spacing: -0.03em;
+        }
+        .proof-section .metric-num .pct {
+          font-size: 0.62em;
+          letter-spacing: -0.02em;
+          margin-left: 0.02em;
         }
         .proof-section .metric-label {
           font-family: var(--pf-body);
@@ -577,7 +593,7 @@ export default function Results() {
           .proof-section .running-head-r { right: 22px; }
           .proof-section .card-grid { grid-template-columns: 1fr; gap: 12px; }
           .proof-section .case-card { padding: 20px; }
-          .proof-section .metric-num { font-size: 44px; }
+          .proof-section .metric-num { font-size: 56px; }
         }
         @media (max-width: 480px) {
           .proof-section .headline { font-size: 30px; }

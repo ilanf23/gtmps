@@ -202,6 +202,8 @@ export default function ReceiptsStrip() {
           border-radius: 14px;
           padding: 32px;
           position: relative;
+          display: flex;
+          flex-direction: column;
           transition:
             transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1),
             border-color 300ms ease,
@@ -498,6 +500,7 @@ export default function ReceiptsStrip() {
           align-items: center;
           justify-content: space-between;
           gap: 8px;
+          margin-top: auto;
           font-family: 'DM Mono', 'IBM Plex Mono', Menlo, monospace;
           font-size: 11px;
           letter-spacing: 0.04em;
@@ -802,7 +805,7 @@ export default function ReceiptsStrip() {
                 </article>
                 <article className="rcpt-card rcpt-card-sm delay-4">
                   <p className="card-firm">Workiva</p>
-                  <p className="card-stat qualitative">GTM Anchor</p>
+                  <p className="card-stat" data-needs-content="true">{'{{WORKIVA_STAT}}'}</p>
                   <p className="card-sub">Long-term advisory engagement, ongoing.</p>
                   <p className="card-foot">
                     <span>Discover Mabbly · Active</span>

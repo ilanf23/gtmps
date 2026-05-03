@@ -235,6 +235,11 @@
 @layer base {
   * {
     @apply border-border;
+    hyphens: none;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    word-break: normal;
+    overflow-wrap: normal;
   }
   body {
     @apply bg-background text-foreground;
