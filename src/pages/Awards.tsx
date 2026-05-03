@@ -271,15 +271,15 @@ export default function Awards() {
         </div>
       </section>
 
-      {/* SECTION 03 · THE EIGHT AWARDS */}
-      <section className="section" id="awards">
-        <div className="container">
+      {/* SECTION 03 · THE EIGHT AWARDS (DARK) */}
+      <section className="section dark awards-eight" id="awards">
+        <div className="container score-inner" style={{ textAlign: "left" }}>
           <header className="section-head">
             <Meta num="03" tag="The Eight Awards" />
-            <h2 className="section-headline reveal d1">
+            <h2 className="score-headline reveal d1" style={{ textAlign: "center" }}>
               One award per vertical<span className="period">.</span>
             </h2>
-            <p className="section-sub reveal d2">
+            <p className="score-sub reveal d2">
               Each award recognizes the firm that exemplifies its industry's signature growth motion. Defined by your
               vocabulary, judged on your terms.
             </p>
