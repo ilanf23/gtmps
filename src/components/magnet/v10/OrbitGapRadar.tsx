@@ -170,8 +170,7 @@ export default function OrbitGapRadar({
                   fontSize="10"
                   fill={`var(--brand-accent, ${primary})`}
                   fontWeight={600}
-                  fontVariantNumeric="tabular-nums"
-                  style={{ letterSpacing: "0.04em" }}
+                  style={{ letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums" }}
                 >
                   {r.buyer} <tspan fill="rgba(15, 30, 29, 0.4)">· {r.peer}</tspan>
                 </text>
