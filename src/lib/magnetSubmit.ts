@@ -39,23 +39,19 @@ export interface SubmitMagnetUrlOptions {
   verticalSlug?: string;
 }
 
-export type SubmitMagnetUrlResult =
-  | {
-      ok: true;
-      /** Final slug (after any collision-retry suffix). */
-      slug: string;
-      /** Normalized URL persisted to the row. */
-      normalizedUrl: string;
-      /** Path to navigate to (`/m/:slug` or `/m/:slug?vertical=...`). */
-      destination: string;
-    }
-  | {
-      ok: false;
-      /** Human-readable error to surface to the form. */
-      error: string;
-      /** Validation kind, when the failure was the URL itself. */
-      validation?: boolean;
-    };
+export interface SubmitMagnetUrlResult {
+  ok: boolean;
+  /** Final slug (after any collision-retry suffix). */
+  slug?: string;
+  /** Normalized URL persisted to the row. */
+  normalizedUrl?: string;
+  /** Path to navigate to (`/m/:slug` or `/m/:slug?vertical=...`). */
+  destination?: string;
+  /** Human-readable error to surface to the form. */
+  error?: string;
+  /** Validation kind, when the failure was the URL itself. */
+  validation?: boolean;
+}
 
 /**
  * Validate, persist, and dispatch enrichment for a Magnet URL submission.

@@ -113,7 +113,7 @@ export default function GapSlopeChart({
                 fontFamily="'Inter Tight', sans-serif"
                 fontSize="11"
                 fill="rgba(15, 30, 29, 0.6)"
-                fontVariantNumeric="tabular-nums"
+                style={{ fontVariantNumeric: "tabular-nums" }}
               >
                 {r.peerMedian}
               </text>
@@ -127,7 +127,7 @@ export default function GapSlopeChart({
                 fontFamily="'Inter Tight', sans-serif"
                 fontSize="11"
                 fill="rgba(15, 30, 29, 0.6)"
-                fontVariantNumeric="tabular-nums"
+                style={{ fontVariantNumeric: "tabular-nums" }}
               >
                 {r.cohortTop}
               </text>
