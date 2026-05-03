@@ -569,11 +569,15 @@ export default function WhyNow() {
                   transition: "opacity 250ms",
                 }}
               />
-              <div className="wn-video-meta-tl">
-                <span className="wn-live-dot" aria-hidden />
-                <span>S6E1 · Cold Open</span>
-              </div>
-              <div className="wn-video-duration">0:90</div>
+              {!isPlaying && (
+                <>
+                  <div className="wn-video-meta-tl">
+                    <span className="wn-live-dot" aria-hidden />
+                    <span>S6E1 · Cold Open</span>
+                  </div>
+                  <div className="wn-video-duration">0:90</div>
+                </>
+              )}
 
               {!isPlaying && <div className="wn-play-ring" aria-hidden />}
               {!isPlaying && <div className="wn-play-ring r2" aria-hidden />}
@@ -597,6 +601,7 @@ export default function WhyNow() {
                 </svg>
               </button>
 
+              {!isPlaying && (
               <div className="wn-video-caption">
                 <div className="wn-video-speaker">
                   <div className="wn-avatar" aria-hidden>
@@ -620,6 +625,7 @@ export default function WhyNow() {
                 </div>
                 <span className="wn-video-tag">Watch · 0:90</span>
               </div>
+              )}
             </div>
           </div>
 
