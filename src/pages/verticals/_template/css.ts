@@ -49,36 +49,6 @@ export const CSS = `
 .cpage .section.dark + .section, .cpage .section + .section.dark { border-top: 1px solid var(--depth); }
 @media (max-width: 720px) { .cpage .section { padding: 64px 0; } }
 
-.cpage .nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(248, 242, 229, 0.92);
-  backdrop-filter: saturate(140%) blur(12px);
-  -webkit-backdrop-filter: saturate(140%) blur(12px);
-  border-bottom: 1px solid var(--cream-border);
-}
-.cpage .nav-inner { max-width: 1180px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
-.cpage .nav-logo { font-family: var(--display); font-weight: 900; font-size: 16px; letter-spacing: -0.02em; color: var(--depth); text-decoration: none; }
-.cpage .nav-logo .pip { color: var(--care); }
-.cpage .nav-links { display: inline-flex; align-items: center; gap: 20px; }
-.cpage .nav-link {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-  font-weight: 600; color: var(--depth); text-decoration: none; padding-bottom: 1px;
-  border-bottom: 1px solid transparent; transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
-}
-.cpage .nav-link:hover { color: var(--care); border-bottom-color: var(--care); }
-.cpage .nav-cta {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; background: var(--care); color: var(--cream);
-  border: 2px solid var(--care); border-radius: 22px;
-  font-family: var(--display); font-weight: 900; font-size: 10px; letter-spacing: 0.10em;
-  text-transform: uppercase; text-decoration: none;
-  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease);
-}
-.cpage .nav-cta:hover { background: var(--depth); border-color: var(--depth); transform: translateY(-1px); }
-.cpage .nav-cta svg { transition: transform 0.3s var(--ease); }
-.cpage .nav-cta:hover svg { transform: translateX(2px); }
-@media (max-width: 980px) { .cpage .nav-links > .nav-link { display: none; } }
-
 .cpage .section-head { text-align: center; margin: 0 auto 44px; max-width: 760px; }
 .cpage .meta-row {
   display: inline-flex; align-items: center; gap: 10px;

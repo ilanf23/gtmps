@@ -19,7 +19,7 @@ import { submitMagnetUrl } from '@/lib/magnetSubmit';
 type Variant = 'dark' | 'light';
 
 interface HeroUrlFieldProps {
-  /** Vertical slug (used by VerticalLanding). Defaults to 'general'. */
+  /** Vertical slug for analytics / routing context. Defaults to 'general'. */
   vertical?: string;
   /** Visual variant — defaults to 'dark' (Discover hero). */
   variant?: Variant;

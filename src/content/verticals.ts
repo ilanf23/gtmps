@@ -1,6 +1,7 @@
-// Per-vertical content for /consulting, /law, /accounting, /msp,
-// /advisory, /ae, /recruiting, /agency.
-// Single source of truth. VerticalLanding renders any of these.
+// Per-vertical metadata (slug + nav links + labels) consumed by Discover, About,
+// and other shared surfaces. The vertical pages themselves (/consulting, /law, …)
+// are rendered by src/pages/verticals/_template/VerticalPage.tsx and read their
+// own content from src/pages/verticals/_template/data.tsx.
 
 export type VerticalSlug =
   | 'consulting'

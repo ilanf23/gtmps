@@ -21,8 +21,7 @@ import { assertReadableBrand } from "@/lib/clientTheme";
 import PersonalizedHeader from "./v10/PersonalizedHeader";
 import CohortRankCard from "./v10/CohortRankCard";
 import FiveOrbitsViz from "./v10/FiveOrbitsViz";
-import CoreAnalysisSection from "./v10/CoreAnalysisSection";
-import ProofAnalysisSection from "./v10/ProofAnalysisSection";
+import CoreProofAnalysisSection from "./v10/CoreProofAnalysisSection";
 import CompactCtaCard from "./v10/CompactCtaCard";
 import WhyResearchMatters from "./v10/WhyResearchMatters";
 import ValueInTheirWords from "./v10/ValueInTheirWords";
@@ -58,7 +57,6 @@ interface BreakdownRow {
       textMuted?: string | null;
     } | null;
   } | null;
-  created_at?: string;
 }
 
 interface SubmissionRow {
@@ -84,21 +82,15 @@ export default function MagnetBreakdown({
   const { flow, slug: verticalSlug } = useVerticalFlow(vertical);
   const [data, setData] = useState<BreakdownRow | null>(null);
   const [submission, setSubmission] = useState<SubmissionRow | null>(null);
-  const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [brkRes, subRes, brkRowRes] = await Promise.all([
+      const [brkRes, subRes] = await Promise.all([
         supabase.rpc("get_magnet_breakdown_by_slug", { _slug: slug }),
         supabase.rpc("get_magnet_submission_by_slug", { _slug: slug }),
-        supabase
-          .from("magnet_breakdowns")
-          .select("created_at")
-          .eq("slug", slug)
-          .maybeSingle(),
       ]);
 
       if (cancelled) return;
@@ -115,7 +107,6 @@ export default function MagnetBreakdown({
       } else {
         setData(row as unknown as BreakdownRow);
         setSubmission((sub as SubmissionRow) ?? null);
-        setCreatedAt(brkRowRes.data?.created_at ?? null);
       }
       setLoading(false);
     })();
@@ -235,17 +226,6 @@ export default function MagnetBreakdown({
     ? { ...readableBrand, background: "#EDF5EC", surface: "#FAF9F5", text: "#0F1E1D", textMuted: "rgba(15, 30, 29,0.6)" }
     : readableBrand;
 
-  // "Built X seconds ago" — only meaningful for first 5 minutes
-  const buildSecondsAgo = createdAt
-    ? Math.max(
-        1,
-        Math.min(
-          299,
-          Math.round((Date.now() - new Date(createdAt).getTime()) / 1000)
-        )
-      )
-    : null;
-
   // Score-adaptive Section 8 headline
   const findingProfile = profileFromScores(scores);
   const ctaHeadline = ctaHeadlineFor(findingProfile);
@@ -318,8 +298,6 @@ export default function MagnetBreakdown({
         `}</style>
         <PersonalizedHeader
           firmName={customerName}
-          buildSecondsAgo={buildSecondsAgo}
-          bandOverall={scores.bandOverall}
           primary={brand.primary}
         />
 
@@ -345,14 +323,9 @@ export default function MagnetBreakdown({
           }}
         />
 
-        <CoreAnalysisSection
-          observed={sanitizedObserved}
-          primary={brand.primary}
-          slug={slug}
-        />
-
-        <ProofAnalysisSection
-          observed={sanitizedAssessment}
+        <CoreProofAnalysisSection
+          observedCore={sanitizedObserved}
+          observedProof={sanitizedAssessment}
           primary={brand.primary}
           slug={slug}
         />
@@ -391,7 +364,7 @@ export default function MagnetBreakdown({
           primary={brand.primary}
         />
 
-        <DeeperFindings customerName={customerName} primary={brand.primary} />
+        <DeeperFindings customerName={customerName} primary={brand.primary} slug={slug} />
 
         <ManuscriptShareSave
           slug={slug}

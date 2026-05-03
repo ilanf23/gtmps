@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import { CSS } from "./css";
 import type { VerticalConfig, VerticalSlug, SmallStat, BreakBlock } from "./configs";
 
@@ -295,22 +296,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
     <div ref={rootRef} className="cpage">
       <style>{CSS}</style>
 
-      <nav className="nav">
-        <div className="nav-inner">
-          <a className="nav-logo" href="/discover">
-            Discover<span className="pip"> · </span>Mabbly
-          </a>
-          <div className="nav-links">
-            <a className="nav-link" href="#verticals">For Your Firm</a>
-            <a className="nav-link" href="/awards">Awards</a>
-            <a className="nav-link" href="https://www.youtube.com/@GTMforPS">Podcast</a>
-            <a className="nav-cta always-show" href="#begin">
-              Add Your Firm
-              <ArrowSvg />
-            </a>
-          </div>
-        </div>
-      </nav>
+      <VerticalNavBar />
 
       {/* SECTION 01 · HERO */}
       <section className="section section-hero">

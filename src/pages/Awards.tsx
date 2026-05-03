@@ -663,6 +663,33 @@ const AWARDS_CSS = `
   .cpage .awards-grid { grid-template-columns: 1fr; }
 }
 
+/* DARK VARIANT — Section 03 */
+.cpage .section.awards-eight {
+  background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(191, 70, 26, 0.06), transparent 60%), var(--depth);
+}
+.cpage .awards-eight .score-inner { padding: 0; }
+.cpage .awards-eight .score-sub {
+  text-align: center; max-width: 600px; margin: 0 auto 44px;
+}
+.cpage .awards-eight .award-card {
+  background: rgba(248, 242, 229, 0.03);
+  border: 1px solid var(--ink-line-strong);
+}
+.cpage .awards-eight .award-card:hover {
+  border-color: rgba(248, 242, 229, 0.32);
+  background: rgba(248, 242, 229, 0.05);
+  box-shadow: 0 18px 36px -22px rgba(0, 0, 0, 0.5);
+}
+.cpage .awards-eight .award-card::before { background: var(--care-bright); }
+.cpage .awards-eight .award-card-num { color: var(--care-bright); }
+.cpage .awards-eight .award-card-vertical { color: var(--purpose-soft); }
+.cpage .awards-eight .award-card-name { color: var(--cream); }
+.cpage .awards-eight .award-card-body { color: var(--ink-medium); }
+.cpage .awards-eight .award-card-link {
+  color: var(--care-bright);
+  border-top-color: var(--ink-line);
+}
+
 .cpage .judging-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
   max-width: 1080px; margin: 0 auto;

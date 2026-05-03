@@ -21,7 +21,7 @@ export default function OrbitMap({ rings, centerLabel }: Props) {
         boxShadow: "0 20px 60px rgba(26,26,46,0.3)",
       }}
     >
-      <svg viewBox="0 0 560 560" className="w-full max-w-[420px] shrink-0">
+      <svg viewBox="0 0 560 560" className="w-full max-w-[630px] shrink-0">
         <defs>
           <radialGradient id="orbit-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="rgba(198,93,62,0.08)" />

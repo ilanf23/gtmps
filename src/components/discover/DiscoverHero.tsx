@@ -21,6 +21,73 @@ export default function DiscoverHero() {
 
   const reduceMotion = useReducedMotion();
   const proofRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const dormantMarkerRef = useRef<SVGGElement | null>(null);
+  const dormantLabelRef = useRef<SVGGElement | null>(null);
+  const connectorRef = useRef<SVGPathElement | null>(null);
+
+  // Five Orbits — DORMANT marker spins around orbit 4 (rx=475, ry=200).
+  // Period 28s. Each frame updates marker position, connector Q-curve,
+  // and label x-anchor (flips sides based on which half of the orbit).
+  useEffect(() => {
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    const cx = 740;
+    const cy = 380;
+    const orbitRx = 475;
+    const orbitRy = 200;
+    const period = 28000;
+    const startAngle = 0.32;
+
+    const marker = dormantMarkerRef.current;
+    const connector = connectorRef.current;
+    const label = dormantLabelRef.current;
+    if (!marker || !connector || !label) return;
+
+    const compute = (angle: number) => {
+      const x = cx + orbitRx * Math.cos(angle);
+      const y = cy + orbitRy * Math.sin(angle);
+      const dx = x - cx;
+      const dy = y - cy;
+      const dist = Math.hypot(dx, dy) || 1;
+      const ux = dx / dist;
+      const uy = dy / dist;
+      const sx = cx + ux * 16;
+      const sy = cy + uy * 16;
+      const ex = x - ux * 18;
+      const ey = y - uy * 18;
+      const cpX = (sx + ex) / 2;
+      const cpY = (sy + ey) / 2 + 16;
+      const labelOffsetX = x >= cx ? 22 : -170;
+      return { x, y, sx, sy, ex, ey, cpX, cpY, labelOffsetX };
+    };
+
+    const apply = (p: ReturnType<typeof compute>) => {
+      marker.setAttribute('transform', `translate(${p.x}, ${p.y})`);
+      connector.setAttribute(
+        'd',
+        `M ${p.sx} ${p.sy} Q ${p.cpX} ${p.cpY} ${p.ex} ${p.ey}`
+      );
+      label.setAttribute('transform', `translate(${p.x + p.labelOffsetX}, ${p.y})`);
+    };
+
+    if (reduced) {
+      apply(compute(startAngle));
+      return;
+    }
+
+    const startTime = performance.now();
+    let rafId = 0;
+    const tick = (now: number) => {
+      const elapsed = (now - startTime) % period;
+      const angle = startAngle + (elapsed / period) * 2 * Math.PI;
+      apply(compute(angle));
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
   // Count-up on proof numbers
   useEffect(() => {
@@ -353,8 +420,8 @@ export default function DiscoverHero() {
         .kl-map-wrap {
           position: relative;
           margin: 24px auto 56px;
-          max-width: 760px;
-          padding: 16px 8px 12px;
+          max-width: 1040px;
+          padding: 0;
           opacity: 0;
           animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 2000ms forwards;
         }
@@ -362,65 +429,33 @@ export default function DiscoverHero() {
           width: 100%;
           height: auto;
           display: block;
-        }
-        .kl-map-tl, .kl-map-br {
-          position: absolute;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: var(--kl-depth);
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .kl-map-tl { top: -4px; left: 8px; }
-        .kl-map-br { bottom: -2px; right: 8px; opacity: 0.7; }
-        .kl-map-tl-dot {
-          width: 6px; height: 6px;
-          background: var(--kl-care);
-          border-radius: 50%;
-          animation: klPulseDot 1.6s ease-in-out infinite;
+          overflow: visible;
         }
 
-        /* Map SVG animations */
-        .orbit { fill: none; stroke: var(--kl-depth); stroke-dasharray: 1600; stroke-dashoffset: 1600; animation: klDrawOrbit 2200ms cubic-bezier(0.45, 0, 0.2, 1) forwards; }
-        .orbit.o1 { animation-delay: 2100ms; opacity: 0.3;  stroke-width: 1.5; }
-        .orbit.o2 { animation-delay: 2300ms; opacity: 0.45; stroke-width: 1.7; }
-        .orbit.o3 { animation-delay: 2500ms; opacity: 0.6;  stroke-width: 1.9; }
-        .orbit.o4 { animation-delay: 2700ms; opacity: 0.85; stroke-width: 2.1; }
-        @keyframes klDrawOrbit { to { stroke-dashoffset: 0; } }
+        /* Five Orbits visualization animations */
+        .orbit-connector {
+          animation: orbitDashShift 32s linear infinite;
+        }
+        @keyframes orbitDashShift { to { stroke-dashoffset: -200; } }
 
-        .map-dot { opacity: 0; transform-origin: center; transform-box: fill-box; animation: klDotIn 600ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards; }
-        .map-dot.you    { animation-delay: 3000ms; }
-        .map-dot.signal { animation-delay: 3400ms; }
-        .map-dot.q1     { animation-delay: 3700ms; }
-        .map-dot.q2     { animation-delay: 3900ms; }
-        .map-dot.q3     { animation-delay: 4100ms; }
-        @keyframes klDotIn {
-          0%   { opacity: 0; transform: scale(0.2); }
-          60%  { transform: scale(1.3); }
-          100% { opacity: 1; transform: scale(1); }
+        .orbit-firm-glow {
+          transform-origin: 740px 380px;
+          animation: orbitFirmPulse 3.6s ease-in-out infinite;
+        }
+        @keyframes orbitFirmPulse {
+          0%, 100% { opacity: 0.35; }
+          50%      { opacity: 0.55; }
         }
 
-        .map-pulse { transform-origin: center; transform-box: fill-box; animation: klRingPulse 2.4s ease-out 3200ms infinite; }
-        @keyframes klRingPulse {
-          0%   { transform: scale(0.4); opacity: 1; }
-          100% { transform: scale(2.5); opacity: 0; }
+        .orbit-dormant-pulse {
+          transform-origin: center;
+          transform-box: fill-box;
+          animation: orbitDormantPulse 2.4s ease-out infinite;
         }
-
-        .connector {
-          fill: none;
-          stroke: var(--kl-care);
-          stroke-width: 1.6;
-          stroke-dasharray: 4 5;
-          opacity: 0;
-          animation:
-            klConnectorIn 800ms ease-out 3600ms forwards,
-            klDashShift 8s linear 3600ms infinite;
+        @keyframes orbitDormantPulse {
+          0%   { opacity: 0.6; transform: scale(1); }
+          100% { opacity: 0;   transform: scale(2.3); }
         }
-        @keyframes klConnectorIn { to { opacity: 1; } }
-        @keyframes klDashShift  { to { stroke-dashoffset: -90; } }
 
         /* Proof strip */
         .kl-proof {
@@ -513,15 +548,13 @@ export default function DiscoverHero() {
         @media (prefers-reduced-motion: reduce) {
           .kl-eyebrow, .kl-h1 .word, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof,
           .kl-eyebrow-dot, .kl-period, .kl-blob.big, .kl-blob.small,
-          .orbit, .map-dot, .map-pulse, .connector, .kl-submit::after {
+          .orbit-connector, .orbit-firm-glow, .orbit-dormant-pulse, .kl-submit::after {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
           }
           .kl-h1 .word { opacity: 1; transform: none; }
           .kl-eyebrow, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof { opacity: 1; }
-          .orbit { stroke-dashoffset: 0; }
-          .map-dot, .connector { opacity: 1; transform: none; }
         }
       `}</style>
 
@@ -618,46 +651,284 @@ export default function DiscoverHero() {
             </p>
 
             <div className="kl-map-wrap">
-              <span className="kl-map-tl">
-                <span className="kl-map-tl-dot" aria-hidden />
-                Building map · 30-firm cohort
-              </span>
-              <span className="kl-map-br">Preview · Five Orbits framework</span>
-              <svg className="kl-map-svg" viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                <line x1="40" y1="120" x2="680" y2="120" stroke="#0F1E1D" strokeWidth="0.5" opacity="0.15" />
-                <line x1="360" y1="20" x2="360" y2="220" stroke="#0F1E1D" strokeWidth="0.5" opacity="0.15" />
-                <g stroke="#0F1E1D" strokeWidth="0.8" opacity="0.3">
-                  <line x1="120" y1="118" x2="120" y2="122" />
-                  <line x1="240" y1="118" x2="240" y2="122" />
-                  <line x1="480" y1="118" x2="480" y2="122" />
-                  <line x1="600" y1="118" x2="600" y2="122" />
+              <svg
+                className="kl-map-svg"
+                viewBox="0 0 1480 740"
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <defs>
+                  <radialGradient id="firmGrad" cx="32%" cy="30%" r="70%">
+                    <stop offset="0%" stopColor="#FFF6CC" />
+                    <stop offset="22%" stopColor="#FFD64A" />
+                    <stop offset="62%" stopColor="#E89500" />
+                    <stop offset="100%" stopColor="#7A4A00" />
+                  </radialGradient>
+                  <radialGradient id="firmGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#FFD64A" stopOpacity="0.55" />
+                    <stop offset="40%" stopColor="#FFBA1A" stopOpacity="0.30" />
+                    <stop offset="100%" stopColor="#FFBA1A" stopOpacity="0" />
+                  </radialGradient>
+
+                  <radialGradient id="planetGrad" cx="32%" cy="30%" r="70%">
+                    <stop offset="0%" stopColor="#566660" />
+                    <stop offset="40%" stopColor="#2A3936" />
+                    <stop offset="100%" stopColor="#0A1311" />
+                  </radialGradient>
+
+                  <radialGradient id="dormantGrad" cx="32%" cy="30%" r="70%">
+                    <stop offset="0%" stopColor="#FFC9A8" />
+                    <stop offset="22%" stopColor="#FF8050" />
+                    <stop offset="60%" stopColor="#C2461C" />
+                    <stop offset="100%" stopColor="#5A1F0A" />
+                  </radialGradient>
+                  <radialGradient id="dormantGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#FF6A2C" stopOpacity="0.55" />
+                    <stop offset="40%" stopColor="#BF461A" stopOpacity="0.30" />
+                    <stop offset="100%" stopColor="#BF461A" stopOpacity="0" />
+                  </radialGradient>
+
+                  <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                    <feOffset dx="0" dy="3" />
+                    <feComponentTransfer>
+                      <feFuncA type="linear" slope="0.35" />
+                    </feComponentTransfer>
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                {/* BUILDING MAP tag (top-left, inside SVG so it scales) */}
+                <g transform="translate(56 96)">
+                  <circle cx="11" cy="11" r="11" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
+                  <circle cx="11" cy="11" r="4" fill="#BF461A" />
+                  <line x1="34" y1="2" x2="34" y2="20" stroke="#0F1E1D" strokeOpacity="0.20" strokeWidth="1" />
+                  <text
+                    x="46"
+                    y="16"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="13"
+                    letterSpacing="2.86"
+                    fill="#0F1E1D"
+                    fontWeight="700"
+                  >
+                    BUILDING MAP
+                  </text>
+                  <text
+                    x="206"
+                    y="16"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="13"
+                    fill="#9AA09C"
+                    fontWeight="700"
+                  >
+                    ·
+                  </text>
+                  <text
+                    x="220"
+                    y="16"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="13"
+                    letterSpacing="2.86"
+                    fill="#9AA09C"
+                    fontWeight="600"
+                  >
+                    30-FIRM COHORT
+                  </text>
                 </g>
-                <ellipse className="orbit o1" cx="360" cy="120" rx="300" ry="100" />
-                <ellipse className="orbit o2" cx="360" cy="120" rx="225" ry="78" />
-                <ellipse className="orbit o3" cx="360" cy="120" rx="150" ry="55" />
-                <ellipse className="orbit o4" cx="360" cy="120" rx="80" ry="32" />
-                <g className="map-dot you">
-                  <circle cx="360" cy="120" r="9" fill="#FFBA1A" stroke="#0F1E1D" strokeWidth="2" />
-                  <circle className="map-pulse" cx="360" cy="120" r="9" fill="none" stroke="#FFBA1A" strokeWidth="1.5" />
+
+                {/* Crosshair axes */}
+                <line x1="60" y1="380" x2="1420" y2="380" stroke="rgba(15, 30, 29, 0.14)" strokeWidth="0.6" />
+                <line x1="740" y1="100" x2="740" y2="660" stroke="rgba(15, 30, 29, 0.12)" strokeWidth="0.6" strokeDasharray="2 3" />
+                <path d="M 70 374 L 60 380 L 70 386" fill="none" stroke="rgba(15, 30, 29, 0.30)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M 1410 374 L 1420 380 L 1410 386" fill="none" stroke="rgba(15, 30, 29, 0.30)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+
+                {/* Five orbit ellipses */}
+                <ellipse cx="740" cy="380" rx="105" ry="44" fill="none" stroke="#0F1E1D" strokeWidth="0.7" strokeOpacity="0.30" />
+                <ellipse cx="740" cy="380" rx="220" ry="92" fill="none" stroke="#0F1E1D" strokeWidth="0.5" strokeOpacity="0.40" strokeDasharray="1.5 3" />
+                <ellipse cx="740" cy="380" rx="345" ry="146" fill="none" stroke="#0F1E1D" strokeWidth="0.7" strokeOpacity="0.30" />
+                <ellipse cx="740" cy="380" rx="475" ry="200" fill="none" stroke="#0F1E1D" strokeWidth="0.5" strokeOpacity="0.40" strokeDasharray="1.5 3" />
+                <ellipse cx="740" cy="380" rx="610" ry="252" fill="none" stroke="#0F1E1D" strokeWidth="0.7" strokeOpacity="0.18" />
+
+                {/* Atmospheric speckle dots */}
+                <g fill="#0F1E1D" opacity="0.18">
+                  <circle cx="160" cy="380" r="0.9" />
+                  <circle cx="1320" cy="380" r="0.9" />
+                  <circle cx="240" cy="430" r="0.8" />
+                  <circle cx="1240" cy="320" r="1" />
+                  <circle cx="380" cy="190" r="0.9" />
+                  <circle cx="1100" cy="565" r="0.8" />
+                  <circle cx="610" cy="125" r="1" />
+                  <circle cx="870" cy="635" r="0.9" />
                 </g>
-                <g className="map-dot signal">
-                  <circle cx="540" cy="155" r="7" fill="#BF461A" />
-                  <circle className="map-pulse" cx="540" cy="155" r="7" fill="none" stroke="#BF461A" strokeWidth="1.5" />
+
+                {/* Five static dark planet spheres */}
+                <g>
+                  <ellipse cx="540" cy="276" rx="14" ry="3" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="540" cy="270" r="11" fill="url(#planetGrad)" />
+                  <circle cx="536" cy="266" r="3" fill="#7A8A85" opacity="0.35" />
                 </g>
-                <circle className="map-dot q1" cx="180" cy="80" r="5" fill="#0F1E1D" opacity="0.5" />
-                <circle className="map-dot q2" cx="565" cy="68" r="4" fill="#0F1E1D" opacity="0.4" />
-                <circle className="map-dot q3" cx="200" cy="170" r="5" fill="#0F1E1D" opacity="0.45" />
-                <path className="connector" d="M 360 120 Q 450 115, 540 155" />
-                <g fontFamily="'IBM Plex Mono', monospace" fontSize="10" letterSpacing="0.5">
-                  <g className="map-dot you">
-                    <text x="360" y="105" textAnchor="middle" fill="#0F1E1D" fontWeight="700">YOUR FIRM</text>
+                <g>
+                  <ellipse cx="430" cy="386" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="430" cy="382" r="8.5" fill="url(#planetGrad)" />
+                  <circle cx="427" cy="379" r="2.4" fill="#7A8A85" opacity="0.35" />
+                </g>
+                <g>
+                  <ellipse cx="595" cy="404" rx="9" ry="2" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="595" cy="400" r="7" fill="url(#planetGrad)" />
+                  <circle cx="593" cy="398" r="2" fill="#7A8A85" opacity="0.35" />
+                </g>
+                <g>
+                  <ellipse cx="1180" cy="326" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="1180" cy="320" r="8.5" fill="url(#planetGrad)" />
+                  <circle cx="1177" cy="317" r="2.4" fill="#7A8A85" opacity="0.35" />
+                </g>
+                <g>
+                  <ellipse cx="500" cy="496" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="500" cy="490" r="8.5" fill="url(#planetGrad)" />
+                  <circle cx="497" cy="487" r="2.4" fill="#7A8A85" opacity="0.35" />
+                </g>
+
+                {/* Dashed connector (animated by JS) */}
+                <path
+                  ref={connectorRef}
+                  className="orbit-connector"
+                  fill="none"
+                  stroke="#BF461A"
+                  strokeWidth="1.4"
+                  strokeDasharray="6 5"
+                  strokeLinecap="round"
+                  d=""
+                />
+
+                {/* YOUR FIRM at center */}
+                <circle className="orbit-firm-glow" cx="740" cy="380" r="38" fill="url(#firmGlow)" />
+                <ellipse cx="740" cy="395" rx="22" ry="4" fill="rgba(15, 30, 29, 0.15)" filter="url(#softShadow)" />
+                <circle cx="740" cy="380" r="22" fill="none" stroke="#FFBA1A" strokeWidth="0.8" opacity="0.4" />
+                <circle cx="740" cy="380" r="18" fill="none" stroke="#FFBA1A" strokeWidth="0.6" opacity="0.6" />
+                <circle cx="740" cy="380" r="14" fill="url(#firmGrad)" filter="url(#softShadow)" />
+                <ellipse cx="736" cy="375" rx="4.5" ry="3" fill="rgba(255, 255, 255, 0.45)" />
+
+                {/* YOUR FIRM black-pill label */}
+                <g transform="translate(740 322)">
+                  <rect x="-52" y="-15" width="104" height="28" rx="6" fill="#0F1E1D" />
+                  <path d="M -8 13 L 0 22 L 8 13 Z" fill="#0F1E1D" />
+                  <text
+                    x="0"
+                    y="3"
+                    textAnchor="middle"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="11"
+                    letterSpacing="2.2"
+                    fill="#F5F2EA"
+                    fontWeight="700"
+                  >
+                    YOUR FIRM
+                  </text>
+                </g>
+
+                {/* DORMANT marker group (animated by JS) */}
+                <g ref={dormantMarkerRef}>
+                  <circle className="orbit-dormant-pulse" cx="0" cy="0" r="14" fill="none" stroke="#BF461A" strokeWidth="1.4" />
+                  <circle cx="0" cy="0" r="32" fill="url(#dormantGlow)" />
+                  <ellipse cx="0" cy="14" rx="14" ry="2.5" fill="rgba(15, 30, 29, 0.20)" filter="url(#softShadow)" />
+                  <circle cx="0" cy="0" r="16" fill="none" stroke="#BF461A" strokeWidth="0.8" opacity="0.4" />
+                  <circle cx="0" cy="0" r="13" fill="none" stroke="#BF461A" strokeWidth="0.6" opacity="0.6" />
+                  <circle cx="0" cy="0" r="10" fill="url(#dormantGrad)" filter="url(#softShadow)" />
+                  <ellipse cx="-3" cy="-4" rx="3.4" ry="2.2" fill="rgba(255, 255, 255, 0.40)" />
+                </g>
+
+                {/* DORMANT label (animated by JS) */}
+                <g ref={dormantLabelRef}>
+                  <rect x="0" y="-15" width="148" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
+                  <text x="14" y="4" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="11" letterSpacing="2.2" fill="#BF461A" fontWeight="700">
+                    DORMANT
+                  </text>
+                  <text x="86" y="4" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="11" fill="#9AA09C" fontWeight="700">
+                    ·
+                  </text>
+                  <text x="100" y="5" fontFamily="'Arial Black', 'Inter Tight', sans-serif" fontSize="13" letterSpacing="-0.52" fill="#0F1E1D" fontWeight="900">
+                    $400K
+                  </text>
+                </g>
+
+                {/* Bottom-left axis label */}
+                <g transform="translate(56 644)">
+                  <g transform="translate(0 -12)">
+                    <circle cx="16" cy="16" r="16" fill="#FCFAF4" stroke="rgba(15, 30, 29, 0.20)" strokeWidth="1.5" />
+                    <g transform="translate(8 8)" fill="none" stroke="#0F1E1D" strokeWidth="1.2" strokeLinecap="round">
+                      <circle cx="5" cy="6" r="2.2" />
+                      <circle cx="11" cy="6" r="2.2" />
+                      <path d="M2 13 c 0 -2 1.5 -3 3 -3 c 1.5 0 3 1 3 3" />
+                      <path d="M8 13 c 0 -2 1.5 -3 3 -3 c 1.5 0 3 1 3 3" />
+                    </g>
                   </g>
-                  <g className="map-dot signal">
-                    <text x="555" y="148" fill="#BF461A" fontWeight="700">DORMANT · $400K</text>
-                  </g>
+                  <text
+                    x="46"
+                    y="9"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="13"
+                    letterSpacing="2.86"
+                    fill="#0F1E1D"
+                    fontWeight="700"
+                  >
+                    RELATIONSHIP DEPTH
+                  </text>
+                  <text x="287" y="9" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="16" fill="#BF461A" fontWeight="700">
+                    →
+                  </text>
+                  <line x1="46" y1="22" x2="320" y2="22" stroke="#BF461A" strokeWidth="1" />
                 </g>
-                <text x="40" y="232" fontFamily="'IBM Plex Mono', monospace" fontSize="9" fill="#0F1E1D" opacity="0.55" letterSpacing="1.5">RELATIONSHIP DEPTH →</text>
-                <text x="680" y="232" fontFamily="'IBM Plex Mono', monospace" fontSize="9" fill="#0F1E1D" opacity="0.55" letterSpacing="1.5" textAnchor="end">REVENUE OPPORTUNITY →</text>
+
+                {/* Bottom-right axis label */}
+                <g transform="translate(1424 644)">
+                  <text
+                    x="-46"
+                    y="9"
+                    textAnchor="end"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="13"
+                    letterSpacing="2.86"
+                    fill="#0F1E1D"
+                    fontWeight="700"
+                  >
+                    REVENUE OPPORTUNITY
+                  </text>
+                  <text x="-30" y="9" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="16" fill="#BF461A" fontWeight="700">
+                    →
+                  </text>
+                  <g transform="translate(-32 -12)">
+                    <circle cx="16" cy="16" r="16" fill="#FCFAF4" stroke="rgba(15, 30, 29, 0.20)" strokeWidth="1.5" />
+                    <g transform="translate(8 8)" fill="#0F1E1D">
+                      <rect x="2.5" y="9" width="2.4" height="5" rx="0.4" />
+                      <rect x="6.8" y="6" width="2.4" height="8" rx="0.4" />
+                      <rect x="11.1" y="3" width="2.4" height="11" rx="0.4" />
+                    </g>
+                  </g>
+                  <line x1="-320" y1="22" x2="-46" y2="22" stroke="#BF461A" strokeWidth="1" />
+                </g>
+
+                {/* PREVIEW caption (bottom-right) */}
+                <g transform="translate(1424 712)">
+                  <text
+                    x="0"
+                    y="0"
+                    textAnchor="end"
+                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
+                    fontSize="11"
+                    letterSpacing="2.42"
+                    fill="#6B7370"
+                    fontWeight="700"
+                  >
+                    <tspan>PREVIEW</tspan>
+                    <tspan dx="6" fill="#BF461A">·</tspan>
+                    <tspan dx="6">FIVE ORBITS FRAMEWORK</tspan>
+                  </text>
+                </g>
               </svg>
             </div>
           </div>

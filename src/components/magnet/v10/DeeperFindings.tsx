@@ -3,11 +3,13 @@
 
 import { useState } from "react";
 import OHQ from "./ObservedHypothesisQuestion";
+import FeedbackDialog from "./FeedbackDialog";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 
 interface Props {
   customerName: string;
   primary: string;
+  slug?: string;
   signalObserved?: string | null;
   cadenceObserved?: string | null;
 }
@@ -15,10 +17,12 @@ interface Props {
 export default function DeeperFindings({
   customerName,
   primary,
+  slug,
   signalObserved,
   cadenceObserved,
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const [feedbackContext, setFeedbackContext] = useState<string | null>(null);
 
   const blocks = [
     {
@@ -99,6 +103,9 @@ export default function DeeperFindings({
                   hypothesis={b.hypothesis}
                   question={b.question}
                   primary={primary}
+                  onFeedbackClick={() =>
+                    setFeedbackContext(`Section 10 · ${b.eyebrow}`)
+                  }
                 />
               </div>
             </div>
@@ -106,6 +113,15 @@ export default function DeeperFindings({
         })}
       </div>
       </div>
+      <FeedbackDialog
+        open={feedbackContext !== null}
+        onOpenChange={(open) => {
+          if (!open) setFeedbackContext(null);
+        }}
+        slug={slug}
+        context={feedbackContext ?? undefined}
+        primary={primary}
+      />
     </section>
   );
 }
