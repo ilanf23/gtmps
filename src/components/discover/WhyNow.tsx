@@ -1,3 +1,4 @@
+const VIDEO_START = 56;
 import { useEffect, useRef, useState } from "react";
 
 const STATEMENT_WORDS = ["The", "ones", "that", "move", "first", "set", "the terms."];
@@ -5,6 +6,20 @@ const STATEMENT_WORDS = ["The", "ones", "that", "move", "first", "set", "the te
 export default function WhyNow() {
   const statRef = useRef<HTMLParagraphElement | null>(null);
   const [statValue, setStatValue] = useState(0);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
+    v.play().then(() => setIsPlaying(true)).catch(() => {});
+  };
+
+  const handleTimeUpdate = () => {
+    const v = videoRef.current;
+    if (v && v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
+  };
 
   useEffect(() => {
     const el = statRef.current;
@@ -523,16 +538,37 @@ export default function WhyNow() {
               role="button"
               tabIndex={0}
               aria-label="Play video: Adam Fridman on why now (90 seconds)"
-              onClick={() => {
-                /* video embed wired in a follow-up ticket */
-              }}
+              onClick={handlePlay}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  /* video embed wired in a follow-up ticket */
+                  handlePlay();
                 }
               }}
             >
+              <video
+                ref={videoRef}
+                src="/videos/why-now.mp4"
+                preload="metadata"
+                playsInline
+                controls={isPlaying}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={(e) => {
+                  const v = e.currentTarget;
+                  if (v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
+                }}
+                onEnded={() => setIsPlaying(false)}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  zIndex: 0,
+                  opacity: isPlaying ? 1 : 0,
+                  transition: "opacity 250ms",
+                }}
+              />
               <div className="wn-video-meta-tl">
                 <span className="wn-live-dot" aria-hidden />
                 <span>S6E1 · Cold Open</span>
@@ -547,6 +583,7 @@ export default function WhyNow() {
                 aria-label="Play video"
                 tabIndex={-1}
                 type="button"
+                style={{ display: isPlaying ? "none" : undefined }}
               >
                 <svg
                   className="wn-play-icon"
