@@ -361,14 +361,14 @@ export default function MagnetBreakdown({
         calendarCta={flow.calendarCta}
       />
 
-      <div className="max-w-[806px] mx-auto px-6 pb-24 ms-centered">
-        <HighestLeverageMove
-          profile={findingProfile}
-          customerName={customerName}
-          recommendedAction={sanitizedAction}
-          primary={brand.primary}
-        />
+      <HighestLeverageMove
+        profile={findingProfile}
+        customerName={customerName}
+        recommendedAction={sanitizedAction}
+        primary={brand.primary}
+      />
 
+      <div className="max-w-[806px] mx-auto px-6 pb-24 ms-centered">
         <DeeperFindings customerName={customerName} primary={brand.primary} slug={slug} />
 
         <ManuscriptShareSave

@@ -50,14 +50,17 @@ index.html  →  src/main.tsx  →  src/App.tsx
 | `/aletheia` | `pages/Aletheia.tsx` | One-off microsite | Bespoke "Market Activation Profile" microsite (dark navy theme). Sections in `components/aletheia/`. |
 | `/pepper-group`, `/google` | `pages/microsites/*.tsx` | Cohort microsite (shared shell) | Per-client tabbed microsites. Each is a thin wrapper defining a `SiteData` object passed to `MicrositeShell`. **Pattern: copy an existing file, edit the data block.** |
 | `/spr` | `pages/SPRGroup.tsx` | One-off microsite | One-off SPR microsite using its own components in `components/spr/`. Predates the shared shell pattern. |
-| `/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency` | `pages/verticals/*.tsx` | Vertical landings | One-line wrappers — `<VerticalLanding vertical={VERTICALS.<slug>} />`. **All copy lives in `src/content/verticals.ts`. Edit there, not in JSX.** |
-| `/assess` | `pages/MagnetAssess.tsx` | Magnet | Step 1 of Magnet flow. Single URL field. Generates slug, writes Supabase, navigates to `/m/:slug`. |
-| `/m/:slug` | `pages/MagnetSite.tsx` | Magnet | Step 2. Polls Supabase for enrichment status, shows `MagnetWaitTheater` while pending, renders `MagnetShell` + `MagnetBreakdown` when complete. Theme loaded per-slug via `useClientTheme`. |
-| `/m/:slug/chat` | `pages/MagnetBookChatPage.tsx` | Magnet | `MagnetShell` + `BookChat` (calls `book-chat` edge function). |
+| `/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency` | `pages/verticals/*.tsx` | Vertical landings | One-liner wrappers around `pages/verticals/_template/VerticalPage.tsx`. **Page content lives in `pages/verticals/_template/data.tsx`. Cross-surface metadata (slug, nav links, short labels) still lives in `src/content/verticals.ts`.** |
+| `/m/:slug` | `pages/MagnetSite.tsx` | Magnet | Polls Supabase for enrichment status, shows `MagnetWaitTheater` while pending (with hard-fail recovery surface), renders `MagnetShell` + `MagnetBreakdown` when complete. Theme loaded per-slug via `useClientTheme`. URL submission happens upstream from the homepage hero (`HeroUrlField` → `lib/magnetSubmit.ts`). |
+| `/m/:slug/chat` | `pages/MagnetBookChatPage.tsx` | Magnet | `MagnetShell` + `BookChat` (calls `book-chat` edge function). Empty state with per-firm starter prompts. |
 | `/m/:slug/read` | `pages/MagnetBookReaderPage.tsx` | Magnet | `MagnetShell` + `BookReader` (PDF reader via `react-pdf` / `pdfjs-dist`). |
 | `/m/:slug/feedback` | `pages/MagnetFeedbackPage.tsx` | Magnet | `MagnetShell` + `FeedbackForm` (calls `submit-feedback` edge function). |
+| `/m/:slug/cohort` | `pages/MagnetCohortPage.tsx` | Magnet | Standalone cohort placement view. Reads from the `cohort_metrics` view via `lib/cohort.ts`. |
 | `/book` | `pages/MagnetBook.tsx` | Magnet | Static booking/process page (uses `MagnetShell`). |
+| `/ops` | `pages/Ops.tsx` | Internal | Password-gated ops dashboard (Bookings, Emails, Microsites tabs). |
 | `*` | `pages/NotFound.tsx` | — | Catch-all. |
+
+> **Removed in Sprint 2 (2026-05-02 → 2026-05-03):** `/assess` and `pages/MagnetAssess.tsx`. The Magnet URL field is now embedded in the homepage hero. All "Add Your Firm" CTAs scroll to that field via `lib/scrollToHero.ts` rather than navigating to a separate page.
 
 ---
 
@@ -69,7 +72,7 @@ The site is really four overlapping product surfaces sharing one repo. **Don't m
 |---|---|---|
 | **Discover** (the book microsite) | Homepage / authority hub at `/` | Long editorial page composed of section components in `src/components/discover/` |
 | **Magnet** (the lead-gen funnel) | URL submit → AI enrichment → personalized site | Stateful flow backed by Supabase + `enrich-magnet` edge function |
-| **Vertical landings** | SEO landing per industry | Single shared `VerticalLanding` component driven by `src/content/verticals.ts` |
+| **Vertical landings** | SEO landing per industry | Templated via `pages/verticals/_template/VerticalPage.tsx`. Each route is a one-liner that passes a config from `_template/data.tsx`. Cross-surface metadata stays in `src/content/verticals.ts`. |
 | **Editorial / static / one-off microsites** | About, Awards, Manuscript, Aletheia, SPR, cohort sites | Bespoke per-page composition OR shared `MicrositeShell` |
 
 ### Microsite shell vs. one-off microsites — DO NOT MIX
@@ -103,23 +106,32 @@ src/components/
 │   └── ...
 │
 ├── magnet/                   ← Magnet flow components
-│   ├── MagnetAssessForm.tsx
-│   ├── MagnetWaitTheater.tsx
+│   ├── MagnetWaitTheater.tsx     ← polling theater w/ hard-fail recovery
 │   ├── MagnetBreakdown.tsx
 │   ├── MagnetShell.tsx
 │   ├── BookChat.tsx
 │   ├── BookReader.tsx
 │   ├── FeedbackForm.tsx
-│   └── v10/                  ← V10 iteration sub-components
+│   ├── CohortRankCardData.tsx    ← cohort-rank data wrapper
+│   └── v10/                      ← V10 iteration sub-components
+│       ├── OrbitGapRadar.tsx     ← viz pack (Sprint 2)
+│       ├── PercentileBar.tsx
+│       ├── GapSlopeChart.tsx
+│       ├── RevenueLeakWaterfall.tsx
+│       ├── FrameworkProgress.tsx
+│       ├── CohortCompareWidget.tsx
+│       ├── CohortRankCard.tsx
+│       └── ResearchCard.tsx
 │
-├── microsite/                ← Shared client microsite shell
+├── microsite/                ← Shared client microsite shell (Mabbly v2 brand spec)
 │   └── MicrositeShell.tsx
 │
 ├── pepper/                   ← Per-client overrides if needed
 ├── spr/                      ← /spr (one-off, predates shell)
 ├── aletheia/                 ← /aletheia (one-off bespoke)
-├── awards/                   ← /awards page sections
-├── VerticalLanding/          ← Shared vertical landing components
+├── awards/                   ← /awards page sections (5-ring sculpture)
+├── VerticalLanding/          ← VerticalNavBar (cross-vertical switcher) + helpers
+├── SkipLink.tsx              ← keyboard skip link (a11y)
 └── v1/                       ← /1 (earlier v1 archive)
 ```
 
@@ -129,7 +141,7 @@ Most user-facing text lives in **typed content modules**, not in JSX. **Editing 
 
 | File | What's in it |
 |---|---|
-| `verticals.ts` | All copy + config for the 8 vertical landings |
+| `verticals.ts` | Cross-surface vertical metadata (slug, nav links, short labels, types). Consumed by Discover, About, `VerticalNavBar`, and `lib/cohort.ts`. Page content for the vertical landings themselves moved to `pages/verticals/_template/data.tsx` in Sprint 2. |
 | `industryStats.ts` | Per-vertical stat cards |
 | `industryIcons.ts` | Lucide icons per vertical |
 | `manuscriptQuotes.ts` | Pull-quotes from the manuscript |
@@ -144,6 +156,8 @@ Most user-facing text lives in **typed content modules**, not in JSX. **Editing 
 | `useReducedMotion` | Respect `prefers-reduced-motion` |
 | `useRevealRef` + `revealStyle` | Per-element scroll reveal control (newer pattern, finer-grained) |
 | `useScrollProgress` | Bound to scroll position |
+| `useScrollRestoration` | Explicit scroll restoration across magnet sub-routes (Sprint 2) |
+| `useFocusOnRouteChange` | Moves focus to `<main>` on route change (a11y, Sprint 2) |
 | `useFooterVisible` | Detects when footer is in viewport (for sticky CTA collision fix) |
 | `useInlineCtaVisible` | Detects when an inline CTA is visible (auto-hides sticky CTA) |
 | `useClientTheme` | Per-slug brand theme cache for Magnet flow |
@@ -158,10 +172,15 @@ Most user-facing text lives in **typed content modules**, not in JSX. **Editing 
 | File | Purpose |
 |---|---|
 | `utils.ts` | `cn()` utility (clsx + tailwind-merge) |
-| `magnetSlug.ts` | `generateMagnetSlug(email)` — slug generation |
+| `tokens.ts` | Typed v2 design-system token registry (colors, spacing, type scale). Sprint 2. |
+| `magnetSlug.ts` | `generateMagnetSlug(...)` — slug generation (unit-tested) |
+| `magnetSubmit.ts` | Magnet submission logic, called from the homepage `HeroUrlField` (replaces the deleted `/assess` page). Sprint 2. |
 | `magnetScoring.ts` | Orbit score calculation logic |
 | `magnetAnalytics.ts` | Client-side analytics helpers (currently minimal — see roadmap for PostHog wiring) |
-| `clientTheme.ts` | Per-slug brand color resolution + cache |
+| `clientTheme.ts` | Per-slug brand color resolution + cache (unit-tested) |
+| `companyName.ts` | Slug ↔ canonical display name disambiguation (unit-tested). Sprint 2. |
+| `cohort.ts` | Fetcher for the `cohort_metrics` view. Sprint 2. |
+| `scrollToHero.ts` | Smooth-scroll to the homepage hero URL field; powers all "Add Your Firm" CTAs site-wide. Sprint 2. |
 | `calendly.ts` | Calendly embed helpers + URL builders |
 | `mabblyAnchors.ts` | Outbound link helpers to mabbly.com / mabbly.ai |
 
@@ -178,6 +197,7 @@ Most user-facing text lives in **typed content modules**, not in JSX. **Editing 
 |---|---|
 | `magnet.ts` | `BreakdownData` + Magnet flow types |
 | `microsite.ts` | `SiteData` shape consumed by `MicrositeShell` |
+| `cohort.ts` | Cohort-rank types consumed by `MagnetCohortPage` and the cohort viz components (Sprint 2) |
 
 ---
 
@@ -226,7 +246,7 @@ Live in `supabase/functions/`. Current set:
 
 | Function | Purpose |
 |---|---|
-| `enrich-magnet` | The heart of the Magnet flow. Scrapes via Jina, calls gpt-4o-mini, writes `breakdown_data` + `enrich_status = 'complete'`. Triggered fire-and-forget from `/assess` submit. |
+| `enrich-magnet` | The heart of the Magnet flow. Scrapes via Jina, calls gpt-4o-mini, writes `breakdown_data` + `enrich_status = 'complete'`. Triggered fire-and-forget from `lib/magnetSubmit.ts` (called by the homepage `HeroUrlField`). |
 | `book-chat` | Powers `/m/:slug/chat`. Loads `breakdown_data` for the slug, calls gpt-4o-mini scoped to the firm's GTM context. |
 | `magnet-chat` | Earlier alias / variant of book-chat. Verify if both live or one is deprecated. |
 | `submit-feedback` | Receives feedback from `/m/:slug/feedback`. Writes to feedback table. |
@@ -361,17 +381,20 @@ Config exists (`playwright.config.ts`, `playwright-fixture.ts`). Coverage is cur
 
 ### Adding a vertical landing
 
-1. Edit `src/content/verticals.ts` — add the new vertical's config block
-2. Add a one-line wrapper file in `src/pages/verticals/`:
+Sprint 2 refactor: vertical pages are now templated. Two files are involved.
+
+1. **Add the slug + nav metadata** in `src/content/verticals.ts` — extend `VerticalSlug` and `NAV_VERTICAL_LINKS`.
+2. **Add the page content** in `src/pages/verticals/_template/data.tsx` — export a config object alongside `consulting`, `law`, etc. Type comes from `_template/configs.ts`.
+3. **Add a one-liner page wrapper** in `src/pages/verticals/`:
    ```typescript
-   import { VerticalLanding } from "@/components/VerticalLanding/VerticalLanding";
-   import { VERTICALS } from "@/content/verticals";
-   export default function NewVertical() {
-     return <VerticalLanding vertical={VERTICALS.newVertical} />;
+   import VerticalPage from "./_template/VerticalPage";
+   import { newVertical } from "./_template/data";
+   export default function NewVerticalPage() {
+     return <VerticalPage config={newVertical} />;
    }
    ```
-3. Register the route in `src/App.tsx` above the catch-all
-4. Verify the vertical appears in the homepage's "Find Your Industry" grid (driven by the same content file)
+4. **Register the route** in `src/App.tsx` above the catch-all.
+5. Verify the vertical appears in the homepage's "Find Your Industry" grid (driven by `src/content/verticals.ts`) and in the `VerticalNavBar` firm menu.
 
 ### Adding a client microsite (shared shell)
 

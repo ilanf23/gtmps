@@ -136,8 +136,15 @@ export default function VerticalNavBar({
   const { pathname } = useLocation();
 
   useEffect(() => {
-    setMySlugs(readRecentSlugs());
-  }, []);
+    const stored = readRecentSlugs();
+    const match = pathname.match(/^\/m\/([^/]+)/);
+    const current = match?.[1];
+    if (current && !stored.includes(current)) {
+      setMySlugs([current, ...stored]);
+    } else {
+      setMySlugs(stored);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (!menuOpen && !firmMenuOpen) return;

@@ -62,6 +62,34 @@ export default function MagnetShell({
     else window.setTimeout(() => prewarmCalendly(), 200);
   }, []);
 
+  // Record this slug in the visitor's recent-microsites list so the global
+  // nav can surface a "Your Map" link on subsequent pages, even when the
+  // visitor lands on /m/:slug directly without going through /assess.
+  useEffect(() => {
+    if (!slug) return;
+    try {
+      const RECENT_KEY = "magnet:my_slugs";
+      const LEGACY_KEY = "magnet:my_slug";
+      const MAX_RECENT = 10;
+      let existing: string[] = [];
+      const raw = localStorage.getItem(RECENT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          existing = parsed.filter((s) => typeof s === "string" && s);
+        }
+      } else {
+        const legacy = localStorage.getItem(LEGACY_KEY);
+        if (legacy) existing = [legacy];
+      }
+      const next = [slug, ...existing.filter((s) => s !== slug)].slice(0, MAX_RECENT);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+      localStorage.setItem(LEGACY_KEY, slug);
+    } catch {
+      /* private mode / storage disabled - non-fatal */
+    }
+  }, [slug]);
+
   const handleBookClick = () => {
     openCalendlyPopup({
       slug: slug ?? "",

@@ -2,6 +2,8 @@
 
 > What's next. Synthesized from the May 1 audit + 3-firm MAP simulation findings + touchpoint playbook + email capture strategy.
 
+> **Status note (2026-05-03):** Sprint 2 (May 2–3) shipped substantial **infrastructure and surface** work — design-system v2 tokens, Discover light-register sweep, the Magnet visualization pack, the cohort layer and `/m/:slug/cohort` page, the vertical-page templating refactor, the `/assess` removal, accessibility primitives, and the magnet polling theater's hard-fail recovery surface. Full details in [`changelog/2026-05-02-2026-05-03-sprint-2.md`](./changelog/2026-05-02-2026-05-03-sprint-2.md). **The four MAP-quality P0s below — firm-name extraction, hypothesis de-templating, $1.2M fabrication, "Did we nail it?" feedback widget — were NOT addressed in Sprint 2 and remain the next ship.** Average MAP quality is therefore unchanged from the May 1 audit.
+
 ---
 
 ## Quality scorecard — where we are today

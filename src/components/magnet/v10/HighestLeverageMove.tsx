@@ -1,83 +1,159 @@
-// SECTION 09 - Your highest leverage move (post-CTA deep-dive).
+// SECTION 09 - The Formula. Signal + Proof + Context = Response.
+// Universal Mabbly IP from Chapter 3 of the manuscript. Not personalized
+// per client by design (the formula is universal); upstream sections carry
+// the client name. Visuals are spec-locked — see HighestLeverageMove.css.
 
-import { MANUSCRIPT_FORMULA } from "@/content/manuscriptQuotes";
 import type { FindingProfile } from "@/lib/magnetScoring";
-import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import "./HighestLeverageMove.css";
 
 interface Props {
-  profile: FindingProfile;
-  customerName: string;
-  recommendedAction: string | null;
-  primary: string;
+  profile?: FindingProfile;
+  customerName?: string;
+  recommendedAction?: string | null;
+  primary?: string;
 }
 
-const HEADLINES: Record<FindingProfile, string> = {
-  strongCoreWeakProof:
-    "Build a 1-page proof library this week. The pipeline you already have closes faster.",
-  weakCoreStrongProof:
-    "Tighten your Core in one paragraph. Your Proof deserves a clearer doorway.",
-  weakDeadZone:
-    "Reactivate your Dead Zone with a 7-minute signal. Same play Madcraft ran.",
-  allWeak:
-    "Run the 90-day RROS sequence. Discover → Prove → Design → Activate → Compound.",
-  allStrong:
-    "Compound. Lock in the cadence so this runs on its own through 2026.",
-  balanced:
-    "Pick the layer with the most leverage and run it for 30 days. The rest follows.",
-};
-
-export default function HighestLeverageMove({
-  profile,
-  customerName,
-  recommendedAction,
-  primary,
-}: Props) {
+export default function HighestLeverageMove(_props: Props) {
   return (
     <section
       id="v10-section-9"
       data-v10-section="9"
-      className="py-10 md:py-12 border-b border-black/10"
+      className="hlm-09"
+      aria-labelledby="hlm-09-headline"
     >
-      <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
-        <p
-          className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: MABBLY_GOLD }}
-        >
-          09 · Your highest leverage move
+      <div className="hlm-inner">
+        <p className="hlm-eyebrow">
+          <span className="hlm-eyebrow-rule" aria-hidden />
+          <span className="hlm-eyebrow-text">09 · Your Highest Leverage Move</span>
         </p>
-      </div>
 
-      <h2
-        className="font-bold leading-tight text-2xl md:text-3xl mb-5 max-w-[806px]"
-        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
-      >
-        {HEADLINES[profile]}
-      </h2>
+        <h2 id="hlm-09-headline" className="hlm-headline">
+          Reactivate Your Dead Zone in <span className="accent">7 Minutes</span>.
+        </h2>
 
-      <div className="space-y-3 max-w-xl text-sm md:text-base leading-relaxed opacity-85">
-        {recommendedAction && <p>{recommendedAction}</p>}
-        <p>
-          For {customerName}, the leverage is in matching one tightly-defined signal to one
-          piece of proof. Expect first responses inside 7 days, qualified pipeline inside 30,
-          and a measurable lift inside 90.
+        <p className="hlm-lede">
+          Pull three recent project completions. Match each to a single piece of proof.{" "}
+          <strong>
+            Madcraft ran this exact play and pulled $400K from a 10 month dormant proposal.
+          </strong>
         </p>
-      </div>
 
-      <figure
-        className="mt-8 pt-6 max-w-xl"
-        style={{ borderTop: `1px solid ${MABBLY_GOLD}33` }}
-      >
-        <blockquote
-          className="font-serif italic text-lg leading-snug opacity-85"
-          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
-        >
-          "{MANUSCRIPT_FORMULA.text}"
-        </blockquote>
-        <figcaption className="text-[10px] uppercase tracking-[0.25em] mt-3 opacity-50">
-          {MANUSCRIPT_FORMULA.attribution}
-        </figcaption>
-      </figure>
+        <div className="hlm-formula" role="group" aria-label="The Formula: Signal plus Proof plus Context equals Response">
+          <div className="operand operand--signal">
+            <div className="operand-meta">
+              <span className="operand-num">01</span>
+              <svg
+                className="operand-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
+                <path d="M8 12 a 4 4 0 0 1 8 0" />
+                <path d="M5 12 a 7 7 0 0 1 14 0" />
+              </svg>
+            </div>
+            <span className="operand-label">Signal</span>
+            <span className="operand-rule" aria-hidden />
+            <p className="operand-desc">A trigger event at their firm</p>
+          </div>
+
+          <span className="operator operator--plus operator--1" aria-hidden>+</span>
+
+          <div className="operand operand--proof">
+            <div className="operand-meta">
+              <span className="operand-num">02</span>
+              <svg
+                className="operand-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M8 12.5 L11 15.5 L16.5 9.5" />
+              </svg>
+            </div>
+            <span className="operand-label">Proof</span>
+            <span className="operand-rule" aria-hidden />
+            <p className="operand-desc">Your case study, mapped to it</p>
+          </div>
+
+          <span className="operator operator--plus operator--2" aria-hidden>+</span>
+
+          <div className="operand operand--context">
+            <div className="operand-meta">
+              <span className="operand-num">03</span>
+              <svg
+                className="operand-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7 V 12 L 15.5 14.5" />
+              </svg>
+            </div>
+            <span className="operand-label">Context</span>
+            <span className="operand-rule" aria-hidden />
+            <p className="operand-desc">Why now, why this firm</p>
+          </div>
+
+          <span className="operator operator--equals operator--3" aria-hidden>=</span>
+
+          <div className="operand operand--response">
+            <div className="operand-meta">
+              <span className="operand-num">04</span>
+              <svg
+                className="operand-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M21 15 a 2 2 0 0 1 -2 2 H 7 L 3 21 V 5 a 2 2 0 0 1 2 -2 H 19 a 2 2 0 0 1 2 2 Z" />
+              </svg>
+            </div>
+            <span className="operand-label">Response</span>
+            <span className="operand-rule" aria-hidden />
+            <p className="operand-desc">Reply, not unsubscribe</p>
+          </div>
+        </div>
+
+        <div className="hlm-timeline">
+          <div className="hlm-timeline-item">
+            <span className="hlm-timeline-num">7</span>
+            <span className="hlm-timeline-unit">Days</span>
+            <span className="hlm-timeline-label">First responses</span>
+          </div>
+          <span className="hlm-timeline-divider" aria-hidden />
+          <div className="hlm-timeline-item">
+            <span className="hlm-timeline-num">30</span>
+            <span className="hlm-timeline-unit">Days</span>
+            <span className="hlm-timeline-label">Qualified pipeline</span>
+          </div>
+          <span className="hlm-timeline-divider" aria-hidden />
+          <div className="hlm-timeline-item">
+            <span className="hlm-timeline-num">90</span>
+            <span className="hlm-timeline-unit">Days</span>
+            <span className="hlm-timeline-label">Measurable lift</span>
+          </div>
+        </div>
+
+      </div>
     </section>
   );
 }

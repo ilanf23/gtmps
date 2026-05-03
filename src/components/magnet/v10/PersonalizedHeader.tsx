@@ -580,42 +580,6 @@ export default function PersonalizedHeader({
                 <span className="ph-band-chip">{bandLabel}</span>
               </div>
 
-              <div
-                className="ph-chart-card"
-                aria-label="Per-orbit results chart"
-              >
-                <div className="ph-chart-head">
-                  <span className="ph-chart-title">Your Results</span>
-                  <span className="ph-chart-axis">0 – 100</span>
-                </div>
-                <div className="ph-chart-bars" role="img" aria-label="Bar chart of per-orbit scores">
-                  {ORBIT_LABELS.map((label, i) => {
-                    const v = Math.max(0, Math.min(100, Math.round(perOrbit[i] ?? 0)));
-                    return (
-                      <div key={label} className="ph-chart-col">
-                        <span className="ph-chart-val">{v}</span>
-                        <div className="ph-chart-bar-track">
-                          <div
-                            className="ph-chart-bar-fill"
-                            style={{
-                              ["--ph-chart-h" as string]: `${v}%`,
-                              animationDelay: `${1900 + i * 110}ms`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="ph-chart-labels">
-                  {ORBIT_LABELS.map((label) => (
-                    <span key={label} className="ph-chart-label">
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
               <div className="ph-orbits" aria-label="Per-orbit scores">
                 {ORBIT_LABELS.map((label, i) => {
                   const v = Math.max(0, Math.min(100, Math.round(perOrbit[i] ?? 0)));

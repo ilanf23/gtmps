@@ -1,27 +1,29 @@
 # 03 · The Magnet Flow
 
-> The four-page personalized AI lead-gen funnel. The most complex piece in this codebase. The single most important conversion surface in the entire Discover Mabbly authority play.
+> The personalized AI lead-gen funnel. The most complex piece in this codebase. The single most important conversion surface in the entire Discover Mabbly authority play.
+
+> **Sprint 2 update (2026-05-02 → 2026-05-03):** the standalone `/assess` page was removed. URL submission now lives in the homepage hero (`HeroUrlField` → `lib/magnetSubmit.ts`). All "Add Your Firm" CTAs across the site scroll to that hero field via `lib/scrollToHero.ts`. The `/m/:slug` flow itself is unchanged. A new sibling route `/m/:slug/cohort` was also added (cohort placement view). When you read references to `/assess` or `pages/MagnetAssess.tsx` below, mentally rewrite them as "homepage hero URL field" — the submit logic and target table are otherwise identical. The polling theater also gained a hard-fail recovery surface (no more silent infinite poll).
 
 ---
 
 ## The flow at a glance
 
 ```
-   /discover               /assess               /m/:slug                /book
-       │                      │                      │                     │
-   ┌───▼────┐            ┌────▼────┐            ┌────▼────┐           ┌────▼────┐
-   │ Hero    │ ──CTA──▶ │ Single  │ ──submit──▶│ AI       │ ──CTA──▶│ Calendly│
-   │ "Add    │           │ field — │            │ enriches │           │ booking │
-   │ Your    │           │ URL     │            │ in ~90s  │           │         │
-   │ Firm →" │           │ only    │            │          │           │         │
-   └─────────┘           └─────────┘            └────┬─────┘           └─────────┘
-                                                      │
-                                                      ├──▶ /m/:slug/chat   (Talk to the Book)
-                                                      ├──▶ /m/:slug/read   (Manuscript reader)
-                                                      └──▶ /m/:slug/feedback
+   /discover  (hero URL field)     /m/:slug                /book
+            │                          │                     │
+   ┌────────▼─────────┐            ┌───▼─────┐          ┌────▼────┐
+   │ Hero with        │ ──submit──▶│ AI       │ ──CTA──▶│ Calendly│
+   │ embedded URL     │            │ enriches │          │ booking │
+   │ field            │            │ in ~90s  │          │         │
+   └──────────────────┘            └────┬─────┘          └─────────┘
+                                         │
+                                         ├──▶ /m/:slug/chat     (Talk to the Book)
+                                         ├──▶ /m/:slug/read     (Manuscript reader)
+                                         ├──▶ /m/:slug/feedback
+                                         └──▶ /m/:slug/cohort   (cohort placement, NEW Sprint 2)
 ```
 
-**Four pages. One AI pipeline. Zero manual work per lead.**
+**Hero submit. One AI pipeline. Zero manual work per lead.**
 
 ---
 

@@ -1,10 +1,10 @@
-// SECTION 10 - Deeper Findings (Signal · Cadence · Research Flag).
-// Compact OHQ blocks; collapsible on mobile, all open on desktop.
+// SECTION 10 - Deeper Findings.
+// Three stacked editorial research cards (Signal Analysis / Cadence Read /
+// Research Flag) using the same research-card discipline as Sections 03/04.
 
-import { useState } from "react";
-import OHQ from "./ObservedHypothesisQuestion";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import FeedbackDialog from "./FeedbackDialog";
-import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import "./DeeperFindings.css";
 
 interface Props {
   customerName: string;
@@ -14,6 +14,14 @@ interface Props {
   cadenceObserved?: string | null;
 }
 
+interface CardSpec {
+  index: "10A" | "10B" | "10C";
+  topic: string;
+  observed: ReactNode;
+  hypothesis: ReactNode;
+  question: string;
+}
+
 export default function DeeperFindings({
   customerName,
   primary,
@@ -21,98 +29,207 @@ export default function DeeperFindings({
   signalObserved,
   cadenceObserved,
 }: Props) {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const sectionRef = useRef<HTMLElement>(null);
   const [feedbackContext, setFeedbackContext] = useState<string | null>(null);
 
-  const blocks = [
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.classList.add("is-in");
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const signalText =
+    signalObserved?.trim() ||
+    `${customerName}'s site reads as a service catalog more than a signal source. Visitors learn what you do, not when to engage you.`;
+
+  const cadenceText =
+    cadenceObserved?.trim() ||
+    "Your public cadence (Insights, social, alumni touches) suggests episodic outreach rather than a scheduled rhythm.";
+
+  const cards: CardSpec[] = [
     {
-      eyebrow: "Signal Analysis",
-      observed:
-        signalObserved?.trim() ||
-        `${customerName}'s site reads as a service catalog more than a signal source. Visitors learn what you do, not when to engage you.`,
-      hypothesis:
-        "If we surface 1 to 2 trigger signals (org change, capability shift, named project), inbound qualifies before the first call.",
+      index: "10A",
+      topic: "Signal Analysis",
+      observed: (
+        <>
+          {signalText.includes("service catalog") ? (
+            <>
+              {signalText.split("service catalog")[0]}
+              <strong>service catalog</strong>
+              {signalText.split("service catalog")[1]}
+            </>
+          ) : (
+            signalText
+          )}
+        </>
+      ),
+      hypothesis: (
+        <>
+          If we surface <strong>1 to 2 trigger signals</strong> (org change, capability shift, named project), inbound qualifies before the first call.
+        </>
+      ),
       question: "Which signal would your team find most useful first?",
     },
     {
-      eyebrow: "Cadence Read",
-      observed:
-        cadenceObserved?.trim() ||
-        "Your public cadence (insights, social, alumni touches) suggests episodic outreach rather than a scheduled rhythm.",
-      hypothesis:
-        "A 4-week relationship rhythm tied to your top 100 contacts typically reactivates 3 to 5 dormant deals per quarter.",
+      index: "10B",
+      topic: "Cadence Read",
+      observed: (
+        <>
+          {cadenceText.includes("episodic outreach") ? (
+            <>
+              {cadenceText.split("episodic outreach")[0]}
+              <strong>episodic outreach</strong>
+              {cadenceText.split("episodic outreach")[1]}
+            </>
+          ) : (
+            cadenceText
+          )}
+        </>
+      ),
+      hypothesis: (
+        <>
+          A <strong>4-week relationship rhythm</strong> tied to your top 100 contacts typically reactivates <strong>3 to 5 dormant deals</strong> per quarter.
+        </>
+      ),
       question: "What does your current touch cadence look like?",
     },
     {
-      eyebrow: "Research Flag",
-      observed: `${customerName} has at least one trait that does not fit the median PS firm in the cohort. We'd like to confirm it on the call before adding it to the manuscript.`,
-      hypothesis:
-        "Outliers often become the most useful chapters. Your input here directly shapes how this case is written.",
+      index: "10C",
+      topic: "Research Flag",
+      observed: (
+        <>
+          {customerName} has at least one trait that does not fit the median PS firm in the cohort. We'd like to <strong>confirm it on the call</strong> before adding it to the manuscript.
+        </>
+      ),
+      hypothesis: (
+        <>
+          Outliers often become the <strong>most useful chapters</strong>. Your input here directly shapes how this case is written.
+        </>
+      ),
       question: "What's the one thing about your firm you wish more people understood?",
     },
   ];
 
   return (
     <section
+      ref={sectionRef}
       id="v10-section-10"
       data-v10-section="10"
-      className="py-14 md:py-20 border-y border-black/10 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-6 md:px-10"
-      style={{ backgroundColor: "#F7F1E6" }}
+      className="df-section df-scope"
     >
-      <div className="max-w-[806px] mx-auto">
-      <div className="flex items-center gap-2 mb-5">
-        <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
-        <p
-          className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-          style={{ color: MABBLY_GOLD }}
-        >
-          10 · Deeper findings
-        </p>
-      </div>
-      <h2
-        className="font-bold leading-tight text-2xl md:text-3xl mb-6"
-        style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
-      >
-        Three more reads we'd like your feedback on.
-      </h2>
+      <div className="df-container">
+        <header className="df-section-head">
+          <div className="df-meta-row">
+            <span className="df-rule" aria-hidden />
+            <span className="df-meta-tag">
+              <span className="df-num">10</span>
+              <span className="df-pip">·</span>Deeper Findings
+            </span>
+            <span className="df-rule" aria-hidden />
+          </div>
+          <h2 className="df-headline">
+            <span className="df-word-mask"><span className="df-word-inner">Three&nbsp;</span></span>
+            <span className="df-word-mask"><span className="df-word-inner">more&nbsp;</span></span>
+            <span className="df-word-mask"><span className="df-word-inner">reads&nbsp;</span></span>
+            <span className="df-word-mask"><span className="df-word-inner">we'd&nbsp;</span></span>
+            <span className="df-word-mask"><span className="df-word-inner">like&nbsp;</span></span>
+            <span className="df-word-mask"><span className="df-word-inner">your&nbsp;</span></span>
+            <span className="df-word-mask"><span className="df-word-inner">feedback<span className="df-period">.</span></span></span>
+          </h2>
+          <p className="df-section-sub df-reveal df-d2">
+            Three editorial reads pulled from the cohort. Tell us what lands &mdash; and what doesn't.
+          </p>
+        </header>
 
-      <div className="space-y-3 md:space-y-6">
-        {blocks.map((b, i) => {
-          const isOpen = openIdx === i;
-          return (
-            <div key={b.eyebrow} className="border border-black/10 bg-[#EDF5EC] text-[#0F1E1D]">
-              <button
-                type="button"
-                onClick={() => setOpenIdx(isOpen ? null : i)}
-                aria-expanded={isOpen}
-                className="w-full flex items-center justify-between p-4 md:p-5 text-left md:cursor-default"
-              >
-                <span
-                  className="text-[11px] uppercase tracking-[0.25em] font-semibold"
-                  style={{ color: MABBLY_GOLD }}
-                >
-                  {b.eyebrow}
-                </span>
-                <span className="md:hidden text-xs opacity-50" aria-hidden>
-                  {isOpen ? "−" : "+"}
-                </span>
-              </button>
-              <div className={(isOpen ? "block" : "hidden md:block") + " p-4 md:p-5 pt-0"}>
-                <OHQ
-                  observed={b.observed}
-                  hypothesis={b.hypothesis}
-                  question={b.question}
-                  primary={primary}
-                  onFeedbackClick={() =>
-                    setFeedbackContext(`Section 10 · ${b.eyebrow}`)
-                  }
-                />
+        <div className="df-stack">
+          {cards.map((card, i) => (
+            <article
+              key={card.index}
+              className={`df-card-wrap df-reveal df-d${i + 3}`}
+            >
+              <span className="df-tick-tr" aria-hidden />
+              <span className="df-tick-bl" aria-hidden />
+              <span className="df-eyebrow">
+                <span className="df-eyebrow-num">Card {card.index}</span>
+                <span className="df-pip">·</span>
+                <span className="df-eyebrow-topic">{card.topic}</span>
+              </span>
+
+              <div className="df-card">
+                <div className="df-cols">
+                  <span className="df-div-mark df-tl" aria-hidden />
+                  <span className="df-div-mark df-tr" aria-hidden />
+                  <span className="df-div-mark df-bl" aria-hidden />
+                  <span className="df-div-mark df-br" aria-hidden />
+
+                  <div className="df-col df-col-1">
+                    <div className="df-col-num-row">
+                      <span className="df-col-num">01</span>
+                      <span className="df-col-label">Observed</span>
+                    </div>
+                    <div className="df-col-content"><p>{card.observed}</p></div>
+                  </div>
+
+                  <div className="df-col df-col-2">
+                    <div className="df-col-num-row">
+                      <span className="df-col-num">02</span>
+                      <span className="df-col-label">Hypothesis</span>
+                    </div>
+                    <div className="df-col-content"><p>{card.hypothesis}</p></div>
+                  </div>
+
+                  <div className="df-col df-col-3">
+                    <div className="df-col-num-row">
+                      <span className="df-col-num">03</span>
+                      <span className="df-col-label">Question</span>
+                    </div>
+                    <div className="df-col-content"><p>{card.question}</p></div>
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+
+              <div className="df-feedback-row">
+                <button
+                  type="button"
+                  className="df-feedback-chip"
+                  onClick={() => setFeedbackContext(`Section 10 · ${card.topic}`)}
+                >
+                  <span className="df-pulse" aria-hidden />
+                  <span>Did we get this right?</span>
+                </button>
+                <span className="df-feedback-question">
+                  Send us your{" "}
+                  <button
+                    type="button"
+                    className="df-feedback-link"
+                    onClick={() => setFeedbackContext(`Section 10 · ${card.topic}`)}
+                  >
+                    feedback
+                  </button>
+                  .
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
-      </div>
+
       <FeedbackDialog
         open={feedbackContext !== null}
         onOpenChange={(open) => {

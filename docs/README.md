@@ -14,8 +14,8 @@
 | **Stack** | React 18 · Vite · TypeScript · Tailwind · Supabase |
 | **Status** | Live · post-Lovable migration to local + Vercel pipeline |
 | **Owner** | Adam Fridman (strategy) · Richard Ashbaugh (relationships) · Ilan (engineering) |
-| **Last major release** | V10 Magnet microsite (Apr 27 2026) |
-| **Last doc refresh** | May 1 2026 |
+| **Last major release** | Sprint 2 — Discover light register + Magnet viz pack + cohort layer (May 2–3 2026) |
+| **Last doc refresh** | May 3 2026 |
 
 ---
 
@@ -24,7 +24,7 @@
 Three overlapping product surfaces sharing one repository:
 
 1. **Discover** — the editorial book microsite at `/` and `/discover`. Long-form authority page that introduces the *Relationship Revenue OS* (RROS), the Five Orbits framework, and the case for GTM for Professional Services as a category.
-2. **The Magnet** — the personalized AI lead-gen funnel at `/assess` → `/m/:slug` → `/book`. Visitor submits their firm URL, AI generates a custom Five Orbits map in ~90 seconds, no email gate.
+2. **The Magnet** — the personalized AI lead-gen funnel. The visitor submits their firm URL from the homepage hero (`HeroUrlField`); AI generates a custom Five Orbits map in ~90 seconds at `/m/:slug` (with sub-routes for chat, read, feedback, cohort), no email gate. The previous standalone `/assess` page was removed in Sprint 2 — the URL field now lives on the homepage.
 3. **Vertical & client surfaces** — eight industry landings (`/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency`), bespoke client microsites (`/pepper-group`, `/google`, `/spr`, `/aletheia`), plus editorial pages (`/about`, `/awards`, `/manuscript`).
 
 Every surface ladders into one of three magnets on the homepage:
@@ -45,7 +45,7 @@ Six docs, ordered for reading top-to-bottom on first read, but each is independe
 |---|---|---|
 | [`01-strategy.md`](./01-strategy.md) | The WHY. RROS thesis. ICP. Locked vocabulary (Five Orbits, Five Truths, Three Laws, The Formula, The MAP). Verified facts library. | You're touching copy, positioning, CTAs, or framework references |
 | [`02-architecture.md`](./02-architecture.md) | The WHAT. Stack, routing, page taxonomy, component organization, backend, styling, conventions. | You're shipping code or onboarding a new dev |
-| [`03-magnet-flow.md`](./03-magnet-flow.md) | The HOW. The four-page Magnet flow. AI enrichment pipeline. V10 spec. MAP 12-field schema. Failure modes. | You're working on `/assess`, `/m/:slug`, the AI pipeline, or anything Magnet-related |
+| [`03-magnet-flow.md`](./03-magnet-flow.md) | The HOW. The Magnet flow (homepage hero submit → `/m/:slug` and sub-routes). AI enrichment pipeline. V10 spec. MAP 12-field schema. Failure modes. *Note: this doc still references `/assess` in places — the page was removed in Sprint 2 and submission now happens from the homepage hero.* | You're working on the Magnet hero submit, `/m/:slug`, the AI pipeline, or anything Magnet-related |
 | [`04-roadmap.md`](./04-roadmap.md) | The NEXT. Audit findings. P0/P1/P2 priority queue. Week 1–4 ship plan. Email capture strategy. Ops dashboard plan. | You're deciding what to build next or status-checking the trajectory |
 | [`05-playbook.md`](./05-playbook.md) | The DAILY. Local dev setup. Common tasks (add vertical, add microsite, edit copy, deploy). Lovable→Vercel migration plan. | You're sitting down to work today |
 | [`06-references.md`](./06-references.md) | The SOURCES. Notion link library. Lovable prompt archive. Glossary. Killed-stats list. Recommended reading order. | You need a citation or a backstop |
@@ -96,18 +96,30 @@ If no, kill it.
 
 ---
 
-## Status snapshot (May 1 2026)
+## Status snapshot (May 3 2026)
+
+> Just shipped: Sprint 2 (May 2–3). Full changelog in [`changelog/2026-05-02-2026-05-03-sprint-2.md`](./changelog/2026-05-02-2026-05-03-sprint-2.md).
 
 **Live:**
-- All 8 vertical landings
-- `/discover` homepage (V10 with verified case studies)
-- `/assess` → `/m/:slug` magnet flow (V10, single-field intake, no email gate)
-- AI enrichment pipeline (`enrich-magnet` edge function with gpt-4o-mini)
-- Floating book chat (`/m/:slug/chat`)
+- All 8 vertical landings (now templated via `pages/verticals/_template/VerticalPage.tsx`)
+- `/discover` homepage on the light editorial register, with the Magnet URL field embedded in the hero (replaces `/assess`)
+- Magnet flow `/m/:slug` with V10 + visualization pack: `OrbitGapRadar`, `PercentileBar`, `GapSlopeChart`, `RevenueLeakWaterfall`, `FrameworkProgress`, `CohortCompareWidget`, `CohortRankCard`
+- New cohort placement page at `/m/:slug/cohort`
+- AI enrichment pipeline (`enrich-magnet` edge function, gpt-4o-mini)
+- Book chat (`/m/:slug/chat`) with empty state and "Ask Adam" framing
 - Manuscript reader (`/m/:slug/read`)
-- Two cohort microsites (`/pepper-group`, `/google`) on shared shell
+- Two cohort microsites (`/pepper-group`, `/google`) on shared shell, now on Mabbly v2 brand spec
+- Awards page restructured (`/awards`) with 5-ring sculpture
+- A11y baseline: skip link, focus-on-route-change, `<main>` landmark
+- Design-system v2 tokens applied (`src/lib/tokens.ts`, `tailwind.config.ts`)
+- Hard-fail recovery surface for the magnet polling theater (no more silent infinite poll)
 
-**In flight (next 14 days per [04-roadmap.md](./04-roadmap.md)):**
+**Removed:**
+- `/assess` route and `pages/MagnetAssess.tsx` — submission now lives in the homepage hero (`HeroUrlField` → `lib/magnetSubmit.ts`)
+- `VerticalLanding`, `VerticalNav`, `VerticalFooter`, `VerticalStickyCta` — replaced by `_template/VerticalPage` + `VerticalNavBar`
+- `VITE_CLIENT_THEME_V2` env gate — dark-body guard is now always-on
+
+**In flight (next 14 days per [04-roadmap.md](./04-roadmap.md) — these P0s are NOT yet shipped):**
 - Firm name extraction fix (priority chain: title → og:site_name → URL stem)
 - Hypothesis/Question de-templating (kill the boilerplate that repeats across firms)
 - Kill the $1.2M fabrication (audit prompt for placeholder dollar values)
@@ -191,5 +203,5 @@ discover-mabbly/
 
 ---
 
-*Documentation last updated: May 1, 2026*
+*Documentation last updated: May 3, 2026*
 *Maintained by: EDITH (with Ilan)*

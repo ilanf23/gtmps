@@ -78,28 +78,29 @@ npm run lint                # ESLint across the project
 
 ### Add a vertical landing
 
-1. Edit `src/content/verticals.ts` — add a config block:
-   ```typescript
-   newVertical: {
-     slug: "new-vertical",
-     nativeTerm: "New Vertical Term",
-     // ... copy + config per VerticalContent type
-   }
-   ```
-2. Add a one-line wrapper at `src/pages/verticals/NewVertical.tsx`:
-   ```typescript
-   import { VerticalLanding } from "@/components/VerticalLanding/VerticalLanding";
-   import { VERTICALS } from "@/content/verticals";
+> **Sprint 2 refactor:** vertical pages are now templated through `pages/verticals/_template/`. The monolithic `VerticalLanding` component is gone.
 
-   export default function NewVertical() {
-     return <VerticalLanding vertical={VERTICALS.newVertical} />;
+1. **Add the slug + nav metadata** in `src/content/verticals.ts`:
+   ```typescript
+   // extend VerticalSlug
+   export type VerticalSlug = '...' | 'new-vertical';
+   // and add an entry in NAV_VERTICAL_LINKS
+   ```
+2. **Add the page content** in `src/pages/verticals/_template/data.tsx` — export a config object alongside `consulting`, `law`, etc. (Type from `_template/configs.ts`.)
+3. **Add a one-liner page wrapper** at `src/pages/verticals/NewVertical.tsx`:
+   ```typescript
+   import VerticalPage from "./_template/VerticalPage";
+   import { newVertical } from "./_template/data";
+
+   export default function NewVerticalPage() {
+     return <VerticalPage config={newVertical} />;
    }
    ```
-3. Register the route in `src/App.tsx` ABOVE the catch-all `*`:
+4. **Register the route** in `src/App.tsx` ABOVE the catch-all `*`:
    ```tsx
    <Route path="/new-vertical" element={<NewVertical />} />
    ```
-4. Verify: visit `http://localhost:8080/new-vertical`. Confirm the vertical appears in the homepage's "Find Your Industry" grid (driven by the same content file).
+5. Verify: visit `http://localhost:8080/new-vertical`. Confirm it appears in the homepage's "Find Your Industry" grid and in the `VerticalNavBar` firm menu.
 
 ### Add a client microsite (shared shell)
 
@@ -129,10 +130,13 @@ Use `/aletheia` or `/spr` as templates. Note: these predate the shared shell —
 
 ### Edit copy on a vertical landing
 
-99% of vertical-landing copy lives in `src/content/verticals.ts`. **Edit there, not in JSX.**
+After the Sprint 2 refactor, vertical-page copy lives in **`src/pages/verticals/_template/data.tsx`**, not in `src/content/verticals.ts`. (The `content/verticals.ts` file still holds slugs, nav links, and short labels used by other surfaces — Discover, About, `VerticalNavBar`.)
 
 ```bash
-# Find the right key
+# Find the right key for body copy
+grep -n "your-search-term" src/pages/verticals/_template/data.tsx
+
+# Find the right key for nav labels / slug metadata
 grep -n "your-search-term" src/content/verticals.ts
 ```
 
@@ -199,14 +203,14 @@ grep -rn "search phrase from the page" src/components/discover/
 
 ### Run a MAP simulation against the live site
 
-Submit a test URL via `/assess`:
+Submit a test URL via the **homepage hero URL field** (the `/assess` page was removed in Sprint 2):
 
 ```
 https://example.com               # Cheap test, won't burn a real-firm slug
 https://www.agconsultingpartners.com   # Real ICP firm from Adam's cohort
 ```
 
-Wait ~90 seconds. Visit `/m/[slug]` to see the result.
+Wait ~90 seconds. Visit `/m/[slug]` to see the result. Sub-routes: `/m/[slug]/chat`, `/m/[slug]/read`, `/m/[slug]/feedback`, `/m/[slug]/cohort`.
 
 Each call costs ~$0.002. Don't worry about cost during development.
 
