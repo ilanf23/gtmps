@@ -1,3 +1,4 @@
+const VIDEO_START = 56;
 import { useEffect, useRef, useState } from "react";
 
 const STATEMENT_WORDS = ["The", "ones", "that", "move", "first", "set", "the terms."];
