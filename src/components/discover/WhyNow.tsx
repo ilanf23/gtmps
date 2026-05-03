@@ -6,6 +6,20 @@ const STATEMENT_WORDS = ["The", "ones", "that", "move", "first", "set", "the te
 export default function WhyNow() {
   const statRef = useRef<HTMLParagraphElement | null>(null);
   const [statValue, setStatValue] = useState(0);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
+    v.play().then(() => setIsPlaying(true)).catch(() => {});
+  };
+
+  const handleTimeUpdate = () => {
+    const v = videoRef.current;
+    if (v && v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
+  };
 
   useEffect(() => {
     const el = statRef.current;
