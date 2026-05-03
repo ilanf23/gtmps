@@ -160,9 +160,9 @@ export function EmailsTab({ refreshNonce, onUnauth }: EmailsTabProps) {
                 <tr key={i} className="hover:bg-zinc-900/60">
                   <td className="px-3 py-2 text-zinc-200">{r.email}</td>
                   <td className="px-3 py-2 text-zinc-400 text-xs font-mono">{r.source_event}</td>
-                  <td className="px-3 py-2 text-zinc-500 text-xs font-mono">{r.source_slug ?? "—"}</td>
+                  <td className="px-3 py-2 text-zinc-500 text-xs font-mono">{r.source_slug ?? "-"}</td>
                   <td className="px-3 py-2 text-zinc-500 text-xs">{new Date(r.captured_at).toLocaleString()}</td>
-                  <td className="px-3 py-2 text-zinc-400 text-xs">{r.email_domain ?? "—"}</td>
+                  <td className="px-3 py-2 text-zinc-400 text-xs">{r.email_domain ?? "-"}</td>
                   <td className="px-3 py-2 text-xs">{r.consented_marketing ? "yes" : "no"}</td>
                 </tr>
               ))

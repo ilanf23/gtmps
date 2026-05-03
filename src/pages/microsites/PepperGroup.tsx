@@ -64,15 +64,15 @@ const SITE_DATA: SiteData = {
     strategicObservations: [
       {
         title: "Your proof points don't match your positioning",
-        text: "Revenue Tower is differentiated IP — Kensing became #1, BASF is a $200M win. But your positioning says 'Top B2B Agency,' which 10 other Chicago firms also claim. The evidence says something sharper.",
+        text: "Revenue Tower is differentiated IP - Kensing became #1, BASF is a $200M win. But your positioning says 'Top B2B Agency,' which 10 other Chicago firms also claim. The evidence says something sharper.",
       },
       {
         title: "George's networks are an untapped goldmine",
-        text: "AMA Chicago, DePaul, CEO Roundtable, Junto — 1,100+ relationships across 4 institutional engines. All managed as volunteer roles, none systematically activated for business development.",
+        text: "AMA Chicago, DePaul, CEO Roundtable, Junto - 1,100+ relationships across 4 institutional engines. All managed as volunteer roles, none systematically activated for business development.",
       },
       {
         title: "The strategy and discipline exist. The activation layer doesn't.",
-        text: "16 years of EOS. A proprietary framework. 95% retention. But zero technology connecting relationships to revenue. The gap isn't thinking — it's the system between knowing people and generating business from them.",
+        text: "16 years of EOS. A proprietary framework. 95% retention. But zero technology connecting relationships to revenue. The gap isn't thinking - it's the system between knowing people and generating business from them.",
       },
     ],
     expandables: [],
@@ -142,7 +142,7 @@ const SITE_DATA: SiteData = {
             items: [
               "No Forbes or major publication bylines",
               "Sparse LinkedIn cadence (2–3/year vs. 2/month target)",
-              "Buried insights — not accessible to prospects",
+              "Buried insights - not accessible to prospects",
             ],
           },
         },
@@ -305,7 +305,7 @@ const SITE_DATA: SiteData = {
     headline: "Your Content Engine,\nAlready Running",
     subtitle: "Before We Ask, We Give",
     description: "We didn't just analyze your business. We built you two pieces of content you can publish this week. In George's voice. On brand. Ready to go.",
-    cadenceNote: "George's cadence is 2–3 per year; it should be 2 per month. The gap isn't ideas — it's bandwidth. This is what the system does.",
+    cadenceNote: "George's cadence is 2–3 per year; it should be 2 per month. The gap isn't ideas - it's bandwidth. This is what the system does.",
     linkedInPost: {
       author: "George Couris",
       status: "Ready to publish",
@@ -329,7 +329,7 @@ const SITE_DATA: SiteData = {
         { num: "1", title: "The Illusion of Progress", desc: "Tools without architecture = organized noise" },
         { num: "2", title: "Why Manufacturers Are Different", desc: "They think in systems but accept disconnected marketing" },
         { num: "3", title: "The Revenue Tower Framework", desc: "6 levels, each feeds the next" },
-        { num: "4", title: "What the Cornerstones Actually Do", desc: "Content, data, talent, tech as plumbing — not shopping list" },
+        { num: "4", title: "What the Cornerstones Actually Do", desc: "Content, data, talent, tech as plumbing - not shopping list" },
         { num: "5", title: "What Winners Do Differently", desc: "PE carveout went from unknown to #1 in 3 years" },
       ],
     },

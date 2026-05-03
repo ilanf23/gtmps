@@ -43,7 +43,7 @@ export default function PepperOverview() {
           <span style={{ color: "#C65D3E" }}>.</span>
         </h1>
 
-        {/* Pull quote — cinematic treatment */}
+        {/* Pull quote - cinematic treatment */}
         <div
           className="relative max-w-[720px] mx-auto"
           style={{

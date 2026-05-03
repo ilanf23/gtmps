@@ -138,7 +138,7 @@ export default function ThePodcast() {
                 letterSpacing: '-0.02em',
               }}
             >
-              The Dead Zone — Why Your Best Clients Already Know You
+              The Dead Zone - Why Your Best Clients Already Know You
             </div>
             <div
               style={{

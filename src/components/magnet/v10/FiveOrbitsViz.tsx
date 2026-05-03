@@ -1,11 +1,11 @@
-// SECTION 02 — Five Orbits visualization
+// SECTION 02 - Five Orbits visualization
 // Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
 // Mobile (<md): vertical card list with progress bars (legacy layout).
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
-import { openCalendlyPopup, type CalendlyContext } from "@/lib/calendly";
+import type { CalendlyContext } from "@/lib/calendly";
 
 const ORBIT_NAMES = [
   "Core Proof",
@@ -68,8 +68,23 @@ export default function FiveOrbitsViz({
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [svgHover, setSvgHover] = useState(false);
   const [logoOk, setLogoOk] = useState(true);
   const hoverTimer = useRef<number | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const shownIdx = openIdx ?? hoverIdx;
+  const shouldPause = svgHover || shownIdx !== null;
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    try {
+      if (shouldPause) svg.pauseAnimations();
+      else svg.unpauseAnimations();
+    } catch {
+      /* SMIL pause unsupported; ignore */
+    }
+  }, [shouldPause]);
 
   const enterHover = (i: number) => {
     if (hoverTimer.current) {
@@ -86,7 +101,7 @@ export default function FiveOrbitsViz({
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
 
-  // SVG geometry — 500x500 viewBox, center (250, 250).
+  // SVG geometry - 500x500 viewBox, center (250, 250).
   const CENTER = 250;
   const RADII = [50, 100, 150, 200, 250];
   // Scale ring radii down slightly so labels sit inside the viewBox bounds.
@@ -131,11 +146,14 @@ export default function FiveOrbitsViz({
 
         <div className="flex justify-center" style={{ overflow: "visible" }}>
           <svg
+            ref={svgRef}
             viewBox={`-40 -20 ${VIEW + 80} ${VIEW + 40}`}
             width="100%"
-            style={{ maxWidth: 640, height: "auto", overflow: "visible" }}
+            style={{ maxWidth: 1400, height: "auto", overflow: "visible" }}
             role="img"
             aria-label="Five Orbits diagram"
+            onMouseEnter={() => setSvgHover(true)}
+            onMouseLeave={() => setSvgHover(false)}
           >
             {/* Center: client logo if available, otherwise "YOUR FIRM" text */}
             <defs>
@@ -312,88 +330,104 @@ export default function FiveOrbitsViz({
                 </g>
               );
             })}
+
+            {/* Callout overlay pass — paints after all pills, overlaps rings + pills + center.
+                Wrapper rotation groups stay mounted for every i so SMIL animations stay
+                in lock-step with the matching pill in the pass above. Only the
+                foreignObject is gated on shownIdx === i. */}
+            {RADII.map((r, i) => {
+              const angleRad = (ORBIT_ANGLES_DEG[i] * Math.PI) / 180;
+              const lx = VIEW_CENTER + Math.cos(angleRad) * r;
+              const ly = VIEW_CENTER + Math.sin(angleRad) * r;
+              const driftDur = `${53 + i * 13}s`;
+              const outerTo = `${i % 2 ? -360 : 360} ${VIEW_CENTER} ${VIEW_CENTER}`;
+              const innerTo = `${i % 2 ? 360 : -360} ${lx} ${ly}`;
+              const band = bandPerOrbit[i] ?? "low";
+              const statusStroke =
+                band === "high" ? "#2E7D32" : band === "mid" ? "#C9A227" : "#C62828";
+
+              return (
+                <g key={`callout-rot-${i}`}>
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from={`0 ${VIEW_CENTER} ${VIEW_CENTER}`}
+                    to={outerTo}
+                    dur={driftDur}
+                    repeatCount="indefinite"
+                    additive="sum"
+                  />
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      from={`0 ${lx} ${ly}`}
+                      to={innerTo}
+                      dur={driftDur}
+                      repeatCount="indefinite"
+                      additive="sum"
+                    />
+                    {shownIdx === i && (() => {
+                      const pillW = 132;
+                      const pillH = 38;
+                      const calloutW = 280;
+                      const calloutH = 150;
+                      const gap = 16;
+                      const fx = lx + pillW / 2 + gap;
+                      const fy = ly - pillH / 2 - calloutH - gap;
+                      return (
+                        <foreignObject
+                          x={fx}
+                          y={fy}
+                          width={calloutW}
+                          height={calloutH}
+                          style={{ overflow: "visible" }}
+                        >
+                          <div
+                            style={{
+                              background: "white",
+                              borderLeft: `3px solid ${statusStroke}`,
+                              padding: "14px 18px 14px 22px",
+                              boxShadow: "0 10px 28px rgba(0,0,0,0.15)",
+                              fontFamily:
+                                "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
+                              fontSize: "13px",
+                              lineHeight: 1.55,
+                              color: "#1a1a1a",
+                              fontStyle: "italic",
+                              position: "relative",
+                            }}
+                          >
+                            <span
+                              aria-hidden
+                              style={{
+                                position: "absolute",
+                                top: -6,
+                                left: 6,
+                                fontSize: 44,
+                                lineHeight: 1,
+                                color: statusStroke,
+                                fontFamily: "Georgia, serif",
+                                fontStyle: "normal",
+                                opacity: 0.85,
+                              }}
+                            >
+                              &ldquo;
+                            </span>
+                            <p style={{ margin: 0, paddingLeft: 14 }}>
+                              {orbits[i]?.trim() || fallbackObs}
+                            </p>
+                          </div>
+                        </foreignObject>
+                      );
+                    })()}
+                  </g>
+                </g>
+              );
+            })}
           </svg>
         </div>
 
-        {/* Hover preview card (desktop) — only when nothing is click-expanded */}
-        {hoverIdx !== null && openIdx === null && (() => {
-          const i = hoverIdx;
-          const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
-          const band = bandPerOrbit[i] ?? "low";
-          const accentBorder =
-            band === "high" ? "#2E7D32" : band === "mid" ? "#C9A227" : "#C62828";
-          const accentText =
-            band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
-          const accentBg =
-            band === "high" ? "#F4FBF4" : band === "mid" ? "#FFFBEC" : "#FFF5F4";
-          return (
-            <div
-              className="mt-6 mx-auto max-w-[806px] border p-5 animate-fade-in"
-              style={{ borderColor: accentBorder, backgroundColor: accentBg }}
-              onMouseEnter={() => enterHover(i)}
-              onMouseLeave={leaveHover}
-            >
-              <div className="flex items-center justify-between gap-4 mb-2">
-                <p
-                  className="text-[11px] uppercase tracking-[0.25em] font-semibold"
-                  style={{ color: accentText }}
-                >
-                  {String(i + 1).padStart(2, "0")} · {ORBIT_NAMES[i]}
-                </p>
-                <span
-                  className="text-[11px] uppercase tracking-[0.18em] font-bold"
-                  style={{ color: accentText }}
-                >
-                  {tokens.label}
-                </span>
-              </div>
-              <p className="text-sm leading-relaxed opacity-90 mb-4">
-                {orbits[i]?.trim() || fallbackObs}
-              </p>
-              {calendlyCtx && (
-                <button
-                  type="button"
-                  onClick={() => openCalendlyPopup(calendlyCtx)}
-                  className="inline-flex items-center gap-2 px-4 py-2 text-[12px] uppercase tracking-[0.14em] font-semibold transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: accentBorder, color: "#EDF5EC" }}
-                >
-                  Learn more <span aria-hidden>→</span>
-                </button>
-              )}
-            </div>
-          );
-        })()}
-
-        {/* Expanded observation panel (desktop) */}
-        {openIdx !== null && (
-          <div
-            className="mt-6 mx-auto max-w-[806px] border p-5 animate-fade-in"
-            style={{
-              borderColor: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].border,
-              backgroundColor: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].bg,
-            }}
-          >
-            <div className="flex items-center justify-between gap-4 mb-2">
-              <p
-                className="text-[11px] uppercase tracking-[0.25em] font-semibold"
-                style={{ color: BAND_TOKENS[bandPerOrbit[openIdx] ?? "low"].fg }}
-              >
-                {String(openIdx + 1).padStart(2, "0")} · {ORBIT_NAMES[openIdx]}
-              </p>
-              <button
-                type="button"
-                onClick={() => setOpenIdx(null)}
-                className="text-xs opacity-60 hover:opacity-100"
-                aria-label="Close observation"
-              >
-                ✕
-              </button>
-            </div>
-            <p className="text-sm leading-relaxed opacity-90">
-              {orbits[openIdx]?.trim() || fallbackObs}
-            </p>
-          </div>
-        )}
       </div>
 
       {/* ─── MOBILE: vertical card list (unchanged layout) ───────────── */}

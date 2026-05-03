@@ -3,7 +3,7 @@ import type { VerticalConfig } from "./configs";
 export const consulting: VerticalConfig = {
   slug: "consulting",
   shortLabel: "Consulting",
-  pageTitle: "Consulting — Practice Growth Score | Mabbly",
+  pageTitle: "Consulting - Practice Growth Score | Mabbly",
   pageDescription:
     "The first research on practice growth in management consulting. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -97,7 +97,7 @@ export const consulting: VerticalConfig = {
       { num: "01", chart: "timeline", headline: "Proposals stall in the Dead Zone.", body: <>Average proposal goes silent <strong>9 to 12 months</strong> before re-engagement. No system to know when to act on it.</> },
       { num: "02", chart: "partnerWeek", headline: "Partner time is the bottleneck.", body: <>Origination depends on partner calendars. Roughly <strong>2 hours a week</strong> for new business. The framework runs on <strong>signals</strong>, not calendars.</> },
       { num: "03", chart: "coldVsWarm", headline: "Generic outreach kills the brand.", body: <>Most firms send "checking in" emails to dormant contacts and watch reply rates fall <strong>below 2%</strong>. Buyers ignore the un-personal.</> },
-      { num: "04", chart: "networkDensity", headline: "The network is the moat. The network decays.", body: <>Hundreds of dormant relationships in every partner's book — worth <strong>millions in reactivatable pipeline</strong>, sitting unsignalled.</> },
+      { num: "04", chart: "networkDensity", headline: "The network is the moat. The network decays.", body: <>Hundreds of dormant relationships in every partner's book - worth <strong>millions in reactivatable pipeline</strong>, sitting unsignalled.</> },
     ],
   },
   audit: {
@@ -153,7 +153,7 @@ export const consulting: VerticalConfig = {
 export const law: VerticalConfig = {
   slug: "law",
   shortLabel: "Law",
-  pageTitle: "Law Firms — Origination Score | Mabbly",
+  pageTitle: "Law Firms - Origination Score | Mabbly",
   pageDescription:
     "The first research on origination strategy in law. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -193,7 +193,7 @@ export const law: VerticalConfig = {
       sub: (
         <>
           The total addressable market for legal services. <strong>80%+ of new matters</strong> at AmLaw 200 firms come
-          from existing clients — the rest is sitting in dormant relationships.
+          from existing clients - the rest is sitting in dormant relationships.
         </>
       ),
       source: "ABA / IBISWorld 2024 · 3.5% Annual Growth",
@@ -207,7 +207,7 @@ export const law: VerticalConfig = {
   reality: {
     metaTag: "Industry Dynamics",
     headline: "The law firm reality",
-    sub: "Six numbers that explain why origination depends on individuals — and why the book leaves when the partner does.",
+    sub: "Six numbers that explain why origination depends on individuals - and why the book leaves when the partner does.",
     definitionTerm: "The Dead Zone",
     definitionBody:
       "Dormant clients. Lapsed prospects. Former matters that closed and went silent. The clients who knew you and stopped hearing from you. 60–80% of contacts in a typical law firm CRM live here right now.",
@@ -292,7 +292,7 @@ export const law: VerticalConfig = {
 export const accounting: VerticalConfig = {
   slug: "accounting",
   shortLabel: "Accounting",
-  pageTitle: "Accounting Firms — Client Development Score | Mabbly",
+  pageTitle: "Accounting Firms - Client Development Score | Mabbly",
   pageDescription:
     "Client development research for accounting firms. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -332,7 +332,7 @@ export const accounting: VerticalConfig = {
       sub: (
         <>
           The total addressable market for accounting and advisory. <strong>Cross-sell from tax to advisory under 20%</strong>{" "}
-          on average — that gap is the line item nobody is measuring.
+          on average - that gap is the line item nobody is measuring.
         </>
       ),
       source: "AICPA / IBISWorld 2024 · 5.1% Annual Growth",
@@ -372,10 +372,10 @@ export const accounting: VerticalConfig = {
     metaTag: "Where It Breaks",
     headline: "Where accounting client development breaks",
     blocks: [
-      { num: "01", chart: "timeline", headline: "Tax season ends. Then silence.", body: <>Most firms touch clients once a year. The next 11 months are <strong>dormant by default</strong> — and so is the cross-sell window.</> },
+      { num: "01", chart: "timeline", headline: "Tax season ends. Then silence.", body: <>Most firms touch clients once a year. The next 11 months are <strong>dormant by default</strong> - and so is the cross-sell window.</> },
       { num: "02", chart: "partnerWeek", headline: "Partner time is the bottleneck.", body: <>Partners spend <strong>under 10% of their time on origination</strong>. Advisory expansion needs signals, not calendars.</> },
       { num: "03", chart: "coldVsWarm", headline: "Generic outreach kills the relationship.", body: <>Templated "year-end" emails fall flat. Reply rates collapse <strong>below 2%</strong> against a 7-year client tenure.</> },
-      { num: "04", chart: "networkDensity", headline: "The book of business is dormant by default.", body: <>Hundreds of tax-only clients sit unsignalled — each one a potential <strong>advisory expansion</strong> the firm never sees.</> },
+      { num: "04", chart: "networkDensity", headline: "The book of business is dormant by default.", body: <>Hundreds of tax-only clients sit unsignalled - each one a potential <strong>advisory expansion</strong> the firm never sees.</> },
     ],
   },
   audit: {
@@ -431,7 +431,7 @@ export const accounting: VerticalConfig = {
 export const msp: VerticalConfig = {
   slug: "msp",
   shortLabel: "MSP",
-  pageTitle: "MSPs — Account Expansion Score | Mabbly",
+  pageTitle: "MSPs - Account Expansion Score | Mabbly",
   pageDescription:
     "Account expansion research for MSPs. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -464,13 +464,13 @@ export const msp: VerticalConfig = {
   numbers: {
     metaTag: "The Account Expansion Gap",
     headline: "Managed services in numbers",
-    sub: "A $220B industry growing at 12.5%. Land-and-expand is the moat — most firms are landing only.",
+    sub: "A $220B industry growing at 12.5%. Land-and-expand is the moat - most firms are landing only.",
     heroStat: {
       label: "US Managed Services Revenue · 2024",
       num: <>$220<span className="unit">B</span></>,
       sub: (
         <>
-          The fastest-growing PS vertical. Net revenue retention is the leading indicator —{" "}
+          The fastest-growing PS vertical. Net revenue retention is the leading indicator -{" "}
           <strong>most MSPs are leaving expansion on the table</strong>.
         </>
       ),
@@ -557,7 +557,7 @@ export const msp: VerticalConfig = {
       { tag: "Stack", q: "How does this fit with our PSA/RMM (ConnectWise, Datto, NinjaOne)?", a: "The framework sits on top. We ingest from your PSA and add signal capture and cadence. We do not replace your PSA or RMM." },
       { tag: "Timing", q: "How long does implementation take?", a: "90 days from data ingestion to first expanded account. Most firms see their first expansion conversation within 2 weeks of the initial outreach round." },
       { tag: "Economics", q: "How does this fit with our existing comp plan?", a: "The framework respects existing comp structures. Expanded accounts route to the original AE / vCIO of record by default." },
-      { tag: "Channel", q: "Does this conflict with vendor MDF or co-sell motions?", a: "No. The framework operates inside the firm's own systems and complements vendor co-sell — most firms run both in parallel." },
+      { tag: "Channel", q: "Does this conflict with vendor MDF or co-sell motions?", a: "No. The framework operates inside the firm's own systems and complements vendor co-sell - most firms run both in parallel." },
       { tag: "Privacy", q: "Can my firm participate confidentially?", a: "Yes. Participation defaults to anonymous benchmarking. Named cases are opt-in only." },
     ],
   },
@@ -570,7 +570,7 @@ export const msp: VerticalConfig = {
 export const advisory: VerticalConfig = {
   slug: "advisory",
   shortLabel: "Advisory",
-  pageTitle: "Financial Advisory — AUM Growth Score | Mabbly",
+  pageTitle: "Financial Advisory - AUM Growth Score | Mabbly",
   pageDescription:
     "AUM growth research for RIAs and wealth advisors. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -603,13 +603,13 @@ export const advisory: VerticalConfig = {
   numbers: {
     metaTag: "The Organic Growth Gap",
     headline: "Independent advisory in numbers",
-    sub: "A $128T market. 15K+ RIA firms. The biggest moat is referral — most firms have no referral cadence.",
+    sub: "A $128T market. 15K+ RIA firms. The biggest moat is referral - most firms have no referral cadence.",
     heroStat: {
       label: "US Wealth AUM · 2024",
       num: <>$128<span className="unit">T</span></>,
       sub: (
         <>
-          Total addressable wealth in the US. Independent advisors capture only a fraction —{" "}
+          Total addressable wealth in the US. Independent advisors capture only a fraction -{" "}
           <strong>organic growth from referrals is the lever</strong> nobody is systematizing.
         </>
       ),
@@ -624,7 +624,7 @@ export const advisory: VerticalConfig = {
   reality: {
     metaTag: "Industry Dynamics",
     headline: "The advisory reality",
-    sub: "Six numbers that explain why organic growth is the moat — and why most firms have no organic engine.",
+    sub: "Six numbers that explain why organic growth is the moat - and why most firms have no organic engine.",
     definitionTerm: "The Dead Zone",
     definitionBody:
       "Centers of influence you never followed up with. Referrals that stalled. Prospects who said 'not yet' two years ago. Former clients who left and never came back. The relationships every advisor knows by name and never re-engages.",
@@ -653,7 +653,7 @@ export const advisory: VerticalConfig = {
       { num: "01", chart: "timeline", headline: "Prospects say 'not yet'. Then silence.", body: <>Most prospects who decline today are in-market in <strong>9–18 months</strong>. No system to know when to re-engage.</> },
       { num: "02", chart: "partnerWeek", headline: "Advisor time is the bottleneck.", body: <>Senior advisors spend <strong>under 2 hours a week</strong> on referral cultivation. The framework runs on signals, not calendars.</> },
       { num: "03", chart: "coldVsWarm", headline: "Cold campaigns destroy trust.", body: <>Templated newsletters are the opposite of fiduciary brand. Reply rates fall <strong>below 2%</strong>.</> },
-      { num: "04", chart: "networkDensity", headline: "COIs decay silently.", body: <>Centers of influence — CPAs, attorneys, business owners — go quiet without a cadence. <strong>Hundreds of dormant referral relationships</strong> sit untouched.</> },
+      { num: "04", chart: "networkDensity", headline: "COIs decay silently.", body: <>Centers of influence - CPAs, attorneys, business owners - go quiet without a cadence. <strong>Hundreds of dormant referral relationships</strong> sit untouched.</> },
     ],
   },
   audit: {
@@ -664,7 +664,7 @@ export const advisory: VerticalConfig = {
       "Have any 'not yet' prospects from 12+ months ago not been re-contacted?",
       "Did under 30% of new AUM come from referrals this year?",
       "Are there COIs (CPAs, attorneys) you haven't engaged in 6+ months?",
-      "Is referral activity informal — no documented cadence?",
+      "Is referral activity informal - no documented cadence?",
       "Are advisors spending under 5 hours a week on origination?",
       "Has the firm not added a new COI relationship in 12 months?",
     ],
@@ -709,7 +709,7 @@ export const advisory: VerticalConfig = {
 export const ae: VerticalConfig = {
   slug: "ae",
   shortLabel: "Architecture",
-  pageTitle: "Architecture & Engineering — Win Rate Score | Mabbly",
+  pageTitle: "Architecture & Engineering - Win Rate Score | Mabbly",
   pageDescription:
     "Pursuit and origination research for A&E firms. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -748,7 +748,7 @@ export const ae: VerticalConfig = {
       num: <>$420<span className="unit">B</span></>,
       sub: (
         <>
-          Architecture and engineering combined. Pursuit overhead is the unmeasured tax —{" "}
+          Architecture and engineering combined. Pursuit overhead is the unmeasured tax -{" "}
           <strong>most firms chase 3x more pursuits than they win</strong>.
         </>
       ),
@@ -790,9 +790,9 @@ export const ae: VerticalConfig = {
     headline: "Where A&E pursuit breaks",
     blocks: [
       { num: "01", chart: "timeline", headline: "Pursuits stall in the procurement maze.", body: <>Average $1M+ pursuit goes silent <strong>9 to 18 months</strong> at procurement. No system to know when to re-engage.</> },
-      { num: "02", chart: "partnerWeek", headline: "Principal time funds the pursuit tax.", body: <>Principals spend <strong>2 hours a week</strong> on origination — and most of that on chase pursuits the firm shouldn't pursue.</> },
+      { num: "02", chart: "partnerWeek", headline: "Principal time funds the pursuit tax.", body: <>Principals spend <strong>2 hours a week</strong> on origination - and most of that on chase pursuits the firm shouldn't pursue.</> },
       { num: "03", chart: "coldVsWarm", headline: "Generic SOQs lose to repeat-client wins.", body: <>Cold SOQ submissions win <strong>under 10%</strong>. Repeat-client engagements win 60%+. The math is brutal.</> },
-      { num: "04", chart: "networkDensity", headline: "Past clients go silent.", body: <>Hundreds of past clients sit unsignalled — every one a potential <strong>repeat-client engagement</strong> with 60%+ win rates.</> },
+      { num: "04", chart: "networkDensity", headline: "Past clients go silent.", body: <>Hundreds of past clients sit unsignalled - every one a potential <strong>repeat-client engagement</strong> with 60%+ win rates.</> },
     ],
   },
   audit: {
@@ -848,7 +848,7 @@ export const ae: VerticalConfig = {
 export const recruiting: VerticalConfig = {
   slug: "recruiting",
   shortLabel: "Executive Search",
-  pageTitle: "Executive Search — Mandate Velocity Score | Mabbly",
+  pageTitle: "Executive Search - Mandate Velocity Score | Mabbly",
   pageDescription:
     "Mandate velocity research for executive search firms. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -881,13 +881,13 @@ export const recruiting: VerticalConfig = {
   numbers: {
     metaTag: "The Mandate Gap",
     headline: "Executive search in numbers",
-    sub: "A $22B industry. 12K+ firms. The biggest moat is the candidate-to-client flywheel — most firms break it after each placement.",
+    sub: "A $22B industry. 12K+ firms. The biggest moat is the candidate-to-client flywheel - most firms break it after each placement.",
     heroStat: {
       label: "US Executive Search Revenue · 2024",
       num: <>$22<span className="unit">B</span></>,
       sub: (
         <>
-          The TAM is small but the LTV per client is enormous. <strong>Repeat clients drive most fee revenue</strong> —
+          The TAM is small but the LTV per client is enormous. <strong>Repeat clients drive most fee revenue</strong> -
           and most firms have no post-placement cadence.
         </>
       ),
@@ -905,7 +905,7 @@ export const recruiting: VerticalConfig = {
     sub: "Six numbers that explain why placements are point events and the relationship is the asset.",
     definitionTerm: "The Dead Zone",
     definitionBody:
-      "Past placements who never re-engaged. Stalled retainers. Candidates you placed who became hiring executives years later — and never came back to you. The flywheel that breaks every time a placement closes.",
+      "Past placements who never re-engaged. Stalled retainers. Candidates you placed who became hiring executives years later - and never came back to you. The flywheel that breaks every time a placement closes.",
     cards: [
       { num: "01", stat: <>60<span className="unit-sm">%+</span></>, text: "Of fees at top retained firms come from repeat clients.", source: "AESC" },
       { num: "02", stat: <>3–6<span className="unit-sm">mo</span></>, text: "Average mandate cycle for VP+ retained search.", source: "Industry Average" },
@@ -931,7 +931,7 @@ export const recruiting: VerticalConfig = {
       { num: "01", chart: "timeline", headline: "Placements close. Then silence.", body: <>Most firms have <strong>no post-placement cadence</strong>. The placed exec moves on, becomes the hiring buyer in 5 years, and goes elsewhere.</> },
       { num: "02", chart: "partnerWeek", headline: "Partner time goes to active mandates only.", body: <>Partners spend <strong>under 2 hours a week</strong> on relationship cultivation. Active mandates eat the rest. The flywheel breaks at every closeout.</> },
       { num: "03", chart: "coldVsWarm", headline: "Cold BD lags candidate-network BD.", body: <>Cold prospecting wins <strong>below 2%</strong>. Past-placement and candidate-turned-buyer networks convert at 25–40%.</> },
-      { num: "04", chart: "networkDensity", headline: "The candidate network is the moat. The candidate network decays.", body: <>Hundreds of past placements and candidates sit silent — each one a potential <strong>retained mandate</strong> in 5 years if signaled correctly.</> },
+      { num: "04", chart: "networkDensity", headline: "The candidate network is the moat. The candidate network decays.", body: <>Hundreds of past placements and candidates sit silent - each one a potential <strong>retained mandate</strong> in 5 years if signaled correctly.</> },
     ],
   },
   audit: {
@@ -987,7 +987,7 @@ export const recruiting: VerticalConfig = {
 export const agency: VerticalConfig = {
   slug: "agency",
   shortLabel: "Marketing",
-  pageTitle: "Marketing Agencies — New Business Score | Mabbly",
+  pageTitle: "Marketing Agencies - New Business Score | Mabbly",
   pageDescription:
     "New business research for marketing agencies. 500 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
@@ -1020,13 +1020,13 @@ export const agency: VerticalConfig = {
   numbers: {
     metaTag: "The New Business Gap",
     headline: "Agency new business in numbers",
-    sub: "A $275B industry. 60K+ agencies. The pitch tax is real — most agencies pitch 4x more than they win.",
+    sub: "A $275B industry. 60K+ agencies. The pitch tax is real - most agencies pitch 4x more than they win.",
     heroStat: {
       label: "US Agency Revenue · 2024",
       num: <>$275<span className="unit">B</span></>,
       sub: (
         <>
-          The TAM is enormous. The pitch tax is the unmeasured cost —{" "}
+          The TAM is enormous. The pitch tax is the unmeasured cost -{" "}
           <strong>most agencies spend more on pitching than reactivating past clients</strong>.
         </>
       ),
@@ -1049,7 +1049,7 @@ export const agency: VerticalConfig = {
       { num: "01", stat: <>4<span className="unit-sm">x</span></>, text: "Median pitch volume vs wins at independent agencies.", source: "Provoke Insights" },
       { num: "02", stat: <>50<span className="unit-sm">%+</span></>, text: "Of revenue at top firms is repeat or referral.", source: "Industry Research" },
       { num: "03", stat: <>18–24<span className="unit-sm">mo</span></>, text: "Average client tenure at midmarket independents.", source: "RSW/US AgencyNew Business" },
-      { num: "04", stat: <>{"<"}10<span className="unit-sm">%</span></>, text: "Pitch win rate at most agencies — including the silent loss tax.", source: "RSW/US" },
+      { num: "04", stat: <>{"<"}10<span className="unit-sm">%</span></>, text: "Pitch win rate at most agencies - including the silent loss tax.", source: "RSW/US" },
       {
         num: "05",
         stat: (
@@ -1068,7 +1068,7 @@ export const agency: VerticalConfig = {
     headline: "Where agency new business breaks",
     blocks: [
       { num: "01", chart: "timeline", headline: "Pitches lose. Then silence.", body: <>Most agencies <strong>never re-engage second-place pitches</strong>. The marketer remembers the work; the agency never calls again.</> },
-      { num: "02", chart: "partnerWeek", headline: "Founder time funds the pitch tax.", body: <>Founders spend <strong>2 hours a week</strong> on new business — and most of that on pitches the agency shouldn't be in.</> },
+      { num: "02", chart: "partnerWeek", headline: "Founder time funds the pitch tax.", body: <>Founders spend <strong>2 hours a week</strong> on new business - and most of that on pitches the agency shouldn't be in.</> },
       { num: "03", chart: "coldVsWarm", headline: "Cold prospecting beats lost-pitch reactivation budget.", body: <>Most agencies invest more in cold prospecting than reactivating past clients. <strong>Reactivation CAC is 5x cheaper</strong>.</> },
       { num: "04", chart: "networkDensity", headline: "The marketer network decays at every roster change.", body: <>Marketers you used to work with move every 18–24 months. Without a cadence, <strong>the relationship disappears</strong> with the role change.</> },
     ],

@@ -18,7 +18,7 @@ interface BookChatProps {
 const WELCOME: ChatMessage = {
   role: "assistant",
   content:
-    "Ask Adam anything about the GTM book — frameworks, chapters, or how to apply Relationship Revenue OS to your firm.",
+    "Ask Adam anything about the GTM book - frameworks, chapters, or how to apply Relationship Revenue OS to your firm.",
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/book-chat`;
@@ -171,7 +171,7 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
               });
             }
           } catch {
-            // Partial JSON across chunks — re-buffer
+            // Partial JSON across chunks - re-buffer
             textBuffer = line + "\n" + textBuffer;
             break;
           }
@@ -305,7 +305,7 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
                     words
                     {firmName ? (
                       <>
-                        {" "}— answers are framed for{" "}
+                        {" "}- answers are framed for{" "}
                         <span className="font-medium text-[#0F1E1D]">
                           {firmName}
                         </span>

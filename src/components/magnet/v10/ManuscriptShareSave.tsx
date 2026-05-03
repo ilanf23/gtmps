@@ -1,4 +1,4 @@
-// SECTION 11 — Manuscript anchor + Share + Save cards.
+// SECTION 11 - Manuscript anchor + Share + Save cards.
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

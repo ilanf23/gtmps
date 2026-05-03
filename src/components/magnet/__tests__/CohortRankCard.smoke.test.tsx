@@ -1,6 +1,6 @@
 // Smoke tests for the styled CohortRankCard. The data layer is covered
 // in src/lib/__tests__/cohort.test.ts; these tests exercise the render
-// behavior — silent omission when there are no rows, and the rank +
+// behavior - silent omission when there are no rows, and the rank +
 // percentile copy when there are.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -72,7 +72,7 @@ describe("CohortRankCard render", () => {
     render(
       <CohortRankCard firmId="cravath" cohortKey="law" primary="#B8933A" />,
     );
-    // Top metric is 88th percentile across 124 firms — that maps to rank 15.
+    // Top metric is 88th percentile across 124 firms - that maps to rank 15.
     expect(await screen.findByText(/You rank 15/)).toBeInTheDocument();
     expect(screen.getByText(/of 124 firms in your cohort/)).toBeInTheDocument();
   });

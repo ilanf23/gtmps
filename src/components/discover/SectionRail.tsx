@@ -8,7 +8,7 @@ interface Item {
 /**
  * Vertical scroll-spy rail. Visible from 1024px up.
  * Active dot: filled gold 12px. Inactive: 8px outline.
- * Label appears as a tooltip on hover/focus only — never in normal flow.
+ * Label appears as a tooltip on hover/focus only - never in normal flow.
  *
  * Visibility:
  *   - Hidden while the hero section (#hero) is in the viewport.
@@ -74,7 +74,7 @@ const SectionRail = ({ items }: { items: Item[] }) => {
     };
 
     const attachFooter = () => {
-      // Page footer OR the v10 final Share+Save section (Section 11) — same
+      // Page footer OR the v10 final Share+Save section (Section 11) - same
       // gating intent: hide the rail once the closing share UI is on-screen.
       const footer =
         document.querySelector('[data-page-footer="true"]') ||

@@ -38,7 +38,7 @@ export default function SPRGroup() {
   };
 
   useEffect(() => {
-    const title = "SPR — Market Activation Profile | Mabbly";
+    const title = "SPR - Market Activation Profile | Mabbly";
     const description = "A personalized market activation profile prepared for Doug, Tom Ryan and Rebecca Butman by Mabbly.";
     const ogImage = `${window.location.origin}/og-spr.jpg`;
 

@@ -7,7 +7,7 @@ import { RefObject, useEffect, useState } from "react";
  *                 1 when its bottom leaves the top of the viewport.
  *
  * mode "pin":     intended for a tall outer wrapper that contains a sticky
- *                 inner — 0 when the wrapper's top hits the top of the viewport,
+ *                 inner - 0 when the wrapper's top hits the top of the viewport,
  *                 1 when the wrapper's bottom hits the bottom of the viewport.
  */
 export function useScrollProgress<T extends HTMLElement>(

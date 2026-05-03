@@ -1,4 +1,4 @@
-// /m/:slug/cohort — standalone cohort-comparison page.
+// /m/:slug/cohort - standalone cohort-comparison page.
 //
 // Spec: §9.1.3 / §9.2.14 of the audit. Composes CohortCompareWidget
 // (radar + percentile rail) under the existing MagnetShell so the

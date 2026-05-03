@@ -1,4 +1,4 @@
-// SECTION 04 — Your Proof (Observed / Hypothesis / Question)
+// SECTION 04 - Your Proof (Observed / Hypothesis / Question)
 
 import { useState } from "react";
 import ResearchCard from "./ResearchCard";
@@ -9,9 +9,11 @@ interface Props {
   primary: string;
   slug?: string;
   compact?: boolean;
+  hideFeedback?: boolean;
+  onFeedbackClick?: () => void;
 }
 
-export default function ProofAnalysisSection({ observed, primary, slug, compact }: Props) {
+export default function ProofAnalysisSection({ observed, primary, slug, compact, hideFeedback, onFeedbackClick }: Props) {
   const hasObserved = Boolean(observed && observed.trim());
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
@@ -42,16 +44,19 @@ export default function ProofAnalysisSection({ observed, primary, slug, compact 
         observed={observedText}
         hypothesis={hypothesis}
         question="Which client result do your prospects cite most often when they decide to work with you?"
-        onFeedbackClick={() => setFeedbackOpen(true)}
+        onFeedbackClick={onFeedbackClick ?? (() => setFeedbackOpen(true))}
         compact={compact}
+        hideFeedback={hideFeedback}
       />
-      <FeedbackDialog
-        open={feedbackOpen}
-        onOpenChange={setFeedbackOpen}
-        slug={slug}
-        context="Section 4 · Your Proof"
-        primary={primary}
-      />
+      {!hideFeedback && (
+        <FeedbackDialog
+          open={feedbackOpen}
+          onOpenChange={setFeedbackOpen}
+          slug={slug}
+          context="Section 4 · Your Proof"
+          primary={primary}
+        />
+      )}
     </>
   );
 }

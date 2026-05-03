@@ -21,7 +21,7 @@ export default function PepperContentEngine() {
           We didn't just analyze your business. We built you two pieces of content you can publish this week. In George's voice. On brand. Ready to go.
         </p>
         <p className="text-[13px] text-[#A09890] leading-relaxed max-w-[560px]">
-          George's cadence is 2–3 per year; it should be 2 per month. The gap isn't ideas — it's bandwidth. This is what the system does.
+          George's cadence is 2–3 per year; it should be 2 per month. The gap isn't ideas - it's bandwidth. This is what the system does.
         </p>
       </section>
 
@@ -106,7 +106,7 @@ export default function PepperContentEngine() {
             { num: "1", title: "The Illusion of Progress", desc: "Tools without architecture = organized noise" },
             { num: "2", title: "Why Manufacturers Are Different", desc: "They think in systems but accept disconnected marketing" },
             { num: "3", title: "The Revenue Tower Framework", desc: "6 levels, each feeds the next" },
-            { num: "4", title: "What the Cornerstones Actually Do", desc: "Content, data, talent, tech as plumbing — not shopping list" },
+            { num: "4", title: "What the Cornerstones Actually Do", desc: "Content, data, talent, tech as plumbing - not shopping list" },
             { num: "5", title: "What Winners Do Differently", desc: "PE carveout went from unknown to #1 in 3 years" },
           ].map((s) => (
             <div key={s.num} className="flex gap-5 items-start">

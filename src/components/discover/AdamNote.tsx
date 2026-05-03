@@ -144,7 +144,7 @@ export default function AdamNote() {
         This page is the answer<span className="period">.</span>
       </p>
 
-      <p className="signature">— Adam</p>
+      <p className="signature">- Adam</p>
 
       <p className="byline">
         <span>Adam Fridman</span>

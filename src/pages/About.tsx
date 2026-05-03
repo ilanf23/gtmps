@@ -17,7 +17,7 @@ const ADD_YOUR_FIRM_LABEL = "Get MY Map →";
 const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
 
 /* ─────────────────────────────────────────────
-   TOP NAV (light variant — page is light overall, hero is dark)
+   TOP NAV (light variant - page is light overall, hero is dark)
    ───────────────────────────────────────────── */
 const navItems = [
   { label: "About", href: "/about", internal: true },
@@ -450,7 +450,7 @@ const S6E1AudioBlock = () => {
   );
 };
 
-/* Editorial pull quote — appears as its own quiet section between content blocks */
+/* Editorial pull quote - appears as its own quiet section between content blocks */
 const PullQuoteBlock = ({
   id,
   quote,
@@ -517,7 +517,7 @@ const PullQuoteBlock = ({
   );
 };
 
-/* Founder humanizing marks — Adam: Science of Story thumb. Richard: AArete + Kearney chips. */
+/* Founder humanizing marks - Adam: Science of Story thumb. Richard: AArete + Kearney chips. */
 const FounderMarks = ({ name }: { name: string }) => {
   if (name === "Adam Fridman") {
     return (
@@ -601,7 +601,7 @@ const About = () => {
       <main>
         <SectionRail items={railItems} />
 
-        {/* ── 01 — HERO (dark) ── */}
+        {/* ── 01 - HERO (dark) ── */}
         <section
           id="hero"
           style={{
@@ -657,7 +657,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 02 — THE MISSION (cream) ── */}
+        {/* ── 02 - THE MISSION (cream) ── */}
         <section id="mission" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>Why We Exist</p>
@@ -673,7 +673,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 03 — WHAT IS GTM FOR PS (dark) ── */}
+        {/* ── 03 - WHAT IS GTM FOR PS (dark) ── */}
         <section id="definition" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>A Definition</p>
@@ -687,7 +687,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 04 — THE THREE ROOMS (cream) ── */}
+        {/* ── 04 - THE THREE ROOMS (cream) ── */}
         <section id="rooms" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div className="max-w-[1100px] mx-auto">
             <p style={eyebrowStyle}>How We Are Built</p>
@@ -781,14 +781,14 @@ const About = () => {
           </div>
         </section>
 
-        {/* Pull quote A — between definition (03) and rooms (04) */}
+        {/* Pull quote A - between definition (03) and rooms (04) */}
         <PullQuoteBlock
           id="pq-a"
           quote="The right person at the wrong moment is just another name in your CRM. The right person at the right moment is revenue."
           attribution="Chapter 4 · Truth II"
         />
 
-        {/* ── 05 — THE MANUSCRIPT (dark) ── */}
+        {/* ── 05 - THE MANUSCRIPT (dark) ── */}
         <section id="manuscript" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[1100px] mx-auto manuscript-grid">
             <style>{`
@@ -851,7 +851,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 06 — THE AWARDS (cream) — text + trophy mini-sculpture ── */}
+        {/* ── 06 - THE AWARDS (cream) - text + trophy mini-sculpture ── */}
         <section id="awards" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "120px 24px" }}>
           <div className="max-w-[1100px] mx-auto awards-grid">
             <style>{`
@@ -962,14 +962,14 @@ const About = () => {
           </div>
         </section>
 
-        {/* Pull quote B — between awards (06) and agency (07) */}
+        {/* Pull quote B - between awards (06) and agency (07) */}
         <PullQuoteBlock
           id="pq-b"
           quote="The Dead Zone is not a CRM problem. It is an avoidance problem. The contacts are there. The trust is there. The only thing missing is the willingness to pick up the phone."
           attribution="Richard Ashbaugh · Chapter 7"
         />
 
-        {/* ── 07 — THE AGENCY (dark) ── */}
+        {/* ── 07 - THE AGENCY (dark) ── */}
         <section id="agency" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>When You Need Hands-On Help</p>
@@ -992,7 +992,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 08 — THE PRODUCT (cream) ── */}
+        {/* ── 08 - THE PRODUCT (cream) ── */}
         <section id="product" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>When You Need Scale</p>
@@ -1023,7 +1023,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 09 — BUILT FOR THESE VERTICALS (dark) ── */}
+        {/* ── 09 - BUILT FOR THESE VERTICALS (dark) ── */}
         <section id="verticals" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "120px 24px" }}>
           <div className="max-w-[1180px] mx-auto">
             <p style={eyebrowStyle}>Who This Is For</p>
@@ -1108,7 +1108,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 10 — THE VISION (cream) ── */}
+        {/* ── 10 - THE VISION (cream) ── */}
         <section id="vision" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "120px 24px" }}>
           <div className="max-w-[920px] mx-auto">
             <p style={eyebrowStyle}>Where This Goes</p>
@@ -1122,14 +1122,14 @@ const About = () => {
           </div>
         </section>
 
-        {/* Pull quote C — between vision (10) and founders (11) */}
+        {/* Pull quote C - between vision (10) and founders (11) */}
         <PullQuoteBlock
           id="pq-c"
           quote="Your next client already knows you. The relationships exist. The trust is built. The system to activate them did not."
           attribution="Introduction"
         />
 
-        {/* ── 11 — THE FOUNDERS (dark) ── */}
+        {/* ── 11 - THE FOUNDERS (dark) ── */}
         <section id="founders" style={{ background: "#0A0807", color: "#EDF5EC", padding: "112px 24px" }}>
           <div className="max-w-[1100px] mx-auto">
             <p style={eyebrowStyle}>Who Is Building This</p>
@@ -1261,7 +1261,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 12 — PRESS + CONTACT (cream) ── */}
+        {/* ── 12 - PRESS + CONTACT (cream) ── */}
         <section id="press" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <p style={eyebrowStyle}>Inquiries</p>
@@ -1289,7 +1289,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 13 — THE ORIGIN / CONFESSION (dark) ── */}
+        {/* ── 13 - THE ORIGIN / CONFESSION (dark) ── */}
         <section id="origin" style={{ background: "#0F1E1D", color: "#EDF5EC", padding: "112px 24px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <p style={eyebrowStyle}>Why This Book Exists</p>
@@ -1329,7 +1329,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 14 — FOREWORD (cream) ── */}
+        {/* ── 14 - FOREWORD (cream) ── */}
         <section id="foreword" style={{ background: "#EDF5EC", color: "#0F1E1D", padding: "112px 24px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <p style={eyebrowStyle}>Foreword</p>
@@ -1368,7 +1368,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── 15 — FINAL CTA (dark) ── */}
+        {/* ── 15 - FINAL CTA (dark) ── */}
         <section
           id="cta"
           style={{

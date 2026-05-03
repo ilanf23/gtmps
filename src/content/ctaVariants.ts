@@ -21,7 +21,7 @@ export interface CtaVariant {
   closer: string;
 }
 
-// VARIANT A — Skeptics / small firm
+// VARIANT A - Skeptics / small firm
 const A: CtaVariant = {
   id: "A",
   label: "skeptic",
@@ -32,7 +32,7 @@ const A: CtaVariant = {
   closer: "Free call. No pitch.",
 };
 
-// VARIANT B — Institutional (law / accounting / large)
+// VARIANT B - Institutional (law / accounting / large)
 const B: CtaVariant = {
   id: "B",
   label: "institutional",
@@ -43,7 +43,7 @@ const B: CtaVariant = {
   closer: "Free. No pitch.",
 };
 
-// VARIANT C — Operational (agency / msp / a&e)
+// VARIANT C - Operational (agency / msp / a&e)
 const C: CtaVariant = {
   id: "C",
   label: "operational",
@@ -59,7 +59,7 @@ const C: CtaVariant = {
   closer: "Free call. No pitch.",
 };
 
-// VARIANT D — ROI-focused / time-pressed
+// VARIANT D - ROI-focused / time-pressed
 const D: CtaVariant = {
   id: "D",
   label: "roi",

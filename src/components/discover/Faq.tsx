@@ -12,7 +12,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
           <>
             No.{' '}
             <span className="faq-care">
-              The Dead Zone is not a CRM problem — it's an avoidance problem.
+              The Dead Zone is not a CRM problem - it's an avoidance problem.
             </span>{' '}
             The book is about the operating system that turns dormant
             relationships into recurring revenue, regardless of which CRM your
@@ -31,7 +31,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
             Northwestern Kellogg.
             <br />
             <br />
-            Every framework is anchored in verified case proof — Madcraft's{' '}
+            Every framework is anchored in verified case proof - Madcraft's{' '}
             <span className="faq-accent">$400K reactivated in seven minutes</span>,
             SPR's <span className="faq-accent">150 dormant contacts</span>{' '}
             identified, AArete's{' '}
@@ -48,7 +48,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
             <span className="faq-accent">Q4 2026</span>. Early Access readers see
             the manuscript{' '}
             <span className="faq-accent">90 days before public launch</span>.
-            Approved firms get chapters as they're finalized — not all at once.
+            Approved firms get chapters as they're finalized - not all at once.
           </>
         ),
       },
@@ -67,7 +67,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
             already built a book of dormant relationships worth reactivating.
             <br />
             <br />
-            If you're pre-revenue or below $5M, this is adjacent — useful as a
+            If you're pre-revenue or below $5M, this is adjacent - useful as a
             long-term framework, but not optimized for your stage. We'd point you
             toward the podcast first, not the diagnostic.
           </>
@@ -86,7 +86,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
             <span className="faq-care">
               We don't hand off and disappear.
             </span>{' '}
-            Mabbly's team stays through the rebuild — the timeline depends on
+            Mabbly's team stays through the rebuild - the timeline depends on
             how fast your internal owner can move.
           </>
         ),
@@ -101,7 +101,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
         q: 'Does this work if we already burned bridges with past clients?',
         a: (
           <>
-            Honestly — sometimes. The system gives you{' '}
+            Honestly - sometimes. The system gives you{' '}
             <span className="faq-care">permission and cadence</span> to reach
             back out, but if there's an unresolved issue (a botched engagement, a
             fee dispute, a partner conflict), the framework can't fix that.
@@ -122,7 +122,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
             <span className="faq-accent">
               Three firms in pilot saw little movement
             </span>{' '}
-            — every one of them had no internal owner for the work.
+            - every one of them had no internal owner for the work.
             <br />
             <br />
             The diagnostic identifies the gap, but{' '}

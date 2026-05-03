@@ -1,5 +1,5 @@
 /**
- * Tests for `fetchCohortMetrics` — data-layer fetcher for the future
+ * Tests for `fetchCohortMetrics` - data-layer fetcher for the future
  * <CohortRankCard>. Mocks the Supabase client so the test does not
  * require a live database connection.
  */

@@ -27,7 +27,7 @@ const BADGES = ["30 Chapters", "3 Frameworks", "PS Firms $5M to $100M"];
 
 export default function Manuscript() {
   useEffect(() => {
-    const title = "The Manuscript — GTM for Professional Services | Mabbly";
+    const title = "The Manuscript - GTM for Professional Services | Mabbly";
     const description =
       "Relationship Revenue OS: the complete GTM operating system for professional services firms. 30 chapters covering The Dead Zone, The Five Orbits, and the MAP framework.";
     const canonical = "https://discover.mabbly.com/manuscript";

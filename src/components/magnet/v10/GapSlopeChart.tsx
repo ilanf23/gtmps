@@ -1,4 +1,4 @@
-// GapSlopeChart — small slope chart showing peer-median → cohort-top
+// GapSlopeChart - small slope chart showing peer-median → cohort-top
 // → buyer position for one or more metrics. Pure SVG, no chart lib.
 //
 // Spec: §3.3 of the audit. Reads as an editorial "where you stand" beat.
@@ -16,7 +16,7 @@ interface SlopeRow {
 
 interface Props {
   rows: SlopeRow[];
-  /** Domain max — values are normalized to this for vertical position. */
+  /** Domain max - values are normalized to this for vertical position. */
   max?: number;
   /** Brand accent for the buyer marker. */
   primary?: string;
@@ -132,7 +132,7 @@ export default function GapSlopeChart({
                 {r.cohortTop}
               </text>
 
-              {/* buyer marker — emphasized */}
+              {/* buyer marker - emphasized */}
               <circle
                 cx={innerRight}
                 cy={buyerPos}

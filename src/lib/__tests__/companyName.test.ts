@@ -1,5 +1,5 @@
 /**
- * Tests for getDisplayName — the firm-name fallback resolver.
+ * Tests for getDisplayName - the firm-name fallback resolver.
  *
  * Covers the v2 P0 bug surfaced on /m/cravath:
  *   client_company_name = "" → existing `??` chain passed through → hero blank.

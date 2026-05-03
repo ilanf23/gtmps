@@ -282,7 +282,7 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* ─── RIGHT COLUMN — Cinematic Book ─── */}
+        {/* ─── RIGHT COLUMN - Cinematic Book ─── */}
         <div
           className="flex flex-col items-center justify-center order-1 lg:order-2"
           style={{
@@ -364,7 +364,7 @@ const HeroSection = () => {
             >
               <img
                 src={bookOpen}
-                alt="GTM for Professional Services — The Relationship Revenue OS book"
+                alt="GTM for Professional Services - The Relationship Revenue OS book"
                 className="relative z-10 max-w-[160px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-none lg:w-[300px] rounded-md"
                 style={{
                   transform: pageHover

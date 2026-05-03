@@ -12,7 +12,7 @@ interface Props {
 
 /**
  * A field of dots representing a CRM. On scroll-into-view, ~70% of dots
- * fade from gold to dim — the Dead Zone happening before the viewer's eyes.
+ * fade from gold to dim - the Dead Zone happening before the viewer's eyes.
  * Reduced-motion fallback: dots render in their final state immediately.
  */
 const DeadZoneDotField = ({

@@ -34,7 +34,7 @@ export default function EarlyAccessReminder({
         setDismissed(true);
       }
     } catch {
-      /* sessionStorage unavailable — render normally */
+      /* sessionStorage unavailable - render normally */
     }
   }, [variant, dismissKey]);
 
@@ -349,7 +349,7 @@ export default function EarlyAccessReminder({
           className="ear-box ear-cta"
           onClick={handleCtaClick}
           data-cta="add-your-firm"
-          aria-label="Get MY Map — apply for Early Access"
+          aria-label="Get MY Map - apply for Early Access"
         >
           <span className="ear-cta-pill">
             Get MY Map

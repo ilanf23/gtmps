@@ -1,4 +1,4 @@
-// SECTION 06 — Why This Research Matters (Dark)
+// SECTION 06 - Why This Research Matters (Dark)
 // Dark inversion: research-dashboard-at-night. Stats with corner-tick brackets
 // drawing in via stroke-dashoffset, oscillating care-orange glow halos, and
 // three numbered editorial chapter blocks. No "Verified Cohort Firms" banner.
@@ -212,7 +212,7 @@ export default function WhyResearchMatters({ primary }: Props) {
               <span>The Cohort</span>
             </div>
             <p className="body-text">
-              <strong>30 PS firms</strong> in the inaugural cohort &mdash; including{" "}
+              <strong>30 PS firms</strong> in the inaugural cohort - including{" "}
               <strong>AArete</strong> and <strong>SPR</strong>. Validated by{" "}
               <strong>Jonathan Copulsky</strong>, former CMO of Deloitte and senior lecturer at
               Northwestern Kellogg. He wrote the foreword.

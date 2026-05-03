@@ -9,7 +9,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ManuscriptShareSave from "../v10/ManuscriptShareSave";
 
-// Mock supabase client — we only care that the right calls are made.
+// Mock supabase client - we only care that the right calls are made.
 vi.mock("@/integrations/supabase/client", () => {
   const insertSpy = vi.fn().mockResolvedValue({ error: null });
   const invokeSpy = vi.fn().mockResolvedValue({ data: null, error: null });

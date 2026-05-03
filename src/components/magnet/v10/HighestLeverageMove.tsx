@@ -1,4 +1,4 @@
-// SECTION 09 — Your highest leverage move (post-CTA deep-dive).
+// SECTION 09 - Your highest leverage move (post-CTA deep-dive).
 
 import { MANUSCRIPT_FORMULA } from "@/content/manuscriptQuotes";
 import type { FindingProfile } from "@/lib/magnetScoring";

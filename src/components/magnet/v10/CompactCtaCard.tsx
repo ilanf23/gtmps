@@ -1,7 +1,7 @@
-// SECTION 05 — Compact CTA: chapter capture.
+// SECTION 05 - Compact CTA: chapter capture.
 // Trades the Calendly button for a single-line email capture that promises
 // Chapter 7 of the manuscript. Persists to magnet_map_emails (tagged
-// "chapter7"). No email is sent yet — delivery is a follow-up step.
+// "chapter7"). No email is sent yet - delivery is a follow-up step.
 
 import { useState } from "react";
 import { toast } from "sonner";

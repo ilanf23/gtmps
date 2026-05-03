@@ -248,7 +248,7 @@ export default function MagnetSite() {
     const websiteUrl = navState.websiteUrl ?? slug ?? 'unknown';
     const mailtoSubject = encodeURIComponent(`Map for ${websiteUrl} is stuck`);
     const mailtoBody = encodeURIComponent(
-      `Hi Mabbly team,\n\nMy map at /m/${slug} didn't finish generating. Please email me when it's ready.\n\nWebsite: ${websiteUrl}\nFirst name: ${firstName ?? '—'}\n\nThanks.`,
+      `Hi Mabbly team,\n\nMy map at /m/${slug} didn't finish generating. Please email me when it's ready.\n\nWebsite: ${websiteUrl}\nFirst name: ${firstName ?? '-'}\n\nThanks.`,
     );
     const mailtoHref = `mailto:beta@mabbly.com?subject=${mailtoSubject}&body=${mailtoBody}`;
     return (
@@ -287,7 +287,7 @@ export default function MagnetSite() {
               }}
             >
               Enrichment took longer than expected. This usually means the site
-              we read needed a closer look. We'll keep working on it &mdash; you
+              we read needed a closer look. We'll keep working on it - you
               can retry now, or have us email you the moment it's ready.
             </p>
 

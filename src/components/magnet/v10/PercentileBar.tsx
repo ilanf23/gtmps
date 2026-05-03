@@ -1,4 +1,4 @@
-// PercentileBar — single horizontal bar with quartile bands and the
+// PercentileBar - single horizontal bar with quartile bands and the
 // buyer-firm marker. Reusable building block for cohort comparisons.
 //
 // Spec: §3.x of the audit (the gap-slope/percentile family). The visual
@@ -107,7 +107,7 @@ export default function PercentileBar({
             />
           ))}
 
-        {/* Buyer marker — vertical tick + accent dot */}
+        {/* Buyer marker - vertical tick + accent dot */}
         <span
           aria-hidden
           style={{

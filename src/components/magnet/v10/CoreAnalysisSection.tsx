@@ -1,4 +1,4 @@
-// SECTION 03 — Your Core (Observed / Hypothesis / Question)
+// SECTION 03 - Your Core (Observed / Hypothesis / Question)
 
 import { useState } from "react";
 import ResearchCard from "./ResearchCard";
@@ -9,9 +9,11 @@ interface Props {
   primary: string;
   slug?: string;
   compact?: boolean;
+  hideFeedback?: boolean;
+  onFeedbackClick?: () => void;
 }
 
-export default function CoreAnalysisSection({ observed, primary, slug, compact }: Props) {
+export default function CoreAnalysisSection({ observed, primary, slug, compact, hideFeedback, onFeedbackClick }: Props) {
   const hasObserved = Boolean(observed && observed.trim());
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
@@ -38,16 +40,19 @@ export default function CoreAnalysisSection({ observed, primary, slug, compact }
         observed={observedText}
         hypothesis={hypothesis}
         question="How do your best clients describe what you do, in their own words, when they refer you?"
-        onFeedbackClick={() => setFeedbackOpen(true)}
+        onFeedbackClick={onFeedbackClick ?? (() => setFeedbackOpen(true))}
         compact={compact}
+        hideFeedback={hideFeedback}
       />
-      <FeedbackDialog
-        open={feedbackOpen}
-        onOpenChange={setFeedbackOpen}
-        slug={slug}
-        context="Section 3 · Your Core"
-        primary={primary}
-      />
+      {!hideFeedback && (
+        <FeedbackDialog
+          open={feedbackOpen}
+          onOpenChange={setFeedbackOpen}
+          slug={slug}
+          context="Section 3 · Your Core"
+          primary={primary}
+        />
+      )}
     </>
   );
 }

@@ -39,7 +39,7 @@ const SITE_DATA: SiteData = {
       {
         quote: `"Our CRM has 6 million contacts, but when I ask who actually knows the CTO of Delta, nobody can tell me. The data is there. The relationship graph isn't."`,
         label: "Data Without Context",
-        insight: "Contact records aren't relationships. Google has the data infrastructure to solve this — the same entity resolution that powers Knowledge Graph could map internal relationship capital. It just hasn't been pointed inward.",
+        insight: "Contact records aren't relationships. Google has the data infrastructure to solve this - the same entity resolution that powers Knowledge Graph could map internal relationship capital. It just hasn't been pointed inward.",
       },
       {
         quote: `"We lost a $40M GCP deal to AWS last quarter. Turns out, the buyer's former VP of Engineering used to sit on a Google Developer Expert panel. Nobody on our team knew."`,
@@ -47,7 +47,7 @@ const SITE_DATA: SiteData = {
         insight: "Signal-activated outreach would have flagged that connection 90 days before the RFP dropped. The relationship existed. The system to surface it didn't.",
       },
       {
-        quote: `"Every time we reorganize — and we reorg constantly — the relationship map resets. New AE, new territory, zero context on who actually knows who."`,
+        quote: `"Every time we reorganize - and we reorg constantly - the relationship map resets. New AE, new territory, zero context on who actually knows who."`,
         label: "Reorg Amnesia",
         insight: "Relationship capital should be an organizational asset, not an individual one. When territories shift, the system should transfer context, not delete it.",
       },
@@ -60,11 +60,11 @@ const SITE_DATA: SiteData = {
     strategicObservations: [
       {
         title: "You win on technology but compete on relationships with one hand tied",
-        text: "Gemini and BigQuery are best-in-class. But AWS has a 20-year relationship head start and Azure has Office 365 in 9M+ businesses. Google Cloud's gap isn't product — it's that nobody on your team can tell you who actually knows the CTO at a target account.",
+        text: "Gemini and BigQuery are best-in-class. But AWS has a 20-year relationship head start and Azure has Office 365 in 9M+ businesses. Google Cloud's gap isn't product - it's that nobody on your team can tell you who actually knows the CTO at a target account.",
       },
       {
         title: "14,000 departed AEs are now selling for your competitors",
-        text: "Every former Google Cloud rep who left for AWS, Azure, or a startup took 120+ enterprise relationships with them. That's 1.7M relationship nodes that walked out the door — and many are now actively selling against you.",
+        text: "Every former Google Cloud rep who left for AWS, Azure, or a startup took 120+ enterprise relationships with them. That's 1.7M relationship nodes that walked out the door - and many are now actively selling against you.",
       },
       {
         title: "Your partner ecosystem is a credential system, not a relationship system",
@@ -97,12 +97,12 @@ const SITE_DATA: SiteData = {
       description: "Technically accurate. But AWS owns 'cloud infrastructure' and Azure owns 'enterprise integration.' Google Cloud's positioning competes on features, not relationships.",
     },
     proposedPositioning: {
-      title: "The Intelligence Cloud — Where Your Data Already Wants to Live",
+      title: "The Intelligence Cloud - Where Your Data Already Wants to Live",
       description: "BigQuery is #1 in cloud analytics. Gemini is the most capable enterprise AI. 72% of cloud deals start with a warm intro. The positioning should lead with intelligence and relationships, not just AI benchmarks.",
     },
     eosTest: {
       title: "Positioning Stress Test",
-      text: "When a Fortune 500 CTO evaluates cloud providers, 'AI-first' is a feature comparison. 'The cloud that already understands your data and connects you to people who've solved your problem' is a relationship. Google has both — but only markets the first.",
+      text: "When a Fortune 500 CTO evaluates cloud providers, 'AI-first' is a feature comparison. 'The cloud that already understands your data and connects you to people who've solved your problem' is a relationship. Google has both - but only markets the first.",
     },
     competitors: {
       columns: ["Capability", "Google Cloud", "AWS", "Azure", "Oracle Cloud", "IBM Cloud"],
@@ -132,9 +132,9 @@ const SITE_DATA: SiteData = {
           strengths: {
             title: "Strengths",
             items: [
-              "Global recognition — top 10 most influential tech CEO",
+              "Global recognition - top 10 most influential tech CEO",
               "Keynote speaker at I/O, Cloud Next, Davos",
-              "Strong media presence — 2M+ LinkedIn followers",
+              "Strong media presence - 2M+ LinkedIn followers",
               "Trusted voice on AI policy and regulation",
             ],
           },
@@ -162,12 +162,12 @@ const SITE_DATA: SiteData = {
     haveItems: [
       "180,000 employees (massive relationship surface area)",
       "$41.2B Cloud revenue and accelerating",
-      "Gemini — most capable enterprise AI",
-      "BigQuery — #1 cloud analytics platform",
+      "Gemini - most capable enterprise AI",
+      "BigQuery - #1 cloud analytics platform",
       "500K+ Google Cloud certified partners",
       "Google Developer Experts program (global)",
       "Workspace installed in 9M+ businesses",
-      "Mandiant — top cybersecurity acquisition",
+      "Mandiant - top cybersecurity acquisition",
     ],
     gapItems: [
       "No relationship graph across the sales org",
@@ -184,23 +184,23 @@ const SITE_DATA: SiteData = {
         { num: 14000, role: "Former Cloud Sales Reps (2019–2025)", name: "Alumni Network", insight: "Every departed AE took relationships to AWS, Azure, or startups" },
         { num: 500000, role: "Google Cloud Certified Professionals", name: "Partner Ecosystem", insight: "Certified ≠ activated. Each cert holder is a warm referral node" },
         { num: 3200, role: "Google Developer Experts Worldwide", name: "GDE Program", insight: "Trusted community voices with deep enterprise connections" },
-        { num: 9000000, role: "Google Workspace Business Customers", name: "Workspace Install Base", insight: "Existing relationship — they already pay Google monthly" },
+        { num: 9000000, role: "Google Workspace Business Customers", name: "Workspace Install Base", insight: "Existing relationship - they already pay Google monthly" },
       ],
-      summary: "9.5M+ relationship nodes across just 4 channels — before counting enterprise accounts, startup portfolio, or Cloud Next attendees",
+      summary: "9.5M+ relationship nodes across just 4 channels - before counting enterprise accounts, startup portfolio, or Cloud Next attendees",
     },
     deadZone: {
       countLabel: "14,000+",
       headline: "14,000+ former Cloud Sales relationships sitting in silence",
-      description: "Each departed AE averaged 120+ enterprise contacts. That's 1.7M relationships that walked out the door — many now selling for competitors.",
+      description: "Each departed AE averaged 120+ enterprise contacts. That's 1.7M relationships that walked out the door - many now selling for competitors.",
       dotMatrix: {
         activePercent: 15,
         tooltips: [
-          "Former Google Cloud AE, now VP Sales at Snowflake — still knows 40 GCP prospects",
+          "Former Google Cloud AE, now VP Sales at Snowflake - still knows 40 GCP prospects",
           "Ex-Customer Engineer, now CTO at Series B startup evaluating cloud providers",
           "Former Cloud Partner Manager, now runs consulting practice recommending AWS",
-          "Departed Solutions Architect, now Enterprise Architect at Fortune 100 — could champion GCP",
+          "Departed Solutions Architect, now Enterprise Architect at Fortune 100 - could champion GCP",
           "Ex-Google Cloud Sales Director, now COO at PE-backed SaaS company building on Azure",
-          "Former DevRel lead, now VP Engineering at unicorn — their team loved BigQuery",
+          "Former DevRel lead, now VP Engineering at unicorn - their team loved BigQuery",
           "Departed Customer Success Manager, now heads IT at hospital system considering cloud migration",
           "Ex-Google Cloud regional lead, now managing director at Accenture Cloud Practice",
         ],
@@ -224,7 +224,7 @@ const SITE_DATA: SiteData = {
     icp: [
       { title: "Fortune 500 CTOs & CIOs", text: "Technology leaders evaluating cloud migration or multi-cloud strategy. Often influenced by former colleagues who've already made the switch." },
       { title: "PE & VC Portfolio Operators", text: "Operating partners standardizing cloud infrastructure across portfolio companies. One decision = 10–50 cloud accounts." },
-      { title: "AI/ML Engineering Leaders", text: "VP Engineering and Chief Data Officers building ML pipelines. Google's Vertex AI and BigQuery are natural fits — but only if someone they trust recommends it." },
+      { title: "AI/ML Engineering Leaders", text: "VP Engineering and Chief Data Officers building ML pipelines. Google's Vertex AI and BigQuery are natural fits - but only if someone they trust recommends it." },
     ],
   },
 
@@ -239,7 +239,7 @@ const SITE_DATA: SiteData = {
     ],
     exampleEmail: {
       signalDescription: "Former Google Cloud customer's VP Engineering promoted to CTO at Fortune 500 retailer evaluating cloud AI",
-      emailText: "Hey Marcus. Congratulations on the CTO role at Nordstrom — well deserved after what you built at Zalando. I noticed Nordstrom's earnings call mentioned 'AI-powered personalization' as a 2027 priority. We just helped Walmart deploy a similar recommendation engine on Vertex AI that reduced inference costs by 60% while improving conversion. Your former colleague Priya (she's a GDE now) mentioned you'd been exploring this. Happy to connect you with the Walmart team if it would be useful — no pitch, just practitioners comparing notes.",
+      emailText: "Hey Marcus. Congratulations on the CTO role at Nordstrom - well deserved after what you built at Zalando. I noticed Nordstrom's earnings call mentioned 'AI-powered personalization' as a 2027 priority. We just helped Walmart deploy a similar recommendation engine on Vertex AI that reduced inference costs by 60% while improving conversion. Your former colleague Priya (she's a GDE now) mentioned you'd been exploring this. Happy to connect you with the Walmart team if it would be useful - no pitch, just practitioners comparing notes.",
       tags: [
         { label: "Signal", value: "Promotion + earnings call AI mention", color: "#C4A747" },
         { label: "Proof", value: "Walmart Vertex AI deployment", color: "#C65D3E" },
@@ -267,7 +267,7 @@ const SITE_DATA: SiteData = {
   // ── Tab 5: Roadmap ──
   roadmap: {
     headline: "From 2.0 to 3.5 on the Spectrum",
-    description: "A system where Google Cloud's relationship capital compounds — regardless of reorgs, territory changes, or AE departures.",
+    description: "A system where Google Cloud's relationship capital compounds - regardless of reorgs, territory changes, or AE departures.",
     today: [
       { label: "Spectrum", value: "2.0" },
       { label: "Departed AE relationships", value: "14,000+ (lost)", color: "red" },
@@ -292,7 +292,7 @@ const SITE_DATA: SiteData = {
         content: {
           type: "card-grid",
           cards: [
-            { title: "The Advantage", text: "Neither AWS nor Azure has relationship activation technology. Google can be first — and use its own AI to power it. Gemini + RROS = a self-reinforcing flywheel." },
+            { title: "The Advantage", text: "Neither AWS nor Azure has relationship activation technology. Google can be first - and use its own AI to power it. Gemini + RROS = a self-reinforcing flywheel." },
             { title: "The Revenue Impact", text: "If 3% of departed AE relationships convert at $850K ACV, that's $357M in recovered pipeline from relationships Google already earned." },
             { title: "The Strategic Signal", text: "Google Cloud stops competing on price and benchmarks. Starts competing on 'we already know someone who solved your exact problem.' That's unchallengeable." },
           ],
@@ -315,10 +315,10 @@ const SITE_DATA: SiteData = {
         "We built Google to organize the world's information. But I've been thinking about a different kind of information lately.",
         "When a senior engineer leaves Google Cloud and joins a Fortune 500 as CTO, that's not just a departure. It's a signal. They know our platform. They've seen what it can do. And now they're making infrastructure decisions for a company 10x the size.",
         "Most companies treat departures as losses. We're starting to see them as the beginning of a different kind of relationship.",
-        "The enterprise technology we built to understand connections between entities across the internet — entity resolution, knowledge graphs, relationship mapping — turns out to be exactly what's needed to understand connections between people across an industry.",
+        "The enterprise technology we built to understand connections between entities across the internet - entity resolution, knowledge graphs, relationship mapping - turns out to be exactly what's needed to understand connections between people across an industry.",
         "We've been so focused on organizing everyone else's information that we forgot to organize our own relationships.",
-        "The next frontier of enterprise AI isn't just about models. It's about knowing who already trusts you — and having a system to act on it.",
-        "*What would change in your business if you could see every relationship your company has ever built — not just the ones in your CRM?*",
+        "The next frontier of enterprise AI isn't just about models. It's about knowing who already trusts you - and having a system to act on it.",
+        "*What would change in your business if you could see every relationship your company has ever built - not just the ones in your CRM?*",
       ],
     },
     blogPost: {
@@ -327,22 +327,22 @@ const SITE_DATA: SiteData = {
       status: "Draft outline",
       wordCount: "~1,400 words",
       sections: [
-        { num: "1", title: "The $40M Wake-Up Call", desc: "We lost a deal to AWS — not because of technology, but because their AE played golf with the buyer's CTO" },
+        { num: "1", title: "The $40M Wake-Up Call", desc: "We lost a deal to AWS - not because of technology, but because their AE played golf with the buyer's CTO" },
         { num: "2", title: "The Reorg Problem", desc: "Every restructuring resets the relationship map to zero. 14,000 departed AEs took context that no system captured." },
         { num: "3", title: "What Knowledge Graph Taught Us", desc: "The same entity resolution we use to understand the web can map enterprise relationships" },
         { num: "4", title: "From CRM to Relationship OS", desc: "Contacts aren't relationships. Relationships have context, history, trust scores, and signal patterns." },
-        { num: "5", title: "What We're Building Now", desc: "Applying Gemini to our own relationship capital — and why we think every enterprise should do the same" },
+        { num: "5", title: "What We're Building Now", desc: "Applying Gemini to our own relationship capital - and why we think every enterprise should do the same" },
       ],
     },
     whyThisMatters: {
       title: "Why This Matters",
-      text: "Google Cloud is winning on technology but competing on relationships with one hand tied behind its back. The relationship capital exists — 14,000 alumni, 500K partners, 9M Workspace customers, 3,200 GDEs. RROS is the system that turns those numbers into pipeline. This isn't a new initiative. It's activating what Google already built.",
+      text: "Google Cloud is winning on technology but competing on relationships with one hand tied behind its back. The relationship capital exists - 14,000 alumni, 500K partners, 9M Workspace customers, 3,200 GDEs. RROS is the system that turns those numbers into pipeline. This isn't a new initiative. It's activating what Google already built.",
     },
     validationQuestions: [
       "Is 2.0 on the Spectrum accurate, or is it lower in some regions?",
       "Is 14,000 departed AEs the right number? (We suspect it's higher including contractors and PSO.)",
       "Is Healthcare the right beachhead vertical, or should it be Financial Services?",
-      "Does the LinkedIn post sound like Sundar — or should it come from Thomas Kurian?",
+      "Does the LinkedIn post sound like Sundar - or should it come from Thomas Kurian?",
     ],
     dataRequest: {
       title: "Before the MAP Review, we'd love to know:",

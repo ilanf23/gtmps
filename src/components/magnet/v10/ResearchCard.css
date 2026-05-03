@@ -1,4 +1,4 @@
-/* ResearchCard — scoped styles for diagnostic Sections 03 (Core) & 04 (Proof). */
+/* ResearchCard - scoped styles for diagnostic Sections 03 (Core) & 04 (Proof). */
 
 .rc-scope {
   --rc-depth: #0F1E1D;
@@ -254,7 +254,7 @@
   border-radius: 50%;
 }
 
-/* OBSERVED — purpose mustard */
+/* OBSERVED - purpose mustard */
 .rc-col-1 .rc-col-label { color: var(--rc-purpose); }
 .rc-col-1 .rc-col-label::before { background: var(--rc-purpose); }
 .rc-col-1 .rc-col-content {
@@ -264,7 +264,7 @@
   color: var(--rc-depth-soft);
 }
 
-/* HYPOTHESIS — care orange */
+/* HYPOTHESIS - care orange */
 .rc-col-2 .rc-col-label { color: var(--rc-care); }
 .rc-col-2 .rc-col-label::before { background: var(--rc-care); }
 .rc-col-2 .rc-col-content {
@@ -279,7 +279,7 @@
   font-weight: 600;
 }
 
-/* QUESTION — depth ink, serif italic */
+/* QUESTION - depth ink, serif italic */
 .rc-col-3 .rc-col-label { color: var(--rc-depth); }
 .rc-col-3 .rc-col-label::before { background: var(--rc-depth); }
 .rc-col-3 .rc-col-content {
@@ -424,7 +424,7 @@
   .rc-card-wrap { padding: 16px 8px 0; }
 }
 
-/* Pair layout — Sections 03 + 04 rendered side-by-side in one full-bleed
+/* Pair layout - Sections 03 + 04 rendered side-by-side in one full-bleed
    cream section, with each card's columns stacked vertically. */
 .rc-pair-section {
   background: #F8F2E5;
@@ -454,7 +454,15 @@
   .rc-pair-grid { grid-template-columns: 1fr; gap: 56px; }
 }
 
-/* Compact card variant — used when ResearchCard is hosted inside another
+/* Shared feedback row beneath the 03/04 pair - single, centered. */
+.rc-pair-feedback {
+  margin-top: 40px;
+}
+@media (max-width: 720px) {
+  .rc-pair-feedback { margin-top: 28px; }
+}
+
+/* Compact card variant - used when ResearchCard is hosted inside another
    full-bleed section (e.g. the 03/04 pair). Strips the standalone section
    chrome and stacks the 3 columns vertically. */
 .rc-section.rc-compact {

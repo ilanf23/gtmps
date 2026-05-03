@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Slot 03 — ReceiptsStrip.
+// Slot 03 - ReceiptsStrip.
 //
 // Madcraft hero-card on the left + 2x2 supporting grid (Outcomes / Long-term
 // Partners) on the right. Numeric stats count up via IntersectionObserver
@@ -649,7 +649,7 @@ export default function ReceiptsStrip() {
         </header>
 
         <div className="rcpt-row">
-          {/* Hero card — Madcraft */}
+          {/* Hero card - Madcraft */}
           <article className="rcpt-card rcpt-hero">
             <div className="rcpt-hero-top">
               <span className="firm-tag">Madcraft · Verified</span>
@@ -717,7 +717,7 @@ export default function ReceiptsStrip() {
 
             <p className="rcpt-hero-narrative">
               The proposal sat <span className="hl-mustard">9 months silent</span>. One outreach
-              lifted the Dead Zone — the reply came back in{' '}
+              lifted the Dead Zone - the reply came back in{' '}
               <span className="hl-care">7 minutes</span>.
             </p>
 

@@ -239,7 +239,7 @@ export default function PepperIdentity() {
               <ul className="text-[13px] text-[#6B6560] space-y-2">
                 <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#8B3A3A]" /> No Forbes or major publication bylines</li>
                 <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#8B3A3A]" /> Sparse LinkedIn cadence (2–3/year vs. 2/month target)</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#8B3A3A]" /> Buried insights — not accessible to prospects</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#8B3A3A]" /> Buried insights - not accessible to prospects</li>
               </ul>
             </div>
           </div>

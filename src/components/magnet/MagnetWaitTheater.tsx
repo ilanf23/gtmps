@@ -6,10 +6,10 @@ import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 // Four-stage cinematic wait theater.
 //
 // Stage cadence (from spec):
-//   1 — 0–22s   Reading your homepage
-//   2 — 22–45s  Mapping your services
-//   3 — 45–70s  Mapping your dormant relationships
-//   4 — 70–90s  Building your RROS map
+//   1 - 0–22s   Reading your homepage
+//   2 - 22–45s  Mapping your services
+//   3 - 45–70s  Mapping your dormant relationships
+//   4 - 70–90s  Building your RROS map
 //
 // Status tickers within each stage rotate every ~6s so the user always sees
 // fresh language. The top progress bar tracks elapsed time but caps at 88%
@@ -222,7 +222,7 @@ export default function MagnetWaitTheater({
         )}
       </main>
 
-      {/* ─── Trust callout — appears mid-Stage 3 ───────────────────────── */}
+      {/* ─── Trust callout - appears mid-Stage 3 ───────────────────────── */}
       {!reduced && currentStageIdx === 2 && elapsed >= 55 && (
         <aside className="max-w-2xl w-full mx-auto px-2 sm:px-4 mt-8 animate-in fade-in duration-500">
           <div className="border border-[#A8923A]/30 bg-[#A8923A]/5 p-4 text-center">

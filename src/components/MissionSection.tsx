@@ -79,7 +79,7 @@ const pillars = [
     num: "03",
     icon: Users,
     title: "The Research Is Happening Now.",
-    body: "Every managing partner who participates shapes a chapter. Participation defaults to confidential benchmarking. Named examples are opt-in only — most contributing firms remain unnamed in the manuscript.",
+    body: "Every managing partner who participates shapes a chapter. Participation defaults to confidential benchmarking. Named examples are opt-in only - most contributing firms remain unnamed in the manuscript.",
     stat: { value: 30, suffix: "", label: "firms in cohort" },
   },
 ];
@@ -88,7 +88,7 @@ const MissionSection = () => {
   return (
     <section id="mission" className="px-6 py-20 md:px-20 md:py-28 bg-warm-white overflow-hidden">
       <div className="max-w-[1080px] mx-auto">
-        {/* Header — cinematic statement */}
+        {/* Header - cinematic statement */}
         <div className="max-w-[960px]">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-px bg-gold" />

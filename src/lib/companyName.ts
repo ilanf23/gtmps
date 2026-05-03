@@ -1,5 +1,5 @@
 /**
- * Firm display-name resolution — single source of truth.
+ * Firm display-name resolution - single source of truth.
  *
  * The audit surfaced a P0 bug on /m/cravath: the hero rendered
  * "Your Revenue Map for ___" with no firm name. Root cause: the existing
@@ -16,12 +16,12 @@ import { displayNameFromSlug } from "./magnetSlug";
 
 export interface DisplayNameInput {
   /** The extracted company name from enrichment. May be null, undefined,
-      empty, or whitespace-only — all treated as missing. */
+      empty, or whitespace-only - all treated as missing. */
   companyName?: string | null;
   /** The route slug. Used to derive a name when companyName is missing. */
   slug?: string | null;
   /** Optional final fallback when both companyName and slug fail to yield
-      anything. Defaults to "Your firm" — sentence case, never empty. */
+      anything. Defaults to "Your firm" - sentence case, never empty. */
   fallback?: string;
 }
 

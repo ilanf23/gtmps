@@ -1,4 +1,4 @@
-// CohortCompareWidget — composes OrbitGapRadar + a compact peer table
+// CohortCompareWidget - composes OrbitGapRadar + a compact peer table
 // + the firm's percentile bars into one cohesive "where you stand" widget.
 // Designed to live as the body of /m/:slug/cohort.
 //
@@ -74,7 +74,7 @@ export default function CohortCompareWidget({
       style={{ paddingTop: 24, paddingBottom: 24 }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-12 items-start">
-        {/* Left — Radar */}
+        {/* Left - Radar */}
         <div>
           <p
             style={{
@@ -93,7 +93,7 @@ export default function CohortCompareWidget({
           <OrbitGapRadar rows={radarRows} primary={primary} />
         </div>
 
-        {/* Right — Per-metric percentile rail */}
+        {/* Right - Per-metric percentile rail */}
         <div className="flex flex-col gap-6">
           <p
             style={{

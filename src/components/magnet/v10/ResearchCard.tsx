@@ -15,6 +15,7 @@ interface Props {
   question: string;
   onFeedbackClick?: () => void;
   compact?: boolean;
+  hideFeedback?: boolean;
 }
 
 export default function ResearchCard({
@@ -26,6 +27,7 @@ export default function ResearchCard({
   question,
   onFeedbackClick,
   compact = false,
+  hideFeedback = false,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -138,27 +140,29 @@ export default function ResearchCard({
             </div>
           </div>
 
-          <div className="rc-feedback-row rc-reveal rc-d6">
-            <button
-              type="button"
-              className="rc-feedback-chip"
-              onClick={onFeedbackClick}
-            >
-              <span className="rc-pulse" aria-hidden />
-              <span>Did we get this right?</span>
-            </button>
-            <span className="rc-feedback-question">
-              Send us your{" "}
+          {!hideFeedback && (
+            <div className="rc-feedback-row rc-reveal rc-d6">
               <button
                 type="button"
-                className="rc-feedback-link"
+                className="rc-feedback-chip"
                 onClick={onFeedbackClick}
               >
-                feedback
+                <span className="rc-pulse" aria-hidden />
+                <span>Did we get this right?</span>
               </button>
-              .
-            </span>
-          </div>
+              <span className="rc-feedback-question">
+                Send us your{" "}
+                <button
+                  type="button"
+                  className="rc-feedback-link"
+                  onClick={onFeedbackClick}
+                >
+                  feedback
+                </button>
+                .
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </section>

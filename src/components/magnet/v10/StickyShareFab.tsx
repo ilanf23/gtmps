@@ -1,4 +1,4 @@
-// Sticky share FAB — bottom-right floating button.
+// Sticky share FAB - bottom-right floating button.
 //
 // - 56px on desktop, 48px on mobile.
 // - Visible after the user scrolls past Section 2.

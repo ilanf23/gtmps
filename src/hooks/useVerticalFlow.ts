@@ -18,7 +18,7 @@ export interface ResolvedVerticalFlow {
  * Resolve the active vertical context for the post-CTA flow.
  *
  * Priority:
- *   1. `override` argument — used by /m/[slug] result pages that hydrate the
+ *   1. `override` argument - used by /m/[slug] result pages that hydrate the
  *      vertical from the persisted submission row when the URL param is missing.
  *   2. `?vertical=<slug>` URL param.
  *   3. "general" fallback.

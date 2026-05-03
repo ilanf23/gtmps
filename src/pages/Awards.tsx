@@ -92,7 +92,7 @@ const JUDGING = [
   {
     tag: "Methodology",
     headline: "Systematic excellence.",
-    body: "Judged on repeatable systems. The firms that built origination, expansion, or reactivation as a process — not the ones with single lucky wins.",
+    body: "Judged on repeatable systems. The firms that built origination, expansion, or reactivation as a process - not the ones with single lucky wins.",
   },
   {
     tag: "Year One Truth",
@@ -111,17 +111,17 @@ const TIMELINE = [
 const FAQS = [
   { tag: "Eligibility", q: "Who is eligible?", a: "Any independent professional services firm in one of the eight verticals, with $5M–$100M in revenue and a US presence. The diagnostic determines fit." },
   { tag: "Application", q: "Is there a separate application?", a: "No. Every firm that takes the 10-minute diagnostic is considered by default. Anonymous benchmarking applies; named recognition is opt-in." },
-  { tag: "Cost", q: "Is there a fee?", a: "No fee to enter, finalist, or win. The Awards exist to recognize practice excellence — not to monetize entry." },
+  { tag: "Cost", q: "Is there a fee?", a: "No fee to enter, finalist, or win. The Awards exist to recognize practice excellence - not to monetize entry." },
   { tag: "Privacy", q: "Can my firm participate confidentially?", a: "Yes. Participation defaults to anonymous benchmarking. Named cases are opt-in only. Unsuccessful firms are never publicly identified." },
   { tag: "Methodology", q: "How are winners actually chosen?", a: "Three inputs: diagnostic score (40%), practitioner panel review (40%), and documented systems evidence (20%). The full rubric is published before nominations open." },
-  { tag: "Geography", q: "Is this US-only?", a: "The inaugural cohort is US-focused due to the research base. International firms are welcome to take the diagnostic — international awards launch Year Two." },
+  { tag: "Geography", q: "Is this US-only?", a: "The inaugural cohort is US-focused due to the research base. International firms are welcome to take the diagnostic - international awards launch Year Two." },
 ];
 
 export default function Awards() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = "GTM for PS Awards — Inaugural 2026 | Mabbly";
+    document.title = "GTM for PS Awards - Inaugural 2026 | Mabbly";
     const setMeta = (key: string, content: string) => {
       let el = document.querySelector(`meta[name="${key}"]`) as HTMLMetaElement | null;
       if (!el) {
@@ -663,7 +663,7 @@ const AWARDS_CSS = `
   .cpage .awards-grid { grid-template-columns: 1fr; }
 }
 
-/* DARK VARIANT — Section 03 */
+/* DARK VARIANT - Section 03 */
 .cpage .section.awards-eight {
   background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(191, 70, 26, 0.06), transparent 60%), var(--depth);
 }

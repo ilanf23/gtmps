@@ -116,7 +116,7 @@ export default function MagnetBreakdown({
     };
   }, [slug]);
 
-  // Derive scores + variant + theme from row data (always called — even when null —
+  // Derive scores + variant + theme from row data (always called - even when null -
   // so hook order stays stable across loading states).
   const scores = useMemo(() => {
     if (!data) return null;
@@ -164,9 +164,9 @@ export default function MagnetBreakdown({
   //  2. Remove em-dashes / en-dashes per project typography rule (use periods/commas).
   const stripDashes = (s: string): string =>
     s
-      .replace(/\s+[—–]\s+/g, ". ")
-      .replace(/(\w)[—–](\w)/g, "$1 to $2")
-      .replace(/[—–]/g, ",")
+      .replace(/\s+[-–]\s+/g, ". ")
+      .replace(/(\w)[-–](\w)/g, "$1 to $2")
+      .replace(/[-–]/g, ",")
       .replace(/\s{2,}/g, " ")
       .trim();
 
@@ -187,7 +187,7 @@ export default function MagnetBreakdown({
   ];
 
   // Firm-name fallback: never render an empty hero. The previous chain used
-  // `??` which only catches null/undefined — when enrichment wrote
+  // `??` which only catches null/undefined - when enrichment wrote
   // client_company_name="" (whitespace-trimmed empty), the hero rendered
   // "Your Revenue Map for ___" with no name (the v2 P0 Cravath bug).
   // getDisplayName() handles null, undefined, "", and whitespace.
@@ -215,7 +215,7 @@ export default function MagnetBreakdown({
   };
   const { brand: readableBrand } = assertReadableBrand(rawBrand, data.client_company_name);
 
-  // ── Dark-body guard — applied to MagnetBreakdown's brand path ──────────
+  // ── Dark-body guard - applied to MagnetBreakdown's brand path ──────────
   // assertReadableBrand only rejects when WCAG contrast fails. A dark navy
   // bg with white text passes contrast but still produces an unreadable
   // editorial body (cream-on-ink-designed sections). When the extracted bg

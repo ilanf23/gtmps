@@ -5,7 +5,7 @@ interface Props {
 
 /**
  * Abstract topographic / contour map. Fits the "Build Your MAP" metaphor.
- * Pure SVG — no external assets.
+ * Pure SVG - no external assets.
  */
 const TopographicBackground = ({ className = "", opacity = 0.08 }: Props) => (
   <svg

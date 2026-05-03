@@ -1,15 +1,15 @@
 /**
- * CohortRankCardData — UNSTYLED preview of the cohort metrics data layer.
+ * CohortRankCardData - UNSTYLED preview of the cohort metrics data layer.
  *
  * This component exists ONLY to prove the data-layer end-to-end during
  * Track E of audit Sprint 2. The visual <CohortRankCard> (with bars,
  * tokens, copy, motion, etc.) is intentionally deferred until design
- * tokens land in the parallel session — building it now would force
+ * tokens land in the parallel session - building it now would force
  * us to invent ad-hoc colors and font choices that conflict with the
  * design-tokens work in flight.
  *
  * It is NOT wired into any page; it is exported for the future styled
- * component author (and for tests) to consume. No colors, no fonts —
+ * component author (and for tests) to consume. No colors, no fonts -
  * only layout primitives (`space-y-1`).
  */
 

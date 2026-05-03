@@ -463,7 +463,7 @@ export default function IndustryGrid() {
                 key={v.slug}
                 to={`/${v.slug}`}
                 className={`vcard c${i + 1}`}
-                aria-label={`${v.name} — view thesis`}
+                aria-label={`${v.name} - view thesis`}
               >
                 <span className="vcard-slug">/{v.slug}</span>
                 <span className="icon-wrap" aria-hidden>

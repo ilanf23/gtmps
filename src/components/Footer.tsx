@@ -26,7 +26,7 @@ const Footer = () => {
       `}</style>
 
       <div className="mf-root max-w-[1100px] mx-auto">
-        {/* Row 1 — ACROSS MABBLY */}
+        {/* Row 1 - ACROSS MABBLY */}
         <p
           className="font-mono uppercase"
           style={{
@@ -41,7 +41,7 @@ const Footer = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Item 1 — current page */}
+          {/* Item 1 - current page */}
           <div className="flex flex-col" style={{ gap: 8 }}>
             <span
               className="font-display"
@@ -69,7 +69,7 @@ const Footer = () => {
             </span>
           </div>
 
-          {/* Item 2 — mabbly.com */}
+          {/* Item 2 - mabbly.com */}
           <div className="flex flex-col" style={{ gap: 8 }}>
             <a
               href="https://mabbly.com"
@@ -99,7 +99,7 @@ const Footer = () => {
             </span>
           </div>
 
-          {/* Item 3 — mabbly.ai */}
+          {/* Item 3 - mabbly.ai */}
           <div className="flex flex-col" style={{ gap: 8 }}>
             <a
               href="https://mabbly.ai"
@@ -129,7 +129,7 @@ const Footer = () => {
             </span>
           </div>
 
-          {/* Item 4 — Podcast */}
+          {/* Item 4 - Podcast */}
           <div className="flex flex-col" style={{ gap: 8 }}>
             <a
               href="https://www.youtube.com/@GTMforPS"
@@ -160,7 +160,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Row 2 — divider */}
+        {/* Row 2 - divider */}
         <div
           aria-hidden
           style={{
@@ -171,7 +171,7 @@ const Footer = () => {
           }}
         />
 
-        {/* Row 3 — bottom strip */}
+        {/* Row 3 - bottom strip */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-center md:text-left">
           <div style={{ maxWidth: 320 }} className="mx-auto md:mx-0">
             <span

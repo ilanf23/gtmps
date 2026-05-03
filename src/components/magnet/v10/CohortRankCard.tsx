@@ -1,9 +1,9 @@
-// CohortRankCard — styled cohort percentile card.
+// CohortRankCard - styled cohort percentile card.
 //
 // Sits between PersonalizedHeader (01) and FiveOrbitsViz (02) in
 // MagnetBreakdown. Reads from the `cohort_metrics` table via
 // fetchCohortMetrics (data layer shipped in #7). Silently renders
-// nothing when no rows match — most firms won't have cohort data
+// nothing when no rows match - most firms won't have cohort data
 // seeded yet, and we don't want a "no data" placeholder breaking
 // the editorial flow.
 

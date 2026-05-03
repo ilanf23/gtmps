@@ -60,7 +60,7 @@ function fallbackSlug(): string {
 
 /**
  * Convert a slug or domain root into a human-display firm name.
- *   'aarete'         → 'AArete' (special-cased capitals not handled — caller can override)
+ *   'aarete'         → 'AArete' (special-cased capitals not handled - caller can override)
  *   'calliope'       → 'Calliope'
  *   'foo-bar'        → 'Foo Bar'
  *   'firm-x7k'       → 'Firm'
@@ -95,7 +95,7 @@ export function displayNameFromSlug(slug: string | null | undefined): string | n
 export function normalizeFirmName(input: string | null | undefined): string {
   const raw = (input ?? '').toString().trim().toLowerCase();
   if (!raw) return '';
-  // Drop common corporate suffixes — these often appear on the canonical
+  // Drop common corporate suffixes - these often appear on the canonical
   // name from enrichment but never on a slug.
   const suffixStripped = raw
     .replace(
@@ -117,7 +117,7 @@ export function normalizeFirmName(input: string | null | undefined): string {
  *   - one normalized string is a prefix/substring of the other (e.g. slug
  *     'aarete' vs canonical 'AArete Consulting' → still the same firm)
  *
- * Returns true when the names diverge meaningfully — this is the signal
+ * Returns true when the names diverge meaningfully - this is the signal
  * for the disambiguation banner (e.g. user submitted "marcum" but
  * enrichment resolved to "CBIZ" because Marcum was acquired).
  */

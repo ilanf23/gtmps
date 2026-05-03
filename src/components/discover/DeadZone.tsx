@@ -793,7 +793,7 @@ export default function DeadZone() {
             The Dead Zone<span className="dz-period">.</span>
           </h2>
           <p className="dz-headline-sub">
-            Between <strong>60% and 80%</strong> of your CRM is sitting here right now — quiet, warm, unactivated. <strong>Tune the inputs.</strong> Watch what it costs.
+            Between <strong>60% and 80%</strong> of your CRM is sitting here right now - quiet, warm, unactivated. <strong>Tune the inputs.</strong> Watch what it costs.
           </p>
         </div>
 
@@ -915,7 +915,7 @@ export default function DeadZone() {
           <div className="dz-results">
             <div className="dz-hero">
               <div className="dz-hero-label">
-                <span>Your Dead Zone — Annual Pipeline</span>
+                <span>Your Dead Zone - Annual Pipeline</span>
                 <span className="dz-hero-rule" aria-hidden="true" />
               </div>
               <p className="dz-hero-value" ref={heroRef}>{fmtMoney(pipelinePerBook)}</p>
@@ -979,12 +979,12 @@ export default function DeadZone() {
                 </p>
                 <div className="dz-compound-stats">
                   <p className="dz-compound-stat">
-                    <span className="dz-dash dz-dash-loss" aria-hidden="true">—</span>
+                    <span className="dz-dash dz-dash-loss" aria-hidden="true">-</span>
                     5-yr no action
                     <span className="dz-compound-amount">{fmtMoney(noAction)}</span>
                   </p>
                   <p className="dz-compound-stat">
-                    <span className="dz-dash dz-dash-rec" aria-hidden="true">—</span>
+                    <span className="dz-dash dz-dash-rec" aria-hidden="true">-</span>
                     5-yr activated
                     <span className="dz-compound-amount">{fmtMoney(activatedTotal)}</span>
                   </p>

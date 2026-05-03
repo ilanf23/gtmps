@@ -20,7 +20,7 @@ export interface ChatMessage {
 }
 
 export interface ChapterCallout {
-  /** e.g. "Ch.1 — The Dead Zone" */
+  /** e.g. "Ch.1 - The Dead Zone" */
   chapter: string;
   /** Personalized paragraph for their firm */
   callout: string;

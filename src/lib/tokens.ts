@@ -1,10 +1,10 @@
 /**
- * Mabbly Design System — Canonical Tokens (v2.0, 2026-05-02)
+ * Mabbly Design System - Canonical Tokens (v2.0, 2026-05-02)
  *
  * Single source-of-truth for design tokens. Tailwind config and src/index.css
  * mirror these values; components import semantic tokens from here.
  *
- * Aesthetic: Monocle meets McKinsey — organic, grounded, premium.
+ * Aesthetic: Monocle meets McKinsey - organic, grounded, premium.
  * Heading rule: 900 weight + UPPERCASE. Body: 400 sentence case.
  * The 900↔400 contrast IS the brand.
  *
@@ -12,23 +12,23 @@
  */
 
 // ============================================================================
-// Brand palette — locked spec values
+// Brand palette - locked spec values
 // ============================================================================
 //
 // Old token names (ink/gold/sage/rust/slate/cream/warmWhite/softNavy) are
 // retained as aliases so existing class strings keep compiling. The values
-// behind those names now point to the new spec — all surfaces using them
+// behind those names now point to the new spec - all surfaces using them
 // will visually shift to the new brand. Out-of-scope microsite surfaces
 // override locally via their own component styles.
 // ============================================================================
 export const brand = {
-  // New spec — primary
-  deepForest:    "#0F1E1D",  // dark primary — hero / dark sections / headings on light
-  sageLight:     "#EDF5EC",  // light primary — page bg / text on dark / Mabbly fallback
-  oliveGold:     "#A8923A",  // PRIMARY ACCENT — links, borders, focus, decorative
-  burntOrange:   "#BF461A",  // RESERVED — primary conversion CTAs only
+  // New spec - primary
+  deepForest:    "#0F1E1D",  // dark primary - hero / dark sections / headings on light
+  sageLight:     "#EDF5EC",  // light primary - page bg / text on dark / Mabbly fallback
+  oliveGold:     "#A8923A",  // PRIMARY ACCENT - links, borders, focus, decorative
+  burntOrange:   "#BF461A",  // RESERVED - primary conversion CTAs only
 
-  // New spec — secondary
+  // New spec - secondary
   darkRust:      "#803402",  // H3 subheading color, secondary accent, hover
   sageMedium:    "#D5DED4",  // borders, dividers, secondary surfaces
   goldHighlight: "#FFBA1A",  // emphasis: labels, stat callouts, badge accents
@@ -38,25 +38,25 @@ export const brand = {
   warmWhite:     "#FAF9F5",  // alternate light surface
   charcoal:      "#141413",  // alternate dark, footer
 
-  // New spec — extended
+  // New spec - extended
   ctaPurple:     "#491D89",  // waitlist CTA / product pages
   signalRed:     "#C02B0A",  // error / urgency
 
-  // Card surface on dark — derived from spec ("slightly lighter forest").
+  // Card surface on dark - derived from spec ("slightly lighter forest").
   cardDark:      "#1A2B2A",
 
-  // Backwards-compat aliases — point at new spec values.
+  // Backwards-compat aliases - point at new spec values.
   ink:        "#0F1E1D",  // → Deep Forest
   gold:       "#A8923A",  // → Olive Gold (primary accent)
   sage:       "#225351",  // → Forest Teal (most legacy uses are accents)
   rust:       "#803402",  // → Dark Rust
   slate:      "#A1A9A0",  // → Sage Muted (demoted to muted-text role)
   cream:      "#EDF5EC",  // → Sage Light
-  softNavy:   "#1B3A6B",  // not in new spec — preserved for vertical landings (out of scope)
+  softNavy:   "#1B3A6B",  // not in new spec - preserved for vertical landings (out of scope)
 } as const;
 
 // ============================================================================
-// Color — semantic tokens (light mode default)
+// Color - semantic tokens (light mode default)
 // Components consume these via CSS vars, not the brand palette directly.
 // ============================================================================
 export const color = {
@@ -90,7 +90,7 @@ export const color = {
     secondaryOn:   "var(--color-accent-secondary-on)",
     tertiary:      "var(--color-accent-tertiary)",
     tertiaryOn:    "var(--color-accent-tertiary-on)",
-    highlight:     "var(--color-accent-highlight)",     // Gold #FFBA1A — emphasis only
+    highlight:     "var(--color-accent-highlight)",     // Gold #FFBA1A - emphasis only
     highlightOn:   "var(--color-accent-highlight-on)",
   },
   status: {
@@ -114,14 +114,14 @@ export const color = {
 } as const;
 
 // ============================================================================
-// Typography — heading rule: 900 + UPPERCASE. Body: 400, sentence case.
+// Typography - heading rule: 900 + UPPERCASE. Body: 400, sentence case.
 //
 // Heading stack: Mabbly Repro (custom, not yet loaded) → Arial Black (system)
 //                → Verdana → sans-serif. Arial Black is the doc-sanctioned
 //                substitute that preserves the heavy / editorial register.
 // Body stack:    Mabbly Repro → Instrument Sans (closer to spec than Verdana
 //                visually until Mabbly Repro arrives).
-// Editorial face: Cormorant Garamond — retained ONLY for decorative numerals
+// Editorial face: Cormorant Garamond - retained ONLY for decorative numerals
 //                 and italic pull quotes per Q3 lock-in.
 // ============================================================================
 export const FONT_HEADING = "'Mabbly Repro', 'Arial Black', Verdana, Helvetica, sans-serif";
@@ -198,7 +198,7 @@ export const type = {
 } as const;
 
 // ============================================================================
-// Spacing — 8pt-based with editorial extensions
+// Spacing - 8pt-based with editorial extensions
 // ============================================================================
 export const space = {
   0:  "0",
@@ -217,7 +217,7 @@ export const space = {
 } as const;
 
 // ============================================================================
-// Layout — max widths
+// Layout - max widths
 // ============================================================================
 export const maxWidth = {
   prose:   "65ch",
@@ -227,7 +227,7 @@ export const maxWidth = {
 } as const;
 
 // ============================================================================
-// Radius — primary CTA is 25px pill per spec §3.2
+// Radius - primary CTA is 25px pill per spec §3.2
 // ============================================================================
 export const radius = {
   sm:   "0.25rem",
@@ -282,7 +282,7 @@ export const breakpoint = {
 } as const;
 
 // ============================================================================
-// Per-vertical accent palettes — OUT OF SCOPE for v2.0 brand migration.
+// Per-vertical accent palettes - OUT OF SCOPE for v2.0 brand migration.
 // Vertical landings (/consulting, /law, etc.) keep their existing palettes.
 // Values below intentionally reference brand aliases that now point at
 // new-spec values; verticals were not migrated as part of this pass.

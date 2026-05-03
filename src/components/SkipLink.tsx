@@ -1,4 +1,4 @@
-// Skip link — visually hidden until focused. Lets keyboard users jump
+// Skip link - visually hidden until focused. Lets keyboard users jump
 // past the top nav directly into the main content of the current page.
 //
 // Pairs with the <main id="main-content" tabIndex={-1}> wrapper in App.tsx

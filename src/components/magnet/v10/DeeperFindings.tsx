@@ -1,4 +1,4 @@
-// SECTION 10 — Deeper Findings (Signal · Cadence · Research Flag).
+// SECTION 10 - Deeper Findings (Signal · Cadence · Research Flag).
 // Compact OHQ blocks; collapsible on mobile, all open on desktop.
 
 import { useState } from "react";

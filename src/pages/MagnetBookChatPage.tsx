@@ -9,7 +9,7 @@ import type { VerticalFlowSlug } from "@/content/verticalFlow";
  * Plain-language label for each vertical, used inside the chat empty-state
  * prompts (e.g. "What does the book say about law firms?"). Kept here rather
  * than added to verticalFlow.ts so we don't widen that data shape just for
- * one consumer — and so the wording can stay chat-conversational without
+ * one consumer - and so the wording can stay chat-conversational without
  * affecting the generated copy on the assess/wait/result pages.
  */
 const VERTICAL_LABELS: Record<VerticalFlowSlug, string | null> = {

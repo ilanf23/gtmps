@@ -11,6 +11,6 @@
 // gold replaces the warmer legacy gold; Deep Forest replaces the near-black
 // ink; Sage Light replaces the warm cream.
 
-export const MABBLY_GOLD = "#A8923A";   // Olive Gold — primary brand accent
-export const MABBLY_DARK = "#0F1E1D";   // Deep Forest — dark anchor
-export const MABBLY_CREAM = "#EDF5EC";  // Sage Light — light anchor
+export const MABBLY_GOLD = "#A8923A";   // Olive Gold - primary brand accent
+export const MABBLY_DARK = "#0F1E1D";   // Deep Forest - dark anchor
+export const MABBLY_CREAM = "#EDF5EC";  // Sage Light - light anchor

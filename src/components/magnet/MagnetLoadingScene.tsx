@@ -13,7 +13,7 @@ const CENTER = STAGE / 2;
 const RING_RADII = [80, 130, 185, 240, 295];
 const STEP_DURATION_MS = 14_000;
 
-// Hand-placed nodes on the orbit rings — labels chosen to read as the
+// Hand-placed nodes on the orbit rings - labels chosen to read as the
 // "five orbits" of relationship revenue.
 const ORBIT_NODES = [
   { ring: 0, angleDeg: -55, label: "Clients" },
@@ -23,11 +23,11 @@ const ORBIT_NODES = [
   { ring: 4, angleDeg: 80, label: "Capital" },
 ];
 
-// Five calibration bars on the right edge — different fill widths so they
+// Five calibration bars on the right edge - different fill widths so they
 // read as a real calibration panel, not a progress bar.
 const CALIBRATION_BARS = [0.62, 0.84, 0.46, 0.71, 0.55];
 
-// Deterministic pseudo-random — same paper texture every render.
+// Deterministic pseudo-random - same paper texture every render.
 function seeded(i: number) {
   const x = Math.sin(i * 9301 + 49297) * 233280;
   return x - Math.floor(x);
@@ -73,7 +73,7 @@ export default function MagnetLoadingScene({
   const dots = useMemo(() => buildDots(25), []);
   const stepNumeral = String(stepIndex + 1).padStart(2, "0");
 
-  // Each layer mounts when its step starts and stays mounted afterwards —
+  // Each layer mounts when its step starts and stays mounted afterwards -
   // the map "builds up" rather than flickering between scenes.
   const showDocScan = stepIndex >= 0;
   const showOrbits = stepIndex >= 1;
@@ -81,7 +81,7 @@ export default function MagnetLoadingScene({
   const showCalibration = stepIndex >= 3;
   const showManuscript = stepIndex >= 4;
 
-  // Document outline geometry — a tall, narrow rectangle that suggests a
+  // Document outline geometry - a tall, narrow rectangle that suggests a
   // webpage being scanned.
   const DOC = { x: CENTER - 110, y: CENTER - 165, w: 220, h: 330 };
 
@@ -194,7 +194,7 @@ export default function MagnetLoadingScene({
             </clipPath>
           </defs>
 
-          {/* Layer 0 — quiet paper texture */}
+          {/* Layer 0 - quiet paper texture */}
           <g>
             {dots.map((d, i) => {
               const animation = reduced
@@ -215,7 +215,7 @@ export default function MagnetLoadingScene({
             })}
           </g>
 
-          {/* === STEP 01 — Document scan ============================ */}
+          {/* === STEP 01 - Document scan ============================ */}
           {showDocScan && (
             <g
               style={{
@@ -306,7 +306,7 @@ export default function MagnetLoadingScene({
             </g>
           )}
 
-          {/* === STEP 02 — Orbit rings + nodes ====================== */}
+          {/* === STEP 02 - Orbit rings + nodes ====================== */}
           {showOrbits && (
             <g>
               {RING_RADII.map((r, i) => {
@@ -389,7 +389,7 @@ export default function MagnetLoadingScene({
             </g>
           )}
 
-          {/* === STEP 03 — Dead Zone wedge ========================== */}
+          {/* === STEP 03 - Dead Zone wedge ========================== */}
           {showDeadZone && (
             <g
               style={{
@@ -422,7 +422,7 @@ export default function MagnetLoadingScene({
             </g>
           )}
 
-          {/* === STEP 04 — Calibration bars (right edge) ============ */}
+          {/* === STEP 04 - Calibration bars (right edge) ============ */}
           {showCalibration && (
             <g>
               {CALIBRATION_BARS.map((fill, i) => {
@@ -481,7 +481,7 @@ export default function MagnetLoadingScene({
             </g>
           )}
 
-          {/* === STEP 05 — Manuscript line typing =================== */}
+          {/* === STEP 05 - Manuscript line typing =================== */}
           {showManuscript && !reduced && (
             <foreignObject x={MANU.x} y={MANU.y - 14} width={MANU.w} height={28}>
               <div
@@ -521,7 +521,7 @@ export default function MagnetLoadingScene({
             </foreignObject>
           )}
 
-          {/* Layer top — compass rose at center (always visible) */}
+          {/* Layer top - compass rose at center (always visible) */}
           <g>
             <circle
               cx={CENTER}
@@ -603,7 +603,7 @@ export default function MagnetLoadingScene({
         </svg>
       </div>
 
-      {/* Layer 5 — editorial text block */}
+      {/* Layer 5 - editorial text block */}
       <div className="relative z-10 w-full max-w-xl flex flex-col items-center text-center -mt-4 sm:-mt-8">
         <p className="text-[#A8923A] text-[11px] uppercase tracking-[0.32em] font-semibold mb-4">
           Building Your Map

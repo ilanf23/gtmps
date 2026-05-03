@@ -6,7 +6,7 @@ interface Props {
 }
 
 /**
- * Static editorial waveform — a designed shape, not animated.
+ * Static editorial waveform - a designed shape, not animated.
  * 30 bars of varying heights using a deterministic "song-like" envelope so
  * each render is identical and feels intentional, not random.
  */

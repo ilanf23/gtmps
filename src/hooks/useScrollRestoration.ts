@@ -90,7 +90,7 @@ const useScrollRestoration = () => {
         return () => window.cancelAnimationFrame(handle);
       }
     }
-    // PUSH / REPLACE: do nothing here — let ScrollToTop reset to top.
+    // PUSH / REPLACE: do nothing here - let ScrollToTop reset to top.
   }, [location.key, navType]);
 
   // Save on unload as well, so the active tab's last position survives

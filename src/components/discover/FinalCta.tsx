@@ -16,7 +16,7 @@ export default function FinalCta() {
         @media (min-width: 768px) {
           .fc-section { padding: 160px 40px; }
         }
-        /* Primary conversion CTA — reserved Burnt Orange per brand spec. */
+        /* Primary conversion CTA - reserved Burnt Orange per brand spec. */
         .fc-btn-primary {
           background: #BF461A;
           color: #FFFFFF;

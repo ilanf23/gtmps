@@ -1,4 +1,4 @@
-// SECTION 08 — Full CTA section (SECOND CTA, primary conversion target).
+// SECTION 08 - Full CTA section (SECOND CTA, primary conversion target).
 // Score-adaptive headline + variant copy + inline Calendly widget + microlines.
 
 import { useEffect, useRef } from "react";
@@ -154,7 +154,7 @@ export default function FullCtaSection({
           </p>
         </div>
 
-        {/* Inline Calendly — initialized via initCalendlyInline() in the effect above. */}
+        {/* Inline Calendly - initialized via initCalendlyInline() in the effect above. */}
         <div
           ref={calendlyRef}
           className="w-full border border-black/10"

@@ -22,7 +22,7 @@ export default function BookReader() {
   // Existence check (avoid mounting <Document> against an HTML 404).
   useEffect(() => {
     let cancelled = false;
-    // Soft existence check — only reject on a hard 404. Some hosts return
+    // Soft existence check - only reject on a hard 404. Some hosts return
     // application/octet-stream on HEAD even when GET serves the PDF fine,
     // so we don't gate on content-type.
     fetch(PDF_URL, { method: "HEAD" })
@@ -172,7 +172,7 @@ export default function BookReader() {
               <div
                 className="relative shadow-[0_18px_60px_-20px_rgba(15, 30, 29,0.35)] bg-white"
                 onClick={(e) => {
-                  // Preserve scroll position — flipping the page must not
+                  // Preserve scroll position - flipping the page must not
                   // jump the reader back to the top.
                   const scrollEl = containerRef.current;
                   const savedScroll = scrollEl?.scrollTop ?? 0;
@@ -201,7 +201,7 @@ export default function BookReader() {
                   renderAnnotationLayer={false}
                   renderTextLayer={false}
                 />
-                {/* Subtle visual hint zones — invisible but make the affordance clear on hover */}
+                {/* Subtle visual hint zones - invisible but make the affordance clear on hover */}
                 <div
                   className="pointer-events-none absolute inset-y-0 left-0 w-1/2"
                   aria-hidden

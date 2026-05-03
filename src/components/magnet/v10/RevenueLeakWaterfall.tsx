@@ -1,4 +1,4 @@
-// RevenueLeakWaterfall — Recharts ComposedChart with custom waterfall
+// RevenueLeakWaterfall - Recharts ComposedChart with custom waterfall
 // shapes. Editorial visualization of "where the dollars leak" across
 // the GTM funnel for a firm.
 //

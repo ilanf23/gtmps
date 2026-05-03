@@ -34,7 +34,7 @@ const handleAddYourFirmClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
 };
 
 /* ─────────────────────────────────────────────
-   STICKY BOTTOM CTA — restyled, lower visual weight
+   STICKY BOTTOM CTA - restyled, lower visual weight
    ───────────────────────────────────────────── */
 const StickyCTA = () => {
   const [scrolled, setScrolled] = useState(false);

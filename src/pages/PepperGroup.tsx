@@ -24,7 +24,7 @@ export default function PepperGroup() {
   };
 
   useEffect(() => {
-    const title = "Pepper Group — Market Activation Profile | Mabbly";
+    const title = "Pepper Group - Market Activation Profile | Mabbly";
     const description = "A personalized market activation profile prepared for Tim Padgett & George Couris by Mabbly.";
     const ogImage = `${window.location.origin}/og-pepper-group.jpg`;
 

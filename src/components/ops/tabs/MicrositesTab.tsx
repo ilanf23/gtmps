@@ -182,7 +182,7 @@ function RowGroup({
             {row.slug}
           </a>
         </td>
-        <td className="px-3 py-2 text-zinc-300">{row.firm_name ?? "—"}</td>
+        <td className="px-3 py-2 text-zinc-300">{row.firm_name ?? "-"}</td>
         <td className="px-3 py-2 text-zinc-500 text-xs">{relTime(row.created_at)}</td>
         <td className="px-3 py-2">
           <StatusPill status={row.status} hasError={!!row.enrichment_error} />
@@ -191,7 +191,7 @@ function RowGroup({
         <td className="px-3 py-2 text-zinc-500 text-xs">{relTime(row.last_viewed_at)}</td>
         <td className="px-3 py-2 text-right text-zinc-300">{row.share_count}</td>
         <td className="px-3 py-2 text-right text-zinc-300">{row.email_count}</td>
-        <td className="px-3 py-2 text-zinc-500 text-xs">{row.booking_at ? new Date(row.booking_at).toLocaleString() : "—"}</td>
+        <td className="px-3 py-2 text-zinc-500 text-xs">{row.booking_at ? new Date(row.booking_at).toLocaleString() : "-"}</td>
       </tr>
       {expanded && (
         <tr>

@@ -1,4 +1,4 @@
-// FrameworkProgress — horizontal stepped indicator for the five-layer
+// FrameworkProgress - horizontal stepped indicator for the five-layer
 // RROS framework: DISCOVER → PROVE → DESIGN → ACTIVATE → COMPOUND.
 // Replaces the existing static stats row inside the orbit/system sections.
 //

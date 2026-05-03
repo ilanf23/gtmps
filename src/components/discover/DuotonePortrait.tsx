@@ -72,7 +72,7 @@ const DuotonePortrait = ({
       }}
     />
 
-    {/* Gold edge highlight on right + bottom — reads as foil stamp */}
+    {/* Gold edge highlight on right + bottom - reads as foil stamp */}
     <div
       aria-hidden
       className="absolute inset-0 pointer-events-none"

@@ -63,8 +63,8 @@ export function BookingsTab({ refreshNonce, onUnauth }: BookingsTabProps) {
               <td className="px-3 py-2 font-mono text-xs">
                 <a href={`/m/${r.slug}`} target="_blank" rel="noreferrer" className="text-zinc-300 hover:text-zinc-100 underline-offset-2 hover:underline">/m/{r.slug}</a>
               </td>
-              <td className="px-3 py-2 text-zinc-400 text-xs font-mono">{r.calendly_event_id ?? "—"}</td>
-              <td className="px-3 py-2 text-zinc-300 text-xs">{r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "—"}</td>
+              <td className="px-3 py-2 text-zinc-400 text-xs font-mono">{r.calendly_event_id ?? "-"}</td>
+              <td className="px-3 py-2 text-zinc-300 text-xs">{r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "-"}</td>
               <td className="px-3 py-2 text-zinc-500 text-xs">{new Date(r.created_at).toLocaleString()}</td>
             </tr>
           ))}

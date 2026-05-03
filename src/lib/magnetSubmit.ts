@@ -148,10 +148,10 @@ export async function submitMagnetUrl(
     localStorage.setItem(RECENT_KEY, JSON.stringify(next));
     localStorage.setItem(LEGACY_KEY, slug);
   } catch {
-    /* private mode / storage disabled — non-fatal */
+    /* private mode / storage disabled - non-fatal */
   }
 
-  // Fire and forget — enrichment runs in the background.
+  // Fire and forget - enrichment runs in the background.
   void supabase.functions
     .invoke('enrich-magnet', {
       body: {

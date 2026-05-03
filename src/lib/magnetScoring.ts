@@ -6,7 +6,7 @@
 // Key change vs v1: length alone is no longer evidence of a relationship system.
 // Each of the five orbits has its own qualitative signal gate. If the orbit
 // description doesn't mention the system that orbit measures, the score is
-// capped at 55 (Yellow). Plus a "no flat strong sweep" guarantee — if every
+// capped at 55 (Yellow). Plus a "no flat strong sweep" guarantee - if every
 // orbit lands in `high`, the lowest is demoted to mid so the tool never reads
 // as fake validation.
 //
@@ -36,10 +36,10 @@ const SIGNAL_KEYWORDS = [
 // text, the score is capped at 55 (mid/Yellow). These represent the minimum
 // public evidence we'd expect from a firm that genuinely runs that orbit.
 const ORBIT_GATES: Array<{ idx: number; pattern: RegExp; cap: number }> = [
-  // Orbit 01 (Core Identity / Positioning) — open: a positioning paragraph is enough.
+  // Orbit 01 (Core Identity / Positioning) - open: a positioning paragraph is enough.
   // Orbit 02 (Active Proof / Pipeline)
   { idx: 1, pattern: /case stud|client work|results|won|delivered|increased|reduced|saved|%|\$|million|billion/i, cap: 55 },
-  // Orbit 03 (Dead Zone / Reactivation) — strict: most firms have no public reactivation system.
+  // Orbit 03 (Dead Zone / Reactivation) - strict: most firms have no public reactivation system.
   { idx: 2, pattern: /reactiv|dormant|nurture|sequence|cadence|win[\s-]?back|alumni|former client|re[-\s]?engage/i, cap: 55 },
   // Orbit 04 (Cadence / Publishing rhythm)
   { idx: 3, pattern: /weekly|monthly|quarterly|cadence|rhythm|series|publish|podcast|newsletter|cohort/i, cap: 55 },
@@ -74,7 +74,7 @@ function extractStatusTag(text: string | null | undefined): StatusTag {
 export function scoreOrbit(text: string | null | undefined): number {
   if (!text) return 20;
   const trimmed = text.trim();
-  if (!trimmed || trimmed === "—" || trimmed.toLowerCase() === "pending") return 20;
+  if (!trimmed || trimmed === "-" || trimmed.toLowerCase() === "pending") return 20;
 
   const tag = extractStatusTag(trimmed);
   const lower = trimmed.toLowerCase();
@@ -86,7 +86,7 @@ export function scoreOrbit(text: string | null | undefined): number {
     return Math.max(0, Math.min(100, baseline + nudge));
   }
 
-  // No tag — heuristic fallback.
+  // No tag - heuristic fallback.
   const length = trimmed.length;
   let base = 20;
   if (length > 60) base = 30;

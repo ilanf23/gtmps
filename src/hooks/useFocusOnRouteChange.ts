@@ -1,4 +1,4 @@
-// useFocusOnRouteChange — moves keyboard / screen-reader focus to the
+// useFocusOnRouteChange - moves keyboard / screen-reader focus to the
 // page's <main id="main-content"> element when the route changes via
 // PUSH or REPLACE navigation. Skips POP (back/forward) so the existing
 // scroll-restoration UX isn't disrupted by an unwanted focus jump.

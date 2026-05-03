@@ -169,7 +169,7 @@ export default function Authors() {
             className="au-hero-photo"
           />
           <figcaption className="au-hero-caption">
-            Mabbly editorial team — Chicago, 2026.
+            Mabbly editorial team - Chicago, 2026.
           </figcaption>
         </figure>
 

@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Verbatim manuscript pull quotes used at Sections 1, 9, 11 of the V10 page.
-// Keep attribution exact — these are "research artifact" trust anchors.
+// Keep attribution exact - these are "research artifact" trust anchors.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const MANUSCRIPT_OPENING = {

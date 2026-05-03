@@ -1,4 +1,4 @@
-// OrbitGapRadar — pentagonal radar comparing buyer scores vs cohort
+// OrbitGapRadar - pentagonal radar comparing buyer scores vs cohort
 // medians across the 5 RROS metrics. Pure SVG; no chart library
 // dependency.
 //

@@ -5,7 +5,7 @@
 //   - Fixed at bottom, 3px tall, full width.
 //   - Gold (#A8923A) fill grows with scroll position.
 //   - Hidden on >= 1024px (rail handles desktop).
-//   - Hidden once the final v10 Section 11 enters the viewport — same gating
+//   - Hidden once the final v10 Section 11 enters the viewport - same gating
 //     intent as the rail.
 
 import { useEffect, useState } from "react";

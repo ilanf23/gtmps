@@ -35,7 +35,7 @@ export function buildCalendlyEmbedUrl(ctx: CalendlyContext): string {
   params.set("utm_medium", "map");
   params.set("utm_campaign", ctx.slug);
 
-  // Prefill — Calendly accepts these query params on the booking widget.
+  // Prefill - Calendly accepts these query params on the booking widget.
   const displayName = [ctx.firstName, ctx.firmName].filter(Boolean).join(" · ");
   if (displayName) params.set("name", displayName);
   if (ctx.firmName) params.set("a1", ctx.firmName); // "Company" custom question
@@ -64,7 +64,7 @@ export function prewarmCalendly(): void {
     document.head.appendChild(link);
   }
 
-  // widget.js — only needed for the popup. Inline mounts a direct iframe.
+  // widget.js - only needed for the popup. Inline mounts a direct iframe.
   if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
     const script = document.createElement("script");
     script.src = SCRIPT_SRC;

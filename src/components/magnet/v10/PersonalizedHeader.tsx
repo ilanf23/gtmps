@@ -1,4 +1,4 @@
-// SECTION 01 — Your Research Profile
+// SECTION 01 - Your Research Profile
 // Stripped-down centered type-only hero. The firm name is the focal point;
 // everything else (eyebrow, sublines, divider, manuscript quote) is supporting
 // structure. Three continuous motions (firm glow, hand-drawn underline drop

@@ -8,7 +8,7 @@ import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 
 interface MagnetShellProps {
   children: ReactNode;
-  /** Optional override slug — used by /book where there is no :slug param */
+  /** Optional override slug - used by /book where there is no :slug param */
   slug?: string;
   /** Optional visitor first name passed into Calendly prefill */
   firstName?: string | null;
@@ -35,8 +35,8 @@ function useGoogleFont(family: string | null) {
 
 /**
  * Shared layout for the 4-page magnet microsite (/m/:slug, /chat, /read,
- * /feedback) plus /book. Renders the cream homepage nav at the top — same
- * chrome as /discover — and lets the microsite body re-skin to client colors
+ * /feedback) plus /book. Renders the cream homepage nav at the top - same
+ * chrome as /discover - and lets the microsite body re-skin to client colors
  * via `data-ms-themed` and the override sheet in `styles/microsite-theme.css`.
  *
  * The nav itself stays cream; only the body reflects the client palette.

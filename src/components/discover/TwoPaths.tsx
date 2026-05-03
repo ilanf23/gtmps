@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────
-   AFTER THE MAP — two-paths comparison (mabbly.ai · mabbly.com)
+   AFTER THE MAP - two-paths comparison (mabbly.ai · mabbly.com)
    The disambiguation layer between seeing the map and taking action.
    ───────────────────────────────────────────────────────────────── */
 
@@ -35,11 +35,11 @@ const PartnerServices = [
 const ToolSteps = [
   {
     title: "Connect your CRM",
-    body: "HubSpot, Salesforce, Close, Pipedrive — ingest the relationships you've already built.",
+    body: "HubSpot, Salesforce, Close, Pipedrive - ingest the relationships you've already built.",
   },
   {
     title: "AI scans for signals",
-    body: "Job changes, funding events, content shifts — anywhere your dormant contacts re-enter the buying window.",
+    body: "Job changes, funding events, content shifts - anywhere your dormant contacts re-enter the buying window.",
   },
   {
     title: "Approve & send",
@@ -50,7 +50,7 @@ const ToolSteps = [
 const PartnerSteps = [
   {
     title: "Discovery audit",
-    body: "90-minute call. Map your CRM's Dead Zone. Quantify the dormant pipeline. No deck — a working session.",
+    body: "90-minute call. Map your CRM's Dead Zone. Quantify the dormant pipeline. No deck - a working session.",
   },
   {
     title: "Design the playbook",
@@ -957,7 +957,7 @@ export default function TwoPaths() {
               <div className="atm-callout">
                 <p className="atm-callout-label" style={{ color: "var(--ai-green)" }}>Audience</p>
                 <p className="atm-callout-text">
-                  B2B sales, RevOps and ops teams with 10K+ CRM contacts who want a tool — not a vendor relationship.
+                  B2B sales, RevOps and ops teams with 10K+ CRM contacts who want a tool - not a vendor relationship.
                 </p>
               </div>
             </div>
@@ -1010,7 +1010,7 @@ export default function TwoPaths() {
             <p className="atm-tagline">A team to run the playbook. With you.</p>
             <p className="atm-desc">
               GTM for professional services, run by Mabbly's team. We build your map, run the playbook with you, and
-              stay through the rebuild — alongside the named practitioners from the book.
+              stay through the rebuild - alongside the named practitioners from the book.
             </p>
 
             {/* 01 How It Works */}
@@ -1085,7 +1085,7 @@ export default function TwoPaths() {
               <div className="atm-callout">
                 <p className="atm-callout-label" style={{ color: "var(--color-care)" }}>Audience</p>
                 <p className="atm-callout-text">
-                  PS firms $5M–$100M — managing partners, CMOs, founders — that want a partner running the playbook
+                  PS firms $5M–$100M - managing partners, CMOs, founders - that want a partner running the playbook
                   with them, not software running it for them.
                 </p>
               </div>
@@ -1127,7 +1127,7 @@ export default function TwoPaths() {
         <div className="atm-final">
           <a className="atm-final-pill" href={PODCAST_S6E1_HREF} target="_blank" rel="noopener noreferrer">
             <span>
-              Not sure which path? <strong>Listen to S6E1</strong> — Adam walks through both.
+              Not sure which path? <strong>Listen to S6E1</strong> - Adam walks through both.
             </span>
             <span className="atm-final-link">Listen now →</span>
           </a>

@@ -735,7 +735,7 @@ export default function ManuscriptAnchor() {
             </h2>
 
             <p className="lede">
-              The first published account of how relationship-driven firms turn dormant CRM into a revenue line. Two years of field research across <strong>30 mid-market firms</strong> and <strong>500 practitioner interviews</strong> — now in long form, in early access today.
+              The first published account of how relationship-driven firms turn dormant CRM into a revenue line. Two years of field research across <strong>30 mid-market firms</strong> and <strong>500 practitioner interviews</strong> - now in long form, in early access today.
             </p>
 
             <div className="inside">
@@ -753,7 +753,7 @@ export default function ManuscriptAnchor() {
                 <span className="inside-num">02</span>
                 <div>
                   <p className="inside-name">The MAP</p>
-                  <p className="inside-desc">Build the playbook for your highest-leverage Dead Zone — the activation chapter.</p>
+                  <p className="inside-desc">Build the playbook for your highest-leverage Dead Zone - the activation chapter.</p>
                 </div>
               </div>
 

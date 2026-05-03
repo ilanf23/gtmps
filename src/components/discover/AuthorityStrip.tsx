@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Linkedin } from 'lucide-react';
 
 /* ───────────────────────────────────────────────────────────────────────────
-   AuthorityStrip — v3 Mabbly brand spec (docs/07-design-system.md).
+   AuthorityStrip - v3 Mabbly brand spec (docs/07-design-system.md).
    Two-column layout: compressed header rail (left) + 3D rolodex card flipper
    (right) cycling Foreword → Practitioner → Author. Auto-advances every 7s,
    pauses on interaction, resumes after 4s idle. Motion preserved per face:
@@ -107,7 +107,7 @@ export default function AuthorityStrip() {
     return () => window.clearInterval(id);
   }, [active, paused, next]);
 
-  // Per-face count-up retrigger — runs each time the active card changes
+  // Per-face count-up retrigger - runs each time the active card changes
   useEffect(() => {
     if (!active) return;
     const node = sectionRef.current;
@@ -737,7 +737,7 @@ export default function AuthorityStrip() {
             </h2>
 
             <p className="au-deck">
-              <strong>Three signatures.</strong> Foreword, practitioner, author — flip through.
+              <strong>Three signatures.</strong> Foreword, practitioner, author - flip through.
             </p>
           </header>
 
@@ -763,7 +763,7 @@ export default function AuthorityStrip() {
               <div className="au-stack-shadow deeper" aria-hidden />
               <div className="au-stack-shadow" aria-hidden />
 
-              {/* Card 0 — Foreword */}
+              {/* Card 0 - Foreword */}
               <article
                 className="au-card"
                 data-active={activeIndex === 0}
@@ -794,7 +794,7 @@ export default function AuthorityStrip() {
                 </div>
               </article>
 
-              {/* Card 1 — Practitioner */}
+              {/* Card 1 - Practitioner */}
               <article
                 className="au-card"
                 data-active={activeIndex === 1}
@@ -829,7 +829,7 @@ export default function AuthorityStrip() {
                 </p>
               </article>
 
-              {/* Card 2 — Author */}
+              {/* Card 2 - Author */}
               <article
                 className="au-card"
                 data-active={activeIndex === 2}
@@ -894,7 +894,7 @@ export default function AuthorityStrip() {
         <div className="au-bottom">
           <p className="au-bottom-text">
             <strong>The most credentialed GTM authority strip in professional services.</strong>{' '}
-            Verified affiliations — open the source.
+            Verified affiliations - open the source.
           </p>
           <div className="au-badges">
             <a className="au-badge" href="https://www.deloitte.com" target="_blank" rel="noopener noreferrer" aria-label="Deloitte (opens in new tab)">Deloitte</a>

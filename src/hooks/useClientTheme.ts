@@ -16,7 +16,7 @@ import {
  * IMPORTANT: we only cache themes that contain real client branding. If the
  * RPC returns a row whose branding columns are still null (e.g. row was
  * written by an early enrichment error path before branding extraction
- * succeeded), we deliberately do NOT cache the resulting MABBLY_DEFAULTS —
+ * succeeded), we deliberately do NOT cache the resulting MABBLY_DEFAULTS -
  * otherwise the cache would lock the microsite into the orange/beige defaults
  * for the rest of the session, even after a successful re-enrichment writes
  * the real branding to the DB.
@@ -72,7 +72,7 @@ function themesDiffer(a: ClientTheme, b: ClientTheme): boolean {
 /**
  * Merge the rich palette stored in `client_brand_profile.palette` (the
  * 5-key structure produced by the AI extractor) on top of the flat brand
- * columns. The palette wins whenever it has a valid 6-digit hex — that way
+ * columns. The palette wins whenever it has a valid 6-digit hex - that way
  * the V10 page and the shell always agree on what "the brand" is.
  */
 function rowToRawBranding(row: Record<string, unknown>): RawBranding {

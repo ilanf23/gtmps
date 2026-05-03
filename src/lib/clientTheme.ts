@@ -23,7 +23,7 @@ export type ClientTheme = {
    * Dual-color brand pair, distinct from `accent`/`background` which control
    * the page chrome. `brandAccent` is the highlight/text color (links, CTAs,
    * orbit bars). `brandBackground` is the dark container color (CTA buttons,
-   * orbit number badges, sticky header). Always present — defaults to a
+   * orbit number badges, sticky header). Always present - defaults to a
    * sensible industry fallback when extraction fails or returns near-white.
    */
   brandAccent: string;
@@ -35,7 +35,7 @@ export const INDUSTRY_FALLBACK_BG = "#1B3A6B"; // consulting navy
 
 /**
  * Luminance threshold under which an extracted background is considered "too
- * dark to render content sections on" — forces body bg to Mabbly cream while
+ * dark to render content sections on" - forces body bg to Mabbly cream while
  * keeping the extracted dark color available for chrome (header/footer/CTA).
  *
  * The Cravath failure mode: client_background = #0B1A2E (navy, lum ≈ 0.02).
@@ -58,7 +58,7 @@ export function shouldForceDarkBodyFallback(extractedBgHex: string): boolean {
 export const MABBLY_DEFAULTS: ClientTheme = {
   logoUrl: null,
   companyName: null,
-  // Mabbly brand v2.0 — Olive Gold accent, Sage Light page bg, Deep Forest text.
+  // Mabbly brand v2.0 - Olive Gold accent, Sage Light page bg, Deep Forest text.
   // Burnt Orange is reserved for primary conversion CTAs and is not the
   // default brand accent.
   accent: "#A8923A",
@@ -146,7 +146,7 @@ export interface RawBranding {
 
 /**
  * Build a safe, complete theme from the raw branding columns. Any field that
- * is missing or invalid falls back to the Mabbly default — so existing
+ * is missing or invalid falls back to the Mabbly default - so existing
  * microsites without extracted branding still look right.
  */
 /** WCAG contrast ratio between two hex colors (1–21). */
@@ -201,7 +201,7 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
   // ── Palette quality threshold ───────────────────────────────────────────
   // Valid extracted hex must take priority over Mabbly defaults. We only
   // fall back when the accent is structurally broken (grayscale or equal to
-  // the background) — NOT just because contrast is below 4.5. Brand colors
+  // the background) - NOT just because contrast is below 4.5. Brand colors
   // are often softer than Mabbly gold and we still want them to ship.
   const sat = saturation(accent);
   let fallbackReason: string | null = null;
@@ -271,7 +271,7 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
   // those nested surfaces ship as near-pure-black with editorial cream-on-
   // ink content rendered illegibly on top. Substitute the consulting
   // INDUSTRY_FALLBACK_BG which the color-mix logic was originally designed
-  // around — keeps a navy chrome register but preserves contrast on the
+  // around - keeps a navy chrome register but preserves contrast on the
   // section cards. The firm's actual brand color stays as `brandAccent` for
   // links, button text, and accent rules.
   if (extractedIsTooDark && relLuminance(brandBackground) < DARK_BODY_LUMINANCE_THRESHOLD) {

@@ -8,12 +8,12 @@ import { submitMagnetUrl } from '@/lib/magnetSubmit';
 //
 // Embedded Magnet URL submission used in the homepage hero (DiscoverHero) and
 // on every vertical landing page. Eliminates the `/assess` intermediate from
-// the happy path — the form posts to Supabase via `submitMagnetUrl` and
+// the happy path - the form posts to Supabase via `submitMagnetUrl` and
 // navigates straight to `/m/:slug`.
 //
 // Variants:
-//   - `dark`  — pairs with the navy-on-gold hero (DiscoverHero).
-//   - `light` — pairs with the cream vertical-landing hero.
+//   - `dark`  - pairs with the navy-on-gold hero (DiscoverHero).
+//   - `light` - pairs with the cream vertical-landing hero.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Variant = 'dark' | 'light';
@@ -21,7 +21,7 @@ type Variant = 'dark' | 'light';
 interface HeroUrlFieldProps {
   /** Vertical slug for analytics / routing context. Defaults to 'general'. */
   vertical?: string;
-  /** Visual variant — defaults to 'dark' (Discover hero). */
+  /** Visual variant - defaults to 'dark' (Discover hero). */
   variant?: Variant;
   /** Override the submit-button label. Defaults to 'Build My Map →'. */
   submitLabel?: string;
@@ -63,7 +63,7 @@ export default function HeroUrlField({
       });
     } catch (err) {
       console.error('Hero submit error:', err);
-      toast.error('Something went wrong — please try again.');
+      toast.error('Something went wrong - please try again.');
       setSubmitting(false);
     }
   };

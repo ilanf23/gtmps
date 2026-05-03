@@ -6,7 +6,7 @@ const STEPS = [
   {
     n: "01",
     title: "You talk. We listen.",
-    body: "We want to hear how business is actually coming in — not the pitch version.",
+    body: "We want to hear how business is actually coming in - not the pitch version.",
   },
   {
     n: "02",
@@ -16,7 +16,7 @@ const STEPS = [
   {
     n: "03",
     title: "We identify your Dead Zone.",
-    body: "A real number. The revenue that's already yours — sitting silent in your CRM.",
+    body: "A real number. The revenue that's already yours - sitting silent in your CRM.",
   },
   {
     n: "04",

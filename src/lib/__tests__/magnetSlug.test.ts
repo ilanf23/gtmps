@@ -4,7 +4,7 @@
  *
  * Audit case in scope: user submits "marcum.com" → enrichment resolves to
  * "CBIZ" (because Marcum was acquired). The slug stays `marcum` but the
- * canonical name is "CBIZ" — the page should surface that mismatch.
+ * canonical name is "CBIZ" - the page should surface that mismatch.
  */
 
 import { describe, it, expect } from "vitest";

@@ -1,5 +1,5 @@
 /**
- * Cohort metric types — mirror of the `public.cohort_metrics` table
+ * Cohort metric types - mirror of the `public.cohort_metrics` table
  * defined in the matching Supabase migration. See:
  *   supabase/migrations/2026050212522 9_*.sql
  *

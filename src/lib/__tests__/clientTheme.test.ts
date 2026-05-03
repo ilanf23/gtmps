@@ -1,5 +1,5 @@
 /**
- * Tests for `buildClientTheme` — focused on the dark-body guard
+ * Tests for `buildClientTheme` - focused on the dark-body guard
  * (the Cravath failure mode surfaced in the audit). The guard is
  * now always-on; the previously-gated VITE_CLIENT_THEME_V2 flag
  * was removed once the path was proven via fixtures.
@@ -15,7 +15,7 @@ import {
   type RawBranding,
 } from "../clientTheme";
 
-describe("buildClientTheme — null/undefined input", () => {
+describe("buildClientTheme - null/undefined input", () => {
   it("returns Mabbly defaults when raw is null", () => {
     expect(buildClientTheme(null)).toEqual(MABBLY_DEFAULTS);
   });
@@ -25,7 +25,7 @@ describe("buildClientTheme — null/undefined input", () => {
   });
 });
 
-describe("buildClientTheme — dark-body guard (Cravath fix)", () => {
+describe("buildClientTheme - dark-body guard (Cravath fix)", () => {
   it("Cravath case: forces cream body bg, switches chrome to safe navy", () => {
     const raw: RawBranding = {
       client_company_name: "Cravath, Swaine & Moore",
@@ -73,7 +73,7 @@ describe("buildClientTheme — dark-body guard (Cravath fix)", () => {
     const theme = buildClientTheme(raw);
     expect(theme.background.toLowerCase()).toBe(MABBLY_DEFAULTS.background.toLowerCase());
     expect(theme.brandBackground.toLowerCase()).toBe(INDUSTRY_FALLBACK_BG.toLowerCase());
-    // Firm's accent color stays — links, button text, accent rules use this.
+    // Firm's accent color stays - links, button text, accent rules use this.
     expect(theme.brandAccent.toLowerCase()).toBe("#a99054");
   });
 
@@ -107,7 +107,7 @@ describe("buildClientTheme — dark-body guard (Cravath fix)", () => {
   });
 
   it("Threshold edge: bg comfortably above threshold is NOT forced cream", () => {
-    // #BCBCBC has luminance ~0.50 — well above threshold (0.35).
+    // #BCBCBC has luminance ~0.50 - well above threshold (0.35).
     const raw: RawBranding = {
       client_company_name: "EdgeCo",
       client_brand_color: "#3D5A4A",
@@ -118,14 +118,14 @@ describe("buildClientTheme — dark-body guard (Cravath fix)", () => {
   });
 });
 
-describe("buildClientTheme — companyName preservation", () => {
+describe("buildClientTheme - companyName preservation", () => {
   it("preserves the extracted company name when present", () => {
     const raw: RawBranding = { client_company_name: "Marcum LLP" };
     expect(buildClientTheme(raw).companyName).toBe("Marcum LLP");
   });
 
   it("returns null when company name is missing", () => {
-    // The 'missing firm name' bug — Sprint 3 wires the fallback separately
+    // The 'missing firm name' bug - Sprint 3 wires the fallback separately
     // via getDisplayName(). Here we just confirm current contract.
     const raw: RawBranding = {};
     expect(buildClientTheme(raw).companyName).toBe(null);

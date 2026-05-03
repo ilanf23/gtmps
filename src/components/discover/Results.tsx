@@ -148,7 +148,7 @@ export default function Results() {
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  // Section IO — triggers entrance animations
+  // Section IO - triggers entrance animations
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -184,7 +184,7 @@ export default function Results() {
     };
   }, [reduced]);
 
-  // Per-card IO — triggers count-up on each card individually
+  // Per-card IO - triggers count-up on each card individually
   useEffect(() => {
     if (reduced) return;
     const observers: IntersectionObserver[] = [];
@@ -217,7 +217,7 @@ export default function Results() {
       ref={sectionRef}
       id="results"
       className={`proof-section ${sectionIn ? 'is-in' : ''}`}
-      aria-label="Proof — three documented cases"
+      aria-label="Proof - three documented cases"
     >
       <style>{`
         .proof-section {
@@ -622,7 +622,7 @@ export default function Results() {
             {HEADLINE_WORDS.map((word, i) => {
               const isLast = i === HEADLINE_WORDS.length - 1;
               if (isLast) {
-                // "field." — split off the period so we can color it
+                // "field." - split off the period so we can color it
                 return (
                   <span className="word-mask" key={`${word}-${i}`}>
                     <span className="word-inner">

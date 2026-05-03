@@ -25,7 +25,7 @@ export default function DiscoverHero() {
   const dormantLabelRef = useRef<SVGGElement | null>(null);
   const connectorRef = useRef<SVGPathElement | null>(null);
 
-  // Five Orbits — DORMANT marker spins around orbit 4 (rx=475, ry=200).
+  // Five Orbits - DORMANT marker spins around orbit 4 (rx=475, ry=200).
   // Period 28s. Each frame updates marker position, connector Q-curve,
   // and label x-anchor (flips sides based on which half of the orbit).
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function DiscoverHero() {
       navigate(result.destination, { state: { websiteUrl: result.normalizedUrl } });
     } catch (err) {
       console.error('Hero submit error:', err);
-      toast.error('Something went wrong — please try again.');
+      toast.error('Something went wrong - please try again.');
       setSubmitting(false);
     }
   };
@@ -607,7 +607,7 @@ export default function DiscoverHero() {
                 The largest research on GTM in professional services.{' '}
                 <span className="kl-hl">500 practitioner interviews.</span> Validated by Copulsky.
                 The map shows where your firm sits in the <span className="kl-hl">Dead Zone</span>{' '}
-                — and the one chapter that fixes your biggest gap.
+                - and the one chapter that fixes your biggest gap.
               </span>
             </p>
 

@@ -301,7 +301,7 @@ export default function MapSection() {
                 fontWeight: 400,
               }}
             >
-              10 questions. Confidential. Benchmarked against 30 peer firms in the research cohort. The RROS map is yours either way &mdash; we just ask for feedback on the framework in return.
+              10 questions. Confidential. Benchmarked against 30 peer firms in the research cohort. The RROS map is yours either way - we just ask for feedback on the framework in return.
             </p>
 
             {/* Button row */}

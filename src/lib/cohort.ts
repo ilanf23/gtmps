@@ -1,5 +1,5 @@
 /**
- * Cohort metric fetcher — data layer for the future <CohortRankCard>.
+ * Cohort metric fetcher - data layer for the future <CohortRankCard>.
  *
  * Reads from `public.cohort_metrics` (see the matching migration in
  * supabase/migrations/). Returns a list of metric rows for one
