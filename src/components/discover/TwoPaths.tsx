@@ -273,6 +273,8 @@ export default function TwoPaths() {
           padding: 44px 40px;
           overflow: hidden;
           opacity: 0;
+          display: flex;
+          flex-direction: column;
           transition: transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1),
                       border-color 300ms ease,
                       box-shadow 300ms ease;
@@ -569,7 +571,7 @@ export default function TwoPaths() {
 
         /* footer */
         .atm-card-foot {
-          margin-top: 32px;
+          margin-top: auto;
           padding-top: 24px;
           border-top: 1px solid;
           display: flex;
