@@ -1,4 +1,6 @@
-import VerticalLanding from '@/components/VerticalLanding/VerticalLanding';
-import { VERTICALS } from '@/content/verticals';
+import VerticalPage from "./_template/VerticalPage";
+import { accounting } from "./_template/data";
 
-export default function AccountingPage() { return <VerticalLanding vertical={VERTICALS.accounting} />; }
+export default function AccountingPage() {
+  return <VerticalPage config={accounting} />;
+}

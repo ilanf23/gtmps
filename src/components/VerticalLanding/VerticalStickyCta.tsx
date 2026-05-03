@@ -30,7 +30,7 @@ export default function VerticalStickyCta({ label = 'Get MY Map →', vertical }
       }}
     >
       <a
-        href="#add-your-firm"
+        href="/#hero"
         className="pointer-events-auto"
         style={{
           background: 'rgba(28,16,8,0.92)',

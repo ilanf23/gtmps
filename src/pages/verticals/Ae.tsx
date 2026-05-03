@@ -1,4 +1,6 @@
-import VerticalLanding from '@/components/VerticalLanding/VerticalLanding';
-import { VERTICALS } from '@/content/verticals';
+import VerticalPage from "./_template/VerticalPage";
+import { ae } from "./_template/data";
 
-export default function AePage() { return <VerticalLanding vertical={VERTICALS.ae} />; }
+export default function AePage() {
+  return <VerticalPage config={ae} />;
+}

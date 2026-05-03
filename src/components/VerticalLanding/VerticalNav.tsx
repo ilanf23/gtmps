@@ -236,7 +236,7 @@ export default function VerticalNav({ currentSlug }: Props) {
               Podcast
             </a>
             <a
-              href="#add-your-firm"
+              href="/#hero"
               className="vn-cta"
             >
               Get MY Map →
@@ -286,7 +286,7 @@ export default function VerticalNav({ currentSlug }: Props) {
             Podcast
           </a>
           <a
-            href="#add-your-firm"
+            href="/#hero"
             className="vn-mobile-cta"
             onClick={() => setOpen(false)}
           >

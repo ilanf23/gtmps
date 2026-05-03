@@ -1,4 +1,6 @@
-import VerticalLanding from '@/components/VerticalLanding/VerticalLanding';
-import { VERTICALS } from '@/content/verticals';
+import VerticalPage from "./_template/VerticalPage";
+import { agency } from "./_template/data";
 
-export default function AgencyPage() { return <VerticalLanding vertical={VERTICALS.agency} />; }
+export default function AgencyPage() {
+  return <VerticalPage config={agency} />;
+}

@@ -552,7 +552,7 @@ export default function VerticalLanding({ vertical }: Props) {
             {vertical.hero.headline}
           </h1>
           <p className="vl-sub">{vertical.hero.sub}</p>
-          <a href="#add-your-firm" className="vl-cta-primary" data-cta="add-your-firm">{ctaLabel}</a>
+          <a href="/#hero" className="vl-cta-primary" data-cta="add-your-firm">{ctaLabel}</a>
           <p className="vl-hero-cohort">{vertical.hero.cohortLine}</p>
         </section>
 

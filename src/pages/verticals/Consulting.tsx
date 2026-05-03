@@ -1,4 +1,6 @@
-import VerticalLanding from '@/components/VerticalLanding/VerticalLanding';
-import { VERTICALS } from '@/content/verticals';
+import VerticalPage from "./_template/VerticalPage";
+import { consulting } from "./_template/data";
 
-export default function ConsultingPage() { return <VerticalLanding vertical={VERTICALS.consulting} />; }
+export default function ConsultingPage() {
+  return <VerticalPage config={consulting} />;
+}

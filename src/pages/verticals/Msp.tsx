@@ -1,4 +1,6 @@
-import VerticalLanding from '@/components/VerticalLanding/VerticalLanding';
-import { VERTICALS } from '@/content/verticals';
+import VerticalPage from "./_template/VerticalPage";
+import { msp } from "./_template/data";
 
-export default function MspPage() { return <VerticalLanding vertical={VERTICALS.msp} />; }
+export default function MspPage() {
+  return <VerticalPage config={msp} />;
+}
