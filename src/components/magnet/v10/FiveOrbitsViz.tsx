@@ -68,23 +68,21 @@ export default function FiveOrbitsViz({
 }: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
-  const [svgHover, setSvgHover] = useState(false);
   const [logoOk, setLogoOk] = useState(true);
   const hoverTimer = useRef<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const shownIdx = openIdx ?? hoverIdx;
-  const shouldPause = svgHover || shownIdx !== null;
 
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
     try {
-      if (shouldPause) svg.pauseAnimations();
+      if (shownIdx !== null) svg.pauseAnimations();
       else svg.unpauseAnimations();
     } catch {
       /* SMIL pause unsupported; ignore */
     }
-  }, [shouldPause]);
+  }, [shownIdx]);
 
   const enterHover = (i: number) => {
     if (hoverTimer.current) {
@@ -152,8 +150,6 @@ export default function FiveOrbitsViz({
             style={{ maxWidth: 1400, height: "auto", overflow: "visible" }}
             role="img"
             aria-label="Five Orbits diagram"
-            onMouseEnter={() => setSvgHover(true)}
-            onMouseLeave={() => setSvgHover(false)}
           >
             {/* Center: client logo if available, otherwise "YOUR FIRM" text */}
             <defs>

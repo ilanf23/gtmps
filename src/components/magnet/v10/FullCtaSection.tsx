@@ -1,12 +1,14 @@
-// SECTION 08 - Full CTA section (SECOND CTA, primary conversion target).
-// Score-adaptive headline + variant copy + inline Calendly widget + microlines.
+// SECTION 08 - Book a Walkthrough.
+// Deep Forest two-column card. Editorial copy on the left, live Calendly
+// inline embed on the right. Keeps the original analytics + booking message
+// wiring intact.
 
 import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CTA_VARIANTS, type CtaVariantId } from "@/content/ctaVariants";
+import type { CtaVariantId } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
-import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 import { ensureCalendlyAssets, initCalendlyInline } from "@/lib/calendly";
+import "./FullCtaSection.css";
 
 interface Props {
   slug: string;
@@ -25,22 +27,15 @@ export default function FullCtaSection({
   slug,
   vertical,
   variantId,
-  scoreAdaptiveHeadline,
   customerName,
   firstName,
-  primary,
-  background,
-  text,
-  calendarCta,
 }: Props) {
-  const variant = CTA_VARIANTS[variantId];
   const sectionRef = useRef<HTMLElement>(null);
   const calendlyRef = useRef<HTMLDivElement>(null);
   const viewedRef = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Track section view once
   useEffect(() => {
     if (!sectionRef.current) return;
     const obs = new IntersectionObserver(
@@ -58,7 +53,6 @@ export default function FullCtaSection({
     return () => obs.disconnect();
   }, [slug, vertical, variantId]);
 
-  // Lazy-load Calendly script + initialize the inline widget when ready.
   useEffect(() => {
     let cancelled = false;
     void ensureCalendlyAssets().then(() => {
@@ -67,17 +61,16 @@ export default function FullCtaSection({
         slug,
         firmName: customerName,
         firstName,
-        primary,
-        background,
-        text,
+        primary: "#FFBA1A",
+        background: "#0F1E1D",
+        text: "#EDF5EC",
       });
     });
     return () => {
       cancelled = true;
     };
-  }, [slug, customerName, firstName, primary, background, text]);
+  }, [slug, customerName, firstName]);
 
-  // Capture booking events (and route to ?booked=true).
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
       const data = e?.data as { event?: string } | undefined;
@@ -105,62 +98,48 @@ export default function FullCtaSection({
       data-v10-section="8"
       data-v10-cta="primary"
       data-v10-variant={variantId}
-      className="py-10 md:py-12 border-b border-black/10"
+      className="v10-book-section"
     >
-      <div
-        className="p-5 sm:p-6 md:p-8 border-2"
-        style={{
-          backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
-          borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
-        }}
-      >
-        <div className="flex items-center gap-2 mb-5">
-          <span className="h-px w-6" style={{ backgroundColor: MABBLY_GOLD }} aria-hidden />
-          <p
-            className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-            style={{ color: MABBLY_GOLD }}
-          >
-            08 · {calendarCta || "Your 30-minute conversation"}
+      <div className="v10-book-card">
+        <div className="v10-book-left">
+          <div className="v10-book-eyebrow">
+            <span className="v10-book-eyebrow-rule" aria-hidden />
+            <p className="v10-book-eyebrow-label">08 · Book a Walkthrough with Adam</p>
+          </div>
+
+          <h2 className="v10-book-headline">
+            Activate Your Dead Zone Like Madcraft Did.
+          </h2>
+
+          <span className="v10-book-client-tag">For {customerName}</span>
+
+          <p className="v10-book-body">
+            Madcraft pulled{" "}
+            <strong>$400K from one dormant proposal in 7 minutes</strong>. Your analysis
+            mapped where yours sits. 30 minutes turns it into your 90 day plan.
           </p>
+
+          <div className="v10-book-proof" role="list">
+            <div className="v10-book-proof-item" role="listitem">
+              <span className="v10-book-proof-num">$400K</span>
+              <span className="v10-book-proof-label">Dormant Recovered</span>
+            </div>
+            <div className="v10-book-proof-item" role="listitem">
+              <span className="v10-book-proof-num">30 min</span>
+              <span className="v10-book-proof-label">Walkthrough</span>
+            </div>
+            <div className="v10-book-proof-item" role="listitem">
+              <span className="v10-book-proof-num">90 day</span>
+              <span className="v10-book-proof-label">Action Plan</span>
+            </div>
+          </div>
+
+          <span className="v10-book-free">Free call. No pitch.</span>
         </div>
 
-        <h2
-          className="font-bold leading-tight text-2xl md:text-3xl mb-2 max-w-[806px]"
-          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
-        >
-          {scoreAdaptiveHeadline}
-        </h2>
-        <p className="text-sm opacity-55 mb-6">For {customerName}.</p>
-
-        <div className="space-y-4 max-w-xl text-sm md:text-base leading-relaxed mb-6">
-          {variant.paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-          {variant.bullets && (
-            <>
-              <p className="font-semibold mt-2">What we'll discuss:</p>
-              <ul className="space-y-1.5 pl-1">
-                {variant.bullets.map((b, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span style={{ color: `var(--brand-accent, ${primary})` }} aria-hidden>·</span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-          <p className="font-semibold" style={{ color: `var(--brand-accent, ${primary})` }}>
-            {variant.closer}
-          </p>
+        <div className="v10-book-embed-wrap">
+          <div ref={calendlyRef} className="calendly-embed" />
         </div>
-
-        {/* Inline Calendly - initialized via initCalendlyInline() in the effect above. */}
-        <div
-          ref={calendlyRef}
-          className="w-full border border-black/10"
-          style={{ minWidth: "320px", height: "720px" }}
-        />
-
       </div>
     </section>
   );

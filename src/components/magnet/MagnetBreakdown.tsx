@@ -299,6 +299,9 @@ export default function MagnetBreakdown({
         <PersonalizedHeader
           firmName={customerName}
           primary={brand.primary}
+          overall={scores.overall}
+          band={scores.bandOverall}
+          perOrbit={scores.perOrbit}
         />
 
         <CohortRankCard
@@ -343,20 +346,22 @@ export default function MagnetBreakdown({
         <WhyResearchMatters primary={brand.primary} />
 
         <ValueInTheirWords primary={brand.primary} />
+      </div>
 
-        <FullCtaSection
-          slug={slug}
-          vertical={verticalSlug}
-          variantId={variantId}
-          scoreAdaptiveHeadline={ctaHeadline}
-          customerName={customerName}
-          firstName={submission?.first_name ?? null}
-          primary={brand.primary}
-          background={brand.background}
-          text={brand.text}
-          calendarCta={flow.calendarCta}
-        />
+      <FullCtaSection
+        slug={slug}
+        vertical={verticalSlug}
+        variantId={variantId}
+        scoreAdaptiveHeadline={ctaHeadline}
+        customerName={customerName}
+        firstName={submission?.first_name ?? null}
+        primary={brand.primary}
+        background={brand.background}
+        text={brand.text}
+        calendarCta={flow.calendarCta}
+      />
 
+      <div className="max-w-[806px] mx-auto px-6 pb-24 ms-centered">
         <HighestLeverageMove
           profile={findingProfile}
           customerName={customerName}

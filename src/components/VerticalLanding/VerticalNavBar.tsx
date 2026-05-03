@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useClientTheme } from "@/hooks/useClientTheme";
+import { NAV_VERTICAL_LINKS } from "@/content/verticals";
 
 type Props = {
   forYourFirmHref?: string;
@@ -128,7 +129,10 @@ export default function VerticalNavBar({
 }: Props) {
   const [mySlugs, setMySlugs] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [firmMenuOpen, setFirmMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const firmMenuRef = useRef<HTMLDivElement | null>(null);
+  const firmCloseTimer = useRef<number | null>(null);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -136,13 +140,21 @@ export default function VerticalNavBar({
   }, []);
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen && !firmMenuOpen) return;
     const onDocClick = (e: MouseEvent) => {
-      if (!menuRef.current) return;
-      if (!menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+      const target = e.target as Node;
+      if (menuOpen && menuRef.current && !menuRef.current.contains(target)) {
+        setMenuOpen(false);
+      }
+      if (firmMenuOpen && firmMenuRef.current && !firmMenuRef.current.contains(target)) {
+        setFirmMenuOpen(false);
+      }
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        setFirmMenuOpen(false);
+      }
     };
     document.addEventListener("mousedown", onDocClick);
     document.addEventListener("keydown", onKey);
@@ -150,7 +162,18 @@ export default function VerticalNavBar({
       document.removeEventListener("mousedown", onDocClick);
       document.removeEventListener("keydown", onKey);
     };
-  }, [menuOpen]);
+  }, [menuOpen, firmMenuOpen]);
+
+  const cancelFirmClose = () => {
+    if (firmCloseTimer.current !== null) {
+      window.clearTimeout(firmCloseTimer.current);
+      firmCloseTimer.current = null;
+    }
+  };
+  const scheduleFirmClose = () => {
+    cancelFirmClose();
+    firmCloseTimer.current = window.setTimeout(() => setFirmMenuOpen(false), 120);
+  };
 
   const isActiveSlug = (slug: string) => pathname.startsWith(`/m/${slug}`);
   const activeSlug = mySlugs.find(isActiveSlug) ?? mySlugs[0] ?? null;
@@ -165,7 +188,62 @@ export default function VerticalNavBar({
             Discover<span className="vnav-pip"> · </span>Mabbly
           </a>
           <div className="vnav-links">
-            <a className="vnav-link" href={forYourFirmHref}>For Your Firm</a>
+            <div
+              className="vnav-firm"
+              ref={firmMenuRef}
+              onMouseEnter={() => {
+                cancelFirmClose();
+                setFirmMenuOpen(true);
+              }}
+              onMouseLeave={scheduleFirmClose}
+            >
+              <button
+                type="button"
+                className="vnav-link vnav-firm-trigger"
+                aria-haspopup="menu"
+                aria-expanded={firmMenuOpen}
+                onClick={() => setFirmMenuOpen((v) => !v)}
+                onFocus={cancelFirmClose}
+              >
+                For Your Firm
+                <span className="vnav-firm-caret" aria-hidden>▾</span>
+              </button>
+              {firmMenuOpen && (
+                <div
+                  className="vnav-firm-panel"
+                  role="menu"
+                  onMouseEnter={cancelFirmClose}
+                  onMouseLeave={scheduleFirmClose}
+                >
+                  <div className="vnav-menu-heading">For Your Firm</div>
+                  {NAV_VERTICAL_LINKS.map((item) => {
+                    const href = `/${item.slug}`;
+                    const active = pathname === href;
+                    return (
+                      <a
+                        key={item.slug}
+                        href={href}
+                        role="menuitem"
+                        className={`vnav-firm-row${active ? " vnav-firm-row--active" : ""}`}
+                        onClick={() => setFirmMenuOpen(false)}
+                      >
+                        <span className="vnav-firm-row-label">{item.label}</span>
+                        <span className="vnav-firm-row-arrow" aria-hidden>→</span>
+                      </a>
+                    );
+                  })}
+                  <a
+                    href={forYourFirmHref}
+                    role="menuitem"
+                    className="vnav-firm-row vnav-firm-row--all"
+                    onClick={() => setFirmMenuOpen(false)}
+                  >
+                    <span className="vnav-firm-row-label">See all verticals</span>
+                    <span className="vnav-firm-row-arrow" aria-hidden>→</span>
+                  </a>
+                </div>
+              )}
+            </div>
             <a className="vnav-link" href="/awards">Awards</a>
             <a
               className="vnav-link"
@@ -409,8 +487,64 @@ const CSS = `
 .vnav-cta:hover { background: #0F1E1D; border-color: #0F1E1D; transform: translateY(-1px); }
 .vnav-cta svg { transition: transform 0.3s cubic-bezier(0.13, 0.28, 0.3, 1); }
 .vnav-cta:hover svg { transform: translateX(2px); }
+
+.vnav-firm { position: relative; display: inline-flex; }
+.vnav-firm-trigger {
+  background: transparent; border: 0; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 0 1px;
+  border-bottom: 1px solid transparent;
+}
+.vnav-firm-trigger:focus-visible { outline: 2px solid #BF461A; outline-offset: 4px; }
+.vnav-firm-caret {
+  font-size: 9px; line-height: 1;
+  color: #BF461A;
+  transition: transform 0.25s cubic-bezier(0.13, 0.28, 0.3, 1);
+}
+.vnav-firm-trigger[aria-expanded="true"] .vnav-firm-caret { transform: rotate(-180deg); }
+.vnav-firm-panel {
+  position: absolute; top: calc(100% + 12px); left: 50%;
+  transform: translateX(-50%);
+  min-width: 280px; max-width: 340px;
+  background: #FBF7EC;
+  border: 1px solid #E5E0CF;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(15, 30, 29, 0.12);
+  padding: 8px;
+  display: flex; flex-direction: column; gap: 2px;
+  z-index: 110;
+}
+.vnav-firm-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none; color: #0F1E1D;
+  transition: background 0.2s cubic-bezier(0.13, 0.28, 0.3, 1);
+}
+.vnav-firm-row:hover { background: rgba(191, 70, 26, 0.08); }
+.vnav-firm-row--active { background: rgba(191, 70, 26, 0.12); }
+.vnav-firm-row--active:hover { background: rgba(191, 70, 26, 0.16); }
+.vnav-firm-row-label {
+  font-family: 'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 700;
+}
+.vnav-firm-row-arrow {
+  color: #BF461A; font-weight: 700; font-size: 12px;
+  transition: transform 0.2s cubic-bezier(0.13, 0.28, 0.3, 1);
+}
+.vnav-firm-row:hover .vnav-firm-row-arrow { transform: translateX(3px); }
+.vnav-firm-row--all {
+  margin-top: 4px;
+  border-top: 1px solid #E5E0CF;
+  border-radius: 0 0 8px 8px;
+  padding-top: 12px;
+}
+.vnav-firm-row--all .vnav-firm-row-label { color: #6B5F47; }
+
 @media (max-width: 980px) {
-  .vnav-links > .vnav-link { display: none; }
+  .vnav-links > .vnav-link,
+  .vnav-links > .vnav-firm { display: none; }
   .vnav-links > .vnav-mine,
   .vnav-links > .vnav-menu { display: inline-flex; }
 }

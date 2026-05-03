@@ -448,10 +448,49 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
-  align-items: start;
+  align-items: stretch;
+}
+
+/* Hide the inner-edge L-ticks on each pair card so the pair reads as one
+   unified card with brackets only at the outermost four corners — matching
+   the single .rc-card-wrap above. Desktop only (>=981px). */
+@media (min-width: 981px) {
+  .rc-pair-grid > .rc-section:first-child .rc-card-wrap > .rc-tick-tr,
+  .rc-pair-grid > .rc-section:first-child .rc-card-wrap::after,
+  .rc-pair-grid > .rc-section:last-child .rc-card-wrap::before,
+  .rc-pair-grid > .rc-section:last-child .rc-card-wrap > .rc-tick-bl {
+    display: none;
+  }
+}
+.rc-pair-grid > .rc-section,
+.rc-pair-grid > .rc-section.rc-compact {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.rc-pair-grid .rc-compact .rc-container,
+.rc-pair-grid .rc-compact .rc-card-wrap,
+.rc-pair-grid .rc-compact .rc-card,
+.rc-pair-grid .rc-compact .rc-cols {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.rc-pair-grid .rc-compact .rc-col {
+  flex: 0 0 auto;
+}
+.rc-pair-grid .rc-compact .rc-col-3 {
+  flex: 1 0 auto;
 }
 @media (max-width: 980px) {
-  .rc-pair-grid { grid-template-columns: 1fr; gap: 56px; }
+  .rc-pair-grid { grid-template-columns: 1fr; gap: 56px; align-items: start; }
+  .rc-pair-grid > .rc-section,
+  .rc-pair-grid > .rc-section.rc-compact { height: auto; }
+  .rc-pair-grid .rc-compact .rc-container,
+  .rc-pair-grid .rc-compact .rc-card-wrap,
+  .rc-pair-grid .rc-compact .rc-card,
+  .rc-pair-grid .rc-compact .rc-cols,
+  .rc-pair-grid .rc-compact .rc-col-3 { flex: 0 0 auto; display: block; }
 }
 
 /* Shared feedback row beneath the 03/04 pair - single, centered. */

@@ -1,13 +1,14 @@
 // SECTION 05 - Compact CTA: chapter capture.
-// Trades the Calendly button for a single-line email capture that promises
-// Chapter 7 of the manuscript. Persists to magnet_map_emails (tagged
-// "chapter7"). No email is sent yet - delivery is a follow-up step.
+// Mabbly hero brand reskin: sage panel, hand-drawn SVG illustration,
+// care-orange shimmering pill. Brand-bridges from Discover Mabbly's
+// research-publication register into mabbly.com's action-engagement register.
+// Persists email to magnet_map_emails (tagged "chapter7").
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
-import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import "./CompactCtaCard.css";
 
 interface Props {
   slug: string;
@@ -19,16 +20,51 @@ interface Props {
   firstName?: string | null;
 }
 
-export default function CompactCtaCard({
-  slug,
-  vertical,
-  primary,
-}: Props) {
+export default function CompactCtaCard({ slug, vertical }: Props) {
   void vertical;
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduced) {
+      panel.classList.add("is-in");
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            panel.classList.add("is-in");
+            io.unobserve(panel);
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+    );
+    io.observe(panel);
+
+    const fallback = window.setTimeout(() => {
+      const rect = panel.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        panel.classList.add("is-in");
+      }
+    }, 100);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(fallback);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,99 +87,179 @@ export default function CompactCtaCard({
     toast.success("You're on the list. Chapter 7 lands in your inbox soon.");
   };
 
+  const handleDismiss = () => {
+    trackMagnetEvent(slug, "cta_section5_dismiss", {});
+    setDismissed(true);
+  };
+
   if (dismissed) return null;
 
   return (
     <section
       id="v10-section-5"
       data-v10-section="5"
-      className="py-10 md:py-12 border-b border-black/10"
+      className="chapter-cta py-10 md:py-12"
     >
-      <div
-        className="border-2 p-5 sm:p-6 md:p-8"
-        style={{
-          borderColor: `var(--brand-bg, var(--client-primary, ${primary}))`,
-          backgroundColor: `color-mix(in srgb, var(--brand-bg, ${primary}) 10%, transparent)`,
-        }}
-      >
-        <div className="flex items-center gap-2 mb-3">
-          <span
-            className="h-px w-6"
-            style={{ backgroundColor: MABBLY_GOLD }}
-            aria-hidden
-          />
-          <p
-            className="text-[11px] uppercase tracking-[0.3em] font-semibold"
-            style={{ color: `var(--brand-accent, ${MABBLY_GOLD})` }}
-          >
-            05 · You're contributing to the research
-          </p>
-        </div>
-        <h2
-          className="font-bold leading-tight text-xl md:text-2xl mb-2"
-          style={{ fontFamily: "'Source Serif 4', 'IBM Plex Serif', Georgia, serif" }}
-        >
-          Want Chapter 7 of the manuscript?
-        </h2>
-        <p className="text-base md:text-sm opacity-75 mb-5 max-w-prose">
-          The chapter that explains your highest leverage move. Drop your email and we'll send it when the next draft lands.
-        </p>
+      <div className="container">
+        <div ref={panelRef} className="cta-panel">
+          <div className="cta-grid">
+            <div className="illo" aria-hidden="true">
+              <svg viewBox="0 0 600 510" xmlns="http://www.w3.org/2000/svg">
+                {/* Olive scribble blob — verified Mabbly 9-point polygon */}
+                <g transform="translate(12 -50) scale(0.95)">
+                  <path
+                    className="blob"
+                    d="M537.319 540.412L227.81 609.6L34.3851 540.412L0 302.629L34.3851 34.5832L270.807 0L537.319 34.5832L576 259.406L537.319 540.412Z"
+                  />
+                </g>
 
-        {submitted ? (
-          <div
-            className="text-sm font-medium"
-            style={{ color: `var(--brand-accent, ${MABBLY_GOLD})` }}
-            aria-live="polite"
-          >
-            Got it. Chapter 7 will arrive at <span className="font-semibold">{email.trim()}</span>.
-          </div>
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row sm:items-stretch gap-2 sm:gap-3"
-          >
-            <label htmlFor="chapter7-email" className="sr-only">
-              Your email
-            </label>
-            <input
-              id="chapter7-email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@yourfirm.com"
-              disabled={submitting}
-              className="flex-1 h-12 min-h-[48px] px-4 text-base bg-white text-[#0F1E1D] placeholder:text-black/30 border border-black/10 focus:outline-none focus:ring-0 rounded-none disabled:opacity-50"
-              style={{ borderColor: "rgba(0,0,0,0.15)" }}
-            />
-            <button
-              type="submit"
-              disabled={submitting}
-              className="inline-flex items-center justify-center gap-2 h-12 min-h-[48px] px-6 font-semibold tracking-wide uppercase text-base sm:text-sm transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{
-                backgroundColor: `var(--brand-bg, ${primary})`,
-                color: `var(--brand-bg-fg, #EDF5EC)`,
-              }}
-            >
-              {submitting ? "Sending…" : (
-                <>
-                  Send the chapter <span aria-hidden>→</span>
-                </>
+                {/* Marker squiggles */}
+                <path
+                  className="squiggle s1"
+                  d="M 130 200 C 90 160, 100 100, 160 90 C 220 80, 280 70, 340 80 C 400 90, 460 130, 470 190 C 480 250, 460 310, 410 350 C 360 390, 290 410, 230 390 C 170 370, 130 320, 120 270 C 110 220, 130 200, 130 200 Z"
+                />
+                <path
+                  className="squiggle s2"
+                  d="M 180 240 C 150 210, 160 170, 200 160 C 240 150, 290 150, 330 170 C 370 190, 400 230, 400 270 C 400 310, 370 340, 330 350 C 290 360, 240 350, 210 320 C 180 290, 175 260, 180 240 Z"
+                />
+                <path
+                  className="squiggle s3"
+                  d="M 80 110 C 110 80, 150 70, 200 90 C 240 105, 270 140, 250 180 C 230 220, 180 230, 150 210 C 130 200, 120 180, 130 160"
+                />
+                <path
+                  className="squiggle s4"
+                  d="M 480 380 C 460 410, 420 430, 380 420 C 340 410, 320 380, 340 340 C 360 310, 400 305, 430 320 C 450 330, 460 350, 470 370"
+                />
+
+                {/* L-bracket cropmarks */}
+                <path className="cropmark cm-tl" d="M 220 220 L 220 240 M 220 220 L 240 220" />
+                <path className="cropmark cm-tr" d="M 360 220 L 360 240 M 360 220 L 340 220" />
+                <path className="cropmark cm-bl" d="M 220 320 L 220 300 M 220 320 L 240 320" />
+                <path className="cropmark cm-br" d="M 360 320 L 360 300 M 360 320 L 340 320" />
+
+                {/* Diamond gem */}
+                <g className="diamond">
+                  <path d="M 290 245 L 270 270 L 310 270 Z" fill="#E5582B" />
+                  <path d="M 270 270 L 310 270 L 290 295 Z" fill="#BF461A" />
+                  <path
+                    d="M 290 245 L 270 270 L 290 295 Z"
+                    fill="none"
+                    stroke="#0F1E1D"
+                    strokeWidth="0.8"
+                    opacity="0.3"
+                  />
+                  <path
+                    d="M 290 245 L 310 270 L 290 295 Z"
+                    fill="none"
+                    stroke="#0F1E1D"
+                    strokeWidth="0.8"
+                    opacity="0.3"
+                  />
+                  <path
+                    d="M 290 245 L 270 270 L 310 270 Z"
+                    fill="none"
+                    stroke="#0F1E1D"
+                    strokeWidth="1.2"
+                  />
+                  <path
+                    d="M 270 270 L 310 270 L 290 295 Z"
+                    fill="none"
+                    stroke="#0F1E1D"
+                    strokeWidth="1.2"
+                  />
+                  <line
+                    x1="290"
+                    y1="245"
+                    x2="290"
+                    y2="295"
+                    stroke="#0F1E1D"
+                    strokeWidth="0.8"
+                    opacity="0.5"
+                  />
+                  <path
+                    d="M 282 254 L 278 268"
+                    stroke="#FFD68A"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                </g>
+
+                {/* Sparkle */}
+                <g className="sparkle" transform="translate(330 240)">
+                  <path
+                    d="M 0 -6 L 1.2 -1.2 L 6 0 L 1.2 1.2 L 0 6 L -1.2 1.2 L -6 0 L -1.2 -1.2 Z"
+                    fill="#FFBA1A"
+                  />
+                </g>
+              </svg>
+            </div>
+
+            <div className="content">
+              <div className="eyebrow">
+                <span>05 · You're contributing to the research</span>
+              </div>
+
+              <h2 className="cta-headline">
+                <span className="cta-headline-line">
+                  <span className="word-mask"><span className="word-inner">WANT&nbsp;</span></span>
+                  <span className="word-mask"><span className="word-inner">CHAPTER&nbsp;</span></span>
+                  <span className="word-mask"><span className="word-inner">7&nbsp;</span></span>
+                  <span className="word-mask"><span className="word-inner">OF&nbsp;</span></span>
+                </span>
+                <span className="cta-headline-line">
+                  <span className="word-mask"><span className="word-inner">THE&nbsp;</span></span>
+                  <span className="word-mask"><span className="word-inner">MANUSCRIPT</span></span>
+                  <span className="word-mask"><span className="word-inner"><span className="qmark">?</span></span></span>
+                </span>
+              </h2>
+
+              <p className="cta-body">
+                The chapter that explains your <strong>highest leverage move</strong>. Drop your email and we'll send it when the next draft lands.
+              </p>
+
+              {submitted ? (
+                <div className="cta-success" aria-live="polite">
+                  Got it. Chapter 7 will arrive at <strong>{email.trim()}</strong>.
+                </div>
+              ) : (
+                <form className="cta-form-row" onSubmit={handleSubmit}>
+                  <label htmlFor="chapter7-email" className="sr-only">
+                    Your email
+                  </label>
+                  <input
+                    id="chapter7-email"
+                    className="cta-input"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@yourfirm.com"
+                    required
+                    disabled={submitting}
+                  />
+                  <button className="cta-pill" type="submit" disabled={submitting}>
+                    {submitting ? "Sending…" : "Send the Chapter"}
+                    <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <path
+                        d="M2 7h10m0 0L8 3m4 4l-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="cta-secondary"
+                    onClick={handleDismiss}
+                  >
+                    Not now
+                  </button>
+                </form>
               )}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                trackMagnetEvent(slug, "cta_section5_dismiss", {});
-                setDismissed(true);
-              }}
-              className="h-12 min-h-[48px] px-4 text-sm uppercase tracking-wide font-medium opacity-60 hover:opacity-90 transition-opacity"
-              style={{ color: "inherit" }}
-            >
-              Not now
-            </button>
-          </form>
-        )}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
