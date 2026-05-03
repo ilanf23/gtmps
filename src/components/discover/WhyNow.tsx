@@ -575,8 +575,8 @@ export default function WhyNow() {
               </div>
               <div className="wn-video-duration">0:90</div>
 
-              <div className="wn-play-ring" aria-hidden />
-              <div className="wn-play-ring r2" aria-hidden />
+              {!isPlaying && <div className="wn-play-ring" aria-hidden />}
+              {!isPlaying && <div className="wn-play-ring r2" aria-hidden />}
 
               <button
                 className="wn-play-button"
