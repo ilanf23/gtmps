@@ -73,7 +73,12 @@ export default function FiveOrbitsViz({
   const svgRef = useRef<SVGSVGElement>(null);
   const shownIdx = openIdx ?? hoverIdx;
 
+  const didMountRef = useRef(false);
   useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
     const svg = svgRef.current;
     if (!svg) return;
     try {

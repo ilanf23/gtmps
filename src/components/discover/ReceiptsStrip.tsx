@@ -908,9 +908,6 @@ export default function ReceiptsStrip() {
             <strong>30 firms</strong> in the research cohort.{' '}
             <strong>500 practitioner interviews.</strong> The full case index lives in Chapter 1.
           </p>
-          <a className="pill-depth" href="#">
-            Read Chapter 1 <span aria-hidden>→</span>
-          </a>
         </div>
       </div>
     </section>

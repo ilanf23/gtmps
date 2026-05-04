@@ -777,43 +777,46 @@ export default function DiscoverHero() {
                 <ellipse cx="740" cy="380" rx="475" ry="200" fill="none" stroke="#0F1E1D" strokeWidth="0.5" strokeOpacity="0.40" strokeDasharray="1.5 3" />
                 <ellipse cx="740" cy="380" rx="610" ry="252" fill="none" stroke="#0F1E1D" strokeWidth="0.7" strokeOpacity="0.18" />
 
-                {/* Atmospheric speckle dots */}
+                {/* Atmospheric speckle dots — kept off the horizontal axis
+                    and clearly outside the orbit ellipses. */}
                 <g fill="#0F1E1D" opacity="0.18">
-                  <circle cx="160" cy="380" r="0.9" />
-                  <circle cx="1320" cy="380" r="0.9" />
-                  <circle cx="240" cy="430" r="0.8" />
-                  <circle cx="1240" cy="320" r="1" />
-                  <circle cx="380" cy="190" r="0.9" />
-                  <circle cx="1100" cy="565" r="0.8" />
-                  <circle cx="610" cy="125" r="1" />
-                  <circle cx="870" cy="635" r="0.9" />
+                  <circle cx="160" cy="356" r="0.9" />
+                  <circle cx="1320" cy="404" r="0.9" />
+                  <circle cx="240" cy="446" r="0.8" />
+                  <circle cx="1240" cy="306" r="1" />
+                  <circle cx="340" cy="158" r="0.9" />
+                  <circle cx="1140" cy="600" r="0.8" />
+                  <circle cx="610" cy="110" r="1" />
+                  <circle cx="870" cy="650" r="0.9" />
                 </g>
 
-                {/* Five static dark planet spheres */}
+                {/* Five static dark planet spheres — positioned in mid-gaps
+                    between orbits so they don't sit on the ellipse strokes
+                    or the horizontal cross-hair axis. */}
                 <g>
-                  <ellipse cx="540" cy="276" rx="14" ry="3" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="540" cy="270" r="11" fill="url(#planetGrad)" />
-                  <circle cx="536" cy="266" r="3" fill="#7A8A85" opacity="0.35" />
+                  <ellipse cx="572" cy="296" rx="14" ry="3" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="572" cy="290" r="11" fill="url(#planetGrad)" />
+                  <circle cx="568" cy="286" r="3" fill="#7A8A85" opacity="0.35" />
                 </g>
                 <g>
-                  <ellipse cx="430" cy="386" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="430" cy="382" r="8.5" fill="url(#planetGrad)" />
-                  <circle cx="427" cy="379" r="2.4" fill="#7A8A85" opacity="0.35" />
+                  <ellipse cx="390" cy="444" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="390" cy="440" r="8.5" fill="url(#planetGrad)" />
+                  <circle cx="387" cy="437" r="2.4" fill="#7A8A85" opacity="0.35" />
                 </g>
                 <g>
-                  <ellipse cx="595" cy="404" rx="9" ry="2" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="595" cy="400" r="7" fill="url(#planetGrad)" />
-                  <circle cx="593" cy="398" r="2" fill="#7A8A85" opacity="0.35" />
+                  <ellipse cx="595" cy="436" rx="9" ry="2" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="595" cy="432" r="7" fill="url(#planetGrad)" />
+                  <circle cx="593" cy="430" r="2" fill="#7A8A85" opacity="0.35" />
                 </g>
                 <g>
-                  <ellipse cx="1180" cy="326" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="1180" cy="320" r="8.5" fill="url(#planetGrad)" />
-                  <circle cx="1177" cy="317" r="2.4" fill="#7A8A85" opacity="0.35" />
+                  <ellipse cx="1092" cy="346" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="1092" cy="340" r="8.5" fill="url(#planetGrad)" />
+                  <circle cx="1089" cy="337" r="2.4" fill="#7A8A85" opacity="0.35" />
                 </g>
                 <g>
-                  <ellipse cx="500" cy="496" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="500" cy="490" r="8.5" fill="url(#planetGrad)" />
-                  <circle cx="497" cy="487" r="2.4" fill="#7A8A85" opacity="0.35" />
+                  <ellipse cx="508" cy="525" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
+                  <circle cx="508" cy="519" r="8.5" fill="url(#planetGrad)" />
+                  <circle cx="505" cy="516" r="2.4" fill="#7A8A85" opacity="0.35" />
                 </g>
 
                 {/* Dashed connector (animated by JS) */}
