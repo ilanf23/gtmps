@@ -121,14 +121,17 @@ export default function DiscoverHero() {
       labelText.textContent = word.toUpperCase();
     };
 
-    if (reduced) {
+    // Synchronous initial frame so first paint matches phase A frame 0
+    // even before RAF starts ticking.
+    {
       const p = PLANETS[0];
       drawConnector(p.x, p.y);
       placeLabel(p.x, p.y, ROTATOR_WORDS[0]);
       label.style.opacity = '1';
       connector.style.opacity = '1';
-      return;
     }
+
+    if (reduced) return;
 
     const t0 = performance.now();
     let rafId = 0;
@@ -826,7 +829,7 @@ export default function DiscoverHero() {
                   <circle cx="505" cy="516" r="2.4" fill="#7A8A85" opacity="0.35" />
                 </g>
 
-                {/* Dashed connector (animated by JS) */}
+                {/* Dashed connector (animated by JS) — initial d pre-rendered for planet 0 */}
                 <path
                   ref={connectorRef}
                   className="orbit-connector"
@@ -835,8 +838,7 @@ export default function DiscoverHero() {
                   strokeWidth="1.4"
                   strokeDasharray="6 5"
                   strokeLinecap="round"
-                  d=""
-                  style={{ opacity: 0 }}
+                  d="M 729 396 Q 731 414 597 432"
                 />
 
                 {/* YOUR FIRM at center */}
@@ -862,8 +864,8 @@ export default function DiscoverHero() {
                   </text>
                 </g>
 
-                {/* Active rotator-word label (animated by JS) */}
-                <g ref={labelRef} style={{ opacity: 0 }}>
+                {/* Active rotator-word label (animated by JS) — initial transform/text pre-rendered for planet 0 */}
+                <g ref={labelRef} transform="translate(445, 432)">
                   <rect x="0" y="-15" width="118" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
                   <text
                     ref={labelTextRef}
