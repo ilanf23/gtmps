@@ -180,7 +180,7 @@ const Discover = () => {
           <DiscoverHero />
         </div>
         <IndustryGrid />
-        <section style={{ background: "#FFFFFF", padding: "96px 24px" }}>
+        <section style={{ background: "#0F1E1D", padding: "96px 24px" }}>
           <div
             style={{
               maxWidth: 1200,
@@ -225,7 +225,7 @@ const Discover = () => {
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "clamp(32px, 4vw, 48px)",
                   lineHeight: 1.1,
-                  color: "#0F1E1D",
+                  color: "#EDF5EC",
                   margin: "0 0 24px",
                   fontWeight: 600,
                 }}
@@ -238,7 +238,7 @@ const Discover = () => {
                   fontFamily: "'Instrument Sans', system-ui, sans-serif",
                   fontSize: 18,
                   lineHeight: 1.6,
-                  color: "#3A4544",
+                  color: "rgba(237, 245, 236, 0.78)",
                   margin: "0 0 16px",
                 }}
               >
@@ -250,7 +250,7 @@ const Discover = () => {
                   fontSize: 14,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: "#5A6A7A",
+                  color: "rgba(237, 245, 236, 0.55)",
                   margin: 0,
                 }}
               >
