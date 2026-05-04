@@ -822,13 +822,13 @@ export default function DiscoverHero() {
 
                 {/* Static "Dormant · $400K" pill that follows the orbiting planet */}
                 <g ref={labelRef} transform="translate(530, 519)" style={{ willChange: 'transform' }}>
-                  <rect x="0" y="-18" width="180" height="36" rx="18" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
+                  <rect x="0" y="-14" width="144" height="29" rx="14.5" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
                   <text
                     ref={labelTextRef}
-                    x="12"
-                    y="7"
+                    x="10"
+                    y="5"
                     fontFamily="'Inter Tight', 'Inter', system-ui, sans-serif"
-                    fontSize="20"
+                    fontSize="16"
                     letterSpacing="-0.01em"
                     fill="#BF461A"
                     fontWeight="600"
