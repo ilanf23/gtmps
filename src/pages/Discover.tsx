@@ -24,6 +24,7 @@ import TwoPaths from '@/components/discover/TwoPaths';
 import Faq from '@/components/discover/Faq';
 import FinalCta from '@/components/discover/FinalCta';
 import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
+import bookCoverGm from '@/assets/book-cover-gm.png';
 
 const ADD_YOUR_FIRM_LABEL = "Build Your Map →";
 
@@ -199,7 +200,7 @@ const Discover = () => {
           >
             <div>
               <img
-                src="/book/book-cover.png"
+                src={bookCoverGm}
                 alt="The Relationship Revenue OS — book cover"
                 style={{
                   width: "100%",
