@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { CSS } from "@/pages/verticals/_template/css";
+import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 
 const ArrowSvg = () => (
   <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -184,23 +185,7 @@ export default function Awards() {
       <style>{CSS}</style>
       <style>{AWARDS_CSS}</style>
 
-      {/* NAV */}
-      <nav className="nav">
-        <div className="nav-inner">
-          <a className="nav-logo" href="/discover">
-            Discover<span className="pip"> · </span>Mabbly
-          </a>
-          <div className="nav-links">
-            <a className="nav-link" href="#verticals">For Your Firm</a>
-            <a className="nav-link" href="/awards" style={{ color: "var(--care)", borderBottomColor: "var(--care)" }}>Awards</a>
-            <a className="nav-link" href="https://www.youtube.com/@GTMforPS">Podcast</a>
-            <a className="nav-cta always-show" href="#begin">
-              Add Your Firm
-              <ArrowSvg />
-            </a>
-          </div>
-        </div>
-      </nav>
+      <VerticalNavBar forYourFirmHref="#verticals" addYourFirmHref="#begin" />
 
       {/* SECTION 01 · HERO */}
       <section className="section section-hero awards-hero">

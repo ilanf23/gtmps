@@ -45,6 +45,14 @@ export default function PersonalizedHeader({
 }: Props) {
   const accent = `var(--brand-accent, ${primary || MABBLY_GOLD})`;
   const upperFirm = (firmName || "Your Firm").toUpperCase();
+  // Length-bucketed scale. The default `.ph-firm` clamp is sized for short
+  // single-word brands ("Acme") and overflows the column for 9+ char compound
+  // names like "RENEWPAVE", which then wraps mid-character. Apply a tighter
+  // clamp for long names so the firm stays on one line without the
+  // word-break safety net firing.
+  const firmLen = upperFirm.replace(/\s/g, "").length;
+  const firmSizeClass =
+    firmLen >= 14 ? "ph-firm--xl" : firmLen >= 9 ? "ph-firm--lg" : "";
 
   // Score ring geometry. r=86, circumference = 2π·86 ≈ 540.354.
   const RING_R = 86;
@@ -188,6 +196,11 @@ export default function PersonalizedHeader({
           padding: 0 0.12em;
           word-break: break-word;
         }
+        /* Length-scaled overrides. 9-13 char brands (e.g. RENEWPAVE) and
+           14+ char brands (e.g. CRAVATH SWAINE MOORE) get a tighter clamp
+           so they fit the editorial column on one line. */
+        .ph-firm.ph-firm--lg { font-size: clamp(40px, 5.4vw, 88px); }
+        .ph-firm.ph-firm--xl { font-size: clamp(32px, 4.2vw, 68px); }
         .ph-period {
           color: var(--kl-care);
           font-weight: 900;
@@ -481,6 +494,8 @@ export default function PersonalizedHeader({
           .ph-hero { padding: 72px 20px 64px; }
           .ph-h1 { font-size: clamp(36px, 11vw, 64px); }
           .ph-firm { font-size: clamp(44px, 13vw, 80px); }
+          .ph-firm.ph-firm--lg { font-size: clamp(36px, 10vw, 64px); }
+          .ph-firm.ph-firm--xl { font-size: clamp(28px, 8vw, 52px); }
           .ph-sub { font-size: 16px; }
           .ph-score-card { padding: 22px 22px 20px; width: 100%; max-width: 360px; }
           .ph-ring-wrap { width: 168px; height: 168px; }
@@ -541,7 +556,7 @@ export default function PersonalizedHeader({
                 <span className="ph-word w3">Map</span>
                 <span className="ph-word w4">For</span>
                 <br />
-                <span className="ph-word w5 ph-firm">{upperFirm}</span>
+                <span className={`ph-word w5 ph-firm ${firmSizeClass}`.trim()}>{upperFirm}</span>
                 <span className="ph-period">.</span>
               </h1>
 

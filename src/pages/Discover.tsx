@@ -150,7 +150,12 @@ const Discover = () => {
 
   return (
     <>
-      <VerticalNavBar forYourFirmHref="#industries" addYourFirmHref="#hero" addYourFirmLabel="Build Your Map" />
+      <VerticalNavBar
+        forYourFirmHref="#industries"
+        addYourFirmHref="#hero"
+        addYourFirmLabel="Build Your Map"
+        onAddYourFirm={() => scrollToHero()}
+      />
       <SectionRail items={railItems} />
       <main style={{ paddingBottom: 120 }}>
         <div id="hero">

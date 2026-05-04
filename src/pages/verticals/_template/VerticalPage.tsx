@@ -296,7 +296,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
     <div ref={rootRef} className="cpage">
       <style>{CSS}</style>
 
-      <VerticalNavBar />
+      <VerticalNavBar addYourFirmLabel="Build Your Map" />
 
       {/* SECTION 01 · HERO */}
       <section className="section section-hero">
