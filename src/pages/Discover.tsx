@@ -190,6 +190,10 @@ const Discover = () => {
               gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr)",
               gap: 64,
               alignItems: "center",
+              border: "1px solid rgba(237, 245, 236, 0.14)",
+              borderRadius: 8,
+              padding: "48px 52px",
+              background: "rgba(237, 245, 236, 0.025)",
             }}
             className="discover-book-intro"
           >
@@ -208,14 +212,7 @@ const Discover = () => {
                 }}
               />
             </div>
-            <div
-              style={{
-                border: "1px solid rgba(237, 245, 236, 0.14)",
-                borderRadius: 8,
-                padding: "40px 44px",
-                background: "rgba(237, 245, 236, 0.025)",
-              }}
-            >
+            <div>
               <p
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
