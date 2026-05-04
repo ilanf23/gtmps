@@ -190,10 +190,11 @@ const Discover = () => {
               gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr)",
               gap: 64,
               alignItems: "center",
-              border: "1px solid rgba(237, 245, 236, 0.14)",
+              border: "1px solid rgba(15, 30, 29, 0.08)",
               borderRadius: 8,
               padding: "48px 52px",
-              background: "rgba(237, 245, 236, 0.025)",
+              background: "#FBF8F4",
+              boxShadow: "0 30px 60px -20px rgba(0,0,0,0.35)",
             }}
             className="discover-book-intro"
           >
