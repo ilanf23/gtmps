@@ -68,36 +68,21 @@ export type Database = {
           event_name: string
           id: string
           props: Json
-          session_id: string | null
           slug: string
-          utm_campaign: string | null
-          utm_medium: string | null
-          utm_source: string | null
-          visitor_fingerprint: string | null
         }
         Insert: {
           created_at?: string
           event_name: string
           id?: string
           props?: Json
-          session_id?: string | null
           slug: string
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-          visitor_fingerprint?: string | null
         }
         Update: {
           created_at?: string
           event_name?: string
           id?: string
           props?: Json
-          session_id?: string | null
           slug?: string
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-          visitor_fingerprint?: string | null
         }
         Relationships: []
       }

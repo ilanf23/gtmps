@@ -548,7 +548,7 @@ export default function WhyNow() {
             >
               <video
                 ref={videoRef}
-                src="/videos/why-now.mp4"
+                src="/discover/videos/why-now.mp4"
                 preload="metadata"
                 playsInline
                 controls={isPlaying}
