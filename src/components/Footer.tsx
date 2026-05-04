@@ -112,7 +112,7 @@ const Footer = () => {
         .mf-top-headline {
           font-family: var(--mf-display);
           font-weight: 800;
-          font-size: clamp(24px, 2.6vw, 34px);
+          font-size: clamp(36px, 4.2vw, 56px);
           line-height: 1.05;
           letter-spacing: -0.02em;
           color: var(--mf-cream);
