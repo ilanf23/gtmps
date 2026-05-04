@@ -27,6 +27,10 @@ npx playwright test                    # E2E (config exists, minimal usage)
 
 `ScrollToTop` component resets scroll on navigation. `QueryClientProvider` wraps the tree but TanStack Query is used sparingly; most pages fetch via direct Supabase calls or polling.
 
+### CRITICAL: Vite base + Router basename
+**Do NOT set `base` in `vite.config.ts` or `basename` on `<BrowserRouter>`.**
+The site is published at the root of `discovermabbly.lovable.app` (and `discover.mabbly.com`). Setting `base: "/discover/"` causes built assets to be requested from `/discover/assets/*.js`, which 404 on the published site and produce a fully white screen with a "MIME type 'text/plain'" CSS error in the console. The matching `basename="/discover"` on the router compounds the issue. Both must remain unset. If you need a `/discover` URL, add it as a route alias inside `<Routes>`, never as a base path.
+
 ### Page taxonomy (what lives where)
 
 The site is really four overlapping product surfaces sharing one repo:
