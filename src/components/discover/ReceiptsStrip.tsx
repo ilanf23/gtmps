@@ -637,7 +637,6 @@ export default function ReceiptsStrip() {
 
       <div className="rcpt-shell">
         <header className="rcpt-head">
-          <p className="rcpt-num">03 · Receipts</p>
           <span className="rcpt-rule" aria-hidden />
           <h2 className="rcpt-h2">
             <span className="word w1">Receipts</span>{' '}
