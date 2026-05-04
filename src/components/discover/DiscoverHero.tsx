@@ -81,55 +81,27 @@ export default function DiscoverHero() {
 
   const rotatorWidthEm = rotatorEmWidths[rotatorIdx];
 
-  // Five Orbits — two-phase animation.
-  // Phase A (0..10s): YOUR FIRM connects to each planet in turn (2s each),
-  //   showing a rotator-word label above the active planet.
-  // Phase B (10s+): connector + label fade out and all five planets orbit
-  //   YOUR FIRM on their assigned ellipses at their own periods.
+  // Five Orbits — single rotating planet ("$400,000 deal closed") orbiting YOUR FIRM.
   useEffect(() => {
     const reduced =
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-    const connector = connectorRef.current;
     const label = labelRef.current;
-    const labelText = labelTextRef.current;
-    if (!connector || !label || !labelText) return;
+    const planet = planetRefs.current[2]; // middle ellipse, RETAINER orbit
+    if (!label || !planet) return;
 
-    const STEP_MS = 2000;
-    const SEQUENCE_END = STEP_MS * PLANETS.length;
-    const FADE_MS = 600;
+    const p = PLANETS[2];
 
-    const drawConnector = (px: number, py: number) => {
-      const dx = px - ORBIT_CX;
-      const dy = py - ORBIT_CY;
-      const dist = Math.hypot(dx, dy) || 1;
-      const ux = dx / dist;
-      const uy = dy / dist;
-      const sx = ORBIT_CX + ux * 16;
-      const sy = ORBIT_CY + uy * 16;
-      const ex = px - ux * 14;
-      const ey = py - uy * 14;
-      const cpX = (sx + ex) / 2;
-      const cpY = (sy + ey) / 2 + 16;
-      connector.setAttribute('d', `M ${sx} ${sy} Q ${cpX} ${cpY} ${ex} ${ey}`);
+    const place = (x: number, y: number) => {
+      planet.setAttribute('transform', `translate(${x - p.x}, ${y - p.y})`);
+      const offsetX = x >= ORBIT_CX ? 22 : -178;
+      label.setAttribute('transform', `translate(${x + offsetX}, ${y})`);
     };
 
-    const placeLabel = (px: number, py: number, word: string) => {
-      const offsetX = px >= ORBIT_CX ? 22 : -150;
-      label.setAttribute('transform', `translate(${px + offsetX}, ${py})`);
-      labelText.textContent = word.toUpperCase();
-    };
-
-    // Synchronous initial frame so first paint matches phase A frame 0
-    // even before RAF starts ticking.
-    {
-      const p = PLANETS[0];
-      drawConnector(p.x, p.y);
-      placeLabel(p.x, p.y, ROTATOR_WORDS[0]);
-      label.style.opacity = '1';
-      connector.style.opacity = '1';
-    }
+    // initial frame
+    place(p.x, p.y);
+    label.style.opacity = '1';
 
     if (reduced) return;
 
@@ -137,37 +109,10 @@ export default function DiscoverHero() {
     let rafId = 0;
     const tick = (now: number) => {
       const elapsed = now - t0;
-
-      if (elapsed < SEQUENCE_END) {
-        // Phase A — advance every 2s.
-        const stepIdx = Math.min(PLANETS.length - 1, Math.floor(elapsed / STEP_MS));
-        const p = PLANETS[stepIdx];
-        // Reset planet transforms in case we re-enter phase A on hot reload.
-        planetRefs.current.forEach((g) => {
-          if (g) g.setAttribute('transform', 'translate(0,0)');
-        });
-        drawConnector(p.x, p.y);
-        placeLabel(p.x, p.y, ROTATOR_WORDS[stepIdx]);
-        label.style.opacity = '1';
-        connector.style.opacity = '1';
-      } else {
-        // Phase B — connector + label fade, planets orbit.
-        const fadeT = Math.min(1, (elapsed - SEQUENCE_END) / FADE_MS);
-        const opacity = String(1 - fadeT);
-        label.style.opacity = opacity;
-        connector.style.opacity = opacity;
-
-        const tOrbit = elapsed - SEQUENCE_END;
-        PLANETS.forEach((p, i) => {
-          const g = planetRefs.current[i];
-          if (!g) return;
-          const angle = p.startAngle + (tOrbit / p.period) * 2 * Math.PI;
-          const x = ORBIT_CX + p.rx * Math.cos(angle);
-          const y = ORBIT_CY + p.ry * Math.sin(angle);
-          g.setAttribute('transform', `translate(${x - p.x}, ${y - p.y})`);
-        });
-      }
-
+      const angle = p.startAngle + (elapsed / p.period) * 2 * Math.PI;
+      const x = ORBIT_CX + p.rx * Math.cos(angle);
+      const y = ORBIT_CY + p.ry * Math.sin(angle);
+      place(x, y);
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
@@ -800,46 +745,12 @@ export default function DiscoverHero() {
                   <circle cx="870" cy="650" r="0.9" />
                 </g>
 
-                {/* Five planets — each indexed into PLANETS so the JS animation
-                    can move them. Group transform="translate(dx,dy)" deltas
-                    are applied on top of the authored cx/cy. */}
-                <g ref={(el) => { planetRefs.current[1] = el; }}>
-                  <ellipse cx="572" cy="296" rx="14" ry="3" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="572" cy="290" r="11" fill="url(#planetGrad)" />
-                  <circle cx="568" cy="286" r="3" fill="#7A8A85" opacity="0.35" />
-                </g>
-                <g ref={(el) => { planetRefs.current[3] = el; }}>
-                  <ellipse cx="390" cy="444" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="390" cy="440" r="8.5" fill="url(#planetGrad)" />
-                  <circle cx="387" cy="437" r="2.4" fill="#7A8A85" opacity="0.35" />
-                </g>
-                <g ref={(el) => { planetRefs.current[0] = el; }}>
-                  <ellipse cx="595" cy="436" rx="9" ry="2" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="595" cy="432" r="7" fill="url(#planetGrad)" />
-                  <circle cx="593" cy="430" r="2" fill="#7A8A85" opacity="0.35" />
-                </g>
-                <g ref={(el) => { planetRefs.current[4] = el; }}>
-                  <ellipse cx="1092" cy="346" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="1092" cy="340" r="8.5" fill="url(#planetGrad)" />
-                  <circle cx="1089" cy="337" r="2.4" fill="#7A8A85" opacity="0.35" />
-                </g>
+                {/* Single orbiting planet — RED — with a "$400,000 deal closed" label */}
                 <g ref={(el) => { planetRefs.current[2] = el; }}>
-                  <ellipse cx="508" cy="525" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
-                  <circle cx="508" cy="519" r="8.5" fill="url(#planetGrad)" />
-                  <circle cx="505" cy="516" r="2.4" fill="#7A8A85" opacity="0.35" />
+                  <ellipse cx="508" cy="525" rx="13" ry="3" fill="rgba(15, 30, 29, 0.20)" />
+                  <circle cx="508" cy="519" r="9.5" fill="#BF461A" />
+                  <circle cx="505" cy="516" r="2.6" fill="#FFFFFF" opacity="0.55" />
                 </g>
-
-                {/* Dashed connector (animated by JS) — initial d pre-rendered for planet 0 */}
-                <path
-                  ref={connectorRef}
-                  className="orbit-connector"
-                  fill="none"
-                  stroke="#BF461A"
-                  strokeWidth="1.4"
-                  strokeDasharray="6 5"
-                  strokeLinecap="round"
-                  d="M 729 396 Q 731 414 597 432"
-                />
 
                 {/* YOUR FIRM at center */}
                 <ellipse cx="740" cy="395" rx="22" ry="4" fill="rgba(15, 30, 29, 0.15)" filter="url(#softShadow)" />
@@ -864,9 +775,9 @@ export default function DiscoverHero() {
                   </text>
                 </g>
 
-                {/* Active rotator-word label (animated by JS) — initial transform/text pre-rendered for planet 0 */}
-                <g ref={labelRef} transform="translate(445, 432)">
-                  <rect x="0" y="-15" width="118" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
+                {/* Static "$400,000 deal closed" pill that follows the orbiting planet */}
+                <g ref={labelRef} transform="translate(530, 519)">
+                  <rect x="0" y="-15" width="156" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
                   <text
                     ref={labelTextRef}
                     x="14"
@@ -877,7 +788,7 @@ export default function DiscoverHero() {
                     fill="#BF461A"
                     fontWeight="700"
                   >
-                    CLIENT
+                    $400,000 DEAL CLOSED
                   </text>
                 </g>
 
