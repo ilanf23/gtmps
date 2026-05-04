@@ -25,6 +25,37 @@ export default function DiscoverHero() {
   const dormantLabelRef = useRef<SVGGElement | null>(null);
   const connectorRef = useRef<SVGPathElement | null>(null);
 
+  const rotatorMeasureRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [rotatorEmWidths, setRotatorEmWidths] = useState<number[]>([]);
+  const [rotatorIdx, setRotatorIdx] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    const measure = () => {
+      if (cancelled) return;
+      const widths = ROTATOR_WORDS.map((_, i) => {
+        const el = rotatorMeasureRefs.current[i];
+        if (!el) return 5.4;
+        const parent = el.parentElement;
+        if (!parent) return 5.4;
+        const fontSize = parseFloat(getComputedStyle(parent).fontSize);
+        if (!fontSize) return 5.4;
+        return el.getBoundingClientRect().width / fontSize;
+      });
+      setRotatorEmWidths(widths);
+    };
+    if (typeof document !== 'undefined' && (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready) {
+      (document as Document & { fonts: { ready: Promise<unknown> } }).fonts.ready.then(measure);
+    } else {
+      measure();
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const rotatorWidthEm = rotatorEmWidths[rotatorIdx];
+
   // Five Orbits - DORMANT marker spins around orbit 4 (rx=475, ry=200).
   // Period 28s. Each frame updates marker position, connector Q-curve,
   // and label x-anchor (flips sides based on which half of the orbit).
@@ -250,6 +281,21 @@ export default function DiscoverHero() {
           padding: 0 0.12em;
           width: 5.4em;
           height: 0.95em;
+          transition: width 0.45s cubic-bezier(0.13, 0.28, 0.3, 1);
+        }
+        .kl-rotator-measure {
+          position: absolute;
+          visibility: hidden;
+          pointer-events: none;
+          top: 0;
+          left: 0;
+          white-space: nowrap;
+          font: inherit;
+          letter-spacing: inherit;
+          text-transform: inherit;
+        }
+        .kl-rotator-measure > span {
+          display: inline-block;
         }
         .kl-rotator-static {
           display: inline-block;
@@ -581,7 +627,22 @@ export default function DiscoverHero() {
             <h1 className="kl-h1">
               <span className="word w1">Your</span>
               <span className="word w2">next</span>
-              <span className="word w3 kl-rotator">
+              <span
+                className="word w3 kl-rotator"
+                style={rotatorWidthEm ? { width: `${rotatorWidthEm + 0.24}em` } : undefined}
+              >
+                <span className="kl-rotator-measure" aria-hidden>
+                  {ROTATOR_WORDS.map((w, i) => (
+                    <span
+                      key={w}
+                      ref={(el) => {
+                        rotatorMeasureRefs.current[i] = el;
+                      }}
+                    >
+                      {w}
+                    </span>
+                  ))}
+                </span>
                 {reduceMotion ? (
                   <span className="kl-rotator-static">{ROTATOR_WORDS[0]}</span>
                 ) : (
@@ -591,6 +652,7 @@ export default function DiscoverHero() {
                     cooldownTime={1.6}
                     className="kl-gooey"
                     textClassName="kl-gooey-text"
+                    onIndexChange={setRotatorIdx}
                   />
                 )}
               </span>
@@ -767,10 +829,7 @@ export default function DiscoverHero() {
                 />
 
                 {/* YOUR FIRM at center */}
-                <circle className="orbit-firm-glow" cx="740" cy="380" r="38" fill="url(#firmGlow)" />
                 <ellipse cx="740" cy="395" rx="22" ry="4" fill="rgba(15, 30, 29, 0.15)" filter="url(#softShadow)" />
-                <circle cx="740" cy="380" r="22" fill="none" stroke="#FFBA1A" strokeWidth="0.8" opacity="0.4" />
-                <circle cx="740" cy="380" r="18" fill="none" stroke="#FFBA1A" strokeWidth="0.6" opacity="0.6" />
                 <circle cx="740" cy="380" r="14" fill="url(#firmGrad)" filter="url(#softShadow)" />
                 <ellipse cx="736" cy="375" rx="4.5" ry="3" fill="rgba(255, 255, 255, 0.45)" />
 
@@ -794,11 +853,7 @@ export default function DiscoverHero() {
 
                 {/* DORMANT marker group (animated by JS) */}
                 <g ref={dormantMarkerRef}>
-                  <circle className="orbit-dormant-pulse" cx="0" cy="0" r="14" fill="none" stroke="#BF461A" strokeWidth="1.4" />
-                  <circle cx="0" cy="0" r="32" fill="url(#dormantGlow)" />
                   <ellipse cx="0" cy="14" rx="14" ry="2.5" fill="rgba(15, 30, 29, 0.20)" filter="url(#softShadow)" />
-                  <circle cx="0" cy="0" r="16" fill="none" stroke="#BF461A" strokeWidth="0.8" opacity="0.4" />
-                  <circle cx="0" cy="0" r="13" fill="none" stroke="#BF461A" strokeWidth="0.6" opacity="0.6" />
                   <circle cx="0" cy="0" r="10" fill="url(#dormantGrad)" filter="url(#softShadow)" />
                   <ellipse cx="-3" cy="-4" rx="3.4" ry="2.2" fill="rgba(255, 255, 255, 0.40)" />
                 </g>

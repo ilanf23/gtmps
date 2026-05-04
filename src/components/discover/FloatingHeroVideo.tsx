@@ -3,8 +3,8 @@ import { X } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const VIDEO_SRC = '/s6e1-hero-vertical.mp4';
-const POSTER_SRC = '/s6e1-poster.jpg';
+const VIDEO_SRC = `${import.meta.env.BASE_URL}s6e1-hero-vertical.mp4`;
+const POSTER_SRC = `${import.meta.env.BASE_URL}s6e1-poster.jpg`;
 const SESSION_KEY = 'discover-float-video-dismissed';
 
 export default function FloatingHeroVideo() {

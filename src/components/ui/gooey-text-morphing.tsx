@@ -9,6 +9,7 @@ interface GooeyTextProps {
   cooldownTime?: number;
   className?: string;
   textClassName?: string;
+  onIndexChange?: (index: number) => void;
 }
 
 export function GooeyText({
@@ -17,6 +18,7 @@ export function GooeyText({
   cooldownTime = 0.25,
   className,
   textClassName,
+  onIndexChange,
 }: GooeyTextProps) {
   const text1Ref = React.useRef<HTMLSpanElement>(null);
   const text2Ref = React.useRef<HTMLSpanElement>(null);
@@ -79,6 +81,7 @@ export function GooeyText({
             text1Ref.current.textContent = texts[textIndex % texts.length];
             text2Ref.current.textContent = texts[(textIndex + 1) % texts.length];
           }
+          onIndexChange?.((textIndex + 1) % texts.length);
         }
         doMorph();
       } else {
@@ -91,7 +94,7 @@ export function GooeyText({
     return () => {
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [texts, morphTime, cooldownTime]);
+  }, [texts, morphTime, cooldownTime, onIndexChange]);
 
   return (
     <span className={cn("relative inline-block align-baseline", className)}>

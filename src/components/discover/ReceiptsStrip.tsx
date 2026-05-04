@@ -804,7 +804,7 @@ export default function ReceiptsStrip() {
                 </article>
                 <article className="rcpt-card rcpt-card-sm delay-4">
                   <p className="card-firm">Workiva</p>
-                  <p className="card-stat" data-needs-content="true">{'{{WORKIVA_STAT}}'}</p>
+                  <p className="card-stat qualitative" data-needs-content="true">{'{{WORKIVA_STAT}}'}</p>
                   <p className="card-sub">Long-term advisory engagement, ongoing.</p>
                   <p className="card-foot">
                     <span>Discover Mabbly · Active</span>

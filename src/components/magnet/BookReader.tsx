@@ -7,9 +7,9 @@ import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 // Serve the worker as a static asset from /public so the URL is stable across
 // dev, preview iframe, and production. Avoids Vite module-URL resolution
 // quirks that broke the embed in the Lovable preview iframe.
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf-worker/pdf.worker.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = `${import.meta.env.BASE_URL}pdf-worker/pdf.worker.min.mjs`;
 
-const PDF_URL = "/book/relationship-revenue-os.pdf";
+const PDF_URL = `${import.meta.env.BASE_URL}book/relationship-revenue-os.pdf`;
 
 export default function BookReader() {
   const [numPages, setNumPages] = useState<number | null>(null);

@@ -380,9 +380,9 @@ const CSS = `
 .vnav-pip { color: #BF461A; }
 .vnav-links { display: inline-flex; align-items: center; gap: 20px; }
 .vnav-link {
-  font-family: 'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace;
-  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-  font-weight: 600; color: #0F1E1D; text-decoration: none; padding-bottom: 1px;
+  font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif;
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  font-weight: 900; color: #0F1E1D; text-decoration: none; padding-bottom: 1px;
   border-bottom: 1px solid transparent;
   transition: color 0.25s cubic-bezier(0.13, 0.28, 0.3, 1), border-color 0.25s cubic-bezier(0.13, 0.28, 0.3, 1);
 }
@@ -504,7 +504,7 @@ const CSS = `
 }
 .vnav-firm-trigger:focus-visible { outline: 2px solid #BF461A; outline-offset: 4px; }
 .vnav-firm-caret {
-  font-size: 9px; line-height: 1;
+  font-size: 10px; line-height: 1;
   color: #BF461A;
   transition: transform 0.25s cubic-bezier(0.13, 0.28, 0.3, 1);
 }

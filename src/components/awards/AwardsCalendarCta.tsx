@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const MARKERS = [
   { date: 'June 2026', label: 'Nominations open' },
   { date: 'August 2026', label: 'Finalists announced' },
@@ -164,7 +166,7 @@ export default function AwardsCalendarCta() {
         <p className="ac-cta-sub">
           Take the 10 min diagnostic. Your firm is added to the research and considered for the Awards by default. No separate application.
         </p>
-        <a href="/#hero" className="ac-cta" data-cta="add-your-firm">Get MY Map →</a>
+        <Link to="/#hero" className="ac-cta" data-cta="add-your-firm">Get MY Map →</Link>
         <p className="ac-trust">Free. 90 seconds to build. 10 minutes to read. Confidential.</p>
       </div>
     </section>

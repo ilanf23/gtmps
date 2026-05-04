@@ -429,7 +429,7 @@ const S6E1AudioBlock = () => {
         <audio
           controls
           preload="metadata"
-          src="/s6e1-cold-open.mp3"
+          src={`${import.meta.env.BASE_URL}s6e1-cold-open.mp3`}
           aria-label="S6E1 cold open, 30 seconds"
           style={{ width: "100%", minHeight: 48, display: "block" }}
         >
