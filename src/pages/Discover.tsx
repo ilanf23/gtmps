@@ -208,7 +208,14 @@ const Discover = () => {
                 }}
               />
             </div>
-            <div>
+            <div
+              style={{
+                border: "1px solid rgba(237, 245, 236, 0.14)",
+                borderRadius: 8,
+                padding: "40px 44px",
+                background: "rgba(237, 245, 236, 0.025)",
+              }}
+            >
               <p
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
