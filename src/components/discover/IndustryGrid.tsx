@@ -475,7 +475,6 @@ export default function IndustryGrid() {
                   }
                 }}
               >
-                <span className="vcard-slug">/{v.slug}</span>
                 <span className="icon-wrap" aria-hidden>
                   <Icon strokeWidth={2} />
                 </span>

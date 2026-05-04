@@ -80,7 +80,7 @@ export default function FinalCta() {
         <h2
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: 'clamp(36px, 6vw, 62px)',
+            fontSize: 'clamp(40px, 6.6vw, 68px)',
             fontWeight: 400,
             color: '#0F1E1D',
             lineHeight: 1.05,

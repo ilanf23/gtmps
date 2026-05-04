@@ -173,13 +173,15 @@ const SectionRail = ({ items }: { items: Item[] }) => {
           left: 28px;
           top: 50%;
           transform: translateY(-50%);
-          background: rgba(15, 30, 29,0.92);
-          color: #A8923A;
+          background: rgba(8, 18, 17, 0.98);
+          color: #F2D77A;
           font-family: 'DM Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 0.18em;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
           text-transform: uppercase;
-          padding: 6px 10px;
+          padding: 8px 14px;
+          border: 1px solid rgba(242, 215, 122, 0.45);
           border-radius: 4px;
           max-width: 200px;
           white-space: nowrap;
@@ -187,7 +189,8 @@ const SectionRail = ({ items }: { items: Item[] }) => {
           opacity: 0;
           transition: opacity 150ms ease;
           z-index: 100;
-          box-shadow: 0 4px 12px -4px rgba(0,0,0,0.4);
+          box-shadow: 0 6px 18px -4px rgba(0,0,0,0.55), 0 0 0 1px rgba(168, 146, 58, 0.15), 0 0 16px rgba(242, 215, 122, 0.12);
+          text-shadow: 0 0 8px rgba(242, 215, 122, 0.25);
         }
         .sr-dot:hover .sr-tooltip,
         .sr-dot:focus-visible .sr-tooltip,

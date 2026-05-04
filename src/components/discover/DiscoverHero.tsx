@@ -94,10 +94,11 @@ export default function DiscoverHero() {
 
     const p = PLANETS[2];
 
+    const r2 = (n: number) => Math.round(n * 100) / 100;
     const place = (x: number, y: number) => {
-      planet.setAttribute('transform', `translate(${x - p.x}, ${y - p.y})`);
-      const offsetX = x >= ORBIT_CX ? 22 : -178;
-      label.setAttribute('transform', `translate(${x + offsetX}, ${y})`);
+      planet.setAttribute('transform', `translate(${r2(x - p.x)}, ${r2(y - p.y)})`);
+      const offsetX = x >= ORBIT_CX ? 22 : -158;
+      label.setAttribute('transform', `translate(${r2(x + offsetX)}, ${r2(y)})`);
       if (connector) {
         const dx = x - ORBIT_CX;
         const dy = y - ORBIT_CY;
@@ -110,7 +111,7 @@ export default function DiscoverHero() {
         const ey = y - uy * 12;
         const cpX = (sx + ex) / 2;
         const cpY = (sy + ey) / 2 + 14;
-        connector.setAttribute('d', `M ${sx} ${sy} Q ${cpX} ${cpY} ${ex} ${ey}`);
+        connector.setAttribute('d', `M ${r2(sx)} ${r2(sy)} Q ${r2(cpX)} ${r2(cpY)} ${r2(ex)} ${r2(ey)}`);
       }
     };
 
@@ -292,7 +293,12 @@ export default function DiscoverHero() {
           padding: 0 0.12em;
           width: 5.4em;
           height: 0.95em;
+          overflow: hidden;
+          contain: layout style;
           transition: width 0.45s cubic-bezier(0.13, 0.28, 0.3, 1);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .kl-rotator { transition: none; }
         }
         .kl-rotator-measure {
           position: absolute;
@@ -331,10 +337,6 @@ export default function DiscoverHero() {
           text-transform: inherit;
           line-height: 1;
         }
-        @media (max-width: 540px) {
-          .kl-rotator { width: 5em; }
-        }
-
         .kl-period {
           color: var(--kl-energy);
           animation: klBlink 1.4s ease-in-out 1500ms infinite;
@@ -345,7 +347,7 @@ export default function DiscoverHero() {
           max-width: 56ch;
           margin: 0 0 28px;
           font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
-          font-size: 16px;
+          font-size: 19.2px;
           line-height: 1.55;
           letter-spacing: -0.025em;
           color: var(--kl-depth);
@@ -675,10 +677,7 @@ export default function DiscoverHero() {
             </form>
 
             <p className="kl-trust">
-              Free<span className="kl-trust-sep">·</span>90 seconds
-              <span className="kl-trust-sep">·</span>No email required
-              <span className="kl-trust-sep">·</span>Confidential
-              <span className="kl-trust-sep">·</span>Peer-benchmarked
+              Free<span className="kl-trust-sep">·</span>90 seconds<span className="kl-trust-sep">·</span>No email required
             </p>
             </div>
             <div className="kl-split-map">
@@ -779,8 +778,8 @@ export default function DiscoverHero() {
                   <circle cx="870" cy="650" r="0.9" />
                 </g>
 
-                {/* Single orbiting planet — RED — with a "$400,000 deal closed" label */}
-                <g ref={(el) => { planetRefs.current[2] = el; }}>
+                {/* Single orbiting planet — RED — with a "Dormant · $400K" label */}
+                <g ref={(el) => { planetRefs.current[2] = el; }} style={{ willChange: 'transform' }}>
                   <ellipse cx="508" cy="525" rx="13" ry="3" fill="rgba(15, 30, 29, 0.20)" />
                   <circle cx="508" cy="519" r="9.5" fill="#BF461A" />
                   <circle cx="505" cy="516" r="2.6" fill="#FFFFFF" opacity="0.55" />
@@ -821,20 +820,20 @@ export default function DiscoverHero() {
                   </text>
                 </g>
 
-                {/* Static "$400,000 deal closed" pill that follows the orbiting planet */}
-                <g ref={labelRef} transform="translate(530, 519)">
-                  <rect x="0" y="-15" width="220" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
+                {/* Static "Dormant · $400K" pill that follows the orbiting planet */}
+                <g ref={labelRef} transform="translate(530, 519)" style={{ willChange: 'transform' }}>
+                  <rect x="0" y="-15" width="148" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
                   <text
                     ref={labelTextRef}
                     x="14"
                     y="4"
-                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
-                    fontSize="11"
-                    letterSpacing="2.2"
+                    fontFamily="'Inter Tight', 'Inter', system-ui, sans-serif"
+                    fontSize="13"
+                    letterSpacing="-0.01em"
                     fill="#BF461A"
-                    fontWeight="700"
+                    fontWeight="600"
                   >
-                    $400,000 DEAL CLOSED
+                    Dormant · $400K
                   </text>
                 </g>
 

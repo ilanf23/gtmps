@@ -37,6 +37,7 @@ export const CSS = `
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  zoom: 1.18;
 }
 .cpage *, .cpage *::before, .cpage *::after { box-sizing: border-box; }
 
@@ -96,7 +97,7 @@ export const CSS = `
 .cpage .is-in .reveal.d8 { transition-delay: 0.80s; }
 
 .cpage .section-hero { padding: 72px 0 110px; border-top: 0; }
-.cpage .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
+.cpage .hero-grid { display: grid; grid-template-columns: 0.85fr 1fr; gap: 64px; align-items: center; }
 .cpage .hero-eyebrow { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
 .cpage .eyebrow-rule { width: 22px; height: 1px; background: var(--purpose); }
 .cpage .eyebrow-text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: var(--purpose); }
@@ -142,7 +143,7 @@ export const CSS = `
 .cpage .trust-line.dark .dot { color: rgba(248, 242, 229, 0.30); }
 
 .cpage .hero-right { display: flex; justify-content: center; }
-.cpage .profile-stage { position: relative; width: 100%; max-width: 480px; }
+.cpage .profile-stage { position: relative; width: 100%; max-width: 624px; }
 .cpage .profile-stage::before {
   content: ''; position: absolute; inset: -6% -8% -10%;
   background:
@@ -211,7 +212,7 @@ export const CSS = `
 .cpage .hero-stat::before { content: ''; position: absolute; top: 0; left: 0; width: 64px; height: 2px; background: var(--care); }
 .cpage .hero-stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: var(--purpose); margin-bottom: 14px; }
 .cpage .hero-stat-num { font-family: var(--display); font-weight: 900; font-size: clamp(64px, 8.4vw, 110px); letter-spacing: -0.05em; line-height: 0.88; color: var(--depth); margin-bottom: 18px; }
-.cpage .hero-stat-num .unit { font-size: 0.5em; letter-spacing: -0.02em; vertical-align: 0.18em; }
+.cpage .hero-stat-num .unit { font-size: 0.5em; letter-spacing: 0; vertical-align: 0.22em; margin-left: 0.12em; display: inline-block; }
 .cpage .hero-stat-sub { font-size: 14px; line-height: 1.55; color: var(--depth-soft); max-width: 380px; margin-bottom: 18px; }
 .cpage .hero-stat-sub strong { color: var(--depth); font-weight: 600; }
 .cpage .hero-stat-bar { height: 4px; background: var(--cream-line); border-radius: 2px; overflow: hidden; margin-bottom: 14px; }
@@ -270,19 +271,12 @@ export const CSS = `
 .cpage .break-block {
   position: relative;
   background: var(--cream-card); border: 1px solid var(--cream-border); border-radius: 2px;
-  display: grid; grid-template-columns: 180px 1fr; gap: 36px;
+  display: grid; grid-template-columns: 260px 1fr; gap: 36px;
   align-items: center; padding: 28px 32px;
-  transition: border-color 0.4s var(--ease), transform 0.4s var(--ease);
   overflow: hidden;
 }
-.cpage .break-block::before {
-  content: ''; position: absolute; top: 0; left: 0; width: 0; height: 2px; background: var(--care);
-  transition: width 0.5s var(--ease);
-}
-.cpage .break-block:hover { border-color: var(--depth-line); transform: translateX(3px); }
-.cpage .break-block:hover::before { width: 100%; }
 .cpage .break-chart { display: flex; align-items: center; justify-content: center; }
-.cpage .break-chart svg { width: 100%; height: auto; max-width: 180px; }
+.cpage .break-chart svg { width: 100%; height: auto; max-width: 240px; }
 .cpage .break-num-row { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .cpage .break-num-rule { width: 24px; height: 1px; background: var(--care); opacity: 0.6; }
 .cpage .break-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.20em; color: var(--care); font-weight: 700; text-transform: uppercase; }
@@ -291,8 +285,8 @@ export const CSS = `
 .cpage .break-body strong { color: var(--depth); font-weight: 600; }
 
 @media (max-width: 980px) {
-  .cpage .break-block { grid-template-columns: 120px 1fr; gap: 24px; padding: 22px; }
-  .cpage .break-chart svg { max-width: 120px; }
+  .cpage .break-block { grid-template-columns: 180px 1fr; gap: 24px; padding: 22px; }
+  .cpage .break-chart svg { max-width: 180px; }
 }
 
 .cpage .audit-card {
@@ -520,7 +514,7 @@ export const CSS = `
 
 @media (max-width: 980px) {
   .cpage .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-  .cpage .profile-stage { max-width: 380px; margin: 0 auto; }
+  .cpage .profile-stage { max-width: 494px; margin: 0 auto; }
   .cpage .numbers-grid { grid-template-columns: 1fr; }
 }
 

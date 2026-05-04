@@ -152,15 +152,19 @@ export default function AuthorityStrip() {
           justify-content: center;
           width: 28px;
           height: 28px;
-          color: #BF461A;
-          border: 1px solid rgba(191, 70, 26, 0.4);
+          color: #FFFFFF;
+          background: #BF461A;
+          border: 1px solid #BF461A;
           border-radius: 50%;
           transition: color 200ms ease, background 200ms ease, border-color 200ms ease;
         }
+        .au-li svg {
+          fill: currentColor;
+        }
         .au-li:hover {
-          color: #EDF5EC;
-          background: #BF461A;
-          border-color: #BF461A;
+          color: #FFFFFF;
+          background: #A33C16;
+          border-color: #A33C16;
         }
 
         .au-affil {
