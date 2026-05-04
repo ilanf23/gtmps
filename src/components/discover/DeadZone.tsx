@@ -784,7 +784,7 @@ export default function DeadZone() {
 
       <div className="dz-root">
         <p className="dz-section-meta">
-          05 / The Problem
+          The Problem
           <span className="dz-section-meta-rule" aria-hidden="true" />
         </p>
 

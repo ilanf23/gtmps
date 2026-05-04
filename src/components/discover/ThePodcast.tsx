@@ -37,7 +37,7 @@ export default function ThePodcast() {
             fontWeight: 500,
           }}
         >
-          11 · THE PODCAST
+          THE PODCAST
         </p>
         <div
           aria-hidden

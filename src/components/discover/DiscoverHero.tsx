@@ -702,45 +702,6 @@ export default function DiscoverHero() {
                   </filter>
                 </defs>
 
-                {/* BUILDING MAP tag (top-left, inside SVG so it scales) */}
-                <g transform="translate(56 96)">
-                  <circle cx="11" cy="11" r="11" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
-                  <circle cx="11" cy="11" r="4" fill="#BF461A" />
-                  <line x1="34" y1="2" x2="34" y2="20" stroke="#0F1E1D" strokeOpacity="0.20" strokeWidth="1" />
-                  <text
-                    x="46"
-                    y="16"
-                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
-                    fontSize="13"
-                    letterSpacing="2.86"
-                    fill="#0F1E1D"
-                    fontWeight="700"
-                  >
-                    BUILDING MAP
-                  </text>
-                  <text
-                    x="206"
-                    y="16"
-                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
-                    fontSize="13"
-                    fill="#9AA09C"
-                    fontWeight="700"
-                  >
-                    ·
-                  </text>
-                  <text
-                    x="220"
-                    y="16"
-                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
-                    fontSize="13"
-                    letterSpacing="2.86"
-                    fill="#9AA09C"
-                    fontWeight="600"
-                  >
-                    30-FIRM COHORT
-                  </text>
-                </g>
-
                 {/* Crosshair axes */}
                 <line x1="60" y1="380" x2="1420" y2="380" stroke="rgba(15, 30, 29, 0.14)" strokeWidth="0.6" />
                 <line x1="740" y1="100" x2="740" y2="660" stroke="rgba(15, 30, 29, 0.12)" strokeWidth="0.6" strokeDasharray="2 3" />

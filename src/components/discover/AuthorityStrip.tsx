@@ -879,7 +879,7 @@ export default function AuthorityStrip() {
                 <ChevronRight size={18} strokeWidth={2} />
               </button>
               <span className="au-pos">
-                {String(activeIndex + 1).padStart(2, '0')} / 03 · {CARD_LABELS[activeIndex]}
+                {CARD_LABELS[activeIndex]}
               </span>
             </div>
           </div>
