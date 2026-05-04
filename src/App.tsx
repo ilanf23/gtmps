@@ -51,7 +51,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/discover">
         <ScrollRestoration />
         <ScrollToTop />
         <FocusOnRouteChange />
