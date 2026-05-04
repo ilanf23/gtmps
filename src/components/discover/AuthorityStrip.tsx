@@ -722,11 +722,6 @@ export default function AuthorityStrip() {
         <div className="au-inner">
           {/* ── Left rail ── */}
           <header className="au-rail">
-            <div className="au-eyebrow-row">
-              <span className="au-eyebrow-bar" aria-hidden />
-              <p className="au-eyebrow">02 · Built By</p>
-            </div>
-
             <h2 className="au-title">
               <span className="word w1">Built</span>{' '}
               <span className="word w2">by</span>{' '}
@@ -840,7 +835,6 @@ export default function AuthorityStrip() {
                 <div className="au-card-eyebrow">
                   <span className="au-card-dot" aria-hidden />
                   <span className="au-card-label">Author</span>
-                  <span className="au-card-pos">03 / 03</span>
                 </div>
                 <p className="au-name">Adam Fridman</p>
                 <p className="au-role" style={{ margin: '8px 0 24px' }}>Co-Author · Founder, Mabbly</p>
