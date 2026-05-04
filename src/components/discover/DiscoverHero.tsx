@@ -89,6 +89,7 @@ export default function DiscoverHero() {
 
     const label = labelRef.current;
     const planet = planetRefs.current[2]; // middle ellipse, RETAINER orbit
+    const connector = connectorRef.current;
     if (!label || !planet) return;
 
     const p = PLANETS[2];
@@ -97,6 +98,20 @@ export default function DiscoverHero() {
       planet.setAttribute('transform', `translate(${x - p.x}, ${y - p.y})`);
       const offsetX = x >= ORBIT_CX ? 22 : -178;
       label.setAttribute('transform', `translate(${x + offsetX}, ${y})`);
+      if (connector) {
+        const dx = x - ORBIT_CX;
+        const dy = y - ORBIT_CY;
+        const dist = Math.hypot(dx, dy) || 1;
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const sx = ORBIT_CX + ux * 16;
+        const sy = ORBIT_CY + uy * 16;
+        const ex = x - ux * 12;
+        const ey = y - uy * 12;
+        const cpX = (sx + ex) / 2;
+        const cpY = (sy + ey) / 2 + 14;
+        connector.setAttribute('d', `M ${sx} ${sy} Q ${cpX} ${cpY} ${ex} ${ey}`);
+      }
     };
 
     // initial frame
