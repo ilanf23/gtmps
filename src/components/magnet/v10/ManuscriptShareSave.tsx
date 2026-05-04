@@ -98,7 +98,7 @@ export default function ManuscriptShareSave({
     }
   };
 
-  const handleEmailForward = async () => {
+  const buildMailtoHref = () => {
     const url = buildShareUrl();
     const subject = encodeURIComponent(`${emailSubject}: ${customerName}`);
     const body = encodeURIComponent(
@@ -106,9 +106,12 @@ export default function ManuscriptShareSave({
         fromName ? `${fromName}` : ""
       }`.trim()
     );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    return `mailto:?subject=${subject}&body=${body}`;
+  };
+
+  const handleEmailForward = () => {
     trackMagnetEvent(slug, "share_click", { channel: "email", vertical });
-    await supabase
+    void supabase
       .from("magnet_share_events")
       .insert({ slug, share_token: shareToken, channel: "email" });
   };
@@ -657,16 +660,6 @@ export default function ManuscriptShareSave({
             <div className="mss-card-cta-row">
               <button
                 type="button"
-                className="mss-cta-pill"
-                onClick={handleEmailForward}
-              >
-                Email Forward
-                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M2 7h10m0 0L8 3m4 4l-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <button
-                type="button"
                 className="mss-cta-secondary"
                 onClick={handleCopyShare}
               >
@@ -675,6 +668,16 @@ export default function ManuscriptShareSave({
                   <path d="M5 9 L 9 5 M 5 5 H 9 V 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
+              <a
+                href={buildMailtoHref()}
+                className="mss-cta-pill"
+                onClick={handleEmailForward}
+              >
+                Email Forward
+                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2 7h10m0 0L8 3m4 4l-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
             </div>
           </article>
 

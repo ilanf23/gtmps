@@ -2,7 +2,7 @@
 // Desktop (md+): concentric SVG diagram with 5 orbit rings + clickable labels.
 // Mobile (<md): vertical card list with progress bars (legacy layout).
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
 import type { CalendlyContext } from "@/lib/calendly";
@@ -140,6 +140,12 @@ export default function FiveOrbitsViz({
             50% { opacity: 1; stroke-width: 3.5; }
           }
           .orbit-ring-pulse { animation: orbit-pulse 2.4s ease-in-out infinite; }
+
+          @keyframes orbit-breathe {
+            0%, 100% { opacity: var(--ring-base-opacity, 0.3); stroke-width: 1.5; }
+            50%      { opacity: calc(var(--ring-base-opacity, 0.3) + 0.25); stroke-width: 2.25; }
+          }
+          .orbit-ring-breathe { animation: orbit-breathe 4.2s ease-in-out infinite; }
         `}</style>
 
         <div className="flex justify-center" style={{ overflow: "visible" }}>
@@ -201,6 +207,16 @@ export default function FiveOrbitsViz({
               const isStrong = band === "high";
               const opacity = isStrong ? 1 : 0.3;
               const isDeadZone = i === 2;
+              const ringStyle = {
+                "--ring-base-opacity": String(opacity),
+                animationDelay: `${i * 0.35}s`,
+                ...(isDeadZone
+                  ? {
+                      filter:
+                        "drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent, #B43C32) 60%, transparent))",
+                    }
+                  : {}),
+              } as CSSProperties;
               return (
                 <circle
                   key={`ring-${i}`}
@@ -211,15 +227,8 @@ export default function FiveOrbitsViz({
                   stroke="var(--brand-accent, currentColor)"
                   strokeWidth={2}
                   opacity={opacity}
-                  className={isDeadZone ? "orbit-ring-pulse" : ""}
-                  style={
-                    isDeadZone
-                      ? {
-                          filter:
-                            "drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent, #B43C32) 60%, transparent))",
-                        }
-                      : undefined
-                  }
+                  className={`orbit-ring-breathe${isDeadZone ? " orbit-ring-pulse" : ""}`}
+                  style={ringStyle}
                 />
               );
             })}
@@ -233,7 +242,6 @@ export default function FiveOrbitsViz({
               const id = String(i + 1).padStart(2, "0");
               const tokens = BAND_TOKENS[bandPerOrbit[i] ?? "low"];
               const score = Math.max(0, Math.min(100, perOrbit[i] ?? 0));
-              const isOpen = openIdx === i;
               const isDeadZone = i === 2;
 
               // Pill dimensions
@@ -251,7 +259,7 @@ export default function FiveOrbitsViz({
               const statusText =
                 band === "high" ? "#1B5E20" : band === "mid" ? "#8A6D1A" : "#B71C1C";
 
-              const driftDur = `${53 + i * 13}s`;
+              const driftDur = `${28 + i * 6}s`;
               const outerTo = `${i % 2 ? -360 : 360} ${VIEW_CENTER} ${VIEW_CENTER}`;
               const innerTo = `${i % 2 ? 360 : -360} ${lx} ${ly}`;
 
@@ -277,14 +285,12 @@ export default function FiveOrbitsViz({
                       additive="sum"
                     />
                     <g
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setOpenIdx(isOpen ? null : i)}
+                      style={{ cursor: "default" }}
                       onMouseEnter={() => enterHover(i)}
                       onMouseLeave={leaveHover}
                       onFocus={() => enterHover(i)}
                       onBlur={leaveHover}
-                      role="button"
-                      tabIndex={0}
+                      role="img"
                       aria-label={`${ORBIT_NAMES[i]}, score ${score}, ${tokens.label}`}
                     >
                       <rect
@@ -295,7 +301,7 @@ export default function FiveOrbitsViz({
                         rx={pillH / 2}
                         fill={statusFill}
                         stroke={statusStroke}
-                        strokeWidth={isOpen || isDeadZone ? 2 : 1}
+                        strokeWidth={isDeadZone || shownIdx === i ? 2 : 1}
                         style={{
                           filter:
                             "drop-shadow(0 2px 6px rgba(0,0,0,0.08))",
@@ -335,7 +341,7 @@ export default function FiveOrbitsViz({
               const angleRad = (ORBIT_ANGLES_DEG[i] * Math.PI) / 180;
               const lx = VIEW_CENTER + Math.cos(angleRad) * r;
               const ly = VIEW_CENTER + Math.sin(angleRad) * r;
-              const driftDur = `${53 + i * 13}s`;
+              const driftDur = `${28 + i * 6}s`;
               const outerTo = `${i % 2 ? -360 : 360} ${VIEW_CENTER} ${VIEW_CENTER}`;
               const innerTo = `${i % 2 ? 360 : -360} ${lx} ${ly}`;
               const band = bandPerOrbit[i] ?? "low";
@@ -366,51 +372,54 @@ export default function FiveOrbitsViz({
                     {shownIdx === i && (() => {
                       const pillW = 132;
                       const pillH = 38;
-                      const calloutW = 280;
-                      const calloutH = 150;
-                      const gap = 16;
+                      const calloutW = 300;
+                      const calloutH = 170;
+                      const gap = 12;
                       const fx = lx + pillW / 2 + gap;
-                      const fy = ly - pillH / 2 - calloutH - gap;
+                      const fy = ly - pillH / 2;
                       return (
                         <foreignObject
                           x={fx}
                           y={fy}
                           width={calloutW}
                           height={calloutH}
-                          style={{ overflow: "visible" }}
+                          style={{ overflow: "visible", pointerEvents: "none" }}
                         >
                           <div
                             style={{
-                              background: "white",
-                              borderLeft: `3px solid ${statusStroke}`,
-                              padding: "14px 18px 14px 22px",
-                              boxShadow: "0 10px 28px rgba(0,0,0,0.15)",
-                              fontFamily:
-                                "'Source Serif 4', 'IBM Plex Serif', Georgia, serif",
-                              fontSize: "13px",
+                              background: "rgba(13, 17, 23, 0.92)",
+                              backdropFilter: "blur(8px)",
+                              WebkitBackdropFilter: "blur(8px)",
+                              border: `1px solid color-mix(in srgb, ${statusStroke} 45%, transparent)`,
+                              borderRadius: 10,
+                              padding: "12px 16px 14px",
+                              boxShadow: "0 12px 32px rgba(0,0,0,0.35)",
+                              color: "#FFFFFF",
+                              fontFamily: "'Inter', system-ui, sans-serif",
+                              fontSize: 12.5,
                               lineHeight: 1.55,
-                              color: "#1a1a1a",
-                              fontStyle: "italic",
-                              position: "relative",
                             }}
                           >
-                            <span
-                              aria-hidden
+                            <div
                               style={{
-                                position: "absolute",
-                                top: -6,
-                                left: 6,
-                                fontSize: 44,
-                                lineHeight: 1,
+                                fontSize: 10.5,
+                                fontWeight: 700,
+                                letterSpacing: "0.18em",
+                                textTransform: "uppercase",
                                 color: statusStroke,
-                                fontFamily: "Georgia, serif",
-                                fontStyle: "normal",
-                                opacity: 0.85,
+                                marginBottom: 8,
                               }}
                             >
-                              &ldquo;
-                            </span>
-                            <p style={{ margin: 0, paddingLeft: 14 }}>
+                              {String(i + 1).padStart(2, "0")} · {ORBIT_NAMES[i]}
+                            </div>
+                            <div
+                              style={{
+                                height: 1,
+                                background: "rgba(255,255,255,0.12)",
+                                marginBottom: 10,
+                              }}
+                            />
+                            <p style={{ margin: 0, color: "rgba(255,255,255,0.9)" }}>
                               {orbits[i]?.trim() || fallbackObs}
                             </p>
                           </div>

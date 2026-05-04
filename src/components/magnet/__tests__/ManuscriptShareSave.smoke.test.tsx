@@ -70,12 +70,13 @@ describe("ManuscriptShareSave CTAs", () => {
     expect(arg).toContain("share_id=tok-123");
   });
 
-  it("Email forward navigates to a mailto: URL with subject + body", () => {
+  it("Email forward exposes a mailto: URL with subject + body", () => {
     renderShareSave();
-    fireEvent.click(screen.getByRole("button", { name: /email forward/i }));
-    expect(window.location.href.startsWith("mailto:")).toBe(true);
-    expect(window.location.href).toContain("subject=");
-    expect(window.location.href).toContain("body=");
+    const link = screen.getByRole("link", { name: /email forward/i });
+    const href = link.getAttribute("href") || "";
+    expect(href.startsWith("mailto:")).toBe(true);
+    expect(href).toContain("subject=");
+    expect(href).toContain("body=");
   });
 
   it("Email me this map opens the dialog and submits an email", async () => {
