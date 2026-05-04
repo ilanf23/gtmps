@@ -12,18 +12,18 @@ import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
 import SectionRail from "@/components/discover/SectionRail";
 import DiscoverHero from '@/components/discover/DiscoverHero';
 import IndustryGrid from '@/components/discover/IndustryGrid';
-import ManuscriptAnchor from '@/components/discover/ManuscriptAnchor';
 import FloatingHeroVideo from '@/components/discover/FloatingHeroVideo';
 import DeadZone from '@/components/discover/DeadZone';
 import WhyNow from '@/components/discover/WhyNow';
 import BetaReader from '@/components/discover/BetaReader';
 import Results from '@/components/discover/Results';
+import TheDecision from '@/components/discover/TheDecision';
 import Faq from '@/components/discover/Faq';
 import FinalCta from '@/components/discover/FinalCta';
 import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
 import bookCoverGm from '@/assets/book-cover-gm.png';
 
-const ADD_YOUR_FIRM_LABEL = "Build Your Map →";
+const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
 
 const handleAddYourFirmClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault();
@@ -159,11 +159,12 @@ const Discover = () => {
     { id: "authority", label: "03 · Built By" },
     { id: "dead-zone", label: "04 · Dead Zone" },
     { id: "why-now", label: "08 · Why Now" },
-    { id: "results", label: "09 · Proof" },
-    { id: "manuscript", label: "10 · Manuscript" },
-    { id: "beta-reader", label: "11 · Early Access" },
-    { id: "faq", label: "12 · FAQ" },
-    { id: "final", label: "13 · Final" },
+    { id: "beta-reader", label: "09 · Early Access" },
+    { id: "results", label: "10 · Proof" },
+    { id: "decision", label: "11 · Decision" },
+    { id: "manuscript", label: "12 · Manuscript" },
+    { id: "faq", label: "13 · FAQ" },
+    { id: "final", label: "14 · Final" },
   ];
 
   return (
@@ -171,7 +172,7 @@ const Discover = () => {
       <VerticalNavBar
         forYourFirmHref="#industries"
         addYourFirmHref="#hero"
-        addYourFirmLabel="Build Your Map"
+        addYourFirmLabel="Add Your Firm"
         onAddYourFirm={() => scrollToHero()}
       />
       <SectionRail items={railItems} />
@@ -270,9 +271,9 @@ const Discover = () => {
         <AuthorityStrip />
         <DeadZone />
         <WhyNow />
-        <Results />
-        <ManuscriptAnchor />
         <BetaReader />
+        <Results />
+        <TheDecision />
         <Faq />
         <FinalCta />
       </main>

@@ -16,27 +16,67 @@ type CardSpec = {
   href: string;
 };
 
-const CARDS: CardSpec[] = [
-  {
-    slug: 'madcraft',
-    clientName: 'Madcraft',
-    sector: 'Digital Agency',
-    metric: { kind: 'dollars', target: 400000 },
-    labelHTML: 'Dormant proposal reactivated. <strong>7-minute reply.</strong>',
-    bodyHTML:
-      'Proposal had been silent <strong>9 months</strong>. Buyer replied 7 minutes after a signal-matched email. Asked Madcraft to be their agency of record for 2026.',
-    quote: 'Lead nurturing agent created a customized note that reactivated a $400,000 opportunity for us.',
-    attribution: 'Stephen Cuccio · Head of New Client Strategy',
-    href: 'https://mabbly.ai/case-study/madcraft',
-  },
+type FeaturedSpec = CardSpec & {
+  headline: string;
+  deck: string;
+  sections: { eyebrow: string; bodyHTML: string }[];
+  closingHTML: string;
+  highlights: { stat: string; label: string }[];
+};
+
+const FEATURED: FeaturedSpec = {
+  slug: 'madcraft',
+  clientName: 'Madcraft',
+  sector: 'Digital Agency · Chicago',
+  metric: { kind: 'dollars', target: 400000 },
+  headline: '$400K in 7 minutes.',
+  deck: 'How Madcraft reactivated a dead proposal that had been silent for 9 months.',
+  labelHTML: 'Dormant proposal reactivated. <strong>7-minute reply.</strong>',
+  bodyHTML:
+    'Proposal had been silent <strong>9 months</strong>. Buyer replied 7 minutes after a signal-matched email. Asked Madcraft to be their agency of record for 2026.',
+  sections: [
+    {
+      eyebrow: 'The Setup',
+      bodyHTML:
+        'Madcraft is a digital agency — strategy, design, development, performance. Stephen Cuccio runs new client strategy. They had a high-intent proposal sitting silent for <strong>9 to 10 months</strong>. The relationship was real. The work was real. But the timing was off, and the next outreach could not sound generic.',
+    },
+    {
+      eyebrow: 'The Move',
+      bodyHTML:
+        'The team used the <strong>Lead Nurturing Agent</strong>. Real-world signals surfaced. Email drafted in the practitioner\'s voice. Human review before sending. Stephen approved.',
+    },
+    {
+      eyebrow: 'The Reply',
+      bodyHTML:
+        'The buyer replied in <strong>7 minutes</strong>. The reply asked if Madcraft could be their <strong>agency of record for 2026</strong>. Branding, digital, media buying. The whole engagement.',
+    },
+    {
+      eyebrow: 'Why It Landed',
+      bodyHTML:
+        'Not a "checking in" email. The note referenced something specific the buyer cared about <em>right now</em>. The agent surfaced the signal. A human approved the words. Then it sent. This is what "signal-based" looks like in practice — a specific acknowledgement, a value drop, a clean next step.',
+    },
+  ],
+  closingHTML:
+    'Most outreach centers the sender. This <strong>centered the buyer</strong>. It worked because it was <strong>earned, not generic</strong>.',
+  highlights: [
+    { stat: '9 mo', label: 'Silent before reactivation' },
+    { stat: '7 min', label: 'Buyer reply after send' },
+    { stat: '2026', label: 'Agency of record awarded' },
+  ],
+  quote: 'Lead nurturing agent created a customized note that reactivated a $400,000 opportunity for us.',
+  attribution: 'Stephen Cuccio · Head of New Client Strategy',
+  href: 'https://mabbly.ai/case-study/madcraft',
+};
+
+const SUPPORTING: CardSpec[] = [
   {
     slug: 'calliope',
     clientName: 'Calliope Communications',
     sector: 'Healthcare B2B Content',
     metric: { kind: 'ratio', target: 2, denom: 2 },
-    labelHTML: 'Dormant healthcare contacts replied.',
+    labelHTML: 'dormant healthcare contacts replied',
     bodyHTML:
-      'First 2 emails sent. Both replied. One positive engagement, one "stay in touch" reopened door. <strong>Founder voice preserved through human review.</strong>',
+      'First 2 emails sent. Both replied. One positive engagement, one "stay in touch" reopened door. Founder voice preserved through human review.',
     quote: 'The AI has done a pretty good job connecting the dots.',
     attribution: 'Mary Tindall · Founder',
     href: 'https://mabbly.ai/case-study/calliope',
@@ -45,15 +85,17 @@ const CARDS: CardSpec[] = [
     slug: 'spr',
     clientName: 'SPR',
     sector: 'Chicago Technology Consulting',
-    metric: { kind: 'percent', target: 7 },
-    labelHTML: 'Reply rate on dormant enterprise outreach. <strong>43 sent · 3 conversations restarted.</strong>',
+    metric: { kind: 'count', target: 150 },
+    labelHTML: 'dormant enterprise contacts identified, 43 emails sent, 3 conversations restarted',
     bodyHTML:
-      '<strong>150 dormant enterprise contacts</strong> identified. 3-layer human review (enrichment, content, executive). 4 ICPs. Kyle Gams (Managing Director) was final approver.',
+      '3-layer human review (enrichment, content, executive). 4 ICPs. Reply rate ~7%. Kyle Gams (Managing Director) was final approver.',
     quote: "Your guys' signal is the personalization piece.",
     attribution: 'Kristin Rosa · Creative & Content Manager',
     href: 'https://mabbly.ai/case-study/spr',
   },
 ];
+
+const CARDS: CardSpec[] = [FEATURED, ...SUPPORTING];
 
 const HEADLINE_WORDS = ['The', 'framework', 'works', 'in', 'the', 'field.'];
 
@@ -381,9 +423,423 @@ export default function Results() {
         /* Card grid */
         .proof-section .card-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 14px;
           margin-bottom: 36px;
+        }
+        .proof-section .featured-wrap {
+          margin-bottom: 14px;
+        }
+
+        /* Featured (Madcraft) card */
+        .proof-section .featured-card {
+          background: var(--cream-card);
+          border: 1px solid rgba(15, 30, 29, 0.10);
+          border-radius: 3px;
+          padding: 0;
+          position: relative;
+          color: var(--depth);
+          overflow: hidden;
+          box-shadow:
+            0 1px 0 rgba(0, 0, 0, 0.10),
+            0 22px 50px -16px rgba(0, 0, 0, 0.55),
+            0 40px 80px -30px rgba(0, 0, 0, 0.40);
+          opacity: 0;
+          transform: translateY(14px);
+          transition:
+            opacity 0.7s var(--ease) 0.55s,
+            transform 0.7s var(--ease) 0.55s,
+            border-color 0.3s var(--ease),
+            box-shadow 0.3s var(--ease);
+        }
+        .proof-section.is-in .featured-card { opacity: 1; transform: translateY(0); }
+        .proof-section .featured-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, var(--care) 0%, var(--energy) 50%, var(--purpose) 100%);
+        }
+        .proof-section .featured-card:hover {
+          border-color: rgba(191, 70, 26, 0.30);
+          box-shadow:
+            0 1px 0 rgba(0, 0, 0, 0.10),
+            0 30px 60px -14px rgba(0, 0, 0, 0.60),
+            0 0 0 1px rgba(191, 70, 26, 0.10);
+        }
+
+        .proof-section .featured-grid {
+          display: grid;
+          grid-template-columns: 1.05fr 1fr;
+          gap: 0;
+        }
+        @media (max-width: 920px) {
+          .proof-section .featured-grid { grid-template-columns: 1fr; }
+        }
+
+        .proof-section .featured-left {
+          padding: 30px 32px 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          border-right: 1px solid var(--cream-line);
+        }
+        @media (max-width: 920px) {
+          .proof-section .featured-left { border-right: none; border-bottom: 1px solid var(--cream-line); }
+        }
+
+        .proof-section .featured-tagrow {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .proof-section .featured-eyebrow {
+          font-family: var(--pf-mono);
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          line-height: 1.4;
+          margin: 0;
+          color: var(--purpose);
+          font-weight: 700;
+        }
+        .proof-section .featured-eyebrow .pip { color: var(--muted-soft); margin: 0 6px; }
+        .proof-section .featured-eyebrow .sec { color: var(--depth); font-weight: 600; }
+        .proof-section .featured-flag {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-family: var(--pf-mono);
+          font-size: 9.5px;
+          letter-spacing: 0.20em;
+          text-transform: uppercase;
+          font-weight: 700;
+          color: var(--care);
+          padding: 5px 10px;
+          background: rgba(191, 70, 26, 0.08);
+          border: 1px solid rgba(191, 70, 26, 0.25);
+          border-radius: 999px;
+        }
+        .proof-section .featured-flag::before {
+          content: '';
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--care);
+          box-shadow: 0 0 8px rgba(191, 70, 26, 0.6);
+        }
+
+        .proof-section .featured-headline-block {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .proof-section .featured-headline {
+          font-family: var(--pf-display);
+          font-weight: 900;
+          font-size: clamp(34px, 4.2vw, 54px);
+          line-height: 1.02;
+          letter-spacing: -0.03em;
+          color: var(--depth);
+          margin: 0;
+        }
+        .proof-section .featured-headline em {
+          font-style: italic;
+          color: var(--care);
+          font-weight: 800;
+        }
+        .proof-section .featured-deck {
+          font-family: var(--pf-serif);
+          font-style: italic;
+          font-size: 19px;
+          line-height: 1.4;
+          color: var(--depth-soft);
+          margin: 0;
+          max-width: 46ch;
+        }
+
+        .proof-section .featured-sections {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        }
+        .proof-section .featured-section {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .proof-section .featured-section-eyebrow {
+          font-family: var(--pf-mono);
+          font-size: 9.5px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--purpose);
+          font-weight: 700;
+          margin: 0;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .proof-section .featured-section-eyebrow::before {
+          content: '';
+          width: 14px;
+          height: 1px;
+          background: var(--care);
+        }
+        .proof-section .featured-section-body {
+          font-family: var(--pf-body);
+          font-size: 14px;
+          line-height: 1.6;
+          color: var(--depth-soft);
+          margin: 0;
+        }
+        .proof-section .featured-section-body strong { color: var(--depth); font-weight: 700; }
+        .proof-section .featured-section-body em { font-style: italic; color: var(--care); font-weight: 600; }
+
+        .proof-section .featured-closing {
+          font-family: var(--pf-serif);
+          font-style: italic;
+          font-size: 16px;
+          line-height: 1.5;
+          color: var(--depth);
+          margin: 4px 0 0;
+          padding: 14px 0 0;
+          border-top: 1px solid var(--cream-line);
+        }
+        .proof-section .featured-closing strong {
+          font-style: normal;
+          color: var(--depth);
+          font-weight: 700;
+        }
+
+        .proof-section .featured-quote-block {
+          margin-top: 4px;
+          padding-top: 18px;
+          border-top: 1px dashed rgba(15, 30, 29, 0.18);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .proof-section .featured-quote {
+          font-family: var(--pf-serif);
+          font-style: italic;
+          font-size: 17px;
+          line-height: 1.4;
+          color: var(--depth);
+          border-left: 3px solid var(--care);
+          padding: 4px 0 4px 16px;
+          margin: 0;
+        }
+        .proof-section .featured-quote::before { content: "\\201C"; }
+        .proof-section .featured-quote::after { content: "\\201D"; }
+        .proof-section .featured-attribution {
+          font-family: var(--pf-mono);
+          font-size: 10px;
+          letter-spacing: 0.18em;
+          line-height: 1.5;
+          text-transform: uppercase;
+          color: var(--muted);
+          font-weight: 600;
+          margin: 0;
+          padding-left: 19px;
+        }
+
+        .proof-section .featured-foot {
+          margin-top: auto;
+          padding-top: 14px;
+          border-top: 1px solid var(--cream-line);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .proof-section .featured-foot-meta {
+          font-family: var(--pf-mono);
+          font-size: 9px;
+          letter-spacing: 0.20em;
+          text-transform: uppercase;
+          color: var(--muted-soft);
+          font-weight: 600;
+        }
+        .proof-section .featured-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-family: var(--pf-mono);
+          font-size: 10px;
+          letter-spacing: 0.20em;
+          text-transform: uppercase;
+          font-weight: 700;
+          color: #fff;
+          background: var(--care);
+          padding: 9px 14px;
+          border-radius: 2px;
+          text-decoration: none;
+          transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+        }
+        .proof-section .featured-link svg { transition: transform 0.3s var(--ease); }
+        .proof-section .featured-link:hover {
+          background: var(--care-bright);
+          transform: translateY(-1px);
+        }
+        .proof-section .featured-link:hover svg { transform: translateX(4px); }
+
+        .proof-section .featured-right {
+          padding: 30px 32px 28px;
+          background:
+            radial-gradient(ellipse 320px 200px at 80% 10%, rgba(255, 186, 26, 0.12), transparent 70%),
+            linear-gradient(180deg, #FCFAF4 0%, #F5EFDD 100%);
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          position: relative;
+        }
+        .proof-section .featured-metric-block {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .proof-section .featured-metric-eyebrow {
+          font-family: var(--pf-mono);
+          font-size: 9.5px;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          color: var(--care);
+          font-weight: 700;
+          margin: 0;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .proof-section .featured-metric-eyebrow::before {
+          content: '';
+          width: 18px;
+          height: 1px;
+          background: var(--care);
+        }
+        .proof-section .featured-metric-block .metric-num {
+          font-family: var(--pf-display);
+          font-size: clamp(72px, 9vw, 128px);
+          font-weight: 900;
+          letter-spacing: -0.045em;
+          line-height: 0.85;
+          background: linear-gradient(135deg, #A79014 0%, #BF461A 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          display: inline-block;
+          font-variant-numeric: tabular-nums;
+        }
+        .proof-section .featured-metric-block .metric-num .slash,
+        .proof-section .featured-metric-block .metric-num .denom,
+        .proof-section .featured-metric-block .metric-num .pct {
+          background: linear-gradient(135deg, #A79014 0%, #BF461A 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+        .proof-section .featured-metric-label {
+          font-family: var(--pf-body);
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--depth);
+          margin: 0;
+          font-weight: 500;
+        }
+        .proof-section .featured-metric-label strong { font-weight: 700; }
+
+        .proof-section .featured-highlights {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0;
+          border-top: 1px dashed rgba(15, 30, 29, 0.18);
+          border-bottom: 1px dashed rgba(15, 30, 29, 0.18);
+          padding: 14px 0;
+        }
+        .proof-section .featured-highlight {
+          padding: 0 12px;
+          border-right: 1px solid rgba(15, 30, 29, 0.10);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .proof-section .featured-highlight:first-child { padding-left: 0; }
+        .proof-section .featured-highlight:last-child { border-right: none; padding-right: 0; }
+        .proof-section .featured-highlight-stat {
+          font-family: var(--pf-display);
+          font-weight: 800;
+          font-size: 22px;
+          letter-spacing: -0.02em;
+          color: var(--depth);
+          line-height: 1;
+        }
+        .proof-section .featured-highlight-label {
+          font-family: var(--pf-mono);
+          font-size: 9px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--muted);
+          font-weight: 600;
+          line-height: 1.35;
+        }
+
+        .proof-section .featured-timeline {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .proof-section .featured-timeline-title {
+          font-family: var(--pf-mono);
+          font-size: 9.5px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--purpose);
+          font-weight: 700;
+          margin: 0 0 4px;
+        }
+        .proof-section .featured-timeline-row {
+          display: grid;
+          grid-template-columns: 70px 1fr;
+          gap: 12px;
+          align-items: baseline;
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(15, 30, 29, 0.06);
+        }
+        .proof-section .featured-timeline-row:last-child { border-bottom: none; }
+        .proof-section .tl-time {
+          font-family: var(--pf-mono);
+          font-size: 10px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--muted);
+          font-weight: 700;
+        }
+        .proof-section .featured-timeline-row.is-end .tl-time { color: var(--care); }
+        .proof-section .tl-text {
+          font-family: var(--pf-body);
+          font-size: 13px;
+          line-height: 1.45;
+          color: var(--depth);
+          margin: 0;
+        }
+        .proof-section .featured-timeline-row.is-end .tl-text { font-weight: 700; }
+        @media (max-width: 920px) {
+          .proof-section .featured-left,
+          .proof-section .featured-right { padding: 24px 22px; }
+          .proof-section .featured-metric-block .metric-num { font-size: 64px; }
+          .proof-section .featured-highlights { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 480px) {
+          .proof-section .featured-highlights { grid-template-columns: 1fr; gap: 12px; padding: 14px 0; }
+          .proof-section .featured-highlight {
+            border-right: none;
+            border-bottom: 1px solid rgba(15, 30, 29, 0.10);
+            padding: 0 0 10px;
+          }
+          .proof-section .featured-highlight:last-child { border-bottom: none; padding-bottom: 0; }
         }
 
         .proof-section .case-card {
@@ -657,55 +1113,174 @@ export default function Results() {
           <p className="subhead">Three documented cases. Real firms. Real outcomes. Real quotes.</p>
         </header>
 
-        <div className="card-grid">
-          {CARDS.map((card, idx) => (
-            <article
-              key={card.slug}
-              ref={(el) => { cardRefs.current[idx] = el; }}
-              className="case-card"
-            >
-              <p className="eyebrow">
-                <span className="eyebrow-name">{card.clientName}</span>
-                <span className="eyebrow-pip">·</span>
-                <span className="eyebrow-sector">{card.sector}</span>
-              </p>
-              <MetricNum
-                spec={card.metric}
-                trigger={cardIn[idx]}
-                reduced={reduced}
-                delayMs={700 + idx * 120}
-              />
-              <p
-                className="metric-label"
-                dangerouslySetInnerHTML={{ __html: card.labelHTML }}
-              />
-              <p
-                className="case-body"
-                dangerouslySetInnerHTML={{ __html: card.bodyHTML }}
-              />
-              <p className="case-quote">{card.quote}</p>
-              <p className="attribution">{card.attribution}</p>
-              <div className="case-foot">
-                <a
-                  className="case-link"
-                  href={card.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Read full case study
-                  <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden>
-                    <path
-                      d="M2 7h10m0 0L8 3m4 4l-4 4"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
+        <div className="featured-wrap">
+          <article
+            ref={(el) => { cardRefs.current[0] = el; }}
+            className="featured-card"
+            aria-label="Featured case: Madcraft"
+          >
+            <div className="featured-grid">
+              <div className="featured-left">
+                <div className="featured-tagrow">
+                  <p className="featured-eyebrow">
+                    {FEATURED.clientName}
+                    <span className="pip">·</span>
+                    <span className="sec">{FEATURED.sector}</span>
+                  </p>
+                  <span className="featured-flag">Featured Case</span>
+                </div>
+
+                <div className="featured-headline-block">
+                  <h3 className="featured-headline">
+                    $400K in <em>7 minutes.</em>
+                  </h3>
+                  <p className="featured-deck">{FEATURED.deck}</p>
+                </div>
+
+                <div className="featured-sections">
+                  {FEATURED.sections.map((s) => (
+                    <section className="featured-section" key={s.eyebrow}>
+                      <p className="featured-section-eyebrow">{s.eyebrow}</p>
+                      <p
+                        className="featured-section-body"
+                        dangerouslySetInnerHTML={{ __html: s.bodyHTML }}
+                      />
+                    </section>
+                  ))}
+                </div>
+
+                <p
+                  className="featured-closing"
+                  dangerouslySetInnerHTML={{ __html: FEATURED.closingHTML }}
+                />
+
+                <div className="featured-foot">
+                  <span className="featured-foot-meta">Verified · 2025 · Chicago</span>
+                  <a
+                    className="featured-link"
+                    href={FEATURED.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Read the full case study
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden>
+                      <path
+                        d="M2 7h10m0 0L8 3m4 4l-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </div>
               </div>
-            </article>
-          ))}
+
+              <div className="featured-right">
+                <div className="featured-metric-block">
+                  <p className="featured-metric-eyebrow">Opportunity reactivated</p>
+                  <MetricNum
+                    spec={FEATURED.metric}
+                    trigger={cardIn[0]}
+                    reduced={reduced}
+                    delayMs={500}
+                  />
+                  <p
+                    className="featured-metric-label"
+                    dangerouslySetInnerHTML={{ __html: FEATURED.labelHTML }}
+                  />
+                </div>
+
+                <div className="featured-highlights" aria-label="Key highlights">
+                  {FEATURED.highlights.map((h) => (
+                    <div className="featured-highlight" key={h.label}>
+                      <span className="featured-highlight-stat">{h.stat}</span>
+                      <span className="featured-highlight-label">{h.label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="featured-timeline">
+                  <p className="featured-timeline-title">Reactivation Timeline</p>
+                  <div className="featured-timeline-row">
+                    <span className="tl-time">Day 0</span>
+                    <p className="tl-text">Proposal sent. Initial buyer interest.</p>
+                  </div>
+                  <div className="featured-timeline-row">
+                    <span className="tl-time">Day 270</span>
+                    <p className="tl-text">9 months silent. Dead Zone.</p>
+                  </div>
+                  <div className="featured-timeline-row">
+                    <span className="tl-time">Pre-send</span>
+                    <p className="tl-text">Lead Nurturing Agent surfaced signal · drafted in voice · human approved.</p>
+                  </div>
+                  <div className="featured-timeline-row is-end">
+                    <span className="tl-time">+ 7 min</span>
+                    <p className="tl-text">Buyer replied · $400K reactivated · Agency of record 2026.</p>
+                  </div>
+                </div>
+
+                <div className="featured-quote-block">
+                  <blockquote className="featured-quote">{FEATURED.quote}</blockquote>
+                  <p className="featured-attribution">{FEATURED.attribution}</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div className="card-grid">
+          {SUPPORTING.map((card, sIdx) => {
+            const idx = sIdx + 1;
+            return (
+              <article
+                key={card.slug}
+                ref={(el) => { cardRefs.current[idx] = el; }}
+                className="case-card"
+              >
+                <p className="eyebrow">
+                  <span className="eyebrow-name">{card.clientName}</span>
+                  <span className="eyebrow-pip">·</span>
+                  <span className="eyebrow-sector">{card.sector}</span>
+                </p>
+                <MetricNum
+                  spec={card.metric}
+                  trigger={cardIn[idx]}
+                  reduced={reduced}
+                  delayMs={700 + sIdx * 120}
+                />
+                <p
+                  className="metric-label"
+                  dangerouslySetInnerHTML={{ __html: card.labelHTML }}
+                />
+                <p
+                  className="case-body"
+                  dangerouslySetInnerHTML={{ __html: card.bodyHTML }}
+                />
+                <p className="case-quote">{card.quote}</p>
+                <p className="attribution">{card.attribution}</p>
+                <div className="case-foot">
+                  <a
+                    className="case-link"
+                    href={card.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Read full case study
+                    <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden>
+                      <path
+                        d="M2 7h10m0 0L8 3m4 4l-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </article>
+            );
+          })}
         </div>
 
         <div className="disclaimer">

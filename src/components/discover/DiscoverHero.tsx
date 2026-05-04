@@ -706,7 +706,7 @@ export default function DiscoverHero() {
                     </>
                   ) : (
                     <>
-                      Build Your Map <span className="kl-submit-arrow" aria-hidden>→</span>
+                      Add Your Firm <span className="kl-submit-arrow" aria-hidden>→</span>
                     </>
                   )}
                 </button>

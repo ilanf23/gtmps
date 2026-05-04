@@ -93,74 +93,106 @@ export default function WhyNow() {
         .wn-inner {
           position: relative;
           z-index: 1;
-          max-width: 1280px;
+          max-width: 1180px;
           margin: 0 auto;
         }
         .wn-header {
-          padding: 96px 56px 48px;
+          padding: 80px 56px 36px;
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 32px;
+          flex-wrap: wrap;
         }
+        .wn-header-left { max-width: 720px; }
         .wn-body {
           display: grid;
-          grid-template-columns: 1.4fr 1fr;
-          gap: 56px;
-          padding: 16px 56px 64px;
+          grid-template-columns: 1.35fr 1fr;
+          gap: 44px;
+          padding: 12px 56px 56px;
         }
         .wn-kicker-wrap {
-          padding: 40px 56px 96px;
+          padding: 36px 56px 80px;
           border-top: 1px solid rgba(15, 30, 29, 0.08);
         }
         @media (max-width: 1100px) {
-          .wn-body { grid-template-columns: 1fr; gap: 40px; }
+          .wn-body { grid-template-columns: 1fr; gap: 32px; }
         }
         @media (max-width: 720px) {
-          .wn-header     { padding: 72px 22px 32px; }
-          .wn-body       { padding: 12px 22px 48px; gap: 32px; }
-          .wn-kicker-wrap{ padding: 32px 22px 72px; }
+          .wn-header     { padding: 56px 22px 24px; }
+          .wn-body       { padding: 8px 22px 40px; gap: 28px; }
+          .wn-kicker-wrap{ padding: 28px 22px 60px; }
         }
 
-        .wn-eyebrow {
-          font-family: var(--font-mono);
-          font-size: 13px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-          color: #A79014;
-          margin: 0;
-          font-weight: 500;
+        .wn-eyebrow-row {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 6px 12px;
+          background: rgba(167, 144, 20, 0.10);
+          border: 1px solid rgba(167, 144, 20, 0.28);
+          border-radius: 999px;
+          margin-bottom: 18px;
           opacity: 0;
           animation: wnFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 0ms both;
         }
-        .wn-rule {
-          width: 44px;
-          height: 2px;
-          background: linear-gradient(90deg, #A79014, #C4AC4A);
-          margin: 18px 0 28px;
-          transform-origin: left center;
-          transform: scaleX(0);
-          animation: wnDrawLine 800ms cubic-bezier(0.45, 0, 0.2, 1) 400ms forwards;
+        .wn-eyebrow-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #BF461A;
+          box-shadow: 0 0 8px rgba(191, 70, 26, 0.6);
+          animation: wnPulseDot 1.6s ease-in-out infinite;
+        }
+        .wn-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 11px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: #A79014;
+          margin: 0;
+          font-weight: 600;
         }
         .wn-headline {
           font-family: var(--font-display);
-          font-weight: 900;
-          font-size: clamp(56px, 7.6vw, 124px);
-          line-height: 0.9;
-          letter-spacing: -0.025em;
-          text-transform: uppercase;
+          font-weight: 800;
+          font-size: clamp(34px, 4.4vw, 60px);
+          line-height: 1.02;
+          letter-spacing: -0.02em;
           color: #0F1E1D;
           margin: 0;
           max-width: 14ch;
         }
+        .wn-headline .wn-accent {
+          color: #BF461A;
+          font-style: italic;
+          font-weight: 700;
+        }
         .wn-headline .wn-word {
           display: inline-block;
           opacity: 0;
-          transform: translateY(40px);
-          animation: wnWordIn 800ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards;
-          margin-right: 0.18em;
+          transform: translateY(20px);
+          animation: wnWordIn 700ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards;
+          margin-right: 0.24em;
         }
-        .wn-headline .wn-word:nth-child(1) { animation-delay: 600ms; }
-        .wn-headline .wn-word:nth-child(2) { animation-delay: 750ms; }
-        .wn-headline .wn-word:nth-child(3) { animation-delay: 900ms; }
-        .wn-headline .wn-word:nth-child(4) { animation-delay: 1050ms; }
+        .wn-headline .wn-word:nth-child(1) { animation-delay: 300ms; }
+        .wn-headline .wn-word:nth-child(2) { animation-delay: 400ms; }
+        .wn-headline .wn-word:nth-child(3) { animation-delay: 500ms; }
+        .wn-headline .wn-word:nth-child(4) { animation-delay: 600ms; }
         .wn-care-period { color: #BF461A; }
+
+        .wn-deck {
+          font-family: var(--font-sans);
+          font-size: 15px;
+          line-height: 1.5;
+          color: #0F1E1D;
+          opacity: 0.7;
+          margin: 14px 0 0;
+          max-width: 36ch;
+          opacity: 0;
+          animation: wnFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 750ms both;
+        }
+        .wn-deck-strong { color: #235351; font-weight: 600; opacity: 1; }
 
         .wn-card-fadein {
           opacity: 0;
@@ -387,41 +419,78 @@ export default function WhyNow() {
 
         /* Right column: stat box + body */
         .wn-stat-box {
-          background: #EDF5EC;
-          border: 1px solid rgba(15, 30, 29, 0.08);
-          border-radius: 12px;
-          padding: 32px 28px 28px;
+          background: linear-gradient(140deg, #FFFDF6 0%, #FAF3DF 100%);
+          border: 1px solid rgba(167, 144, 20, 0.28);
+          border-radius: 14px;
+          padding: 24px 22px 22px;
           position: relative;
           overflow: hidden;
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.7) inset,
+            0 18px 38px -22px rgba(167, 144, 20, 0.35);
         }
         .wn-stat-box::before {
           content: "";
           position: absolute;
           top: 0;
           left: 0;
-          bottom: 0;
-          width: 4px;
-          background: #A79014;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, #A79014 0%, #FFBA1A 50%, #BF461A 100%);
+        }
+        .wn-stat-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: #BF461A;
+          font-weight: 600;
+          margin: 0 0 10px;
+        }
+        .wn-stat-tag::before {
+          content: "";
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #BF461A;
         }
         .wn-stat-num {
           font-family: var(--font-display);
-          font-weight: 900;
-          font-size: clamp(72px, 8vw, 120px);
-          line-height: 0.85;
-          letter-spacing: -0.04em;
-          color: #A79014;
+          font-weight: 800;
+          font-size: clamp(54px, 6.2vw, 84px);
+          line-height: 0.9;
+          letter-spacing: -0.035em;
           margin: 0;
           display: flex;
           align-items: baseline;
           gap: 2px;
+          background: linear-gradient(135deg, #A79014 0%, #BF461A 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+        .wn-stat-num .wn-pct {
+          font-size: 0.55em;
+          font-weight: 700;
+          background: linear-gradient(135deg, #A79014 0%, #BF461A 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
         }
         .wn-stat-line {
           font-family: var(--font-sans);
-          font-size: 16px;
+          font-size: 14px;
           line-height: 1.45;
           color: #0F1E1D;
-          opacity: 0.85;
-          margin: 16px 0 0;
+          opacity: 0.82;
+          margin: 12px 0 0;
+        }
+        .wn-stat-line strong {
+          color: #235351;
+          font-weight: 600;
         }
         .wn-sup {
           color: #BF461A;
@@ -432,54 +501,81 @@ export default function WhyNow() {
         }
         .wn-source {
           font-family: var(--font-mono);
-          font-size: 11px;
+          font-size: 10px;
           letter-spacing: 0.04em;
           color: #0F1E1D;
-          opacity: 0.55;
-          margin: 14px 0 24px;
+          opacity: 0.5;
+          margin: 12px 0 22px;
           line-height: 1.5;
         }
         .wn-body-p {
           font-family: var(--font-sans);
-          font-size: 17px;
-          line-height: 1.55;
+          font-size: 15px;
+          line-height: 1.6;
           color: #0F1E1D;
           margin: 0;
+          opacity: 0.88;
         }
         .wn-highlight {
-          background: linear-gradient(to top, rgba(167, 144, 20, 0.32) 38%, transparent 38%);
+          background: linear-gradient(to top, rgba(167, 144, 20, 0.35) 40%, transparent 40%);
           font-weight: 600;
-          padding: 0 1px;
+          padding: 0 2px;
+          color: #0F1E1D;
+          opacity: 1;
+        }
+        .wn-highlight-rust {
+          background: linear-gradient(to top, rgba(191, 70, 26, 0.22) 40%, transparent 40%);
+          color: #BF461A;
+          font-weight: 600;
+          padding: 0 2px;
         }
 
         /* Kicker */
+        .wn-kicker-row {
+          display: flex;
+          align-items: baseline;
+          gap: 14px;
+          margin-bottom: 14px;
+        }
+        .wn-kicker-bar {
+          width: 28px;
+          height: 2px;
+          background: #BF461A;
+          flex-shrink: 0;
+          transform: translateY(-6px);
+        }
         .wn-italic-kicker {
           font-family: 'Playfair Display', Fraunces, Georgia, 'Times New Roman', serif;
           font-weight: 500;
           font-style: italic;
-          font-size: clamp(28px, 3.4vw, 48px);
-          line-height: 1.1;
-          color: #A79014;
-          margin: 0 0 14px;
+          font-size: clamp(20px, 2.2vw, 28px);
+          line-height: 1.2;
+          color: #BF461A;
+          margin: 0;
           opacity: 0;
-          animation: wnFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 1900ms both;
+          animation: wnFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 1700ms both;
         }
         .wn-statement {
           font-family: var(--font-display);
-          font-weight: 900;
-          font-size: clamp(40px, 5.2vw, 88px);
-          line-height: 0.95;
-          letter-spacing: -0.025em;
-          text-transform: uppercase;
+          font-weight: 800;
+          font-size: clamp(28px, 3.6vw, 52px);
+          line-height: 1.05;
+          letter-spacing: -0.02em;
           color: #0F1E1D;
           margin: 0;
+          max-width: 22ch;
         }
         .wn-statement .wn-word {
           display: inline-block;
           opacity: 0;
-          transform: translateY(40px);
-          animation: wnWordIn 700ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards;
+          transform: translateY(20px);
+          animation: wnWordIn 600ms cubic-bezier(0.13, 0.28, 0.3, 1) forwards;
           margin-right: 0.22em;
+        }
+        .wn-statement .wn-emph {
+          color: #235351;
+          font-style: italic;
+          font-weight: 700;
         }
 
         /* Keyframes */
@@ -538,16 +634,25 @@ export default function WhyNow() {
 
       <div className="wn-inner">
         <div className="wn-header">
-          <p className="wn-eyebrow">Why Now</p>
-          <div className="wn-rule" aria-hidden />
-          <h2 className="wn-headline">
-            <span className="wn-word">Why</span>
-            <span className="wn-word">this</span>
-            <span className="wn-word">matters</span>
-            <span className="wn-word">
-              now<span className="wn-care-period">.</span>
+          <div className="wn-header-left">
+            <span className="wn-eyebrow-row">
+              <span className="wn-eyebrow-dot" aria-hidden />
+              <p className="wn-eyebrow">Why Now</p>
             </span>
-          </h2>
+            <h2 className="wn-headline">
+              <span className="wn-word">Why</span>
+              <span className="wn-word">this</span>
+              <span className="wn-word">matters</span>
+              <span className="wn-word">
+                <span className="wn-accent">now</span>
+                <span className="wn-care-period">.</span>
+              </span>
+            </h2>
+            <p className="wn-deck">
+              The window to position as <span className="wn-deck-strong">AI-native</span> is closing —
+              and buyers are already deciding who's on which side.
+            </p>
+          </div>
         </div>
 
         <div className="wn-body">
@@ -594,12 +699,13 @@ export default function WhyNow() {
 
           <div className="wn-card-fadein wn-right">
             <div className="wn-stat-box">
+              <p className="wn-stat-tag">Buyer signal · 2025</p>
               <p className="wn-stat-num" ref={statRef} data-target="73">
                 <span className="num-val">{statValue}</span>
-                <span>%</span>
+                <span className="wn-pct">%</span>
               </p>
               <p className="wn-stat-line">
-                of PS buyers say they will evaluate an AI-native firm before 2026
+                of PS buyers say they will evaluate an <strong>AI-native firm</strong> before 2026
                 <span className="wn-sup">1</span>
               </p>
             </div>
@@ -611,30 +717,36 @@ export default function WhyNow() {
               The firms building a relationship system{" "}
               <span className="wn-highlight">now</span> will own the categories
               their competitors are still trying to define. The firms that wait
-              will <span className="wn-highlight">compete on price</span>.
+              will <span className="wn-highlight-rust">compete on price</span>.
             </p>
           </div>
         </div>
 
         <div className="wn-kicker-wrap">
-          <p className="wn-italic-kicker">Most firms will wait.</p>
+          <div className="wn-kicker-row">
+            <span className="wn-kicker-bar" aria-hidden />
+            <p className="wn-italic-kicker">Most firms will wait.</p>
+          </div>
           <p className="wn-statement" aria-label="The ones that move first set the terms.">
-            {STATEMENT_WORDS.map((w, i) => (
-              <span
-                key={i}
-                className="wn-word"
-                style={{ animationDelay: `${2100 + i * 80}ms` }}
-              >
-                {i === STATEMENT_WORDS.length - 1 ? (
-                  <>
-                    {w.replace(".", "")}
-                    <span className="wn-care-period">.</span>
-                  </>
-                ) : (
-                  w
-                )}
-              </span>
-            ))}
+            {STATEMENT_WORDS.map((w, i) => {
+              const isEmph = w === "first" || w === "the terms.";
+              return (
+                <span
+                  key={i}
+                  className={`wn-word${isEmph ? " wn-emph" : ""}`}
+                  style={{ animationDelay: `${1900 + i * 70}ms` }}
+                >
+                  {i === STATEMENT_WORDS.length - 1 ? (
+                    <>
+                      {w.replace(".", "")}
+                      <span className="wn-care-period">.</span>
+                    </>
+                  ) : (
+                    w
+                  )}
+                </span>
+              );
+            })}
           </p>
         </div>
       </div>

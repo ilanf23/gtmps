@@ -129,7 +129,7 @@ export default function FinalCta() {
             className="fc-btn-primary"
             data-cta="add-your-firm"
           >
-            Build Your Map →
+            Add Your Firm →
           </a>
         </div>
 
