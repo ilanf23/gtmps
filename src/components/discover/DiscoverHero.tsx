@@ -89,6 +89,7 @@ export default function DiscoverHero() {
 
     const label = labelRef.current;
     const planet = planetRefs.current[2]; // middle ellipse, RETAINER orbit
+    const connector = connectorRef.current;
     if (!label || !planet) return;
 
     const p = PLANETS[2];
@@ -97,6 +98,20 @@ export default function DiscoverHero() {
       planet.setAttribute('transform', `translate(${x - p.x}, ${y - p.y})`);
       const offsetX = x >= ORBIT_CX ? 22 : -178;
       label.setAttribute('transform', `translate(${x + offsetX}, ${y})`);
+      if (connector) {
+        const dx = x - ORBIT_CX;
+        const dy = y - ORBIT_CY;
+        const dist = Math.hypot(dx, dy) || 1;
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const sx = ORBIT_CX + ux * 16;
+        const sy = ORBIT_CY + uy * 16;
+        const ex = x - ux * 12;
+        const ey = y - uy * 12;
+        const cpX = (sx + ex) / 2;
+        const cpY = (sy + ey) / 2 + 14;
+        connector.setAttribute('d', `M ${sx} ${sy} Q ${cpX} ${cpY} ${ex} ${ey}`);
+      }
     };
 
     // initial frame
@@ -732,6 +747,25 @@ export default function DiscoverHero() {
                 <ellipse cx="740" cy="380" rx="475" ry="200" fill="none" stroke="#0F1E1D" strokeWidth="0.5" strokeOpacity="0.40" strokeDasharray="1.5 3" />
                 <ellipse cx="740" cy="380" rx="610" ry="252" fill="none" stroke="#0F1E1D" strokeWidth="0.7" strokeOpacity="0.18" />
 
+                {/* Dead black dots seated on each orbit ellipse */}
+                <g fill="#0A1311">
+                  {/* ring 1 (rx 105, ry 44) */}
+                  <circle cx={740 + 105 * Math.cos(-2.3)} cy={380 + 44 * Math.sin(-2.3)} r="3" />
+                  <circle cx={740 + 105 * Math.cos(0.9)}  cy={380 + 44 * Math.sin(0.9)}  r="3" />
+                  {/* ring 2 (rx 220, ry 92) */}
+                  <circle cx={740 + 220 * Math.cos(-1.0)} cy={380 + 92 * Math.sin(-1.0)} r="3.5" />
+                  <circle cx={740 + 220 * Math.cos(2.4)}  cy={380 + 92 * Math.sin(2.4)}  r="3.5" />
+                  {/* ring 3 (rx 345, ry 146) — orbit of the rotating red dot */}
+                  <circle cx={740 + 345 * Math.cos(-2.6)} cy={380 + 146 * Math.sin(-2.6)} r="4" />
+                  <circle cx={740 + 345 * Math.cos(1.4)}  cy={380 + 146 * Math.sin(1.4)}  r="4" />
+                  {/* ring 4 (rx 475, ry 200) */}
+                  <circle cx={740 + 475 * Math.cos(-0.4)} cy={380 + 200 * Math.sin(-0.4)} r="4" />
+                  <circle cx={740 + 475 * Math.cos(2.8)}  cy={380 + 200 * Math.sin(2.8)}  r="4" />
+                  {/* ring 5 (rx 610, ry 252) */}
+                  <circle cx={740 + 610 * Math.cos(-1.7)} cy={380 + 252 * Math.sin(-1.7)} r="4.5" />
+                  <circle cx={740 + 610 * Math.cos(0.5)}  cy={380 + 252 * Math.sin(0.5)}  r="4.5" />
+                </g>
+
                 {/* Atmospheric speckle dots — kept off the horizontal axis
                     and clearly outside the orbit ellipses. */}
                 <g fill="#0F1E1D" opacity="0.18">
@@ -751,6 +785,18 @@ export default function DiscoverHero() {
                   <circle cx="508" cy="519" r="9.5" fill="#BF461A" />
                   <circle cx="505" cy="516" r="2.6" fill="#FFFFFF" opacity="0.55" />
                 </g>
+
+                {/* Connector from YOUR FIRM to the orbiting deal-closed planet */}
+                <path
+                  ref={connectorRef}
+                  className="orbit-connector"
+                  fill="none"
+                  stroke="#BF461A"
+                  strokeWidth="1.4"
+                  strokeDasharray="6 5"
+                  strokeLinecap="round"
+                  opacity="0.9"
+                />
 
                 {/* YOUR FIRM at center */}
                 <ellipse cx="740" cy="395" rx="22" ry="4" fill="rgba(15, 30, 29, 0.15)" filter="url(#softShadow)" />
