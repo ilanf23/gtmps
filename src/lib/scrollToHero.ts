@@ -1,7 +1,7 @@
 /**
  * Smooth-scroll the homepage hero's URL field into the middle of the viewport
  * and flash a red attention outline so visitors know where to act. Used by
- * every "Build Your Map" / "Add Your Firm" CTA on the Discover homepage now
+ * every "Add Your Firm" CTA on the Discover homepage now
  * that `/assess` is gone and the hero owns submission.
  *
  * Cross-page CTAs (Awards, MagnetSite, etc.) navigate to `/#hero` instead;

@@ -176,7 +176,7 @@ const Discover = () => {
         onAddYourFirm={() => scrollToHero()}
       />
       <SectionRail items={railItems} />
-      <main style={{ paddingBottom: 120 }}>
+      <main>
         <div id="hero">
           <DiscoverHero />
         </div>

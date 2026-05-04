@@ -129,7 +129,7 @@ export const consulting: VerticalConfig = {
     metaTag: "The Practice Growth Score",
     headline: "Score your consulting firm in 10 minutes",
     sub: "10 questions. Your practice growth strategy benchmarked against peer consulting firms. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -146,7 +146,7 @@ export const consulting: VerticalConfig = {
   },
   begin: {
     headline: "Your next consulting client already knows you",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -268,7 +268,7 @@ export const law: VerticalConfig = {
     metaTag: "The Origination Score",
     headline: "Score your origination strategy in 10 minutes",
     sub: "10 questions. Your origination strategy benchmarked against peer law firms. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -285,7 +285,7 @@ export const law: VerticalConfig = {
   },
   begin: {
     headline: "Your next matter already knows you",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -407,7 +407,7 @@ export const accounting: VerticalConfig = {
     metaTag: "The Client Development Score",
     headline: "Score your client development in 10 minutes",
     sub: "10 questions. Your client development strategy benchmarked against peer accounting firms. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -424,7 +424,7 @@ export const accounting: VerticalConfig = {
   },
   begin: {
     headline: "Your next client already knows you",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -546,7 +546,7 @@ export const msp: VerticalConfig = {
     metaTag: "The Account Expansion Score",
     headline: "Score your account expansion in 10 minutes",
     sub: "10 questions. Your expansion strategy benchmarked against peer MSPs. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -563,7 +563,7 @@ export const msp: VerticalConfig = {
   },
   begin: {
     headline: "Your next contract already runs your stack",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -685,7 +685,7 @@ export const advisory: VerticalConfig = {
     metaTag: "The Organic Growth Score",
     headline: "Score your organic growth in 10 minutes",
     sub: "10 questions. Your AUM growth strategy benchmarked against peer RIAs. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -702,7 +702,7 @@ export const advisory: VerticalConfig = {
   },
   begin: {
     headline: "Your next client already trusts you",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -824,7 +824,7 @@ export const ae: VerticalConfig = {
     metaTag: "The Pursuit Score",
     headline: "Score your pursuit strategy in 10 minutes",
     sub: "10 questions. Your pursuit and origination strategy benchmarked against peer A&E firms. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -841,7 +841,7 @@ export const ae: VerticalConfig = {
   },
   begin: {
     headline: "Your next project already met your team",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -963,7 +963,7 @@ export const recruiting: VerticalConfig = {
     metaTag: "The Mandate Velocity Score",
     headline: "Score your mandate velocity in 10 minutes",
     sub: "10 questions. Your mandate strategy benchmarked against peer executive search firms. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -980,7 +980,7 @@ export const recruiting: VerticalConfig = {
   },
   begin: {
     headline: "Your next mandate already placed with you",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
 
@@ -1102,7 +1102,7 @@ export const agency: VerticalConfig = {
     metaTag: "The New Business Score",
     headline: "Score your new business strategy in 10 minutes",
     sub: "10 questions. Your new business strategy benchmarked against peer marketing agencies. Most decisions within 48 hours.",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
   authorsHeadline: "Two practitioners. One academic",
   faq: {
@@ -1119,6 +1119,6 @@ export const agency: VerticalConfig = {
   },
   begin: {
     headline: "Your next account already worked with you",
-    ctaLabel: "Build Your Map",
+    ctaLabel: "Add Your Firm",
   },
 };
