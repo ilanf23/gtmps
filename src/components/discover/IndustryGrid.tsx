@@ -464,6 +464,16 @@ export default function IndustryGrid() {
                 to={`/${v.slug}`}
                 className={`vcard c${i + 1}`}
                 aria-label={`${v.name} - view thesis`}
+                onClick={() => {
+                  try {
+                    sessionStorage.setItem(
+                      "discover:returnScroll",
+                      String(window.scrollY || 0),
+                    );
+                  } catch {
+                    // sessionStorage may be unavailable; fail silently.
+                  }
+                }}
               >
                 <span className="vcard-slug">/{v.slug}</span>
                 <span className="icon-wrap" aria-hidden>

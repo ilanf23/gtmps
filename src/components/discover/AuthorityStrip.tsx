@@ -819,9 +819,6 @@ export default function AuthorityStrip() {
                 <div className="au-stats">
                   {PRACTITIONER_STATS.map((s, i) => renderStatCard(s, `p-${i}`, i))}
                 </div>
-                <p className="au-pull">
-                  The framework in this book is the one I wish I had at AArete.
-                </p>
               </article>
 
               {/* Card 2 - Author */}
@@ -841,9 +838,6 @@ export default function AuthorityStrip() {
                 <div className="au-stats">
                   {AUTHOR_STATS.map((s, i) => renderStatCard(s, `a-${i}`, i))}
                 </div>
-                <p className="au-pull">
-                  Six hundred conversations. One framework that survived contact with reality.
-                </p>
               </article>
             </div>
 

@@ -131,6 +131,31 @@ const Discover = () => {
     }
   }, [location.hash]);
 
+  // When returning from a vertical landing (clicked from IndustryGrid), put
+  // the user back where they left off. We defer with rAF so this fires AFTER
+  // ScrollToTop's reset on PUSH navigations.
+  useEffect(() => {
+    if (location.hash) return;
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem("discover:returnScroll");
+    } catch {
+      return;
+    }
+    if (!saved) return;
+    const y = parseInt(saved, 10);
+    try {
+      sessionStorage.removeItem("discover:returnScroll");
+    } catch {
+      // ignore
+    }
+    if (!Number.isFinite(y) || y <= 0) return;
+    const handle = requestAnimationFrame(() => {
+      window.scrollTo({ top: y, left: 0 });
+    });
+    return () => cancelAnimationFrame(handle);
+  }, [location.pathname]);
+
   const railItems = [
     { id: "hero", label: "01 · Hero" },
     { id: "authority", label: "02 · Built By" },

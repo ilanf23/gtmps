@@ -5,6 +5,8 @@ import { themeStyle } from "@/lib/clientTheme";
 import { openCalendlyPopup, prewarmCalendly } from "@/lib/calendly";
 import Footer from "@/components/Footer";
 import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
+import { useMagnetAttribution } from "@/hooks/useMagnetAttribution";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MagnetShellProps {
   children: ReactNode;
@@ -50,6 +52,37 @@ export default function MagnetShell({
   const slug = slugProp ?? params.slug;
   const theme = useClientTheme(slug);
   useGoogleFont(theme.fontFamily);
+
+  // Capture first-touch UTM context and record one magnet_views row per
+  // (slug, session). Sub-route navigation within the same tab does not
+  // produce duplicate view rows.
+  const attribution = useMagnetAttribution(slug ?? null);
+  useEffect(() => {
+    if (!slug || !attribution) return;
+    const dedupeKey = `mabbly:magnet:viewLogged:${slug}:${attribution.session_id}`;
+    try {
+      if (sessionStorage.getItem(dedupeKey)) return;
+      sessionStorage.setItem(dedupeKey, "1");
+    } catch {
+      /* ignore */
+    }
+    void supabase
+      .from("magnet_views")
+      .insert({
+        slug,
+        session_id: attribution.session_id,
+        visitor_fingerprint: attribution.visitor_fingerprint,
+        utm_source: attribution.utm_source,
+        utm_medium: attribution.utm_medium,
+        utm_campaign: attribution.utm_campaign,
+        referrer_url: attribution.referrer_url,
+      })
+      .then((res) => {
+        if (res.error && typeof console !== "undefined") {
+          console.debug("[magnet attribution] view insert failed", res.error);
+        }
+      });
+  }, [slug, attribution]);
 
   // Warm Calendly assets the moment the microsite mounts so the popup opens
   // instantly when the user clicks "Book a Walkthrough" in the nav.

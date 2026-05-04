@@ -6,7 +6,6 @@ type Author = {
   photo: string;
   name: string;
   role: string;
-  quote: string;
   badges: string[];
   delay: string;
   linkedin: string;
@@ -17,7 +16,6 @@ const AUTHORS: Author[] = [
     photo: adamPhoto,
     name: 'Adam Fridman',
     role: 'Co-Author · Founder, Mabbly',
-    quote: 'Six hundred conversations. One framework that survived contact with reality.',
     badges: ['500 interviews', '180 episodes', 'Inc. Columnist'],
     delay: '0.1s',
     linkedin: 'https://www.linkedin.com/in/adamfridman/',
@@ -26,7 +24,6 @@ const AUTHORS: Author[] = [
     photo: richardPhoto,
     name: 'Richard Ashbaugh',
     role: 'Co-Author · CEO, Mabbly',
-    quote: 'The framework in this book is the one I wish I had at AArete.',
     badges: ['$125M CMO', '$1.2B Scale', '26 years'],
     delay: '0.25s',
     linkedin: 'https://www.linkedin.com/in/richardfashbaugh/',
@@ -268,21 +265,6 @@ export default function Authors() {
                   <Linkedin size={16} strokeWidth={1.75} />
                 </a>
               </div>
-              <p
-                style={{
-                  fontFamily: "'Inter Tight', sans-serif",
-                  fontSize: 'clamp(18px, 1.7vw, 22px)',
-                  lineHeight: 1.5,
-                  color: 'rgba(15,30,29,0.78)',
-                  borderLeft: '3px solid rgba(168, 146, 58,0.45)',
-                  paddingLeft: 20,
-                  margin: '0 0 28px',
-                  fontWeight: 300,
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                {a.quote}
-              </p>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {a.badges.map((b) => (
                   <span key={b} className="au-badge">
