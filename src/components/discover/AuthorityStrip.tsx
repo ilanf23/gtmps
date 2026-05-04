@@ -834,7 +834,19 @@ export default function AuthorityStrip() {
                   <span className="au-card-label">Author</span>
                 </div>
                 <p className="au-name">Adam Fridman</p>
-                <p className="au-role" style={{ margin: '8px 0 24px' }}>Co-Author · Founder, Mabbly</p>
+                <div className="au-role-row">
+                  <p className="au-role">Co-Author · Founder, Mabbly</p>
+                  <a
+                    href="https://www.linkedin.com/in/adamfridman/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Adam Fridman on LinkedIn"
+                    className="au-li"
+                    tabIndex={activeIndex === 2 ? 0 : -1}
+                  >
+                    <Linkedin size={14} strokeWidth={2} />
+                  </a>
+                </div>
                 <div className="au-stats">
                   {AUTHOR_STATS.map((s, i) => renderStatCard(s, `a-${i}`, i))}
                 </div>

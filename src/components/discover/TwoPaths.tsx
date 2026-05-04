@@ -362,10 +362,13 @@ export default function TwoPaths() {
         }
 
         .atm-card-head {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 16px;
+          position: relative;
+          display: block;
+          padding-right: 104px;
+          min-height: 88px;
+        }
+        @media (max-width: 720px) {
+          .atm-card-head { padding-right: 76px; min-height: 64px; }
         }
 
         .atm-domain {
@@ -641,8 +644,14 @@ export default function TwoPaths() {
 
         /* ── card icons (radar / diamond) ─────────── */
         .atm-card-icon {
+          position: absolute;
+          top: 0;
+          right: 0;
           width: 88px; height: 88px;
-          flex: 0 0 auto;
+          overflow: visible;
+        }
+        @media (max-width: 720px) {
+          .atm-card-icon { width: 64px; height: 64px; }
         }
         .atm-radar-arc {
           transform-origin: center;
@@ -798,8 +807,6 @@ export default function TwoPaths() {
         @media (max-width: 720px) {
           .atm-inner { padding: 72px 20px 24px; }
           .atm-card { padding: 32px 26px; }
-          .atm-card-head { flex-direction: column; align-items: flex-start; }
-          .atm-card-icon { width: 64px; height: 64px; }
           .atm-card-foot { flex-direction: column; align-items: flex-start; }
           .atm-table thead th, .atm-table tbody td { padding: 12px 14px; font-size: 13px; }
           .atm-features { grid-template-columns: 1fr; }

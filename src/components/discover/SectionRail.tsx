@@ -133,7 +133,8 @@ const SectionRail = ({ items }: { items: Item[] }) => {
 
         .sr-connector {
           position: absolute;
-          top: 6px;
+          top: 12px;
+          bottom: 12px;
           left: 50%;
           transform: translateX(-50%);
           width: 1px;
@@ -196,7 +197,7 @@ const SectionRail = ({ items }: { items: Item[] }) => {
       `}</style>
 
       <nav aria-label="Sections" className="sr-rail" data-visible={visible}>
-        <div className="sr-connector" style={{ height: items.length * 28 }} aria-hidden />
+        <div className="sr-connector" aria-hidden />
         {items.map((i) => {
           const isActive = i.id === active;
           return (

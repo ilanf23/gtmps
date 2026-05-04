@@ -1,4 +1,3 @@
-const VIDEO_START = 56;
 import { useEffect, useRef, useState } from "react";
 
 const STATEMENT_WORDS = ["The", "ones", "that", "move", "first", "set", "the terms."];
@@ -12,13 +11,7 @@ export default function WhyNow() {
   const handlePlay = () => {
     const v = videoRef.current;
     if (!v) return;
-    if (v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
     v.play().then(() => setIsPlaying(true)).catch(() => {});
-  };
-
-  const handleTimeUpdate = () => {
-    const v = videoRef.current;
-    if (v && v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
   };
 
   useEffect(() => {
@@ -199,6 +192,32 @@ export default function WhyNow() {
         }
         .wn-video-wrap:focus-visible {
           box-shadow: 0 32px 80px -20px rgba(15, 30, 29, 0.55), 0 0 0 3px rgba(255, 186, 26, 0.55);
+        }
+        .wn-play-triangle {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.92);
+          color: #0F1E1D;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 2;
+          pointer-events: none;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+          transition: transform 200ms ease, background 200ms ease;
+        }
+        .wn-play-triangle svg {
+          margin-left: 4px;
+        }
+        .wn-video-wrap:hover .wn-play-triangle,
+        .wn-video-wrap:focus-visible .wn-play-triangle {
+          background: #ffffff;
+          transform: translate(-50%, -50%) scale(1.05);
         }
         .wn-video-wrap::before {
           content: "";
@@ -549,14 +568,10 @@ export default function WhyNow() {
               <video
                 ref={videoRef}
                 src="/discover/videos/why-now.mp4"
+                poster="/discover/videos/why-now-poster.jpg"
                 preload="metadata"
                 playsInline
                 controls={isPlaying}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={(e) => {
-                  const v = e.currentTarget;
-                  if (v.currentTime < VIDEO_START) v.currentTime = VIDEO_START;
-                }}
                 onEnded={() => setIsPlaying(false)}
                 style={{
                   position: "absolute",
@@ -565,66 +580,14 @@ export default function WhyNow() {
                   height: "100%",
                   objectFit: "cover",
                   zIndex: 0,
-                  opacity: isPlaying ? 1 : 0,
-                  transition: "opacity 250ms",
                 }}
               />
               {!isPlaying && (
-                <>
-                  <div className="wn-video-meta-tl">
-                    <span className="wn-live-dot" aria-hidden />
-                    <span>S6E1 · Cold Open</span>
-                  </div>
-                  <div className="wn-video-duration">0:90</div>
-                </>
-              )}
-
-              {!isPlaying && <div className="wn-play-ring" aria-hidden />}
-              {!isPlaying && <div className="wn-play-ring r2" aria-hidden />}
-
-              <button
-                className="wn-play-button"
-                aria-label="Play video"
-                tabIndex={-1}
-                type="button"
-                style={{ display: isPlaying ? "none" : undefined }}
-              >
-                <svg
-                  className="wn-play-icon"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <polygon points="6,4 20,12 6,20" />
-                </svg>
-              </button>
-
-              {!isPlaying && (
-              <div className="wn-video-caption">
-                <div className="wn-video-speaker">
-                  <div className="wn-avatar" aria-hidden>
-                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="40" height="40" fill="#3d2f24" />
-                      <circle cx="20" cy="15" r="7" fill="#c4946e" />
-                      <path
-                        d="M5 40 C 5 30, 12 24, 20 24 C 28 24, 35 30, 35 40 Z"
-                        fill="#5a4226"
-                      />
-                      <path
-                        d="M14 12 Q 20 10, 26 12 L 26 14 L 14 14 Z"
-                        fill="#2a1d0f"
-                      />
-                    </svg>
-                  </div>
-                  <div className="wn-video-speaker-text">
-                    <span className="name">Adam Fridman</span>
-                    <span className="role">Founder · 90 seconds: why now</span>
-                  </div>
-                </div>
-                <span className="wn-video-tag">Watch · 0:90</span>
-              </div>
+                <span className="wn-play-triangle" aria-hidden>
+                  <svg width="28" height="32" viewBox="0 0 24 28" fill="currentColor">
+                    <polygon points="2,2 22,14 2,26" />
+                  </svg>
+                </span>
               )}
             </div>
           </div>

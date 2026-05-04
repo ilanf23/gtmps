@@ -23,7 +23,6 @@ import MapSection from '@/components/discover/MapSection';
 import TwoPaths from '@/components/discover/TwoPaths';
 import Faq from '@/components/discover/Faq';
 import FinalCta from '@/components/discover/FinalCta';
-import AdamNote from '@/components/discover/AdamNote';
 import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
 
 const ADD_YOUR_FIRM_LABEL = "Build Your Map →";
@@ -165,12 +164,11 @@ const Discover = () => {
     { id: "map", label: "06 · GTM Score" },
     { id: "industries", label: "07 · Industries" },
     { id: "why-now", label: "08 · Why Now" },
-    { id: "adam-note", label: "09 · Note" },
-    { id: "results", label: "10 · Proof" },
-    { id: "manuscript", label: "11 · Manuscript" },
-    { id: "beta-reader", label: "12 · Early Access" },
-    { id: "faq", label: "13 · FAQ" },
-    { id: "final", label: "14 · Final" },
+    { id: "results", label: "09 · Proof" },
+    { id: "manuscript", label: "10 · Manuscript" },
+    { id: "beta-reader", label: "11 · Early Access" },
+    { id: "faq", label: "12 · FAQ" },
+    { id: "final", label: "13 · Final" },
   ];
 
   return (
@@ -193,7 +191,6 @@ const Discover = () => {
         <MapSection />
         <IndustryGrid />
         <WhyNow />
-        <AdamNote />
         <Results />
         <ManuscriptAnchor />
         <BetaReader />

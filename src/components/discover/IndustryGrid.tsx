@@ -489,13 +489,6 @@ export default function IndustryGrid() {
             );
           })}
         </div>
-
-        <div className="ind-foot">
-          <span className="ind-foot-pill">
-            <span className="ind-foot-dot" aria-hidden />
-            <span>All 8 verticals live · Click your industry to see the full thesis</span>
-          </span>
-        </div>
       </div>
     </section>
   );
