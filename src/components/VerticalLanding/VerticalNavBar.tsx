@@ -317,7 +317,18 @@ export default function VerticalNavBar({
                 <ArrowSvg />
               </button>
             ) : (
-              <a className="vnav-cta" href={addYourFirmHref}>
+              <a
+                className="vnav-cta"
+                href={addYourFirmHref}
+                onClick={
+                  onAddYourFirm
+                    ? (e) => {
+                        e.preventDefault();
+                        onAddYourFirm();
+                      }
+                    : undefined
+                }
+              >
                 {addYourFirmLabel}
                 <ArrowSvg />
               </a>
