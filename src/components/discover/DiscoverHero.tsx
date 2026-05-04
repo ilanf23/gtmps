@@ -7,10 +7,35 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const ROTATOR_WORDS = ['client', 'partner', 'retainer', 'deal', 'case', 'mandate'];
 
-const PROOF_STATS = [
-  { value: 500, label: 'Practitioner Interviews' },
-  { value: 30, label: 'Firms in Cohort' },
-  { value: 8, label: 'Verticals Translated' },
+const ORBIT_CX = 740;
+const ORBIT_CY = 380;
+
+type Planet = {
+  x: number;
+  y: number;
+  rx: number;
+  ry: number;
+  period: number;
+  startAngle: number;
+};
+
+const buildPlanet = (x: number, y: number, rx: number, ry: number, period: number): Planet => ({
+  x,
+  y,
+  rx,
+  ry,
+  period,
+  startAngle: Math.atan2((y - ORBIT_CY) / ry, (x - ORBIT_CX) / rx),
+});
+
+// Each planet is snapped to one of the five existing orbit ellipses by closest distance.
+// Order matches the rotator words used as labels during the connect phase.
+const PLANETS: Planet[] = [
+  buildPlanet(595, 432, 105, 44, 18000),  // CLIENT — innermost, fastest
+  buildPlanet(572, 290, 220, 92, 24000),  // PARTNER
+  buildPlanet(508, 519, 345, 146, 30000), // RETAINER
+  buildPlanet(390, 440, 475, 200, 36000), // DEAL
+  buildPlanet(1092, 340, 610, 252, 44000), // CASE — outermost, slowest
 ];
 
 export default function DiscoverHero() {
@@ -20,9 +45,9 @@ export default function DiscoverHero() {
   const [submitting, setSubmitting] = useState(false);
 
   const reduceMotion = useReducedMotion();
-  const proofRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const dormantMarkerRef = useRef<SVGGElement | null>(null);
-  const dormantLabelRef = useRef<SVGGElement | null>(null);
+  const planetRefs = useRef<(SVGGElement | null)[]>([]);
+  const labelRef = useRef<SVGGElement | null>(null);
+  const labelTextRef = useRef<SVGTextElement | null>(null);
   const connectorRef = useRef<SVGPathElement | null>(null);
 
   const rotatorMeasureRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -56,97 +81,94 @@ export default function DiscoverHero() {
 
   const rotatorWidthEm = rotatorEmWidths[rotatorIdx];
 
-  // Five Orbits - DORMANT marker spins around orbit 4 (rx=475, ry=200).
-  // Period 28s. Each frame updates marker position, connector Q-curve,
-  // and label x-anchor (flips sides based on which half of the orbit).
+  // Five Orbits — two-phase animation.
+  // Phase A (0..10s): YOUR FIRM connects to each planet in turn (2s each),
+  //   showing a rotator-word label above the active planet.
+  // Phase B (10s+): connector + label fade out and all five planets orbit
+  //   YOUR FIRM on their assigned ellipses at their own periods.
   useEffect(() => {
     const reduced =
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-    const cx = 740;
-    const cy = 380;
-    const orbitRx = 475;
-    const orbitRy = 200;
-    const period = 28000;
-    const startAngle = 0.32;
-
-    const marker = dormantMarkerRef.current;
     const connector = connectorRef.current;
-    const label = dormantLabelRef.current;
-    if (!marker || !connector || !label) return;
+    const label = labelRef.current;
+    const labelText = labelTextRef.current;
+    if (!connector || !label || !labelText) return;
 
-    const compute = (angle: number) => {
-      const x = cx + orbitRx * Math.cos(angle);
-      const y = cy + orbitRy * Math.sin(angle);
-      const dx = x - cx;
-      const dy = y - cy;
+    const STEP_MS = 2000;
+    const SEQUENCE_END = STEP_MS * PLANETS.length;
+    const FADE_MS = 600;
+
+    const drawConnector = (px: number, py: number) => {
+      const dx = px - ORBIT_CX;
+      const dy = py - ORBIT_CY;
       const dist = Math.hypot(dx, dy) || 1;
       const ux = dx / dist;
       const uy = dy / dist;
-      const sx = cx + ux * 16;
-      const sy = cy + uy * 16;
-      const ex = x - ux * 18;
-      const ey = y - uy * 18;
+      const sx = ORBIT_CX + ux * 16;
+      const sy = ORBIT_CY + uy * 16;
+      const ex = px - ux * 14;
+      const ey = py - uy * 14;
       const cpX = (sx + ex) / 2;
       const cpY = (sy + ey) / 2 + 16;
-      const labelOffsetX = x >= cx ? 22 : -170;
-      return { x, y, sx, sy, ex, ey, cpX, cpY, labelOffsetX };
+      connector.setAttribute('d', `M ${sx} ${sy} Q ${cpX} ${cpY} ${ex} ${ey}`);
     };
 
-    const apply = (p: ReturnType<typeof compute>) => {
-      marker.setAttribute('transform', `translate(${p.x}, ${p.y})`);
-      connector.setAttribute(
-        'd',
-        `M ${p.sx} ${p.sy} Q ${p.cpX} ${p.cpY} ${p.ex} ${p.ey}`
-      );
-      label.setAttribute('transform', `translate(${p.x + p.labelOffsetX}, ${p.y})`);
+    const placeLabel = (px: number, py: number, word: string) => {
+      const offsetX = px >= ORBIT_CX ? 22 : -150;
+      label.setAttribute('transform', `translate(${px + offsetX}, ${py})`);
+      labelText.textContent = word.toUpperCase();
     };
 
     if (reduced) {
-      apply(compute(startAngle));
+      const p = PLANETS[0];
+      drawConnector(p.x, p.y);
+      placeLabel(p.x, p.y, ROTATOR_WORDS[0]);
+      label.style.opacity = '1';
+      connector.style.opacity = '1';
       return;
     }
 
-    const startTime = performance.now();
+    const t0 = performance.now();
     let rafId = 0;
     const tick = (now: number) => {
-      const elapsed = (now - startTime) % period;
-      const angle = startAngle + (elapsed / period) * 2 * Math.PI;
-      apply(compute(angle));
+      const elapsed = now - t0;
+
+      if (elapsed < SEQUENCE_END) {
+        // Phase A — advance every 2s.
+        const stepIdx = Math.min(PLANETS.length - 1, Math.floor(elapsed / STEP_MS));
+        const p = PLANETS[stepIdx];
+        // Reset planet transforms in case we re-enter phase A on hot reload.
+        planetRefs.current.forEach((g) => {
+          if (g) g.setAttribute('transform', 'translate(0,0)');
+        });
+        drawConnector(p.x, p.y);
+        placeLabel(p.x, p.y, ROTATOR_WORDS[stepIdx]);
+        label.style.opacity = '1';
+        connector.style.opacity = '1';
+      } else {
+        // Phase B — connector + label fade, planets orbit.
+        const fadeT = Math.min(1, (elapsed - SEQUENCE_END) / FADE_MS);
+        const opacity = String(1 - fadeT);
+        label.style.opacity = opacity;
+        connector.style.opacity = opacity;
+
+        const tOrbit = elapsed - SEQUENCE_END;
+        PLANETS.forEach((p, i) => {
+          const g = planetRefs.current[i];
+          if (!g) return;
+          const angle = p.startAngle + (tOrbit / p.period) * 2 * Math.PI;
+          const x = ORBIT_CX + p.rx * Math.cos(angle);
+          const y = ORBIT_CY + p.ry * Math.sin(angle);
+          g.setAttribute('transform', `translate(${x - p.x}, ${y - p.y})`);
+        });
+      }
+
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, []);
-
-  // Count-up on proof numbers
-  useEffect(() => {
-    const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const rafIds: number[] = [];
-    const start = window.setTimeout(() => {
-      proofRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const target = PROOF_STATS[i]?.value ?? 0;
-        if (reduced) {
-          el.textContent = String(target);
-          return;
-        }
-        const duration = 1400;
-        const t0 = performance.now();
-        const step = (now: number) => {
-          const t = Math.min(1, (now - t0) / duration);
-          const eased = 1 - Math.pow(1 - t, 3);
-          el.textContent = String(Math.round(eased * target));
-          if (t < 1) rafIds.push(requestAnimationFrame(step));
-        };
-        rafIds.push(requestAnimationFrame(step));
-      });
-    }, 2400);
-    return () => {
-      window.clearTimeout(start);
-      rafIds.forEach((id) => cancelAnimationFrame(id));
-    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -197,11 +219,37 @@ export default function DiscoverHero() {
           z-index: 2;
         }
         .kl-inner {
-          max-width: 1100px;
+          max-width: 1320px;
           margin: 0 auto;
           text-align: center;
           position: relative;
           z-index: 2;
+        }
+        .kl-split {
+          display: grid;
+          grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr);
+          gap: 32px;
+          align-items: center;
+          text-align: left;
+        }
+        .kl-split-copy {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .kl-split-map {
+          position: relative;
+          width: 130%;
+          margin-right: -30%;
+        }
+        @media (max-width: 1024px) {
+          .kl-split {
+            grid-template-columns: 1fr;
+            gap: 32px;
+            text-align: center;
+          }
+          .kl-split-copy { align-items: center; }
+          .kl-split-map { width: 100%; margin-right: 0; }
         }
 
         /* Watermark blobs */
@@ -249,10 +297,10 @@ export default function DiscoverHero() {
         }
         /* Headline */
         .kl-h1 {
-          margin: 28px 0 24px;
+          margin: 20px 0 20px;
           font-weight: 900;
-          font-size: clamp(58px, 8.4vw, 144px);
-          line-height: 0.9;
+          font-size: clamp(40px, 4.6vw, 76px);
+          line-height: 0.92;
           letter-spacing: -0.025em;
           text-transform: uppercase;
           color: var(--kl-depth);
@@ -331,10 +379,10 @@ export default function DiscoverHero() {
 
         /* Sub */
         .kl-sub {
-          max-width: 60ch;
-          margin: 0 auto 32px;
+          max-width: 56ch;
+          margin: 0 0 28px;
           font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
-          font-size: 19px;
+          font-size: 16px;
           line-height: 1.55;
           letter-spacing: -0.025em;
           color: var(--kl-depth);
@@ -349,8 +397,9 @@ export default function DiscoverHero() {
 
         /* Form */
         .kl-form {
-          max-width: 580px;
-          margin: 0 auto 16px;
+          width: 100%;
+          max-width: 560px;
+          margin: 0 0 16px;
           display: flex;
           flex-direction: column;
           gap: 8px;
@@ -454,7 +503,7 @@ export default function DiscoverHero() {
           color: var(--kl-depth);
           opacity: 0;
           animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 1700ms forwards;
-          margin: 0 auto 56px;
+          margin: 0 0 0;
         }
         .kl-trust-sep {
           color: var(--kl-care);
@@ -465,8 +514,8 @@ export default function DiscoverHero() {
         /* Map */
         .kl-map-wrap {
           position: relative;
-          margin: 24px auto 56px;
-          max-width: 1040px;
+          margin: 0;
+          width: 100%;
           padding: 0;
           opacity: 0;
           animation: klFadeUp 700ms cubic-bezier(0.13, 0.28, 0.3, 1) 2000ms forwards;
@@ -503,49 +552,6 @@ export default function DiscoverHero() {
           100% { opacity: 0;   transform: scale(2.3); }
         }
 
-        /* Proof strip */
-        .kl-proof {
-          position: relative;
-          width: 100%;
-          background: rgba(255,255,255,0.4);
-          border-top: 1px solid rgba(15,30,29,0.08);
-          border-bottom: 1px solid rgba(15,30,29,0.08);
-          padding: 28px 24px;
-          opacity: 0;
-          animation: klFadeIn 700ms ease-out 2400ms forwards;
-          z-index: 2;
-        }
-        .kl-proof-inner {
-          max-width: 1100px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
-        }
-        .kl-proof-col {
-          padding-left: 16px;
-          border-left: 3px solid var(--kl-care);
-          text-align: left;
-        }
-        .kl-proof-num {
-          font-family: 'Inter Tight', 'Arial Black', sans-serif;
-          font-weight: 900;
-          font-size: clamp(28px, 3vw, 42px);
-          letter-spacing: -0.025em;
-          line-height: 1;
-          color: var(--kl-depth);
-        }
-        .kl-proof-num .unit { color: var(--kl-purpose); }
-        .kl-proof-label {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 12px;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          opacity: 0.7;
-          color: var(--kl-depth);
-          margin: 8px 0 0;
-        }
-
         /* Keyframes */
         @keyframes klFadeIn { to { opacity: 1; } }
         @keyframes klFadeUp {
@@ -579,20 +585,18 @@ export default function DiscoverHero() {
         /* Responsive */
         @media (max-width: 900px) {
           .kl-hero { padding: 72px 20px 56px; }
-          .kl-proof-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
           .kl-form-row { flex-direction: column; }
           .kl-submit { width: 100%; }
           .kl-blob.small { display: none; }
           .kl-trust { font-size: 12px; }
         }
         @media (max-width: 540px) {
-          .kl-proof-inner { grid-template-columns: 1fr; }
           .kl-marquee-item { font-size: 11px; padding: 0 18px; gap: 18px; }
         }
 
         /* Reduced motion */
         @media (prefers-reduced-motion: reduce) {
-          .kl-eyebrow, .kl-h1 .word, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof,
+          .kl-eyebrow, .kl-h1 .word, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap,
           .kl-eyebrow-dot, .kl-period, .kl-blob.big, .kl-blob.small,
           .orbit-connector, .orbit-firm-glow, .orbit-dormant-pulse, .kl-submit::after {
             animation-duration: 0.01ms !important;
@@ -600,7 +604,7 @@ export default function DiscoverHero() {
             transition-duration: 0.01ms !important;
           }
           .kl-h1 .word { opacity: 1; transform: none; }
-          .kl-eyebrow, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap, .kl-proof { opacity: 1; }
+          .kl-eyebrow, .kl-sub, .kl-form, .kl-trust, .kl-map-wrap { opacity: 1; }
         }
       `}</style>
 
@@ -624,6 +628,8 @@ export default function DiscoverHero() {
           </svg>
 
           <div className="kl-inner">
+           <div className="kl-split">
+            <div className="kl-split-copy">
             <h1 className="kl-h1">
               <span className="word w1">Your</span>
               <span className="word w2">next</span>
@@ -711,7 +717,8 @@ export default function DiscoverHero() {
               <span className="kl-trust-sep">·</span>Confidential
               <span className="kl-trust-sep">·</span>Peer-benchmarked
             </p>
-
+            </div>
+            <div className="kl-split-map">
             <div className="kl-map-wrap">
               <svg
                 className="kl-map-svg"
@@ -790,30 +797,30 @@ export default function DiscoverHero() {
                   <circle cx="870" cy="650" r="0.9" />
                 </g>
 
-                {/* Five static dark planet spheres — positioned in mid-gaps
-                    between orbits so they don't sit on the ellipse strokes
-                    or the horizontal cross-hair axis. */}
-                <g>
+                {/* Five planets — each indexed into PLANETS so the JS animation
+                    can move them. Group transform="translate(dx,dy)" deltas
+                    are applied on top of the authored cx/cy. */}
+                <g ref={(el) => { planetRefs.current[1] = el; }}>
                   <ellipse cx="572" cy="296" rx="14" ry="3" fill="rgba(15, 30, 29, 0.18)" />
                   <circle cx="572" cy="290" r="11" fill="url(#planetGrad)" />
                   <circle cx="568" cy="286" r="3" fill="#7A8A85" opacity="0.35" />
                 </g>
-                <g>
+                <g ref={(el) => { planetRefs.current[3] = el; }}>
                   <ellipse cx="390" cy="444" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
                   <circle cx="390" cy="440" r="8.5" fill="url(#planetGrad)" />
                   <circle cx="387" cy="437" r="2.4" fill="#7A8A85" opacity="0.35" />
                 </g>
-                <g>
+                <g ref={(el) => { planetRefs.current[0] = el; }}>
                   <ellipse cx="595" cy="436" rx="9" ry="2" fill="rgba(15, 30, 29, 0.18)" />
                   <circle cx="595" cy="432" r="7" fill="url(#planetGrad)" />
                   <circle cx="593" cy="430" r="2" fill="#7A8A85" opacity="0.35" />
                 </g>
-                <g>
+                <g ref={(el) => { planetRefs.current[4] = el; }}>
                   <ellipse cx="1092" cy="346" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
                   <circle cx="1092" cy="340" r="8.5" fill="url(#planetGrad)" />
                   <circle cx="1089" cy="337" r="2.4" fill="#7A8A85" opacity="0.35" />
                 </g>
-                <g>
+                <g ref={(el) => { planetRefs.current[2] = el; }}>
                   <ellipse cx="508" cy="525" rx="11" ry="2.5" fill="rgba(15, 30, 29, 0.18)" />
                   <circle cx="508" cy="519" r="8.5" fill="url(#planetGrad)" />
                   <circle cx="505" cy="516" r="2.4" fill="#7A8A85" opacity="0.35" />
@@ -829,6 +836,7 @@ export default function DiscoverHero() {
                   strokeDasharray="6 5"
                   strokeLinecap="round"
                   d=""
+                  style={{ opacity: 0 }}
                 />
 
                 {/* YOUR FIRM at center */}
@@ -854,123 +862,30 @@ export default function DiscoverHero() {
                   </text>
                 </g>
 
-                {/* DORMANT marker group (animated by JS) */}
-                <g ref={dormantMarkerRef}>
-                  <ellipse cx="0" cy="14" rx="14" ry="2.5" fill="rgba(15, 30, 29, 0.20)" filter="url(#softShadow)" />
-                  <circle cx="0" cy="0" r="10" fill="url(#dormantGrad)" filter="url(#softShadow)" />
-                  <ellipse cx="-3" cy="-4" rx="3.4" ry="2.2" fill="rgba(255, 255, 255, 0.40)" />
-                </g>
-
-                {/* DORMANT label (animated by JS) */}
-                <g ref={dormantLabelRef}>
-                  <rect x="0" y="-15" width="148" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
-                  <text x="14" y="4" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="11" letterSpacing="2.2" fill="#BF461A" fontWeight="700">
-                    DORMANT
-                  </text>
-                  <text x="86" y="4" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="11" fill="#9AA09C" fontWeight="700">
-                    ·
-                  </text>
-                  <text x="100" y="5" fontFamily="'Arial Black', 'Inter Tight', sans-serif" fontSize="13" letterSpacing="-0.52" fill="#0F1E1D" fontWeight="900">
-                    $400K
-                  </text>
-                </g>
-
-                {/* Bottom-left axis label */}
-                <g transform="translate(56 644)">
-                  <g transform="translate(0 -12)">
-                    <circle cx="16" cy="16" r="16" fill="#FCFAF4" stroke="rgba(15, 30, 29, 0.20)" strokeWidth="1.5" />
-                    <g transform="translate(8 8)" fill="none" stroke="#0F1E1D" strokeWidth="1.2" strokeLinecap="round">
-                      <circle cx="5" cy="6" r="2.2" />
-                      <circle cx="11" cy="6" r="2.2" />
-                      <path d="M2 13 c 0 -2 1.5 -3 3 -3 c 1.5 0 3 1 3 3" />
-                      <path d="M8 13 c 0 -2 1.5 -3 3 -3 c 1.5 0 3 1 3 3" />
-                    </g>
-                  </g>
+                {/* Active rotator-word label (animated by JS) */}
+                <g ref={labelRef} style={{ opacity: 0 }}>
+                  <rect x="0" y="-15" width="118" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
                   <text
-                    x="46"
-                    y="9"
-                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
-                    fontSize="13"
-                    letterSpacing="2.86"
-                    fill="#0F1E1D"
-                    fontWeight="700"
-                  >
-                    RELATIONSHIP DEPTH
-                  </text>
-                  <text x="287" y="9" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="16" fill="#BF461A" fontWeight="700">
-                    →
-                  </text>
-                  <line x1="46" y1="22" x2="320" y2="22" stroke="#BF461A" strokeWidth="1" />
-                </g>
-
-                {/* Bottom-right axis label */}
-                <g transform="translate(1424 644)">
-                  <text
-                    x="-46"
-                    y="9"
-                    textAnchor="end"
-                    fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
-                    fontSize="13"
-                    letterSpacing="2.86"
-                    fill="#0F1E1D"
-                    fontWeight="700"
-                  >
-                    REVENUE OPPORTUNITY
-                  </text>
-                  <text x="-30" y="9" fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace" fontSize="16" fill="#BF461A" fontWeight="700">
-                    →
-                  </text>
-                  <g transform="translate(-32 -12)">
-                    <circle cx="16" cy="16" r="16" fill="#FCFAF4" stroke="rgba(15, 30, 29, 0.20)" strokeWidth="1.5" />
-                    <g transform="translate(8 8)" fill="#0F1E1D">
-                      <rect x="2.5" y="9" width="2.4" height="5" rx="0.4" />
-                      <rect x="6.8" y="6" width="2.4" height="8" rx="0.4" />
-                      <rect x="11.1" y="3" width="2.4" height="11" rx="0.4" />
-                    </g>
-                  </g>
-                  <line x1="-320" y1="22" x2="-46" y2="22" stroke="#BF461A" strokeWidth="1" />
-                </g>
-
-                {/* PREVIEW caption (bottom-right) */}
-                <g transform="translate(1424 712)">
-                  <text
-                    x="0"
-                    y="0"
-                    textAnchor="end"
+                    ref={labelTextRef}
+                    x="14"
+                    y="4"
                     fontFamily="'JetBrains Mono', 'IBM Plex Mono', monospace"
                     fontSize="11"
-                    letterSpacing="2.42"
-                    fill="#6B7370"
+                    letterSpacing="2.2"
+                    fill="#BF461A"
                     fontWeight="700"
                   >
-                    <tspan>PREVIEW</tspan>
-                    <tspan dx="6" fill="#BF461A">·</tspan>
-                    <tspan dx="6">FIVE ORBITS FRAMEWORK</tspan>
+                    CLIENT
                   </text>
                 </g>
+
               </svg>
             </div>
+            </div>
+           </div>
           </div>
         </div>
 
-        <div className="kl-proof">
-          <div className="kl-proof-inner">
-            {PROOF_STATS.map((stat, i) => (
-              <div className="kl-proof-col" key={stat.label}>
-                <div className="kl-proof-num">
-                  <span ref={(el) => { proofRefs.current[i] = el; }}>0</span>
-                </div>
-                <p className="kl-proof-label">{stat.label}</p>
-              </div>
-            ))}
-            <div className="kl-proof-col">
-              <div className="kl-proof-num">
-                $1.2<span className="unit">M</span>
-              </div>
-              <p className="kl-proof-label">Verified · AArete reactivation</p>
-            </div>
-          </div>
-        </div>
       </section>
     </>
   );

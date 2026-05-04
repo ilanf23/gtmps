@@ -157,12 +157,12 @@ const Discover = () => {
 
   const railItems = [
     { id: "hero", label: "01 · Hero" },
-    { id: "authority", label: "02 · Built By" },
-    { id: "receipts", label: "03 · Receipts" },
-    { id: "two-paths", label: "04 · After the Map" },
-    { id: "dead-zone", label: "05 · Dead Zone" },
-    { id: "map", label: "06 · GTM Score" },
-    { id: "industries", label: "07 · Industries" },
+    { id: "industries", label: "02 · Industries" },
+    { id: "authority", label: "03 · Built By" },
+    { id: "dead-zone", label: "04 · Dead Zone" },
+    { id: "receipts", label: "05 · Receipts" },
+    { id: "two-paths", label: "06 · After the Map" },
+    { id: "map", label: "07 · GTM Score" },
     { id: "why-now", label: "08 · Why Now" },
     { id: "results", label: "09 · Proof" },
     { id: "manuscript", label: "10 · Manuscript" },
@@ -184,12 +184,99 @@ const Discover = () => {
         <div id="hero">
           <DiscoverHero />
         </div>
+        <IndustryGrid />
+        <section style={{ background: "#FFFFFF", padding: "96px 24px" }}>
+          <div
+            style={{
+              maxWidth: 1200,
+              margin: "0 auto",
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr)",
+              gap: 64,
+              alignItems: "center",
+            }}
+            className="discover-book-intro"
+          >
+            <div>
+              <img
+                src="/book/book-cover.png"
+                alt="The Relationship Revenue OS — book cover"
+                style={{
+                  width: "100%",
+                  maxWidth: 420,
+                  height: "auto",
+                  display: "block",
+                  margin: "0 auto",
+                  boxShadow: "0 30px 60px -20px rgba(15,30,29,0.25), 0 12px 24px -12px rgba(15,30,29,0.18)",
+                  borderRadius: 4,
+                }}
+              />
+            </div>
+            <div>
+              <p
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 12,
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "#B8933A",
+                  margin: "0 0 16px",
+                }}
+              >
+                The Book
+              </p>
+              <h2
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "clamp(32px, 4vw, 48px)",
+                  lineHeight: 1.1,
+                  color: "#0F1E1D",
+                  margin: "0 0 24px",
+                  fontWeight: 600,
+                }}
+              >
+                The go-to-market system for firms that sell expertise,{" "}
+                <em style={{ color: "#B8933A" }}>not products.</em>
+              </h2>
+              <p
+                style={{
+                  fontFamily: "'Instrument Sans', system-ui, sans-serif",
+                  fontSize: 18,
+                  lineHeight: 1.6,
+                  color: "#3A4544",
+                  margin: "0 0 16px",
+                }}
+              >
+                The Relationship Revenue OS is a field manual for professional services firms — a translation of how 30 cohort firms across 8 verticals turned reputation, relationships, and bench expertise into a repeatable revenue engine.
+              </p>
+              <p
+                style={{
+                  fontFamily: "'Instrument Sans', system-ui, sans-serif",
+                  fontSize: 14,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#5A6A7A",
+                  margin: 0,
+                }}
+              >
+                By Adam Fridman · Richard Ashbaugh
+              </p>
+            </div>
+          </div>
+          <style>{`
+            @media (max-width: 900px) {
+              .discover-book-intro {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+              }
+            }
+          `}</style>
+        </section>
         <AuthorityStrip />
+        <DeadZone />
         <ReceiptsStrip />
         <TwoPaths />
-        <DeadZone />
         <MapSection />
-        <IndustryGrid />
         <WhyNow />
         <Results />
         <ManuscriptAnchor />

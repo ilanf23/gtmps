@@ -158,8 +158,8 @@ export default function IndustryGrid() {
         .ind-headline {
           font-family: var(--ind-display);
           font-weight: 900;
-          font-size: clamp(48px, 6.4vw, 104px);
-          line-height: 0.95;
+          font-size: clamp(28px, 3.2vw, 48px);
+          line-height: 1.05;
           letter-spacing: -0.025em;
           color: var(--color-elevation);
           margin: 0;
@@ -481,7 +481,6 @@ export default function IndustryGrid() {
                 </span>
                 <p className="vcard-term">{v.term}</p>
                 <h3 className="vcard-name">{v.name}</h3>
-                <p className="vcard-hook">{v.hook}</p>
                 <span className="vcard-link">
                   View thesis <span className="arrow">→</span>
                 </span>
