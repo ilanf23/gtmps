@@ -823,7 +823,7 @@ export default function DiscoverHero() {
 
                 {/* Static "$400,000 deal closed" pill that follows the orbiting planet */}
                 <g ref={labelRef} transform="translate(530, 519)">
-                  <rect x="0" y="-15" width="156" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
+                  <rect x="0" y="-15" width="220" height="30" rx="15" fill="#FCFAF4" stroke="#BF461A" strokeWidth="1.5" />
                   <text
                     ref={labelTextRef}
                     x="14"
