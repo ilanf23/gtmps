@@ -246,7 +246,7 @@ export default function Manuscript() {
               textDecoration: "none",
             }}
           >
-            Apply for Early Access
+            Add Your Firm
           </a>
         </div>
       </article>
