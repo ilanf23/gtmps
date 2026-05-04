@@ -231,7 +231,7 @@ const Discover = () => {
                   fontFamily: "'Cormorant Garamond', serif",
                   fontSize: "clamp(32px, 4vw, 48px)",
                   lineHeight: 1.1,
-                  color: "#EDF5EC",
+                  color: "#0F1E1D",
                   margin: "0 0 24px",
                   fontWeight: 600,
                 }}
@@ -244,7 +244,7 @@ const Discover = () => {
                   fontFamily: "'Instrument Sans', system-ui, sans-serif",
                   fontSize: 18,
                   lineHeight: 1.6,
-                  color: "rgba(237, 245, 236, 0.78)",
+                  color: "rgba(15, 30, 29, 0.78)",
                   margin: "0 0 16px",
                 }}
               >
@@ -256,7 +256,7 @@ const Discover = () => {
                   fontSize: 14,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: "rgba(237, 245, 236, 0.55)",
+                  color: "rgba(15, 30, 29, 0.55)",
                   margin: 0,
                 }}
               >
