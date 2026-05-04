@@ -59,7 +59,7 @@ export default function MapSection() {
               fontWeight: 500,
             }}
           >
-            06 · The GTM Score
+            The GTM Score
           </p>
           <div
             aria-hidden

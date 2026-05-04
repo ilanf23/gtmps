@@ -135,7 +135,7 @@ export default function TheBook() {
               fontWeight: 500,
             }}
           >
-            10 · THE MANUSCRIPT
+            THE MANUSCRIPT
           </p>
           <div
             aria-hidden

@@ -519,7 +519,7 @@ export default function WhyNow() {
 
       <div className="wn-inner">
         <div className="wn-header">
-          <p className="wn-eyebrow">09 · Why Now</p>
+          <p className="wn-eyebrow">Why Now</p>
           <div className="wn-rule" aria-hidden />
           <h2 className="wn-headline">
             <span className="wn-word">Why</span>
