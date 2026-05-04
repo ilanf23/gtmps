@@ -482,9 +482,9 @@ const CSS = `
   z-index: 110;
 }
 .vnav-menu-heading {
-  font-family: 'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace;
-  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
-  font-weight: 700; color: #6B5F47;
+  font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 900; color: #6B5F47;
   padding: 8px 10px 4px;
 }
 .vnav-menu-row {
@@ -550,9 +550,9 @@ const CSS = `
 .vnav-firm-row--active { background: rgba(191, 70, 26, 0.12); }
 .vnav-firm-row--active:hover { background: rgba(191, 70, 26, 0.16); }
 .vnav-firm-row-label {
-  font-family: 'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  font-weight: 700;
+  font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif;
+  font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
+  font-weight: 900;
 }
 .vnav-firm-row-arrow {
   color: #BF461A; font-weight: 700; font-size: 12px;
