@@ -243,7 +243,7 @@ export default function BetaReader() {
               autoComplete="email"
             />
             <button type="submit" className="ea-submit" data-cta="add-your-firm">
-              Get MY Map
+              Build Your Map
               <span className="ea-arrow" aria-hidden>→</span>
             </button>
           </div>

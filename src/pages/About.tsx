@@ -13,7 +13,7 @@ import { useRevealRef, revealStyle } from "@/hooks/useRevealRef";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const ADD_YOUR_FIRM_HREF = "/#hero";
-const ADD_YOUR_FIRM_LABEL = "Get MY Map →";
+const ADD_YOUR_FIRM_LABEL = "Build Your Map →";
 const PODCAST_HREF = "https://www.youtube.com/@GTMforPS";
 
 /* ─────────────────────────────────────────────

@@ -776,7 +776,7 @@ export default function ManuscriptAnchor() {
 
             <div className="cta-row">
               <a className="cta-pill" href="#hero" onClick={handleAdd}>
-                Get MY Map
+                Build Your Map
                 {arrow11}
               </a>
               <a className="cta-secondary" href="#">

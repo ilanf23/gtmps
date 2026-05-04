@@ -26,7 +26,7 @@ import FinalCta from '@/components/discover/FinalCta';
 import AdamNote from '@/components/discover/AdamNote';
 import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
 
-const ADD_YOUR_FIRM_LABEL = "Get MY Map →";
+const ADD_YOUR_FIRM_LABEL = "Build Your Map →";
 
 const handleAddYourFirmClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault();
@@ -150,7 +150,7 @@ const Discover = () => {
 
   return (
     <>
-      <VerticalNavBar forYourFirmHref="#industries" addYourFirmHref="#hero" />
+      <VerticalNavBar forYourFirmHref="#industries" addYourFirmHref="#hero" addYourFirmLabel="Build Your Map" />
       <SectionRail items={railItems} />
       <main style={{ paddingBottom: 120 }}>
         <div id="hero">

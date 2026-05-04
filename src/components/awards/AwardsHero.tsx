@@ -163,7 +163,7 @@ export default function AwardsHero() {
         <p className="ah-sub">
           Excellence in relationship driven growth deserves institutional recognition. Eight awards. One per vertical. Inaugural cohort, Q3 2026.
         </p>
-        <Link to="/#hero" className="ah-cta" data-cta="add-your-firm">Get MY Map →</Link>
+        <Link to="/#hero" className="ah-cta" data-cta="add-your-firm">Build Your Map →</Link>
         <p className="ah-trust">Free. 90 seconds to build. 10 minutes to read. Confidential. Considered for the Awards by default.</p>
       </div>
     </section>

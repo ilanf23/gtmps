@@ -333,7 +333,7 @@ export default function MapSection() {
                   fontWeight: 600,
                 }}
               >
-                Get Your Map <span aria-hidden style={{ fontSize: 16, lineHeight: 1 }}>&rarr;</span>
+                Build Your Map <span aria-hidden style={{ fontSize: 16, lineHeight: 1 }}>&rarr;</span>
               </a>
               <span
                 style={{

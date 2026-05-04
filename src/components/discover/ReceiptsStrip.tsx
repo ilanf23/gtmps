@@ -337,6 +337,75 @@ export default function ReceiptsStrip() {
           padding: 0 0.05em;
         }
 
+        .rcpt-hero-timeline {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0;
+          margin-top: 4px;
+          padding: 18px 0 4px;
+          border-top: 1px solid rgba(15, 30, 29, 0.08);
+          position: relative;
+        }
+        .rcpt-hero-timeline::before {
+          content: '';
+          position: absolute;
+          top: 38px;
+          left: 12%;
+          right: 12%;
+          height: 1px;
+          background: repeating-linear-gradient(
+            to right,
+            rgba(15, 30, 29, 0.22) 0,
+            rgba(15, 30, 29, 0.22) 4px,
+            transparent 4px,
+            transparent 9px
+          );
+        }
+        .tl-step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          text-align: center;
+          position: relative;
+          z-index: 1;
+        }
+        .tl-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--rcpt-card);
+          border: 2px solid var(--rcpt-depth);
+          margin-top: 8px;
+        }
+        .tl-step.tl-end .tl-dot {
+          background: var(--rcpt-care);
+          border-color: var(--rcpt-care);
+          box-shadow: 0 0 0 4px rgba(191, 70, 26, 0.18);
+        }
+        .tl-step.tl-mid .tl-dot {
+          background: var(--rcpt-card);
+          border-color: var(--rcpt-depth);
+          opacity: 0.45;
+        }
+        .tl-eyebrow {
+          font-family: 'DM Mono', 'IBM Plex Mono', Menlo, monospace;
+          font-size: 10px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--rcpt-depth);
+          opacity: 0.55;
+        }
+        .tl-step.tl-end .tl-eyebrow { color: var(--rcpt-care); opacity: 1; }
+        .tl-label {
+          font-family: 'Inter Tight', system-ui, sans-serif;
+          font-weight: 600;
+          font-size: 13px;
+          color: var(--rcpt-depth);
+          line-height: 1.25;
+        }
+        .tl-step.tl-mid .tl-label { opacity: 0.7; }
+
         .rcpt-hero-foot {
           display: flex;
           align-items: center;
@@ -723,6 +792,24 @@ export default function ReceiptsStrip() {
               <span className="hl-care">7 minutes</span>.
             </p>
 
+            <div className="rcpt-hero-timeline" aria-label="Reactivation timeline">
+              <div className="tl-step">
+                <span className="tl-eyebrow">Day 0</span>
+                <span className="tl-dot" aria-hidden />
+                <span className="tl-label">Proposal sent</span>
+              </div>
+              <div className="tl-step tl-mid">
+                <span className="tl-eyebrow">Day 270</span>
+                <span className="tl-dot" aria-hidden />
+                <span className="tl-label">Dead Zone — silent</span>
+              </div>
+              <div className="tl-step tl-end">
+                <span className="tl-eyebrow">+ 7 min</span>
+                <span className="tl-dot" aria-hidden />
+                <span className="tl-label">Replied · $400K reactivated</span>
+              </div>
+            </div>
+
             <div className="rcpt-hero-foot">
               <div className="practitioner">
                 <div className="avatar">
@@ -804,8 +891,8 @@ export default function ReceiptsStrip() {
                 </article>
                 <article className="rcpt-card rcpt-card-sm delay-4">
                   <p className="card-firm">Workiva</p>
-                  <p className="card-stat qualitative" data-needs-content="true">{'{{WORKIVA_STAT}}'}</p>
-                  <p className="card-sub">Long-term advisory engagement, ongoing.</p>
+                  <p className="card-stat qualitative">167% more SQOs</p>
+                  <p className="card-sub">After shifting from job-title to challenge-based outreach. Long-term advisory engagement, ongoing.</p>
                   <p className="card-foot">
                     <span>Discover Mabbly · Active</span>
                     <span className="arrow" aria-hidden>→</span>

@@ -58,9 +58,11 @@ export function OpsAuthGate({ onAuthed }: OpsAuthGateProps) {
   const [submitting, setSubmitting] = useState(false);
   const [lockedUntil, setLockedUntil] = useState<number>(0);
   const [now, setNow] = useState<number>(Date.now());
+  const [attemptsRemaining, setAttemptsRemaining] = useState<number>(MAX_ATTEMPTS);
 
   useEffect(() => {
     setLockedUntil(getLockoutUntil());
+    setAttemptsRemaining(MAX_ATTEMPTS - readAttempts().length);
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
@@ -83,23 +85,28 @@ export function OpsAuthGate({ onAuthed }: OpsAuthGateProps) {
       }
       const failStatus = (result as { ok: false; status: number }).status;
       if (failStatus === 503) {
-        setError("ops dashboard not configured");
+        setError("Ops dashboard not configured.");
       } else {
         const until = recordFailedAttempt();
         if (until) setLockedUntil(until);
-        setError("wrong code");
+        const remaining = MAX_ATTEMPTS - readAttempts().length;
+        setAttemptsRemaining(Math.max(0, remaining));
+        setError(`Incorrect password — ${Math.max(0, remaining)} attempts remaining`);
         setShake(true);
         setTimeout(() => setShake(false), 500);
       }
     } catch {
-      setError("network error");
+      setError("Network error.");
     } finally {
       setSubmitting(false);
     }
   }
 
+  const lockoutMM = Math.floor(secondsLeft / 60);
+  const lockoutSS = String(secondsLeft % 60).padStart(2, "0");
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950 text-zinc-100 px-4">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#0F1E1D] text-[#EDF5EC] px-4 font-sans">
       <style>{`
         @keyframes opsShake {
           0%, 100% { transform: translateX(0); }
@@ -110,39 +117,73 @@ export function OpsAuthGate({ onAuthed }: OpsAuthGateProps) {
       `}</style>
       <form
         onSubmit={handleSubmit}
-        className={`w-full max-w-sm space-y-5 ${shake ? "ops-shake" : ""}`}
+        className={`w-full max-w-md rounded-2xl border border-[#22332F] bg-[#1A2B2A] p-10 space-y-6 ${
+          shake ? "ops-shake" : ""
+        }`}
       >
-        <div className="space-y-1 text-center">
-          <div className="text-xs uppercase tracking-[0.3em] text-zinc-500">EDITH OPS</div>
-          <h1 className="text-lg font-medium text-zinc-200">enter access code</h1>
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#BF461A]" />
+          <span className="text-[13px] font-black tracking-[0.18em] text-[#EDF5EC]">EDITH OPS</span>
         </div>
-        <input
-          type="password"
-          autoFocus
-          autoComplete="off"
-          inputMode="text"
-          disabled={isLocked || submitting}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          aria-label="Access code"
-          className="w-full rounded-md bg-zinc-900 border border-zinc-800 px-4 py-3 text-center tracking-widest text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600"
-          placeholder="••••••••"
-        />
+
+        <div className="space-y-3">
+          <h1 className="text-4xl font-black tracking-tight uppercase text-[#EDF5EC]">Unlock</h1>
+          <p className="text-[13px] leading-relaxed text-[#A1A9A0]">
+            Single password access for the Mabbly ops admin.
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-[10px] font-black tracking-[0.14em] uppercase text-[#A1A9A0]">
+            Password
+          </label>
+          <input
+            type="password"
+            autoFocus
+            autoComplete="off"
+            inputMode="text"
+            disabled={isLocked || submitting}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-label="Password"
+            className="w-full rounded-lg bg-[#0F1E1D] border border-[#FFBA1A] px-4 py-3 tracking-widest text-[#EDF5EC] placeholder:text-[#6E7A72] focus:outline-none focus:border-[#BF461A] disabled:opacity-50 transition-colors"
+            placeholder="••••••••••••"
+          />
+        </div>
+
         <button
           type="submit"
           disabled={isLocked || submitting || password.length === 0}
-          className="w-full rounded-md bg-zinc-100 text-zinc-950 py-2.5 text-sm font-medium hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#BF461A] hover:bg-[#A23A14] text-[#EDF5EC] py-3 text-[13px] font-black tracking-[0.16em] uppercase disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          {submitting ? "checking…" : "Enter →"}
+          {submitting ? "Checking…" : (
+            <>
+              Unlock
+              <span aria-hidden>→</span>
+            </>
+          )}
         </button>
+
         {error && !isLocked && (
-          <div className="text-center text-sm text-red-400">{error}</div>
-        )}
-        {isLocked && (
-          <div className="text-center text-sm text-amber-400">
-            too many attempts. locked for {Math.floor(secondsLeft / 60)}m {secondsLeft % 60}s
+          <div className="flex items-center gap-2 rounded-md border border-[#C02B0A] bg-[#2A1414] px-3 py-2.5 text-[12px] text-[#EDF5EC]">
+            <span aria-hidden className="text-[#C02B0A]">⚠</span>
+            <span>{error}</span>
           </div>
         )}
+
+        {isLocked && (
+          <div className="flex items-center gap-2 rounded-md border border-[#A79014] bg-[#352B0E] px-3 py-2.5 text-[12px] text-[#EDF5EC]">
+            <span aria-hidden className="text-[#FFBA1A]">⏱</span>
+            <span>Locked. Try again in {lockoutMM}:{lockoutSS}</span>
+          </div>
+        )}
+
+        <p className="text-[11px] leading-relaxed text-[#6E7A72]">
+          Rate-limited. {MAX_ATTEMPTS} failed attempts triggers a 5-minute lockout.
+          {!isLocked && attemptsRemaining < MAX_ATTEMPTS && attemptsRemaining > 0 && (
+            <> {attemptsRemaining} of {MAX_ATTEMPTS} remaining.</>
+          )}
+        </p>
       </form>
     </div>
   );

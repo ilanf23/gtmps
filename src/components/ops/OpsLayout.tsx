@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { opsAuth } from "@/lib/opsClient";
 
 interface OpsLayoutProps {
@@ -10,13 +10,13 @@ interface OpsLayoutProps {
   children: ReactNode;
 }
 
-const TABS = [
-  { id: "overview", label: "Overview" },
-  { id: "microsites", label: "Microsites" },
-  { id: "shares", label: "Shares" },
-  { id: "emails", label: "Emails" },
-  { id: "bookings", label: "Bookings" },
-  { id: "health", label: "Health" },
+const TABS: Array<{ id: string; label: string; icon: string }> = [
+  { id: "overview", label: "Overview", icon: "▦" },
+  { id: "microsites", label: "Microsites", icon: "◯" },
+  { id: "shares", label: "Shares", icon: "⤳" },
+  { id: "emails", label: "Emails", icon: "✉" },
+  { id: "bookings", label: "Bookings", icon: "★" },
+  { id: "health", label: "Health", icon: "♥" },
 ];
 
 function relativeTime(date: Date | null): string {
@@ -31,55 +31,103 @@ function relativeTime(date: Date | null): string {
 export function OpsLayout({ onSignOut, lastRefresh, onRefresh, active, onTabChange, children }: OpsLayoutProps) {
   const [, force] = useState(0);
   // Re-render relative time every 30s.
-  if (typeof window !== "undefined") {
-    setTimeout(() => force((n) => n + 1), 30_000);
-  }
+  useEffect(() => {
+    const t = setInterval(() => force((n) => n + 1), 30_000);
+    return () => clearInterval(t);
+  }, []);
+
+  const activeTab = TABS.find((t) => t.id === active);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <header className="border-b border-zinc-800 bg-zinc-950/95 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="text-sm font-mono tracking-[0.2em] text-zinc-300">EDITH · OPS</div>
-          </div>
-          <div className="flex items-center gap-3 text-xs text-zinc-500">
-            <span>last refresh: {relativeTime(lastRefresh)}</span>
-            <button
-              onClick={onRefresh}
-              className="rounded border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-zinc-200 hover:bg-zinc-800 transition-colors"
-            >
-              Refresh
-            </button>
-            <button
-              onClick={() => {
-                opsAuth.clear();
-                onSignOut();
-              }}
-              className="rounded border border-zinc-800 bg-transparent px-3 py-1.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors"
-            >
-              Sign out
-            </button>
-          </div>
+    <div className="min-h-screen flex bg-[#0F1E1D] text-[#EDF5EC] font-sans">
+      {/* Sidebar */}
+      <aside className="w-[220px] shrink-0 bg-[#1A2B2A] border-r border-[#22332F] flex flex-col p-4">
+        <div className="flex items-center gap-2 px-3 py-2">
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#BF461A]" />
+          <span className="text-[12px] font-black tracking-[0.18em]">EDITH OPS</span>
         </div>
-        <nav className="max-w-[1400px] mx-auto px-6">
-          <div className="flex gap-1 overflow-x-auto">
-            {TABS.map((t) => (
+
+        <div className="h-6" />
+
+        <div className="px-3 text-[9px] font-black tracking-[0.16em] text-[#6E7A72]">
+          WORKSPACE
+        </div>
+
+        <nav className="mt-2 flex flex-col gap-1">
+          {TABS.map((t) => {
+            const isActive = active === t.id;
+            return (
               <button
                 key={t.id}
                 onClick={() => onTabChange(t.id)}
-                className={`px-4 py-2 text-sm border-b-2 transition-colors whitespace-nowrap ${
-                  active === t.id
-                    ? "border-zinc-100 text-zinc-100"
-                    : "border-transparent text-zinc-500 hover:text-zinc-300"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] text-left transition-colors ${
+                  isActive
+                    ? "bg-[#22332F] border border-[#2E423E] text-[#EDF5EC]"
+                    : "border border-transparent text-[#A1A9A0] hover:text-[#EDF5EC] hover:bg-[#22332F]/50"
                 }`}
               >
-                {t.label}
+                <span className={`text-[14px] leading-none ${isActive ? "text-[#FFBA1A]" : ""}`}>
+                  {t.icon}
+                </span>
+                <span>{t.label}</span>
               </button>
-            ))}
-          </div>
+            );
+          })}
         </nav>
-      </header>
-      <main className="max-w-[1400px] mx-auto px-6 py-6">{children}</main>
+
+        <div className="flex-1" />
+
+        <button
+          onClick={() => {
+            opsAuth.clear();
+            onSignOut();
+          }}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] text-[#A1A9A0] hover:text-[#EDF5EC] hover:bg-[#22332F]/50 transition-colors"
+        >
+          <span aria-hidden>↩</span>
+          <span>Sign out</span>
+        </button>
+      </aside>
+
+      {/* Main column */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Topbar */}
+        <header className="h-16 border-b border-[#22332F] flex items-center gap-4 px-6 sticky top-0 bg-[#0F1E1D] z-10">
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] font-black tracking-[0.16em] uppercase text-[#EDF5EC]">
+              {activeTab?.label ?? active}
+            </span>
+            <span className="text-[#6E7A72] text-[13px]">·</span>
+            <span className="text-[12px] text-[#A1A9A0]">
+              Last refresh: {relativeTime(lastRefresh)}
+            </span>
+          </div>
+
+          <div className="flex-1" />
+
+          <button
+            onClick={onRefresh}
+            className="inline-flex items-center gap-2 rounded-lg border border-[#22332F] bg-[#1A2B2A] px-3 h-9 text-[12px] text-[#EDF5EC] hover:bg-[#22332F] transition-colors"
+          >
+            <span aria-hidden>↻</span>
+            Refresh
+          </button>
+
+          <button
+            type="button"
+            aria-label="Notifications"
+            className="relative inline-flex items-center justify-center w-9 h-9 rounded-lg border border-[#22332F] bg-[#1A2B2A] text-[#EDF5EC] hover:bg-[#22332F] transition-colors"
+          >
+            <span aria-hidden>🔔</span>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#BF461A]" />
+          </button>
+        </header>
+
+        {/* Body */}
+        <main className="flex-1 overflow-x-hidden p-8 max-w-[1440px] w-full mx-auto">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

@@ -116,6 +116,26 @@ export default function HeroUrlField({
           border-color: #B8933A;
           background: rgba(184,147,58,0.08);
         }
+        .huf-input--attention,
+        .huf-input--attention:focus {
+          border-color: #E04F4F !important;
+          box-shadow:
+            0 0 0 3px rgba(224, 79, 79, 0.22),
+            0 0 28px -4px rgba(224, 79, 79, 0.55) !important;
+          animation: huf-attention-pulse 0.85s ease-in-out 2;
+        }
+        @keyframes huf-attention-pulse {
+          0%, 100% {
+            box-shadow:
+              0 0 0 3px rgba(224, 79, 79, 0.22),
+              0 0 28px -4px rgba(224, 79, 79, 0.55);
+          }
+          50% {
+            box-shadow:
+              0 0 0 6px rgba(224, 79, 79, 0.32),
+              0 0 36px -2px rgba(224, 79, 79, 0.78);
+          }
+        }
         .huf-go {
           display: inline-flex;
           align-items: center;

@@ -35,21 +35,21 @@ export function BookingsTab({ refreshNonce, onUnauth }: BookingsTabProps) {
     };
   }, [refreshNonce, onUnauth]);
 
-  if (loading) return <div className="text-zinc-500 text-sm">loading…</div>;
-  if (err) return <div className="text-red-400 text-sm">{err}</div>;
+  if (loading) return <div className="text-[#A1A9A0] text-sm">loading…</div>;
+  if (err) return <div className="text-[#C02B0A] text-sm">{err}</div>;
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 text-sm text-zinc-400">
-        No bookings tracked yet. Wire the Calendly webhook to <code className="text-zinc-200">magnet-track-booking</code> (Phase 2) to populate this tab. Bookings created via the in-app flow are recorded in <code className="text-zinc-200">magnet_call_bookings</code> directly.
+      <div className="rounded-lg border border-[#22332F] bg-[#1A2B2A] p-6 text-sm text-[#A1A9A0]">
+        No bookings tracked yet. Wire the Calendly webhook to <code className="text-[#EDF5EC]">magnet-track-booking</code> (Phase 2) to populate this tab. Bookings created via the in-app flow are recorded in <code className="text-[#EDF5EC]">magnet_call_bookings</code> directly.
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-900/30 overflow-hidden">
+    <div className="rounded-lg border border-[#22332F] bg-[#1A2B2A]/60 overflow-hidden">
       <table className="w-full text-sm">
-        <thead className="bg-zinc-900 text-zinc-500 text-xs uppercase tracking-wider">
+        <thead className="bg-[#1A2B2A] text-[#A1A9A0] text-xs uppercase tracking-wider">
           <tr>
             <th className="text-left px-3 py-2 font-medium">Slug</th>
             <th className="text-left px-3 py-2 font-medium">Calendly event</th>
@@ -57,15 +57,15 @@ export function BookingsTab({ refreshNonce, onUnauth }: BookingsTabProps) {
             <th className="text-left px-3 py-2 font-medium">Created</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-800">
+        <tbody className="divide-y divide-[#22332F]">
           {rows.map((r) => (
-            <tr key={r.id} className="hover:bg-zinc-900/60">
+            <tr key={r.id} className="hover:bg-[#22332F]/40">
               <td className="px-3 py-2 font-mono text-xs">
-                <a href={`/m/${r.slug}`} target="_blank" rel="noreferrer" className="text-zinc-300 hover:text-zinc-100 underline-offset-2 hover:underline">/m/{r.slug}</a>
+                <a href={`/m/${r.slug}`} target="_blank" rel="noreferrer" className="text-[#EDF5EC] hover:text-[#EDF5EC] underline-offset-2 hover:underline">/m/{r.slug}</a>
               </td>
-              <td className="px-3 py-2 text-zinc-400 text-xs font-mono">{r.calendly_event_id ?? "-"}</td>
-              <td className="px-3 py-2 text-zinc-300 text-xs">{r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "-"}</td>
-              <td className="px-3 py-2 text-zinc-500 text-xs">{new Date(r.created_at).toLocaleString()}</td>
+              <td className="px-3 py-2 text-[#A1A9A0] text-xs font-mono">{r.calendly_event_id ?? "-"}</td>
+              <td className="px-3 py-2 text-[#EDF5EC] text-xs">{r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "-"}</td>
+              <td className="px-3 py-2 text-[#A1A9A0] text-xs">{new Date(r.created_at).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

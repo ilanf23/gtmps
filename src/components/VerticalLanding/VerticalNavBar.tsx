@@ -14,6 +14,12 @@ type Props = {
    * keep the nav consistent with the rest of the site.
    */
   onBookWalkthrough?: () => void;
+  /**
+   * When provided, intercepts the default anchor navigation on the
+   * Add-Your-Firm CTA so the host page can run a custom scroll (e.g. the
+   * Discover page centering the hero URL field and flashing it red).
+   */
+  onAddYourFirm?: () => void;
 };
 
 const ArrowSvg = () => (
@@ -126,6 +132,7 @@ export default function VerticalNavBar({
   addYourFirmHref = "#begin",
   addYourFirmLabel = "Add Your Firm",
   onBookWalkthrough,
+  onAddYourFirm,
 }: Props) {
   const [mySlugs, setMySlugs] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);

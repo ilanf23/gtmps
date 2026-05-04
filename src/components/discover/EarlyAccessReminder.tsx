@@ -349,10 +349,10 @@ export default function EarlyAccessReminder({
           className="ear-box ear-cta"
           onClick={handleCtaClick}
           data-cta="add-your-firm"
-          aria-label="Get MY Map - apply for Early Access"
+          aria-label="Build Your Map - apply for Early Access"
         >
           <span className="ear-cta-pill">
-            Get MY Map
+            Build Your Map
             <span className="ear-cta-arrow" aria-hidden>→</span>
           </span>
           <p className="ear-cta-trust">
