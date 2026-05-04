@@ -750,20 +750,20 @@ export default function DiscoverHero() {
                 {/* Dead black dots seated on each orbit ellipse */}
                 <g fill="#0A1311">
                   {/* ring 1 (rx 105, ry 44) */}
-                  <circle cx={740 + 105 * Math.cos(-2.3)} cy={380 + 44 * Math.sin(-2.3)} r="3" />
-                  <circle cx={740 + 105 * Math.cos(0.9)}  cy={380 + 44 * Math.sin(0.9)}  r="3" />
+                  <circle cx={740 + 105 * Math.cos(-2.3)} cy={380 + 44 * Math.sin(-2.3)} r="6" />
+                  <circle cx={740 + 105 * Math.cos(0.9)}  cy={380 + 44 * Math.sin(0.9)}  r="6" />
                   {/* ring 2 (rx 220, ry 92) */}
-                  <circle cx={740 + 220 * Math.cos(-1.0)} cy={380 + 92 * Math.sin(-1.0)} r="3.5" />
-                  <circle cx={740 + 220 * Math.cos(2.4)}  cy={380 + 92 * Math.sin(2.4)}  r="3.5" />
+                  <circle cx={740 + 220 * Math.cos(-1.0)} cy={380 + 92 * Math.sin(-1.0)} r="7" />
+                  <circle cx={740 + 220 * Math.cos(2.4)}  cy={380 + 92 * Math.sin(2.4)}  r="7" />
                   {/* ring 3 (rx 345, ry 146) — orbit of the rotating red dot */}
-                  <circle cx={740 + 345 * Math.cos(-2.6)} cy={380 + 146 * Math.sin(-2.6)} r="4" />
-                  <circle cx={740 + 345 * Math.cos(1.4)}  cy={380 + 146 * Math.sin(1.4)}  r="4" />
+                  <circle cx={740 + 345 * Math.cos(-2.6)} cy={380 + 146 * Math.sin(-2.6)} r="8" />
+                  <circle cx={740 + 345 * Math.cos(1.4)}  cy={380 + 146 * Math.sin(1.4)}  r="8" />
                   {/* ring 4 (rx 475, ry 200) */}
-                  <circle cx={740 + 475 * Math.cos(-0.4)} cy={380 + 200 * Math.sin(-0.4)} r="4" />
-                  <circle cx={740 + 475 * Math.cos(2.8)}  cy={380 + 200 * Math.sin(2.8)}  r="4" />
+                  <circle cx={740 + 475 * Math.cos(-0.4)} cy={380 + 200 * Math.sin(-0.4)} r="8" />
+                  <circle cx={740 + 475 * Math.cos(2.8)}  cy={380 + 200 * Math.sin(2.8)}  r="8" />
                   {/* ring 5 (rx 610, ry 252) */}
-                  <circle cx={740 + 610 * Math.cos(-1.7)} cy={380 + 252 * Math.sin(-1.7)} r="4.5" />
-                  <circle cx={740 + 610 * Math.cos(0.5)}  cy={380 + 252 * Math.sin(0.5)}  r="4.5" />
+                  <circle cx={740 + 610 * Math.cos(-1.7)} cy={380 + 252 * Math.sin(-1.7)} r="9" />
+                  <circle cx={740 + 610 * Math.cos(0.5)}  cy={380 + 252 * Math.sin(0.5)}  r="9" />
                 </g>
 
                 {/* Atmospheric speckle dots — kept off the horizontal axis
