@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────
-   AFTER THE MAP - two-paths comparison (mabbly.ai · mabbly.com)
+   AIvsCOM - mabbly.ai (tool) vs mabbly.com (partner) comparison
    The disambiguation layer between seeing the map and taking action.
    ───────────────────────────────────────────────────────────────── */
 
@@ -71,7 +71,7 @@ const TableRows: Array<{ label: string; tool: string; partner: string }> = [
   { label: "Commitment", tool: "Month-to-month · No contract", partner: "Long-term partnership" },
 ];
 
-export default function TwoPaths() {
+export default function AIvsCOM() {
   return (
     <section
       id="two-paths"

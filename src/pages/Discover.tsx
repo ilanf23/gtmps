@@ -8,7 +8,6 @@ import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
 import PaperGrain from "@/components/discover/PaperGrain";
 import AuthorityStrip from "@/components/discover/AuthorityStrip";
-import ReceiptsStrip from "@/components/discover/ReceiptsStrip";
 import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
 import SectionRail from "@/components/discover/SectionRail";
 import DiscoverHero from '@/components/discover/DiscoverHero';
@@ -19,8 +18,6 @@ import DeadZone from '@/components/discover/DeadZone';
 import WhyNow from '@/components/discover/WhyNow';
 import BetaReader from '@/components/discover/BetaReader';
 import Results from '@/components/discover/Results';
-import MapSection from '@/components/discover/MapSection';
-import TwoPaths from '@/components/discover/TwoPaths';
 import Faq from '@/components/discover/Faq';
 import FinalCta from '@/components/discover/FinalCta';
 import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
@@ -161,9 +158,6 @@ const Discover = () => {
     { id: "industries", label: "02 · Industries" },
     { id: "authority", label: "03 · Built By" },
     { id: "dead-zone", label: "04 · Dead Zone" },
-    { id: "receipts", label: "05 · Receipts" },
-    { id: "two-paths", label: "06 · After the Map" },
-    { id: "map", label: "07 · GTM Score" },
     { id: "why-now", label: "08 · Why Now" },
     { id: "results", label: "09 · Proof" },
     { id: "manuscript", label: "10 · Manuscript" },
@@ -275,9 +269,6 @@ const Discover = () => {
         </section>
         <AuthorityStrip />
         <DeadZone />
-        <ReceiptsStrip />
-        <TwoPaths />
-        <MapSection />
         <WhyNow />
         <Results />
         <ManuscriptAnchor />

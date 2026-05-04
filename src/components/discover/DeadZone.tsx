@@ -1,23 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import AdamNote from '@/components/discover/AdamNote';
 
-type Key = 'contacts' | 'dealValue' | 'dormancy' | 'winRate' | 'activation';
+type Key = 'contacts' | 'dealValue' | 'dormancy';
 
 const DEFAULTS: Record<Key, number> = {
   contacts: 500,
   dealValue: 25000,
   dormancy: 70,
-  winRate: 27,
-  activation: 62,
 };
 
 const CONSTRAINTS: Record<Key, { min: number; max: number; step: number }> = {
-  contacts:   { min: 50,  max: 100000,  step: 50 },
-  dealValue:  { min: 500, max: 5000000, step: 1000 },
-  dormancy:   { min: 50,  max: 85,      step: 1 },
-  winRate:    { min: 5,   max: 40,      step: 1 },
-  activation: { min: 20,  max: 90,      step: 1 },
+  contacts:  { min: 50,  max: 100000,  step: 50 },
+  dealValue: { min: 500, max: 5000000, step: 1000 },
+  dormancy:  { min: 50,  max: 85,      step: 1 },
 };
+
+const WIN_RATE = 0.27;
+const ACTIVATION = 0.62;
 
 function fmtMoney(v: number): string {
   if (!isFinite(v) || v < 0) v = 0;
@@ -44,13 +42,9 @@ export default function DeadZone() {
     contacts: String(DEFAULTS.contacts),
     dealValue: String(DEFAULTS.dealValue),
     dormancy: String(DEFAULTS.dormancy),
-    winRate: String(DEFAULTS.winRate),
-    activation: String(DEFAULTS.activation),
   });
 
   const heroRef = useRef<HTMLParagraphElement>(null);
-  const lineLossRef = useRef<SVGPolylineElement>(null);
-  const lineRecoverRef = useRef<SVGPolylineElement>(null);
   const firstRender = useRef(true);
 
   const numVal = (key: Key): number => {
@@ -73,63 +67,13 @@ export default function DeadZone() {
     setVals(prev => ({ ...prev, [key]: e.target.value }));
   };
 
-  const handleReset = () => {
-    setVals({
-      contacts: String(DEFAULTS.contacts),
-      dealValue: String(DEFAULTS.dealValue),
-      dormancy: String(DEFAULTS.dormancy),
-      winRate: String(DEFAULTS.winRate),
-      activation: String(DEFAULTS.activation),
-    });
-    [lineLossRef.current, lineRecoverRef.current].forEach(el => {
-      if (!el) return;
-      el.classList.remove('dz-draw-line');
-      void el.getBoundingClientRect();
-      el.classList.add('dz-draw-line');
-    });
-  };
-
   const contacts = numVal('contacts');
   const dealValue = numVal('dealValue');
   const dormancyPct = numVal('dormancy');
-  const winRatePct = numVal('winRate');
-  const activationPct = numVal('activation');
 
-  const dormancy = dormancyPct / 100;
-  const winRate = winRatePct / 100;
-  const activation = activationPct / 100;
-
-  const dormant = Math.round(contacts * dormancy);
-  const annualPipeline = dormant * dealValue * winRate;
-  const recoverable = annualPipeline * activation;
-  const noAction = annualPipeline * 5;
-
-  let activatedTotal = 0;
-  let remaining = 1.0;
-  const recoverYearly: number[] = [];
-  for (let y = 1; y <= 5; y++) {
-    const recYearShare = remaining * activation;
-    const recYearDollars = annualPipeline * recYearShare;
-    activatedTotal += recYearDollars;
-    recoverYearly.push(activatedTotal);
-    remaining -= recYearShare;
-  }
-
-  const CH_TOP = 12, CH_BOTTOM = 72, CH_RANGE = CH_BOTTOM - CH_TOP, X_STEP = 240 / 4;
-  const maxVal = Math.max(noAction, activatedTotal, 1);
-  const lossPts: string[] = [];
-  const recPts: string[] = [];
-  for (let y = 0; y <= 4; y++) {
-    const x = y * X_STEP;
-    const lossY = annualPipeline * (y + 1);
-    const lossYpx = CH_BOTTOM - (lossY / maxVal) * CH_RANGE;
-    lossPts.push(`${x},${lossYpx.toFixed(2)}`);
-    const recYDollar = recoverYearly[y];
-    const recYpx = CH_BOTTOM - (recYDollar / maxVal) * CH_RANGE;
-    recPts.push(`${x},${recYpx.toFixed(2)}`);
-  }
-  const lossEndY = parseFloat(lossPts[lossPts.length - 1].split(',')[1]);
-  const recEndY = parseFloat(recPts[recPts.length - 1].split(',')[1]);
+  const dormant = Math.round(contacts * (dormancyPct / 100));
+  const annualPipeline = dormant * dealValue * WIN_RATE;
+  const recoverable = annualPipeline * ACTIVATION;
 
   useEffect(() => {
     if (firstRender.current) {
@@ -157,12 +101,12 @@ export default function DeadZone() {
         .dz-root {
           position: relative;
           z-index: 1;
-          max-width: 1200px;
+          max-width: 980px;
           margin: 0 auto;
-          padding: 44px 40px 56px;
+          padding: 36px 40px 44px;
         }
         @media (max-width: 639px) {
-          .dz-root { padding: 24px 18px; }
+          .dz-root { padding: 24px 18px 32px; }
         }
 
         .dz-section-meta {
@@ -172,7 +116,7 @@ export default function DeadZone() {
           letter-spacing: 0.18em;
           text-transform: uppercase;
           color: #A79014;
-          margin: 0 0 20px;
+          margin: 0 0 16px;
         }
         .dz-section-meta-rule {
           display: block;
@@ -182,72 +126,55 @@ export default function DeadZone() {
           margin-top: 8px;
         }
 
-        .dz-head-row {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 16px;
-          align-items: end;
-          margin-bottom: 28px;
-        }
-        @media (min-width: 980px) {
-          .dz-head-row {
-            grid-template-columns: 1fr auto;
-            gap: 48px;
-          }
-        }
         .dz-headline {
           font-family: 'Inter Tight', 'Arial Black', sans-serif;
-          font-size: 44px;
+          font-size: 40px;
           font-weight: 900;
           letter-spacing: -0.025em;
           line-height: 0.95;
           color: #0F1E1D;
-          margin: 0;
+          margin: 0 0 10px;
         }
-        @media (max-width: 979px) {
-          .dz-headline { font-size: 34px; }
+        @media (max-width: 639px) {
+          .dz-headline { font-size: 30px; }
         }
         .dz-period { color: #BF461A; }
-        .dz-headline-sub {
-          font-family: 'DM Mono', monospace;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 1.5;
-          color: rgba(15, 30, 29, 0.7);
-          max-width: 360px;
-          margin: 0;
+        .dz-sub {
+          font-family: 'Inter', system-ui, sans-serif;
+          font-size: 14px;
+          line-height: 1.45;
+          color: rgba(15, 30, 29, 0.72);
+          max-width: 520px;
+          margin: 0 0 24px;
         }
-        .dz-headline-sub strong { color: #0F1E1D; font-weight: 700; }
+        .dz-sub strong { color: #0F1E1D; font-weight: 700; }
 
         .dz-calc {
           background: #FCFAF4;
           border: 1px solid #E5E0CF;
           border-radius: 4px;
           display: grid;
-          grid-template-columns: 300px 1fr;
+          grid-template-columns: 1fr 1px 1fr;
+          align-items: stretch;
         }
-        @media (max-width: 979px) {
+        @media (max-width: 760px) {
           .dz-calc { grid-template-columns: 1fr; }
+        }
+        .dz-divider {
+          background: #E5E0CF;
+        }
+        @media (max-width: 760px) {
+          .dz-divider { width: 100%; height: 1px; }
         }
 
         .dz-inputs {
-          border-right: 1px solid #E5E0CF;
-          padding: 24px;
+          padding: 22px 24px;
           display: flex;
           flex-direction: column;
-          gap: 18px;
-        }
-        @media (max-width: 979px) {
-          .dz-inputs { border-right: 0; border-bottom: 1px solid #E5E0CF; }
-        }
-        @media (max-width: 639px) {
-          .dz-inputs { padding: 18px; }
+          gap: 16px;
         }
 
         .dz-inputs-head {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
           font-family: 'DM Mono', monospace;
           font-size: 10px;
           font-weight: 700;
@@ -256,22 +183,6 @@ export default function DeadZone() {
           color: rgba(15, 30, 29, 0.72);
           margin: 0 0 2px;
         }
-        .dz-reset {
-          font-family: 'DM Mono', monospace;
-          font-size: 9px;
-          font-weight: 600;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: rgba(15, 30, 29, 0.5);
-          background: transparent;
-          border: 1px solid #E5E0CF;
-          border-radius: 12px;
-          padding: 4px 8px;
-          cursor: pointer;
-          transition: color 0.18s ease, border-color 0.18s ease;
-        }
-        .dz-reset:hover { color: #BF461A; border-color: #BF461A; }
-        .dz-reset:focus-visible { outline: 2px solid #BF461A; outline-offset: 2px; }
 
         .dz-input-block { display: flex; flex-direction: column; gap: 6px; }
         .dz-input-label {
@@ -366,34 +277,28 @@ export default function DeadZone() {
         }
 
         .dz-results {
-          padding: 24px 28px;
+          padding: 22px 28px;
           display: flex;
           flex-direction: column;
-          gap: 18px;
+          justify-content: center;
+          gap: 16px;
         }
         @media (max-width: 639px) {
-          .dz-results { padding: 18px; }
+          .dz-results { padding: 22px 24px; }
         }
 
-        .dz-hero-row {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 20px;
-          flex-wrap: wrap;
-        }
-        .dz-hero { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
         .dz-hero-label {
           font-family: 'DM Mono', monospace;
           font-size: 10px;
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           color: rgba(15, 30, 29, 0.72);
+          margin: 0 0 4px;
         }
         .dz-hero-value {
           font-family: 'Inter Tight', sans-serif;
-          font-size: 72px;
+          font-size: 64px;
           font-weight: 900;
           letter-spacing: -0.045em;
           line-height: 0.92;
@@ -401,32 +306,27 @@ export default function DeadZone() {
           margin: 0;
           transform-origin: left center;
         }
-        @media (max-width: 979px) {
+        @media (max-width: 639px) {
           .dz-hero-value { font-size: 48px; }
         }
         .dz-hero-unit {
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.06em;
+          font-family: 'Inter', system-ui, sans-serif;
+          font-size: 12px;
           color: rgba(15, 30, 29, 0.6);
-          margin: 0;
+          margin: 6px 0 0;
         }
         .dz-hero-unit strong { color: #0F1E1D; font-weight: 700; }
 
         .dz-recover {
           display: flex;
-          flex-direction: column;
-          gap: 2px;
-          padding: 10px 14px;
-          background: #FFFFFF;
-          border: 1px solid #E5E0CF;
-          border-radius: 3px;
-          min-width: 140px;
+          align-items: baseline;
+          gap: 10px;
+          padding-top: 12px;
+          border-top: 1px solid #E5E0CF;
         }
         .dz-recover-label {
           font-family: 'DM Mono', monospace;
-          font-size: 9px;
+          font-size: 10px;
           font-weight: 600;
           letter-spacing: 0.16em;
           text-transform: uppercase;
@@ -439,59 +339,47 @@ export default function DeadZone() {
           letter-spacing: -0.025em;
           color: #225351;
         }
-        .dz-recover-meta {
-          font-family: 'Inter', system-ui, sans-serif;
-          font-size: 10px;
-          color: rgba(15, 30, 29, 0.55);
-        }
 
-        .dz-chart {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          padding-top: 14px;
+        .dz-define {
+          margin: 28px 0 0;
+          padding: 22px 0 0;
           border-top: 1px solid #E5E0CF;
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 18px 22px;
+          align-items: start;
         }
-        .dz-chart-head {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
+        @media (max-width: 639px) {
+          .dz-define { grid-template-columns: 1fr; gap: 10px; }
+        }
+        .dz-define-eyebrow {
           font-family: 'DM Mono', monospace;
           font-size: 10px;
           font-weight: 700;
-          letter-spacing: 0.16em;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: rgba(15, 30, 29, 0.72);
-          flex-wrap: wrap;
-          gap: 10px;
+          color: #A79014;
+          padding-top: 4px;
+          white-space: nowrap;
         }
-        .dz-chart-legend {
-          display: inline-flex;
-          gap: 14px;
-          letter-spacing: 0.06em;
-          text-transform: none;
-          font-size: 10px;
-          font-weight: 600;
-          color: rgba(15, 30, 29, 0.6);
+        .dz-define-body {
+          font-family: 'Inter', system-ui, sans-serif;
+          font-size: 15px;
+          line-height: 1.55;
+          color: rgba(15, 30, 29, 0.82);
+          margin: 0;
+          max-width: 640px;
         }
-        .dz-chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
-        .dz-chart-legend b {
-          font-family: 'Inter Tight', sans-serif;
-          font-weight: 900;
-          color: #0F1E1D;
-          letter-spacing: -0.01em;
-          font-size: 11px;
-        }
-        .dz-legend-swatch { width: 12px; height: 2px; border-radius: 2px; display: inline-block; }
-        .dz-chart-body { display: flex; min-height: 130px; }
-        .dz-chart-body svg { width: 100%; height: 100%; min-height: 130px; display: block; }
+        .dz-define-body + .dz-define-body { margin-top: 10px; }
+        .dz-define-body strong { color: #0F1E1D; font-weight: 700; }
 
-        .dz-draw-line {
-          stroke-dasharray: 600;
-          stroke-dashoffset: 600;
-          animation: dzDrawIn 1.4s ease-out forwards;
+        .dz-foot {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px;
+          letter-spacing: 0.04em;
+          color: rgba(15, 30, 29, 0.5);
+          margin: 14px 0 0;
         }
-        @keyframes dzDrawIn { to { stroke-dashoffset: 0; } }
 
         @keyframes dzPulseCare {
           0%   { transform: scale(1); }
@@ -501,8 +389,8 @@ export default function DeadZone() {
         .dz-bump { animation: dzPulseCare 0.32s ease-out; }
 
         @media (prefers-reduced-motion: reduce) {
-          .dz-bump, .dz-draw-line { animation: none !important; }
-          .dz-num-input, .dz-reset,
+          .dz-bump { animation: none !important; }
+          .dz-num-input,
           .dz-slider::-webkit-slider-thumb,
           .dz-slider::-moz-range-thumb { transition: none !important; }
         }
@@ -514,21 +402,16 @@ export default function DeadZone() {
           <span className="dz-section-meta-rule" aria-hidden="true" />
         </p>
 
-        <div className="dz-head-row">
-          <h2 className="dz-headline">
-            The Dead Zone<span className="dz-period">.</span>
-          </h2>
-          <p className="dz-headline-sub">
-            <strong>60-80%</strong> of your CRM is sitting quiet, warm, and unactivated. Tune the inputs. Watch what it costs.
-          </p>
-        </div>
+        <h2 className="dz-headline">
+          The Dead Zone<span className="dz-period">.</span>
+        </h2>
+        <p className="dz-sub">
+          <strong>60–80%</strong> of your CRM is sitting quiet, warm, and unactivated. Tune the inputs to see what it costs you.
+        </p>
 
         <div className="dz-calc">
           <aside className="dz-inputs" aria-label="Calculator inputs">
-            <header className="dz-inputs-head">
-              <span>◧ Your firm</span>
-              <button type="button" className="dz-reset" onClick={handleReset}>Reset</button>
-            </header>
+            <header className="dz-inputs-head">◧ Your firm</header>
 
             <div className="dz-input-block">
               <label className="dz-input-label" htmlFor="dz-contacts">Contacts in CRM</label>
@@ -581,106 +464,39 @@ export default function DeadZone() {
                 onChange={handleSliderChange('dormancy')}
               />
             </div>
-
-            <div className="dz-input-block">
-              <div className="dz-slider-row">
-                <span className="dz-input-label">Win rate · activated</span>
-                <span className="dz-slider-live">{vals.winRate}%</span>
-              </div>
-              <input
-                type="range"
-                className="dz-slider"
-                aria-label="Win rate on activated dormant contacts"
-                min={CONSTRAINTS.winRate.min}
-                max={CONSTRAINTS.winRate.max}
-                step={CONSTRAINTS.winRate.step}
-                value={vals.winRate}
-                onChange={handleSliderChange('winRate')}
-              />
-            </div>
-
-            <div className="dz-input-block">
-              <div className="dz-slider-row">
-                <span className="dz-input-label">Y1 activation</span>
-                <span className="dz-slider-live">{vals.activation}%</span>
-              </div>
-              <input
-                type="range"
-                className="dz-slider"
-                aria-label="Year one program activation"
-                min={CONSTRAINTS.activation.min}
-                max={CONSTRAINTS.activation.max}
-                step={CONSTRAINTS.activation.step}
-                value={vals.activation}
-                onChange={handleSliderChange('activation')}
-              />
-            </div>
           </aside>
 
+          <div className="dz-divider" aria-hidden="true" />
+
           <div className="dz-results">
-            <div className="dz-hero-row">
-              <div className="dz-hero">
-                <span className="dz-hero-label">Annual pipeline at risk</span>
-                <p className="dz-hero-value" ref={heroRef}>{fmtMoney(annualPipeline)}</p>
-                <p className="dz-hero-unit">
-                  <strong>{fmtNum(dormant)}</strong> dormant contacts · per year
-                </p>
-              </div>
-              <div className="dz-recover">
-                <span className="dz-recover-label">Y1 Recoverable</span>
-                <span className="dz-recover-value">{fmtMoney(recoverable)}</span>
-                <span className="dz-recover-meta">at {activationPct}% activation</span>
-              </div>
+            <div>
+              <p className="dz-hero-label">Annual pipeline at risk</p>
+              <p className="dz-hero-value" ref={heroRef}>{fmtMoney(annualPipeline)}</p>
+              <p className="dz-hero-unit">
+                <strong>{fmtNum(dormant)}</strong> dormant contacts · per year
+              </p>
             </div>
 
-            <div className="dz-chart" aria-hidden="true">
-              <header className="dz-chart-head">
-                <span>◧ 5-year trajectory</span>
-                <span className="dz-chart-legend">
-                  <span><i className="dz-legend-swatch" style={{ background: '#BF461A' }} /> No action <b>{fmtMoney(noAction)}</b></span>
-                  <span><i className="dz-legend-swatch" style={{ background: '#225351' }} /> Activated <b>{fmtMoney(activatedTotal)}</b></span>
-                </span>
-              </header>
-              <div className="dz-chart-body">
-                <svg viewBox="0 0 240 88" preserveAspectRatio="none">
-                  <line x1="0" y1="20" x2="240" y2="20" stroke="#E5E0CF" strokeWidth="0.5" />
-                  <line x1="0" y1="40" x2="240" y2="40" stroke="#E5E0CF" strokeWidth="0.5" />
-                  <line x1="0" y1="60" x2="240" y2="60" stroke="#E5E0CF" strokeWidth="0.5" />
-                  <polyline
-                    ref={lineLossRef}
-                    className="dz-draw-line"
-                    points={lossPts.join(' ')}
-                    stroke="#BF461A"
-                    strokeWidth="1.6"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <polyline
-                    ref={lineRecoverRef}
-                    className="dz-draw-line"
-                    points={recPts.join(' ')}
-                    stroke="#225351"
-                    strokeWidth="1.6"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ animationDelay: '0.3s' }}
-                  />
-                  <circle cx={4 * X_STEP} cy={lossEndY} r="2.5" fill="#BF461A" />
-                  <circle cx={4 * X_STEP} cy={recEndY} r="2.5" fill="#225351" />
-                  <text x="2"   y="84" fontFamily="DM Mono, monospace" fontSize="7" fill="#9AA09C">Y1</text>
-                  <text x="61"  y="84" fontFamily="DM Mono, monospace" fontSize="7" fill="#9AA09C">Y2</text>
-                  <text x="120" y="84" fontFamily="DM Mono, monospace" fontSize="7" fill="#9AA09C">Y3</text>
-                  <text x="178" y="84" fontFamily="DM Mono, monospace" fontSize="7" fill="#9AA09C">Y4</text>
-                  <text x="225" y="84" fontFamily="DM Mono, monospace" fontSize="7" fill="#9AA09C">Y5</text>
-                </svg>
-              </div>
+            <div className="dz-recover">
+              <span className="dz-recover-label">Y1 Recoverable</span>
+              <span className="dz-recover-value">{fmtMoney(recoverable)}</span>
             </div>
           </div>
         </div>
 
-        <AdamNote />
+        <div className="dz-define">
+          <span className="dz-define-eyebrow">What it really is</span>
+          <div>
+            <p className="dz-define-body">
+              The Dead Zone is <strong>not</strong> dormant contacts. It is <strong>not</strong> lapsed leads. It is the predictable result of applying the wrong GTM definition to a relationship business.
+            </p>
+            <p className="dz-define-body">
+              These are not strangers. They knew you, worked with you, evaluated you, or were introduced to you. <strong>Every one represents a relationship that was started but never maintained.</strong>
+            </p>
+          </div>
+        </div>
+
+        <p className="dz-foot">Assumes 27% win rate on activated contacts · 62% Y1 program activation.</p>
       </div>
     </section>
   );

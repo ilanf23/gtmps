@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Slot 03 - ReceiptsStrip.
+// Slot 03 - ReceiptsBeatClaims.
 //
 // Madcraft hero-card on the left + 2x2 supporting grid (Outcomes / Long-term
 // Partners) on the right. Numeric stats count up via IntersectionObserver
@@ -49,7 +49,7 @@ function CountUpStat({
   return <span className={className}>{display}</span>;
 }
 
-export default function ReceiptsStrip() {
+export default function ReceiptsBeatClaims() {
   const sectionRef = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
 
