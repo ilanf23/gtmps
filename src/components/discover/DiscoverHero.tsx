@@ -684,7 +684,7 @@ export default function DiscoverHero() {
             <div className="kl-map-wrap">
               <svg
                 className="kl-map-svg"
-                viewBox="0 0 1480 740"
+                viewBox="100 110 1280 540"
                 preserveAspectRatio="xMidYMid meet"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden
