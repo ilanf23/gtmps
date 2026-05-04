@@ -1,38 +1,32 @@
-# Unify nav + dropdown font
+1. Restore the preview connection
+   - The current failure is not coming from your React code rendering a white screen.
+   - I confirmed the preview request itself is failing at the document level with HTTP 412 before the app loads.
+   - The published site still resolves, which points to a preview infrastructure or preview session issue rather than the DiscoverHero edit alone.
 
-## The problem
+2. Apply the structural route fix in code
+   - Update the router setup so the homepage works correctly at the preview root and under the current route structure.
+   - Specifically review the `BrowserRouter basename="/discover"` setup in `src/App.tsx`, because the app currently defines both `/` and `/discover` routes while also mounting at a `/discover` base. That combination is fragile and can break preview loading depending on how the preview URL is mounted.
+   - Normalize the route setup to one consistent base strategy.
 
-In `src/components/VerticalLanding/VerticalNavBar.tsx`, the top-level nav links and dropdown items use two different font families, which is what's visible in the screenshot:
+3. Verify environment wiring for preview boot
+   - Confirm the app still boots cleanly with the managed backend environment values used by `src/integrations/supabase/client.ts`.
+   - If preview state lost its managed env injection, refresh the integration-backed preview state and recheck the root document load.
+   - `.gitignore` is not excluding `.env`, so this does not look like a simple ignored-env case.
 
-- Top nav links (`FOR YOUR FIRM`, `AWARDS`, `PODCAST`) and the `BUILD YOUR MAP` CTA → `'Mabbly Repro', 'Inter Tight', 'Arial Black', ...` (heavy sans).
-- Dropdown items (`MANAGEMENT CONSULTING`, `LAW FIRMS`, ..., `SEE ALL VERTICALS`) and the `FOR YOUR FIRM` heading → `'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace` (the typewriter look).
+4. Re-test the homepage after the fix
+   - Load `/` and `/discover` in preview.
+   - Confirm the hero orbit renders, the white deal tag still covers the full text, and the larger black orbit dots still appear.
+   - Check console and network again after the preview is healthy.
 
-That's why the dropdown reads as a different typeface than the nav above it.
+5. If the preview proxy is still returning 412 after the code cleanup
+   - Treat it as a preview platform issue rather than an app issue.
+   - I’ll give you the fastest safe recovery steps: refresh the editor preview session, reopen the project preview, and if needed republish once preview is healthy.
 
-## The fix
-
-In the embedded `CSS` block at the bottom of `VerticalNavBar.tsx`, change the `font-family` on the dropdown classes from the mono stack to the same sans stack the nav links use, and tweak the now-too-tight letter-spacing so the rows still feel like nav items (not body copy).
-
-Specifically:
-
-1. **`.vnav-firm-row-label`** (the dropdown row labels — "MANAGEMENT CONSULTING", etc.)
-   - `font-family` → `'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif`
-   - `font-weight` → `900` (to match `.vnav-link`)
-   - `letter-spacing` → `0.10em` (matches `.vnav-link`)
-   - Keep size around `11px`, keep `text-transform: uppercase`.
-
-2. **`.vnav-menu-heading`** (the small "FOR YOUR FIRM" header inside the panel, and the "Your Microsites" header)
-   - Same sans family swap, `font-weight: 900`, `letter-spacing: 0.12em`. Keep the muted color and small size so it still reads as a section label rather than a row.
-
-3. Leave everything else alone:
-   - The "My Map" pill (`.vnav-mine-label`, `.vnav-mine-count`) keeps its mono treatment — that's an intentional pill style, not part of the dropdown the user is pointing at.
-   - The URL pill on the microsite shells (DM Mono) is unrelated and stays.
-
-## Out of scope
-
-- No changes to the nav structure, items, colors, or spacing.
-- No changes to other microsite top bars (`TopBar.tsx`, `PepperTopBar.tsx`, `SPRTopBar.tsx`) — the request is about the dropdown vs. nav mismatch on `/`.
-
-## Files touched
-
-- `src/components/VerticalLanding/VerticalNavBar.tsx` (CSS block only)
+Technical details
+- Files to update first: `src/App.tsx`
+- Files to regression-check after fix: `src/pages/Discover.tsx`, `src/components/discover/DiscoverHero.tsx`
+- Evidence gathered:
+  - Browser console shows `Failed to load resource: the server responded with a status of 412` on the document request.
+  - Browser network shows the top level `GET` for the preview document failing before app assets execute.
+  - `src/App.tsx` currently uses `BrowserRouter basename="/discover"` while also declaring both `/` and `/discover` routes.
+  - `src/integrations/supabase/client.ts` depends on managed env values at startup.
