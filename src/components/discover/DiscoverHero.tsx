@@ -645,8 +645,9 @@ export default function DiscoverHero() {
 
             <p className="kl-sub">
               <span className="kl-sub-inner">
-                The largest research on GTM in professional services.{' '}
-                <span className="kl-hl">500 practitioner interviews.</span> Validated by Copulsky.
+                The largest research on GTM in professional services.<br />
+                <span className="kl-hl">500 practitioner interviews.</span><br />
+                Validated by Copulsky.<br />
                 The map shows where your firm sits in the <span className="kl-hl">Dead Zone</span>{' '}
                 - and the one chapter that fixes your biggest gap.
               </span>
