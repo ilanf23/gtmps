@@ -21,7 +21,9 @@ export type MagnetEventName =
   | "share_click"
   | "save_click"
   | "save_submit"
-  | "firm_name_corrected";
+  | "firm_name_corrected"
+  | "wait_soft_timeout"
+  | "wait_email_fallback";
 
 const SECTION_TO_CTA: Record<string, CtaId> = {
   cta_section5_click: "section5_compact",
