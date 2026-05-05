@@ -296,9 +296,14 @@ function parseIconSize(tagFragment: string): number {
  * found and the SVG payload is small enough to embed safely.
  */
 function findInlineHeaderSvg(html: string): string | null {
-  const headerMatch = html.match(/<(header|nav)[^>]*>([\s\S]{0,15000}?)<\/\1>/i);
-  if (!headerMatch) return null;
-  const svgMatch = headerMatch[2].match(/<svg[\s\S]*?<\/svg>/i);
+  // Take the first 20k chars after <header> or <nav> opening, without
+  // requiring the closing tag (modern WP/React templates often have
+  // 40k+ chars between header open and close).
+  const openMatch = html.match(/<(header|nav)\b[^>]*>/i);
+  if (!openMatch) return null;
+  const start = (openMatch.index ?? 0) + openMatch[0].length;
+  const slice = html.slice(start, start + 20_000);
+  const svgMatch = slice.match(/<svg[\s\S]*?<\/svg>/i);
   if (!svgMatch) return null;
   const svg = svgMatch[0];
   if (svg.length > 25_000) return null;
@@ -367,11 +372,16 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     /* ignore */
   }
 
-  // Slice the markup that lives inside <header> or <nav>. Brand marks
-  // almost always live here; client/partner logo walls live in <section>
-  // or <footer>.
-  const headerSliceMatch = html.match(/<(header|nav)[^>]*>([\s\S]{0,20000}?)<\/\1>/i);
-  const headerSlice = headerSliceMatch ? headerSliceMatch[2] : "";
+  // Slice the first 20k chars of markup after the opening <header>/<nav>.
+  // Brand marks almost always sit at the top of the header. We do NOT
+  // require finding </header> because modern templates routinely have
+  // 40k+ chars (entire mega-menus, mobile drawers) between open and close.
+  let headerSlice = "";
+  const headerOpen = html.match(/<(header|nav)\b[^>]*>/i);
+  if (headerOpen) {
+    const start = (headerOpen.index ?? 0) + headerOpen[0].length;
+    headerSlice = html.slice(start, start + 20_000);
+  }
 
   // Negative-context phrases. If an <img> sits within ~400 chars of one of
   // these, it's almost certainly a client/partner logo, not the brand mark.
