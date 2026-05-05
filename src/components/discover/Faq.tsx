@@ -68,7 +68,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
             <br />
             <br />
             If you're pre-revenue or below $5M, this is adjacent - useful as a
-            long-term framework, but not optimized for your stage. We'd point you
+            long-term framework, but not built for your stage. We'd point you
             toward the podcast first, not the diagnostic.
           </>
         ),
