@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { generateMagnetSlug, magnetSlugSuffix } from '@/lib/magnetSlug';
 import { track } from '@/lib/posthog';
 import type { CtaId } from '@/lib/eventTaxonomy';
+import { getRefAttribution, clearRefAttribution } from '@/lib/refAttribution';
 
 /** Trim, prepend `https://` if missing, and validate via WHATWG URL. */
 export function normalizeUrl(input: string): string | null {
@@ -100,6 +101,8 @@ export async function submitMagnetUrl(
   let slug = baseSlug;
   let insertError: { code?: string; message?: string } | null = null;
 
+  const refAttr = getRefAttribution();
+
   // Collision-retry loop: if the slug exists for a prior submitter, append
   // a 3-char suffix and try again, up to 4 attempts total.
   for (let attempt = 0; attempt < 4; attempt++) {
@@ -118,6 +121,11 @@ export async function submitMagnetUrl(
       case_studies_url: null,
       team_page_url: null,
       vertical: verticalSlug,
+      ref_code: refAttr?.ref_code ?? null,
+      utm_source: refAttr?.utm_source ?? null,
+      utm_medium: refAttr?.utm_medium ?? null,
+      utm_campaign: refAttr?.utm_campaign ?? null,
+      referrer_url: refAttr?.referrer_url ?? null,
     });
 
     if (!res.error) {
