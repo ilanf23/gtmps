@@ -105,6 +105,7 @@ export type Database = {
           dead_zone_reasoning: string | null
           dead_zone_value: number | null
           deal_size_estimate: number | null
+          deeper_findings: Json | null
           enrichment_error: string | null
           gtm_profile_assessment: string | null
           gtm_profile_observed: string | null
@@ -138,6 +139,7 @@ export type Database = {
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
           deal_size_estimate?: number | null
+          deeper_findings?: Json | null
           enrichment_error?: string | null
           gtm_profile_assessment?: string | null
           gtm_profile_observed?: string | null
@@ -171,6 +173,7 @@ export type Database = {
           dead_zone_reasoning?: string | null
           dead_zone_value?: number | null
           deal_size_estimate?: number | null
+          deeper_findings?: Json | null
           enrichment_error?: string | null
           gtm_profile_assessment?: string | null
           gtm_profile_observed?: string | null
@@ -512,6 +515,7 @@ export type Database = {
           dead_zone_reasoning: string
           dead_zone_value: number
           deal_size_estimate: number
+          deeper_findings: Json
           enrichment_error: string
           gtm_profile_assessment: string
           gtm_profile_observed: string
