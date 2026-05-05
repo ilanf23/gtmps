@@ -356,27 +356,76 @@ async function validateLogoAsset(url: string): Promise<string | null> {
 }
 
 async function findLogoUrl(html: string, baseUrl: string): Promise<string | null> {
-  // 1. <img> explicitly tagged as a logo (alt/class/id), either attr order.
-  const explicitImg =
-    pickAttr(
-      html,
-      /<img[^>]+(?:alt|class|id)=["'][^"']*\blogo\b[^"']*["'][^>]*src=["']([^"']+)["']/i,
-    ) ||
-    pickAttr(
-      html,
-      /<img[^>]+src=["']([^"']+)["'][^>]+(?:alt|class|id)=["'][^"']*\blogo\b[^"']*["']/i,
-    );
+  // Domain root word, e.g. "mabbly" from "https://www.mabbly.com".
+  // Used to disambiguate the brand's own logo from client-wall logos
+  // (e.g. "Griffith-logo.svg" sitting on mabbly.com).
+  let domainRoot = "";
+  try {
+    const host = new URL(baseUrl).hostname.replace(/^www\./, "");
+    domainRoot = (host.split(".")[0] ?? "").toLowerCase();
+  } catch {
+    /* ignore */
+  }
 
-  // 2. Inline <svg> inside header/nav, almost always the brand mark.
+  // Slice the markup that lives inside <header> or <nav>. Brand marks
+  // almost always live here; client/partner logo walls live in <section>
+  // or <footer>.
+  const headerSliceMatch = html.match(/<(header|nav)[^>]*>([\s\S]{0,20000}?)<\/\1>/i);
+  const headerSlice = headerSliceMatch ? headerSliceMatch[2] : "";
+
+  // Negative-context phrases. If an <img> sits within ~400 chars of one of
+  // these, it's almost certainly a client/partner logo, not the brand mark.
+  const NEGATIVE_CONTEXT = /(client|partner|trusted by|our work|case stud|portfolio|testimonial|logo[\s-]?wall|brands? we|featured in|as seen|press)/i;
+
+  type Candidate = { src: string; score: number; isData?: boolean };
+  const candidates: Candidate[] = [];
+
+  // Walk every <img> tag, score it.
+  const imgRe = /<img\b[^>]*>/gi;
+  let im: RegExpExecArray | null;
+  while ((im = imgRe.exec(html)) !== null) {
+    const tag = im[0];
+    const src = pickAttr(tag, /src=["']([^"']+)["']/i);
+    if (!src) continue;
+    const alt = (pickAttr(tag, /alt=["']([^"']*)["']/i) ?? "").toLowerCase();
+    const cls = (pickAttr(tag, /class=["']([^"']*)["']/i) ?? "").toLowerCase();
+    const idAttr = (pickAttr(tag, /id=["']([^"']*)["']/i) ?? "").toLowerCase();
+    const srcLower = src.toLowerCase();
+    const idx = im.index;
+    const inHeader = headerSlice && html.indexOf(tag) >= 0
+      ? headerSlice.includes(tag)
+      : false;
+
+    // Surrounding context (~400 chars before the tag).
+    const ctxStart = Math.max(0, idx - 400);
+    const surrounding = html.slice(ctxStart, idx).toLowerCase();
+    const hasNegative = NEGATIVE_CONTEXT.test(surrounding) ||
+      /client|partner|testimonial/.test(cls) ||
+      /client|partner|testimonial/.test(idAttr);
+
+    let score = 0;
+    if (inHeader) score += 12;
+    if (/\blogo\b/.test(alt) || /\blogo\b/.test(cls) || /\blogo\b/.test(idAttr)) score += 5;
+    if (/[\/_-]logo[\._-]|\blogo\.(svg|png|webp)/i.test(srcLower)) score += 4;
+    if (domainRoot && domainRoot.length >= 3) {
+      if (srcLower.includes(domainRoot)) score += 10;
+      if (alt.includes(domainRoot)) score += 10;
+    }
+    // Filename mentioning OTHER company-ish words is a soft negative.
+    // (We can't know every client name, but the negative-context check
+    // catches most logo-wall placements.)
+    if (hasNegative) score -= 15;
+    // Skip pure tracking pixels and tiny icons.
+    if (/sprite|icon-|pixel|tracking|spacer|blank\.gif/.test(srcLower)) score -= 8;
+
+    if (score > 0) candidates.push({ src, score });
+  }
+
+  // Inline <svg> inside header/nav — almost always the brand mark.
   const inlineSvg = findInlineHeaderSvg(html);
+  if (inlineSvg) candidates.push({ src: inlineSvg, score: 11, isData: true });
 
-  // 3. <img> whose src filename screams "logo".
-  const logoFilenameImg = pickAttr(
-    html,
-    /<img[^>]+src=["']([^"']*\/?[^"'\/]*logo[^"'\/]*\.(?:svg|png|webp))["']/i,
-  );
-
-  // 4. SVG favicon, vector favicons are virtually always the real mark.
+  // SVG favicon — vector favicons are virtually always the real mark.
   const svgIconLink = (() => {
     const m = html.match(
       /<link[^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]+type=["']image\/svg\+xml["'][^>]+href=["']([^"']+)["']/i,
@@ -385,20 +434,20 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     );
     return m?.[1] ?? null;
   })();
+  if (svgIconLink) candidates.push({ src: svgIconLink, score: 8 });
 
-  // 5. Safari mask-icon (always a designed SVG mark).
   const maskIcon = pickAttr(
     html,
     /<link[^>]+rel=["']mask-icon["'][^>]+href=["']([^"']+)["']/i,
   );
+  if (maskIcon) candidates.push({ src: maskIcon, score: 7 });
 
-  // 6. apple-touch-icon (square, designed asset).
   const appleTouch = pickAttr(
     html,
     /<link[^>]+rel=["'](?:apple-touch-icon|apple-touch-icon-precomposed)["'][^>]+href=["']([^"']+)["']/i,
   );
+  if (appleTouch) candidates.push({ src: appleTouch, score: 6 });
 
-  // 7. <link rel="icon"> only when it carries a usable size (skip 16/32 favicons).
   const sizedIcon = (() => {
     const re = /<link[^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]*>/gi;
     let m: RegExpExecArray | null;
@@ -412,22 +461,24 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     }
     return null;
   })();
+  if (sizedIcon) candidates.push({ src: sizedIcon, score: 5 });
 
-  // og:image / twitter:image are deliberately NOT in this list, they are
+  // og:image / twitter:image are deliberately NOT used — they are
   // landscape marketing photos, not logos.
-  const candidates = [
-    explicitImg,
-    inlineSvg, // already a data URL, bypasses HEAD validation
-    logoFilenameImg,
-    svgIconLink,
-    maskIcon,
-    appleTouch,
-    sizedIcon,
-  ].filter((v): v is string => Boolean(v));
 
-  for (const c of candidates) {
-    if (c.startsWith("data:")) return c;
-    const resolved = resolveUrl(c, baseUrl);
+  // Sort by score, highest first, deduped by URL.
+  const seen = new Set<string>();
+  const ranked = candidates
+    .sort((a, b) => b.score - a.score)
+    .filter((c) => {
+      if (seen.has(c.src)) return false;
+      seen.add(c.src);
+      return true;
+    });
+
+  for (const c of ranked) {
+    if (c.src.startsWith("data:")) return c.src;
+    const resolved = resolveUrl(c.src, baseUrl);
     if (!resolved) continue;
     const ok = await validateLogoAsset(resolved);
     if (ok) return ok;
