@@ -666,6 +666,13 @@ ${JSON.stringify(linkedin_data)}`;
       .update({ status: "complete" })
       .eq("slug", slug);
 
+    await notifySlackSiteCreated({
+      slug,
+      websiteUrl: submission.website_url,
+      firstName: submission.first_name,
+      companyName: branding?.companyName ?? null,
+    });
+
     return json({ success: true, slug });
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
