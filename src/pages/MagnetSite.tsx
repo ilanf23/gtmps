@@ -392,6 +392,8 @@ export default function MagnetSite() {
         companyName={companyName}
         enrichmentReady={false}
         vertical={vertical}
+        slug={slug}
+        onRetry={retryEnrichment}
       />
     </MagnetShell>
   );
