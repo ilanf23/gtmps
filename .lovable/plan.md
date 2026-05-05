@@ -1,62 +1,77 @@
+# Lock forbidden vocabulary into ESLint
+
 ## Goal
 
-Apply the practices in `docs/mobile-optimization-research.md` to the live Discover homepage and shared infrastructure. Scope is bounded to high-impact, low-risk wins. No design changes, no copy changes (and no new dashes per the project rule).
+The `enrich-magnet` system prompt (line 77) forbids four words in AI output: **underutilized, optimize, leverage, synergy**. Hand-written JSX bypasses that guardrail, so `SPRSittingOn.tsx` ("highest-leverage opportunity") and `AwardsGrid.tsx` ("systematic origination") slipped through. Add a static check so future regressions fail lint.
 
-## Scope
+## Key finding before coding
 
-Only changes that map directly to the research doc's three pillars: Core Web Vitals, mobile UX, accessibility. Discover page (`/`) and shared chrome only. v1, microsites, magnet, vertical landings are out of scope unless they share a touched file.
+`leverage` is used in **legitimate product surface names**, not just stray copy:
 
-## Part 1, Core Web Vitals
+- `src/components/magnet/v10/HighestLeverageMove.tsx` (entire component, css file, eyebrow text "09 · Your Highest Leverage Move")
+- `MagnetBreakdown.tsx` nav label "Leverage"
+- `MagnetWaitTheater.tsx` loading copy "Drafting your highest leverage move…"
+- `CompactCtaCard.tsx` "highest leverage move"
+- `ctaVariants.ts` "highest-leverage move"
+- `verticalFlow.ts` "highest leverage move"
 
-### LCP
+These are the canonical name for Section 09. Banning the bare word breaks the product. Two options for handling them:
 
-- `index.html`: preconnects look fine; the Google Fonts request loads ~10 families, many unused on first paint. Trim the font request to families actually used above the fold (Cormorant Garamond, Instrument Sans, Inter Tight, IBM Plex Mono). Move the rest to a second `<link>` with `media="print" onload="this.media='all'"` so they don't block render.
-- Add `<link rel="preload" as="image" fetchpriority="high">` for the hero LCP image (book cover `bookCoverGm` used in the Book intro block on Discover) only if it qualifies as LCP at mobile widths; otherwise preload the actual hero asset.
-- Audit `<img>` tags on Discover sections (`WarStory`, `Authors`, book intro in `Discover.tsx`) and add explicit `width`/`height` (or `aspect-ratio`) plus `loading="lazy"` for everything below the fold and `fetchpriority="high"` + eager loading for the LCP image only.
-- Confirm `FloatingHeroVideo` uses `preload="metadata"` and `playsInline`; defer mounting on mobile until in viewport.
+1. **Recommended**: ban the words generally, but allow the exact phrase **"highest leverage move"** / **"highest-leverage move"** (case-insensitive) as the only sanctioned use of `leverage`. Anything else (e.g. "highest-leverage opportunity") fails.
+2. Ban the four words with zero exceptions. Forces a global rename of Section 09. Bigger surgery, not what the prompt is doing either (the prompt itself uses "highest-leverage move" at line 112).
 
-### INP
+I will plan for option 1 unless you say otherwise.
 
-- `useScrollReveal` and `ScrollProgressRail` both attach scroll listeners. Verify `{ passive: true }` everywhere (already true in `MobileProgressBar` and `StickyCTA`). Patch any remaining non-passive scroll listeners.
-- `StickyCTA` re-renders on every scroll past 600. Already gated, leave alone.
-- Replace any `setTimeout(fn, 0)` long-task patterns with `requestIdleCallback` fallback where present (spot-check, only if found).
+## Plan
 
-### CLS
+### 1. ESLint rule (`eslint.config.js`)
 
-- Add explicit `width`/`height` to every `<img>` on Discover that lacks them.
-- Tailwind config already loads fonts via Google Fonts CSS, which uses `font-display: swap`. Add a CSS `@font-face` `size-adjust` override for Cormorant Garamond and Instrument Sans against their fallbacks in `src/index.css` to eliminate font-swap CLS on the hero headline.
-- Reserve space for `FloatingHeroVideo` container so its mount does not shift content.
+Add a `no-restricted-syntax` rule keyed on `Literal` and `JSXText` nodes. Use a single regex per word so the message points at the offender.
 
-## Part 2, Mobile UX
+```text
+/\b(synergy|synergies)\b/i                      → forbidden
+/\b(optimize|optimized|optimizing|optimization)\b/i → forbidden
+/\b(underutilized|underutilised)\b/i            → forbidden
+/\bleverage(?!\s*move|-move|d\s+move)\b/i       → forbidden EXCEPT in "leverage move" / "leveraged move"
+```
 
-- Audit Discover for any `<input>` with implicit font-size; ensure `font-size: 16px` minimum on `HeroUrlField` so iOS does not auto-zoom on focus.
-- Touch targets: the sticky CTA pill (56px) and main nav are fine. `WhyNow` and `AuthorityStrip` use 10 to 12px copy; that is body micro-copy, not interactive, so leave font sizes but verify any links inside reach 24x24 hit area (add padding if needed, no visible change).
-- `index.html` viewport tag is correct (`width=device-width, initial-scale=1.0`). No change needed.
-- Confirm `max-width: 65ch` (or equivalent) on long-form prose blocks in Discover; add where missing.
+Implementation: use `no-restricted-syntax` selectors on `Literal[value=/.../i]` and `JSXText[value=/.../i]`. Severity = `error`. Message names the word and tells the author to rephrase.
 
-## Part 3, Accessibility
+The rule scans `src/**/*.{ts,tsx}` only; `supabase/functions/**` is already not in the lint set per current config (`files: ["**/*.{ts,tsx}"]` plus the project layout). No `eslint-disable` allowlist; if a future case truly needs the word, the author must justify and add a comment.
 
-- Verify every icon-only button on Discover/StickyNav has an `aria-label` (StickyNav menu toggle already does, spot-check the rest).
-- Ensure focus styles are visible on the sticky CTA and rail items (currently rely on default `:focus-visible`; add explicit ring if missing).
-- Skip link: `SkipLink` component exists but is not mounted on `Discover.tsx`. Mount it at the top of `<main>`.
+### 2. Clean the two cited violations
 
-## Files likely to change
+- `src/components/spr/SPRSittingOn.tsx:143` — rephrase "highest-leverage opportunity" as **"largest single opportunity"** (matches voice, no jargon).
+- `src/components/awards/AwardsGrid.tsx:28` and the matching string in `src/pages/Awards.tsx:35` and `src/content/verticals.ts` (×2 hits with "systematic origination") — note: "systematic origination" is **not in the forbidden list above**, so the lint rule won't flag it. The user mentioned it as an example of jargon that leaked, but we're scoped to the four words `enrich-magnet` already forbids. I'll leave "systematic origination" alone unless you want it added to the banlist.
 
-- `index.html` (font loading split, optional preload)
-- `src/index.css` (font-face size-adjust overrides, focus-visible polish)
-- `src/pages/Discover.tsx` (mount `SkipLink`, image dimensions on book cover img)
-- `src/components/discover/WarStory.tsx`, `Authors.tsx` (add `width`/`height`/`loading` to imgs)
-- `src/components/discover/FloatingHeroVideo.tsx` (preload, dimensions, defer mount)
-- `src/components/discover/HeroUrlField.tsx` (16px font-size on input)
-- Possibly `src/components/discover/ScrollProgressRail.tsx` (passive listener check)
+### 3. Sweep current violations the new rule will catch
 
-## Out of scope
+Running the rule's regexes across `src/` today shows likely hits beyond the two flagged:
+- `Faq.tsx:71` — "not optimized for your stage" → "not built for your stage"
+- `DeeperSection.tsx:21` and `v1/DeeperSection.tsx:21` — "fully optimized machine" → "fully built machine"
+- `Google.tsx:114` — "underutilized" inside a microsite data row → "low usage"
 
-- Speculation Rules API rollout (needs route-level prefetch design, separate task)
-- Converting JPG/PNG to AVIF/WebP (needs build pipeline change)
-- Screen reader audit on every microsite
-- Core Web Vitals lab measurement before/after (can do if you want, adds time)
+Plus the legitimate `leverage move` usages, which the regex exception preserves.
 
-## Validation
+I'll fix all of these in one pass so `npm run lint` is clean after the rule lands.
 
-After changes, I will rebuild and visually verify Discover at 390x844 (mobile) and 1024 (tablet) breakpoints, plus run a quick console check for layout shift warnings.
+### Out of scope
+
+- Renaming Section 09 ("Highest Leverage Move").
+- Banning words beyond the four in the system prompt (e.g. "systematic origination", "world-class", "best-in-class"). Easy to add later if you give the list.
+- Scanning the edge function source — the prompt already constrains it; lint is for hand-written JSX.
+
+## Files modified
+
+- `eslint.config.js` — add `no-restricted-syntax` rule.
+- `src/components/spr/SPRSittingOn.tsx` — rephrase line 143.
+- `src/components/discover/Faq.tsx` — rephrase line 71.
+- `src/components/DeeperSection.tsx`, `src/components/v1/DeeperSection.tsx` — rephrase line 21.
+- `src/pages/microsites/Google.tsx` — rephrase line 114.
+
+## Verification
+
+1. `npm run lint` — clean.
+2. Add a temporary line `<p>This will leverage synergy</p>` in any component, run lint, confirm two errors fire on correct word and line. Revert.
+3. Confirm `<p>Your highest leverage move…</p>` still passes.
+4. Visit `/spr` — Sitting On section reads naturally with the new phrasing.
