@@ -90,7 +90,7 @@ export default function HeroUrlField({
           min-width: 0;
           padding: 0 16px;
           font-family: 'Inter Tight', sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           border-radius: 8px;
           outline: none;
           height: 56px;
