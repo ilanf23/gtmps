@@ -161,6 +161,8 @@ export default function Authors() {
             alt="The Mabbly editorial team in studio"
             loading="lazy"
             decoding="async"
+            width={1200}
+            height={800}
             className="au-hero-photo"
           />
           <figcaption className="au-hero-caption">
