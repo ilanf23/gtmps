@@ -7,6 +7,7 @@ interface ChannelRow {
   utm_campaign: string | null;
   views: number;
   unique_visitors: number;
+  map_submits: number;
   save_submits: number;
   book_clicks: number;
   share_clicks: number;
@@ -206,6 +207,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
         utm_campaign: s.utm_campaign || null,
         views: 0,
         unique_visitors: 0,
+        map_submits: 0,
         save_submits: 0,
         book_clicks: 0,
         share_clicks: 0,
@@ -385,6 +387,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
                   <th className="text-left px-2 py-1 font-medium">Campaign</th>
                   <th className="text-right px-2 py-1 font-medium">Views</th>
                   <th className="text-right px-2 py-1 font-medium">Unique</th>
+                  <th className="text-right px-2 py-1 font-medium">MAPs</th>
                   <th className="text-right px-2 py-1 font-medium">Save→CR</th>
                   <th className="text-right px-2 py-1 font-medium">Saves</th>
                   <th className="text-right px-2 py-1 font-medium">Book clicks</th>
@@ -411,6 +414,9 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
                       <td className="px-2 py-1 text-right text-[#EDF5EC]">{r.views}</td>
                       <td className="px-2 py-1 text-right text-[#EDF5EC]">
                         {r.unique_visitors}
+                      </td>
+                      <td className="px-2 py-1 text-right text-[#FFBA1A]">
+                        {r.map_submits}
                       </td>
                       <td className="px-2 py-1 text-right text-[#FFBA1A]">
                         {rate(r.save_submits, r.unique_visitors)}
