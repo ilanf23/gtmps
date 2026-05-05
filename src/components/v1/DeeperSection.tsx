@@ -18,7 +18,7 @@ const DeeperSection = () => {
     {
       tag: "THE DIAGNOSTIC",
       title: "The Spectrum. Where Does Your PS Firm Sit on the GTM Maturity Curve?",
-      body: "The self assessment that every managing partner should run before doing anything else with their business development system. Zero infrastructure to fully optimized machine. Where does your firm actually sit today?",
+      body: "The self assessment that every managing partner should run before doing anything else with their business development system. Zero infrastructure to fully built machine. Where does your firm actually sit today?",
     },
   ];
 
