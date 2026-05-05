@@ -283,6 +283,8 @@ export default function TheDecision() {
           color: var(--td-ink);
           justify-items: end;
           padding: 48px clamp(36px, 6vw, 80px);
+          clip-path: inset(0 0 0 var(--td-split));
+          will-change: clip-path;
         }
 
         /* Top layer. Path I (dark), clipped */
