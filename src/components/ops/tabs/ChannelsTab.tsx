@@ -41,9 +41,6 @@ const RANGE_PRESETS: Array<{ id: string; label: string; days: number | null }> =
 ];
 
 function origin(): string {
-  if (typeof window !== "undefined" && window.location?.origin) {
-    return window.location.origin;
-  }
   return "https://discover.mabbly.com";
 }
 
@@ -78,7 +75,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
   const [range, setRange] = useState<string>("30d");
 
   // Builder state.
-  const [path, setPath] = useState<string>("/m/");
+  const [path, setPath] = useState<string>("/");
   const [source, setSource] = useState<string>("linkedin");
   const [medium, setMedium] = useState<string>("post");
   const [campaign, setCampaign] = useState<string>("");
