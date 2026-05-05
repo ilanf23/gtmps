@@ -157,15 +157,15 @@ const Discover = () => {
   const railItems = [
     { id: "hero", label: "01 · Hero" },
     { id: "industries", label: "02 · Industries" },
-    { id: "authority", label: "03 · Built By" },
-    { id: "dead-zone", label: "04 · Dead Zone" },
-    { id: "why-now", label: "08 · Why Now" },
-    { id: "beta-reader", label: "09 · Early Access" },
-    { id: "results", label: "10 · Proof" },
-    { id: "decision", label: "11 · Decision" },
-    { id: "manuscript", label: "12 · Manuscript" },
-    { id: "faq", label: "13 · FAQ" },
-    { id: "final", label: "14 · Final" },
+    { id: "the-book", label: "03 · The Book" },
+    { id: "authority", label: "04 · Authors" },
+    { id: "dead-zone", label: "05 · Dead Zone" },
+    { id: "why-now", label: "06 · Why Now" },
+    { id: "beta-reader", label: "07 · Early Access" },
+    { id: "results", label: "08 · Proof" },
+    { id: "decision", label: "09 · Decision" },
+    { id: "faq", label: "10 · FAQ" },
+    { id: "final", label: "11 · Begin" },
   ];
 
   return (

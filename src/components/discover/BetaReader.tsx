@@ -283,7 +283,7 @@ export default function BetaReader() {
           <span className="ea-pill">
             <span className="ea-dot" aria-hidden />
             <span>
-              <span className="ea-num">15 ·</span>Early Access · Open
+              <span className="ea-num">07 ·</span>Early Access · Open
             </span>
           </span>
           <h2 className="ea-headline">
