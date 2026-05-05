@@ -34,14 +34,31 @@ async function notifySlackSiteCreated(params: {
   websiteUrl?: string | null;
   firstName?: string | null;
   companyName?: string | null;
+  refCode?: string | null;
 }): Promise<void> {
   try {
-    const { slug, websiteUrl, firstName, companyName } = params;
+    const { slug, websiteUrl, firstName, companyName, refCode } = params;
     const host = (() => {
       try { return websiteUrl ? new URL(websiteUrl).hostname.replace(/^www\./, "") : ""; }
       catch { return ""; }
     })();
     if (host === "hi.com") return;
+
+    // Suppress for ref codes flagged with suppress_slack.
+    if (refCode) {
+      try {
+        const sb = createClient(
+          Deno.env.get("SUPABASE_URL")!,
+          Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+        );
+        const { data } = await sb
+          .from("magnet_referral_codes")
+          .select("suppress_slack")
+          .eq("code", refCode)
+          .maybeSingle();
+        if (data?.suppress_slack) return;
+      } catch { /* best-effort */ }
+    }
 
     const lovableKey = Deno.env.get("LOVABLE_API_KEY");
     const slackKey = Deno.env.get("SLACK_API_KEY");
