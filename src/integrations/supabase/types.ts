@@ -439,11 +439,16 @@ export type Database = {
           first_name: string
           id: string
           linkedin_url: string
+          ref_code: string | null
+          referrer_url: string | null
           role: string
           share_token: string | null
           slug: string
           status: string
           team_page_url: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
           vertical: string
           website_url: string
         }
@@ -457,11 +462,16 @@ export type Database = {
           first_name: string
           id?: string
           linkedin_url: string
+          ref_code?: string | null
+          referrer_url?: string | null
           role: string
           share_token?: string | null
           slug: string
           status?: string
           team_page_url?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
           vertical?: string
           website_url: string
         }
@@ -475,11 +485,16 @@ export type Database = {
           first_name?: string
           id?: string
           linkedin_url?: string
+          ref_code?: string | null
+          referrer_url?: string | null
           role?: string
           share_token?: string | null
           slug?: string
           status?: string
           team_page_url?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
           vertical?: string
           website_url?: string
         }
