@@ -111,7 +111,7 @@ const SITE_DATA: SiteData = {
         { capability: "AI/ML Native", values: [{ status: "check", note: "Gemini, Vertex" }, "partial", { status: "partial", note: "OpenAI partnership" }, "partial", { status: "partial", note: "watsonx" }] },
         { capability: "Data Analytics Moat", values: [{ status: "check", note: "BigQuery #1" }, "partial", "partial", { status: "check", note: "Autonomous DB" }, "none"] },
         { capability: "Enterprise Relationship Depth", values: ["partial", { status: "check", note: "20-year head start" }, { status: "check", note: "Office 365 install base" }, { status: "check", note: "Database lock-in" }, "partial"] },
-        { capability: "Partner Ecosystem Activation", values: [{ status: "partial", note: "500K certs, underutilized" }, { status: "check", note: "100K+ partners" }, { status: "check", note: "CSP channel" }, "partial", "none"] },
+        { capability: "Partner Ecosystem Activation", values: [{ status: "partial", note: "500K certs, low usage" }, { status: "check", note: "100K+ partners" }, { status: "check", note: "CSP channel" }, "partial", "none"] },
         { capability: "Relationship Activation Tech", values: [{ status: "partial", note: "With Mabbly" }, "none", "none", "none", "none"] },
         { capability: "Developer Community", values: [{ status: "check", note: "GDEs, Firebase, Android" }, { status: "check", note: "Builder community" }, "partial", "none", "none"] },
       ],
