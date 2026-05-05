@@ -99,6 +99,8 @@ Homepage hero URL submit (`HeroUrlField` → `lib/magnetSubmit.ts`) → row inse
 | **Shared shell** (`MicrositeShell` in `components/microsite/`) | Tabbed layout (Overview / Identity / Signals / Orbits / Roadmap / Content Engine), driven by `SiteData` from `types/microsite.ts`. Used by `/pepper-group`, `/google`. | **All new client microsites.** |
 | **One-off** (`/spr`, `/aletheia`) | Own component folders, own composition. | **Policy: Aletheia, SPR, and LaunchPad Lab stay as one-offs.** They are intentionally bespoke. Only extend this pattern if a client truly needs something the shell can't express. |
 
+**Why two patterns (intentional bifurcation, not drift).** The shared shell exists for templated client microsites where the value is the tab structure itself (overview, signals, orbits, roadmap). The one-offs (`/spr`, `/aletheia`, LaunchPad Lab) are diagnostic mirrors built around verbatim session copy and stakeholder-specific structure (custom calculators, OHQ panels, "Who you are / Where you're going / Triggers" sections). Folding them into the shell would either bloat the shell with bespoke props until it stops being a shell, or strip the bespoke pieces that earn the meeting. If a future audit flags this as bifurcation, it's flagging a deliberate policy. Do not migrate the one-offs.
+
 ### Component organization
 
 ```
