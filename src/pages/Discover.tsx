@@ -6,6 +6,7 @@ import { useFooterVisible } from "@/hooks/useFooterVisible";
 import { useInlineCtaVisible } from "@/hooks/useInlineCtaVisible";
 import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
+import SkipLink from "@/components/SkipLink";
 import PaperGrain from "@/components/discover/PaperGrain";
 import AuthorityStrip from "@/components/discover/AuthorityStrip";
 import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
@@ -169,6 +170,7 @@ const Discover = () => {
 
   return (
     <>
+      <SkipLink />
       <VerticalNavBar
         forYourFirmHref="#industries"
         addYourFirmHref="#hero"
@@ -202,6 +204,10 @@ const Discover = () => {
               <img
                 src={bookCoverGm}
                 alt="The Relationship Revenue OS, book cover"
+                width={840}
+                height={1260}
+                loading="lazy"
+                decoding="async"
                 style={{
                   width: "100%",
                   maxWidth: 420,
