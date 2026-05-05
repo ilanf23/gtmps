@@ -121,12 +121,16 @@ export async function submitMagnetUrl(
       case_studies_url: null,
       team_page_url: null,
       vertical: verticalSlug,
-      ref_code: refAttr?.ref_code ?? null,
-      utm_source: refAttr?.utm_source ?? null,
-      utm_medium: refAttr?.utm_medium ?? null,
-      utm_campaign: refAttr?.utm_campaign ?? null,
-      referrer_url: refAttr?.referrer_url ?? null,
-    });
+      ...(refAttr
+        ? {
+            ref_code: refAttr.ref_code,
+            utm_source: refAttr.utm_source,
+            utm_medium: refAttr.utm_medium,
+            utm_campaign: refAttr.utm_campaign,
+            referrer_url: refAttr.referrer_url,
+          }
+        : {}),
+    } as never);
 
     if (!res.error) {
       slug = candidate;
