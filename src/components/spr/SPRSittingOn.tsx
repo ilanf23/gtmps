@@ -140,7 +140,7 @@ export default function SPRSittingOn() {
         </h2>
         <div className="rounded-xl p-6" style={{ background: "rgba(200,150,62,0.05)", border: "1px solid rgba(200,150,62,0.15)" }}>
           <p className="text-[14px] leading-relaxed" style={{ color: "#2D2A26" }}>
-            The 8,000 to 10,000 dormant relationships in SPR's CRM are the highest-leverage opportunity. These are not cold prospects. They are people who chose to work with SPR and then went quiet. Reactivating even a small percentage of this group would generate more revenue, faster, and at lower cost than any net-new acquisition campaign. This is where the system should start.
+            The 8,000 to 10,000 dormant relationships in SPR's CRM are the largest single opportunity. These are not cold prospects. They are people who chose to work with SPR and then went quiet. Reactivating even a small percentage of this group would generate more revenue, faster, and at lower cost than any net-new acquisition campaign. This is where the system should start.
           </p>
         </div>
       </section>
