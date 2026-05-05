@@ -215,7 +215,7 @@ const law: VerticalContent = {
     items: [
       'How many former clients have not heard from you in 12+ months?',
       'What percent of new matters come from existing client referrals vs new business development?',
-      'Do you have a systematic origination plan beyond partners\' personal networks?',
+      'Do you have a deliberate origination plan beyond partners\' personal networks?',
       'How many lateral hires have brought books that decayed within 24 months?',
       'What percent of your associates contribute to BD pipeline?',
       'When a partner retires or leaves, does the firm retain the book?',
@@ -427,7 +427,7 @@ const advisory: VerticalContent = {
     facts: [
       { text: '80%+ of AUM growth from existing client referrals.' },
       { text: 'Average prospect-to-client conversion takes 2 to 4 years.' },
-      { text: 'Most firms have no systematic origination process.' },
+      { text: 'Most firms have no repeatable origination process.' },
       { text: 'Wealth tier transitions create reactivation triggers.' },
       { text: '60%+ of advisors do no proactive prospecting beyond their book.' },
     ],
