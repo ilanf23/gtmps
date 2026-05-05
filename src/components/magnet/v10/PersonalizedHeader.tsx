@@ -536,6 +536,50 @@ export default function PersonalizedHeader({
                 <br />
                 <span className={`ph-word w5 ph-firm ${firmSizeClass}`.trim()}>{upperFirm}</span>
                 <span className="ph-period">.</span>
+                {!editing && (
+                  <button
+                    type="button"
+                    onClick={() => { setDraft(firmName); setEditing(true); }}
+                    className="ml-3 align-middle inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-mono uppercase tracking-[0.18em] border border-black/15 bg-white/60 hover:bg-white/90 text-[#0F1E1D]/70 hover:text-[#0F1E1D] transition"
+                    aria-label="Not quite, fix this"
+                  >
+                    Not quite, fix this
+                  </button>
+                )}
+                {editing && (
+                  <span className="ml-3 inline-flex items-center gap-2 align-middle">
+                    <input
+                      type="text"
+                      autoFocus
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") submitCorrection();
+                        if (e.key === "Escape") setEditing(false);
+                      }}
+                      maxLength={120}
+                      disabled={saving}
+                      className="px-3 py-1.5 rounded-md border border-black/20 bg-white text-base font-sans text-[#0F1E1D] outline-none focus:border-black/50 min-w-[220px]"
+                      aria-label="Correct firm name"
+                    />
+                    <button
+                      type="button"
+                      onClick={submitCorrection}
+                      disabled={saving}
+                      className="px-3 py-1.5 rounded-md text-[11px] font-mono uppercase tracking-[0.18em] bg-[#0F1E1D] text-white disabled:opacity-50"
+                    >
+                      {saving ? "Saving" : "Save"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditing(false)}
+                      disabled={saving}
+                      className="px-2.5 py-1.5 rounded-md text-[11px] font-mono uppercase tracking-[0.18em] text-[#0F1E1D]/60 hover:text-[#0F1E1D]"
+                    >
+                      Cancel
+                    </button>
+                  </span>
+                )}
               </h1>
 
               <p className="ph-sub">
