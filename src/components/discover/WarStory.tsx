@@ -65,6 +65,8 @@ export default function WarStory() {
               alt="Senior partner in conversation"
               loading="lazy"
               decoding="async"
+              width={900}
+              height={600}
               className="ws-photo"
             />
             <figcaption className="ws-caption">
