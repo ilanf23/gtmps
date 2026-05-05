@@ -26,6 +26,61 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
+// Posts a Slack notification when a new microsite is created.
+// Excludes test domains (e.g. hi.com). Failures are swallowed so they
+// never break the enrichment flow.
+async function notifySlackSiteCreated(params: {
+  slug: string;
+  websiteUrl?: string | null;
+  firstName?: string | null;
+  companyName?: string | null;
+}): Promise<void> {
+  try {
+    const { slug, websiteUrl, firstName, companyName } = params;
+    const host = (() => {
+      try { return websiteUrl ? new URL(websiteUrl).hostname.replace(/^www\./, "") : ""; }
+      catch { return ""; }
+    })();
+    if (host === "hi.com") return;
+
+    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+    const slackKey = Deno.env.get("SLACK_API_KEY");
+    if (!lovableKey || !slackKey) return;
+
+    const channel = "microsite-gtmps";
+    const siteUrl = `https://discover.mabbly.com/m/${slug}`;
+    const firm = companyName || host || "Unknown firm";
+    const who = firstName ? ` (${firstName})` : "";
+    const text = `New microsite created. ${firm}${who}. ${siteUrl}`;
+
+    const res = await fetch("https://connector-gateway.lovable.dev/slack/api/chat.postMessage", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${lovableKey}`,
+        "X-Connection-Api-Key": slackKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        channel,
+        text,
+        username: "Mabbly Magnet",
+        icon_emoji: ":sparkles:",
+        unfurl_links: true,
+      }),
+    });
+    if (!res.ok) {
+      console.warn("[slack notify] http error", res.status, await res.text().catch(() => ""));
+      return;
+    }
+    const data = await res.json().catch(() => null) as { ok?: boolean; error?: string } | null;
+    if (data && data.ok === false) {
+      console.warn("[slack notify] api error", data.error);
+    }
+  } catch (e) {
+    console.warn("[slack notify] threw", e instanceof Error ? e.message : String(e));
+  }
+}
+
 const SYSTEM_PROMPT = `You are Mabbly's GTM analyst. You have scraped a professional services firm's website. Your job is to generate a personalized microsite breakdown that reads like it was written by someone who has worked inside their industry for 20 years, not a chatbot that read their homepage.
 
 ═══ THE ICP ═══
@@ -610,6 +665,13 @@ ${JSON.stringify(linkedin_data)}`;
       .from("magnet_submissions")
       .update({ status: "complete" })
       .eq("slug", slug);
+
+    await notifySlackSiteCreated({
+      slug,
+      websiteUrl: submission.website_url,
+      firstName: submission.first_name,
+      companyName: branding?.companyName ?? null,
+    });
 
     return json({ success: true, slug });
   } catch (err) {
