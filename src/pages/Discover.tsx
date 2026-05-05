@@ -165,7 +165,7 @@ const Discover = () => {
     { id: "results", label: "08 · Proof" },
     { id: "decision", label: "09 · Decision" },
     { id: "faq", label: "10 · FAQ" },
-    { id: "final", label: "11 · Begin" },
+    { id: "final-cta", label: "11 · Begin" },
   ];
 
   return (
