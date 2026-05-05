@@ -177,6 +177,7 @@ export default function PersonalizedHeader({
         .ph-firm {
           position: relative;
           display: inline-block;
+          font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif;
           font-size: clamp(48px, 7.4vw, 116px);
           letter-spacing: -0.03em;
           color: ${accent};
