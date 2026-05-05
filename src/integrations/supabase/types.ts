@@ -97,6 +97,7 @@ export type Database = {
           client_brand_color: string | null
           client_brand_profile: Json
           client_company_name: string | null
+          client_company_name_override: string | null
           client_font_family: string | null
           client_logo_url: string | null
           client_text_color: string | null
@@ -131,6 +132,7 @@ export type Database = {
           client_brand_color?: string | null
           client_brand_profile?: Json
           client_company_name?: string | null
+          client_company_name_override?: string | null
           client_font_family?: string | null
           client_logo_url?: string | null
           client_text_color?: string | null
@@ -165,6 +167,7 @@ export type Database = {
           client_brand_color?: string | null
           client_brand_profile?: Json
           client_company_name?: string | null
+          client_company_name_override?: string | null
           client_font_family?: string | null
           client_logo_url?: string | null
           client_text_color?: string | null
@@ -317,6 +320,33 @@ export type Database = {
           id?: string
           slug?: string
           vertical?: string | null
+        }
+        Relationships: []
+      }
+      magnet_name_corrections: {
+        Row: {
+          corrected_name: string
+          created_at: string
+          id: string
+          previous_name: string | null
+          slug: string
+          visitor_fingerprint: string | null
+        }
+        Insert: {
+          corrected_name: string
+          created_at?: string
+          id?: string
+          previous_name?: string | null
+          slug: string
+          visitor_fingerprint?: string | null
+        }
+        Update: {
+          corrected_name?: string
+          created_at?: string
+          id?: string
+          previous_name?: string | null
+          slug?: string
+          visitor_fingerprint?: string | null
         }
         Relationships: []
       }
@@ -496,6 +526,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      correct_magnet_firm_name: {
+        Args: {
+          _corrected_name: string
+          _slug: string
+          _visitor_fingerprint?: string
+        }
+        Returns: string
+      }
       get_magnet_breakdown_by_slug: {
         Args: { _slug: string }
         Returns: {
