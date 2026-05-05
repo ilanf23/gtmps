@@ -440,7 +440,7 @@ export default function IndustryGrid() {
 
       <div className="ind-inner">
         <div className="ind-header">
-          <p className="ind-eyebrow">The Verticals</p>
+          <p className="ind-eyebrow">02 · The Verticals</p>
           <div className="ind-rule" aria-hidden />
           <h2 className="ind-headline">
             <span className="w w1">Built</span>

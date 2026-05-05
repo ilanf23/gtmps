@@ -158,7 +158,7 @@ export default function AwardsHero() {
           <div className="ah-dot d2" />
         </div>
 
-        <p className="ah-eyebrow">Inaugural · 2026</p>
+        <p className="ah-eyebrow">01 · Inaugural · 2026</p>
         <h1 className="ah-headline">Awards built for the firms that win unfairly.</h1>
         <p className="ah-sub">
           Excellence in relationship driven growth deserves institutional recognition. Eight awards. One per vertical. Inaugural cohort, Q3 2026.

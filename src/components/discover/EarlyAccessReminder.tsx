@@ -21,7 +21,7 @@ function scrollToTarget(id: string) {
 export default function EarlyAccessReminder({
   variant = "inline",
   href = "#hero",
-  sectionRef = "15 · Reminder",
+  sectionRef = "Reminder",
   dismissKey = "earlyAccessReminder.dismissed",
 }: EarlyAccessReminderProps) {
   const [dismissed, setDismissed] = useState(false);

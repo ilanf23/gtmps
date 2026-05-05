@@ -591,7 +591,7 @@ export default function TheDecision() {
       <div className="td-inner">
         <header className="td-head">
           <p className="td-eyebrow">
-            <span className="num">13</span>
+            <span className="num">09</span>
             <span className="pip">·</span>
             <span className="word">The Decision</span>
           </p>
