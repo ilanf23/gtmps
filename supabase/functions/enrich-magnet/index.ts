@@ -688,6 +688,7 @@ ${JSON.stringify(linkedin_data)}`;
       websiteUrl: submission.website_url,
       firstName: submission.first_name,
       companyName: branding?.companyName ?? null,
+      refCode: (submission as { ref_code?: string | null }).ref_code ?? null,
     });
 
     return json({ success: true, slug });
