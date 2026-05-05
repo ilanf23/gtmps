@@ -3,6 +3,7 @@ import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
 import { CSS } from "./css";
 import type { VerticalConfig, VerticalSlug, SmallStat, BreakBlock } from "./configs";
+import { track } from "@/lib/posthog";
 
 type AuditAnswer = "yes" | "no" | null;
 type AuditState = Record<number, AuditAnswer>;
@@ -274,7 +275,27 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
     };
   }, [config.slug]);
 
-  const setAnswer = (q: number, v: AuditAnswer) => setAudit((s) => ({ ...s, [q]: v }));
+  const setAnswer = (q: number, v: AuditAnswer) =>
+    setAudit((s) => {
+      const next = { ...s, [q]: v };
+      const yesAfter = Object.values(next).filter((x) => x === "yes").length;
+      const yesBefore = Object.values(s).filter((x) => x === "yes").length;
+      if (v) {
+        track("vertical_audit_answered", {
+          vertical: config.slug,
+          question_id: q,
+          answer: v,
+          yes_count_after: yesAfter,
+        });
+      }
+      if (yesAfter >= 2 && yesBefore < 2) {
+        track("vertical_audit_alert_triggered", {
+          vertical: config.slug,
+          yes_count: yesAfter,
+        });
+      }
+      return next;
+    });
 
   const Meta = ({ num, tag }: { num: string; tag: string }) => (
     <div className="meta-row">

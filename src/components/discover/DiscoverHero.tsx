@@ -140,7 +140,10 @@ export default function DiscoverHero() {
     setError(null);
     setSubmitting(true);
     try {
-      const result = await submitMagnetUrl(website, { verticalSlug: 'general' });
+      const result = await submitMagnetUrl(website, {
+        verticalSlug: 'general',
+        entryPoint: 'discover_hero',
+      });
       if (!result.ok) {
         if (result.validation) setError(result.error);
         else toast.error(result.error);

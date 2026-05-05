@@ -12,9 +12,10 @@ interface Props {
   onTabChange: (i: number) => void;
   tabLabels?: string[];
   ctaUrl?: string;
+  onCtaClick?: () => void;
 }
 
-export default function TabBar({ activeTab, onTabChange, tabLabels, ctaUrl }: Props) {
+export default function TabBar({ activeTab, onTabChange, tabLabels, ctaUrl, onCtaClick }: Props) {
   const tabs = tabLabels ?? DEFAULT_TABS;
   const progress = ((activeTab + 1) / tabs.length) * 100;
 
@@ -65,7 +66,10 @@ export default function TabBar({ activeTab, onTabChange, tabLabels, ctaUrl }: Pr
           {/* CTA pill */}
           {ctaUrl && (
             <button
-              onClick={() => window.open(ctaUrl, "_blank")}
+              onClick={() => {
+                onCtaClick?.();
+                window.open(ctaUrl, "_blank");
+              }}
               className="whitespace-nowrap px-4 py-1.5 my-2 ml-2 text-[10px] sm:text-[11px] font-semibold tracking-wide rounded-full transition-all duration-300 cursor-pointer shrink-0"
               style={{
                 background: "linear-gradient(135deg, #C65D3E, #A84D32)",

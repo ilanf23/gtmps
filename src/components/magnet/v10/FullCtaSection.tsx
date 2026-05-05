@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { CtaVariantId } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { track } from "@/lib/posthog";
 import { ensureCalendlyAssets, initCalendlyInline } from "@/lib/calendly";
 import "./FullCtaSection.css";
 
@@ -79,6 +80,11 @@ export default function FullCtaSection({
           vertical,
           variant: variantId,
           outcome: "scheduled",
+        });
+        track("booking_completed", {
+          slug,
+          cta_id: "section8_full",
+          variant: variantId ?? null,
         });
         const params = new URLSearchParams(location.search);
         if (params.get("booked") !== "true") {

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { MANUSCRIPT_INTRODUCTION } from "@/content/manuscriptQuotes";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { identifyByEmail } from "@/lib/posthog";
 
 interface Props {
   slug: string;
@@ -138,6 +139,7 @@ export default function ManuscriptShareSave({
       toast.error("Couldn't save your email. Try again.");
       return;
     }
+    identifyByEmail(trimmed, "save");
     setEmailSent(true);
   };
 

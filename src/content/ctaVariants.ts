@@ -6,6 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ScoreBand } from "@/lib/magnetScoring";
+import { getFeatureFlagPayload } from "@/lib/posthog";
 
 export type CtaVariantId = "A" | "B" | "C" | "D";
 
@@ -96,7 +97,7 @@ export interface PickVariantInput {
  *  - generic + dealSize > 30k  → D
  *  - default                   → C
  */
-export function pickVariant(input: PickVariantInput): CtaVariantId {
+function pickVariantStatic(input: PickVariantInput): CtaVariantId {
   const { vertical, bandOverall, dealSizeEstimate } = input;
   const v = vertical.toLowerCase();
 
@@ -115,4 +116,27 @@ export function pickVariant(input: PickVariantInput): CtaVariantId {
   if (bandOverall === "low") return "A";
   if ((dealSizeEstimate ?? 0) > 30_000) return "D";
   return "C";
+}
+
+function isCtaVariantId(v: unknown): v is CtaVariantId {
+  return v === "A" || v === "B" || v === "C" || v === "D";
+}
+
+/**
+ * Pick a CTA variant. Prefers a PostHog `cta-variant` feature-flag payload
+ * (string `"A"|"B"|"C"|"D"` or `{ variant: "A".."D" }`) when available, so we
+ * can A/B test copy without redeploying. Falls back to the static heuristic
+ * below when PostHog hasn't loaded or no payload is configured.
+ */
+export function pickVariant(input: PickVariantInput): CtaVariantId {
+  const payload = getFeatureFlagPayload("cta-variant");
+  if (isCtaVariantId(payload)) return payload;
+  if (
+    payload &&
+    typeof payload === "object" &&
+    isCtaVariantId((payload as { variant?: unknown }).variant)
+  ) {
+    return (payload as { variant: CtaVariantId }).variant;
+  }
+  return pickVariantStatic(input);
 }

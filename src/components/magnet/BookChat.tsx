@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { SendHorizontal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { track } from "@/lib/posthog";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -55,12 +57,17 @@ function buildSuggestedPrompts(
 }
 
 export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}) {
+  const { slug } = useParams<{ slug: string }>();
   const { toast } = useToast();
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    track("book_chat_opened", { slug: slug ?? "" });
+  }, [slug]);
 
   // Empty-state shows when no user message has been sent yet (only the
   // initial welcome is in the transcript).
@@ -91,6 +98,12 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
     const trimmed = (override ?? input).trim();
     if (!trimmed || isLoading) return;
 
+    track("book_chat_message_sent", {
+      slug: slug ?? "",
+      message_length: trimmed.length,
+      is_suggested_prompt: !!override,
+    });
+
     const userMessage: ChatMessage = { role: "user", content: trimmed };
     const next = [...messages, userMessage];
     setMessages(next);
@@ -108,6 +121,7 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
       });
 
       if (resp.status === 429) {
+        track("book_chat_error", { slug: slug ?? "", code: "rate_limited" });
         toast({
           title: "Slow down",
           description: "Too many requests. Please wait a moment and try again.",
@@ -117,6 +131,7 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
         return;
       }
       if (resp.status === 402) {
+        track("book_chat_error", { slug: slug ?? "", code: "credits" });
         toast({
           title: "Out of credits",
           description: "AI credits are exhausted. Please contact support.",
@@ -126,6 +141,7 @@ export default function BookChat({ firmName, verticalLabel }: BookChatProps = {}
         return;
       }
       if (!resp.ok || !resp.body) {
+        track("book_chat_error", { slug: slug ?? "", code: "network" });
         throw new Error(`Stream failed: ${resp.status}`);
       }
 

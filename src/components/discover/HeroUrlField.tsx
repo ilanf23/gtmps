@@ -48,7 +48,10 @@ export default function HeroUrlField({
     setError(null);
     setSubmitting(true);
     try {
-      const result = await submitMagnetUrl(website, { verticalSlug: vertical });
+      const result = await submitMagnetUrl(website, {
+        verticalSlug: vertical,
+        entryPoint: 'discover_hero',
+      });
       if (!result.ok) {
         if (result.validation) {
           setError(result.error);

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
+import { track } from "@/lib/posthog";
 
 // Serve the worker as a static asset from /public so the URL is stable across
 // dev, preview iframe, and production. Avoids Vite module-URL resolution
@@ -12,12 +14,30 @@ pdfjs.GlobalWorkerOptions.workerSrc = `${import.meta.env.BASE_URL}pdf-worker/pdf
 const PDF_URL = `${import.meta.env.BASE_URL}book/relationship-revenue-os.pdf`;
 
 export default function BookReader() {
+  const { slug } = useParams<{ slug: string }>();
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pdfAvailable, setPdfAvailable] = useState<boolean | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [containerWidth, setContainerWidth] = useState<number>(800);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    track("book_reader_opened", { slug: slug ?? "" });
+  }, [slug]);
+
+  const trackPage = (
+    nextPage: number,
+    direction: "next" | "prev",
+    method: "key" | "click" | "button",
+  ) => {
+    track("book_reader_page_changed", {
+      slug: slug ?? "",
+      page_number: nextPage,
+      direction,
+      method,
+    });
+  };
 
   // Existence check (avoid mounting <Document> against an HTML 404).
   useEffect(() => {
@@ -58,20 +78,37 @@ export default function BookReader() {
     const onKey = (e: KeyboardEvent) => {
       if (!numPages) return;
       if (e.key === "ArrowRight" || e.key === "PageDown") {
-        setPageNumber((p) => Math.min(numPages, p + 1));
+        setPageNumber((p) => {
+          const next = Math.min(numPages, p + 1);
+          if (next !== p) trackPage(next, "next", "key");
+          return next;
+        });
       } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
-        setPageNumber((p) => Math.max(1, p - 1));
+        setPageNumber((p) => {
+          const next = Math.max(1, p - 1);
+          if (next !== p) trackPage(next, "prev", "key");
+          return next;
+        });
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [numPages]);
+  }, [numPages, slug]);
 
   const file = useMemo(() => ({ url: PDF_URL }), []);
 
-  const goPrev = () => setPageNumber((p) => Math.max(1, p - 1));
+  const goPrev = () =>
+    setPageNumber((p) => {
+      const next = Math.max(1, p - 1);
+      if (next !== p) trackPage(next, "prev", "button");
+      return next;
+    });
   const goNext = () =>
-    setPageNumber((p) => (numPages ? Math.min(numPages, p + 1) : p));
+    setPageNumber((p) => {
+      const next = numPages ? Math.min(numPages, p + 1) : p;
+      if (next !== p) trackPage(next, "next", "button");
+      return next;
+    });
 
   return (
     <div
@@ -114,7 +151,15 @@ export default function BookReader() {
               </button>
               <button
                 type="button"
-                onClick={() => setFullscreen((v) => !v)}
+                onClick={() =>
+                  setFullscreen((v) => {
+                    track("book_reader_fullscreen_toggled", {
+                      slug: slug ?? "",
+                      entered: !v,
+                    });
+                    return !v;
+                  })
+                }
                 className="ml-1 sm:ml-2 inline-flex items-center justify-center w-8 h-8 rounded text-[#0F1E1D]/70 hover:text-[#0F1E1D] hover:bg-black/5 transition-colors"
                 aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"}
               >
@@ -179,10 +224,17 @@ export default function BookReader() {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const clickedLeftHalf = e.clientX - rect.left < rect.width / 2;
                   if (clickedLeftHalf) {
-                    if (pageNumber > 1) setPageNumber((p) => p - 1);
+                    if (pageNumber > 1) {
+                      const next = pageNumber - 1;
+                      setPageNumber(next);
+                      trackPage(next, "prev", "click");
+                    }
                   } else {
-                    if (numPages && pageNumber < numPages)
-                      setPageNumber((p) => p + 1);
+                    if (numPages && pageNumber < numPages) {
+                      const next = pageNumber + 1;
+                      setPageNumber(next);
+                      trackPage(next, "next", "click");
+                    }
                   }
                   // Restore scroll on next frame, after React re-renders the
                   // new page (which can briefly change content height).

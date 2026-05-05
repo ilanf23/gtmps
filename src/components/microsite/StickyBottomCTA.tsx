@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
+import { track } from "@/lib/posthog";
 
 interface Props {
   buttonText: string;
   buttonUrl: string;
   label?: string;
+  micrositeSlug?: string;
 }
 
-export default function StickyBottomCTA({ buttonText, buttonUrl, label = "15-min MAP Review" }: Props) {
+export default function StickyBottomCTA({ buttonText, buttonUrl, label = "15-min MAP Review", micrositeSlug }: Props) {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const triggerRef = useRef<boolean>(false);
@@ -77,7 +79,13 @@ export default function StickyBottomCTA({ buttonText, buttonUrl, label = "15-min
                 e.currentTarget.style.boxShadow = "0 4px 16px rgba(198,93,62,0.25)";
                 e.currentTarget.style.transform = "translateY(0)";
               }}
-              onClick={() => window.open(buttonUrl, "_blank")}
+              onClick={() => {
+                track("microsite_cta_clicked", {
+                  microsite_slug: micrositeSlug ?? "",
+                  cta_id: "sticky_bottom",
+                });
+                window.open(buttonUrl, "_blank");
+              }}
             >
               {buttonText}
             </button>

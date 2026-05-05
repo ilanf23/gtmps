@@ -10,6 +10,8 @@
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { generateMagnetSlug, magnetSlugSuffix } from '@/lib/magnetSlug';
+import { track } from '@/lib/posthog';
+import type { CtaId } from '@/lib/eventTaxonomy';
 
 /** Trim, prepend `https://` if missing, and validate via WHATWG URL. */
 export function normalizeUrl(input: string): string | null {
@@ -37,6 +39,8 @@ export const websiteSchema = z
 export interface SubmitMagnetUrlOptions {
   /** Vertical slug (from useVerticalFlow). Defaults to 'general'. */
   verticalSlug?: string;
+  /** Where the form lives, for analytics. */
+  entryPoint?: CtaId;
 }
 
 export interface SubmitMagnetUrlResult {
@@ -68,9 +72,15 @@ export async function submitMagnetUrl(
   opts: SubmitMagnetUrlOptions = {},
 ): Promise<SubmitMagnetUrlResult> {
   const verticalSlug = opts.verticalSlug ?? 'general';
+  const entryPoint: CtaId = opts.entryPoint ?? 'discover_hero';
 
   const parsed = websiteSchema.safeParse(rawUrl);
   if (!parsed.success) {
+    track('assess_submit_failed', {
+      reason: 'validation',
+      entry_point: entryPoint,
+      detail: parsed.error.issues[0]?.message,
+    });
     return {
       ok: false,
       validation: true,
@@ -80,6 +90,12 @@ export async function submitMagnetUrl(
 
   const normalizedUrl = normalizeUrl(rawUrl) ?? rawUrl.trim();
   const baseSlug = generateMagnetSlug(normalizedUrl);
+
+  track('assess_form_submitted', {
+    website_url: normalizedUrl,
+    entry_point: entryPoint,
+    vertical: verticalSlug === 'general' ? null : verticalSlug,
+  });
 
   let slug = baseSlug;
   let insertError: { code?: string; message?: string } | null = null;
@@ -119,6 +135,11 @@ export async function submitMagnetUrl(
 
   if (insertError) {
     console.error('Insert error:', insertError);
+    track('assess_submit_failed', {
+      reason: 'rpc_error',
+      entry_point: entryPoint,
+      detail: insertError.code,
+    });
     return {
       ok: false,
       error: 'Something went wrong. Please try again.',

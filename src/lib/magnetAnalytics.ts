@@ -8,6 +8,8 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { getCurrentAttribution } from "@/lib/magnetAttribution";
+import { posthog, isPostHogReady, track } from "@/lib/posthog";
+import type { CtaId } from "@/lib/eventTaxonomy";
 
 export type MagnetEventName =
   | "section_view"
@@ -20,11 +22,66 @@ export type MagnetEventName =
   | "save_click"
   | "save_submit";
 
+const SECTION_TO_CTA: Record<string, CtaId> = {
+  cta_section5_click: "section5_compact",
+  cta_section5_chapter_submit: "section5_compact",
+  cta_section5_dismiss: "section5_compact",
+  cta_section8_view: "section8_full",
+  cta_section8_click: "section8_full",
+};
+
+function variantFromProps(props: Record<string, unknown>): string | null {
+  const v = props.variant;
+  return typeof v === "string" ? v : null;
+}
+
 export async function trackMagnetEvent(
   slug: string,
   event_name: MagnetEventName,
   props: Record<string, unknown> = {}
 ): Promise<void> {
+  // Dual-write: PostHog first (synchronous, in-memory queue) so we never lose
+  // the event if Supabase is slow or fails.
+  if (isPostHogReady()) {
+    try {
+      posthog.capture(event_name, { slug, ...props });
+
+      // Layer the new taxonomy on top of legacy CTA event names so PostHog
+      // funnels can be built against a stable contract.
+      const ctaId = SECTION_TO_CTA[event_name];
+      if (ctaId) {
+        if (event_name === "cta_section8_view") {
+          track("cta_viewed", {
+            slug,
+            cta_id: ctaId,
+            variant: variantFromProps(props),
+          });
+        } else {
+          const outcome =
+            event_name === "cta_section5_dismiss"
+              ? "dismissed"
+              : event_name === "cta_section5_chapter_submit"
+                ? "submitted_chapter"
+                : (props.outcome as
+                    | "opened_calendly"
+                    | "scheduled"
+                    | "click"
+                    | undefined) ?? "click";
+          track("cta_clicked", {
+            slug,
+            cta_id: ctaId,
+            variant: variantFromProps(props),
+            outcome,
+          });
+        }
+      }
+    } catch (err) {
+      if (typeof console !== "undefined") {
+        console.debug("[magnet analytics] posthog capture failed", event_name, err);
+      }
+    }
+  }
+
   try {
     const attr = getCurrentAttribution();
     await supabase

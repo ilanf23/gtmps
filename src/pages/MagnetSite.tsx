@@ -7,6 +7,7 @@ import MagnetWaitTheater from '@/components/magnet/MagnetWaitTheater';
 import { useClientTheme } from '@/hooks/useClientTheme';
 import { resolveVerticalSlug } from '@/content/verticalFlow';
 import { displayNameFromSlug, isCanonicalNameMismatch } from '@/lib/magnetSlug';
+import { track } from '@/lib/posthog';
 
 type Status = 'loading' | 'pending' | 'processing' | 'complete' | 'error';
 
@@ -45,7 +46,45 @@ export default function MagnetSite() {
     let cancelled = false;
     let consecutiveFailures = 0;
     let currentDelay = POLL_BASE_MS;
+    let lastReportedStatus: Status = 'loading';
+    let terminalReported = false;
     const startedAt = Date.now();
+
+    track('magnet_polling_started', { slug });
+
+    const setTrackedStatus = (next: Status) => {
+      if (next !== lastReportedStatus) {
+        track('magnet_status_transition', {
+          slug,
+          from: lastReportedStatus,
+          to: next,
+        });
+        lastReportedStatus = next;
+      }
+      setStatus(next);
+    };
+
+    const reportComplete = (gtmObserved: boolean) => {
+      if (terminalReported) return;
+      terminalReported = true;
+      track('magnet_enrichment_complete', {
+        slug,
+        latency_ms: Date.now() - startedAt,
+        gtm_profile_observed: !!gtmObserved,
+      });
+    };
+
+    const reportFailed = (
+      reason: 'timeout' | 'enrichment_error' | 'rpc_error',
+    ) => {
+      if (terminalReported) return;
+      terminalReported = true;
+      track('magnet_enrichment_failed', {
+        slug,
+        reason,
+        latency_ms: Date.now() - startedAt,
+      });
+    };
 
     const clearPending = () => {
       if (timeoutRef.current) {
@@ -64,7 +103,8 @@ export default function MagnetSite() {
 
       if (Date.now() - startedAt > HARD_TIMEOUT_MS) {
         console.warn('Polling hard timeout reached', { slug });
-        setStatus('error');
+        reportFailed('timeout');
+        setTrackedStatus('error');
         clearPending();
         return;
       }
@@ -79,7 +119,8 @@ export default function MagnetSite() {
       if (subRes.error && brkRes.error) {
         consecutiveFailures += 1;
         if (consecutiveFailures >= MAX_FAILURES) {
-          setStatus('error');
+          reportFailed('rpc_error');
+          setTrackedStatus('error');
           clearPending();
           return;
         }
@@ -119,38 +160,42 @@ export default function MagnetSite() {
         breakdownRow.gtm_profile_observed;
 
       if (breakdownReady) {
-        setStatus('complete');
+        reportComplete(!!breakdownRow.gtm_profile_observed);
+        setTrackedStatus('complete');
         clearPending();
         return;
       }
 
       if (breakdownRow?.enrichment_error) {
-        setStatus('error');
+        reportFailed('enrichment_error');
+        setTrackedStatus('error');
         clearPending();
         return;
       }
 
       if (!submissionRow) {
         if (Date.now() - startedAt < MISSING_ROW_GRACE_MS) {
-          setStatus((prev) => (prev === 'loading' ? 'pending' : prev));
+          if (lastReportedStatus === 'loading') setTrackedStatus('pending');
           currentDelay = POLL_BASE_MS;
           schedule(currentDelay);
           return;
         }
-        setStatus('error');
+        reportFailed('rpc_error');
+        setTrackedStatus('error');
         clearPending();
         return;
       }
 
       const next = submissionRow.status as Status;
       if (next === 'complete') {
-        setStatus('processing');
+        setTrackedStatus('processing');
       } else if (next === 'error') {
-        setStatus('error');
+        reportFailed('enrichment_error');
+        setTrackedStatus('error');
         clearPending();
         return;
       } else {
-        setStatus(next === 'pending' ? 'pending' : 'processing');
+        setTrackedStatus(next === 'pending' ? 'pending' : 'processing');
       }
 
       currentDelay = Math.min(POLL_MAX_MS, Math.round(currentDelay * 1.15));

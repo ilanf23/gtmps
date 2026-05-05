@@ -4,6 +4,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Check } from "lucide-react";
+import { identifyByEmail, track } from "@/lib/posthog";
 
 const feedbackSchema = z.object({
   name: z
@@ -58,9 +59,15 @@ export default function FeedbackForm() {
         body: { ...parsed.data, slug: slug ?? null },
       });
       if (error) throw error;
+      identifyByEmail(parsed.data.email, "feedback");
+      track("feedback_submitted", { slug: slug ?? "" });
       setSubmitted(true);
     } catch (err) {
       console.error("Feedback submit error", err);
+      track("feedback_submit_failed", {
+        slug: slug ?? "",
+        reason: err instanceof Error ? err.message : "unknown",
+      });
       toast({
         title: "Couldn't send your feedback",
         description: "Please try again in a moment.",

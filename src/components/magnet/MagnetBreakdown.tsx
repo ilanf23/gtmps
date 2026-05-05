@@ -13,6 +13,7 @@ import {
 } from "@/lib/magnetScoring";
 import { pickVariant } from "@/content/ctaVariants";
 import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { track } from "@/lib/posthog";
 import { displayNameFromSlug } from "@/lib/magnetSlug";
 import { getDisplayName } from "@/lib/companyName";
 import { shouldForceDarkBodyFallback } from "@/lib/clientTheme";
@@ -150,6 +151,18 @@ export default function MagnetBreakdown({
       dealSizeEstimate: data?.deal_size_estimate ?? null,
     });
   }, [scores, verticalSlug, data?.deal_size_estimate]);
+
+  useEffect(() => {
+    if (!data || !scores) return;
+    track("magnet_map_rendered", {
+      slug,
+      score: scores.overall ?? null,
+      deal_size_estimate: data.deal_size_estimate
+        ? String(data.deal_size_estimate)
+        : null,
+      cta_variant: variantId ?? null,
+    });
+  }, [slug, data, scores, variantId]);
 
   if (loading) {
     return (

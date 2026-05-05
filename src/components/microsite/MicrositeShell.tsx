@@ -9,6 +9,7 @@ import SignalsTab from "./SignalsTab";
 import RoadmapTab from "./RoadmapTab";
 import ContentEngineTab from "./ContentEngineTab";
 import StickyBottomCTA from "./StickyBottomCTA";
+import { track } from "@/lib/posthog";
 
 interface Props {
   data: SiteData;
@@ -18,7 +19,26 @@ export default function MicrositeShell({ data }: Props) {
   const [activeTab, setActiveTab] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
 
+  const tabLabelFor = (i: number): string => {
+    const labels = data.tabLabels ?? [
+      "Overview",
+      "Identity",
+      "Orbits + Spectrum",
+      "Live Signals",
+      "Roadmap",
+      "Your Content Engine",
+    ];
+    return labels[i] ?? String(i);
+  };
+
   const handleTabChange = (i: number) => {
+    if (i !== activeTab) {
+      track("microsite_tab_switched", {
+        microsite_slug: data.slug,
+        from_tab: tabLabelFor(activeTab),
+        to_tab: tabLabelFor(i),
+      });
+    }
     setFadeIn(false);
     setTimeout(() => {
       setActiveTab(i);
@@ -96,6 +116,12 @@ export default function MicrositeShell({ data }: Props) {
         onTabChange={handleTabChange}
         tabLabels={data.tabLabels}
         ctaUrl={data.globalCta?.buttonUrl}
+        onCtaClick={() =>
+          track("microsite_cta_clicked", {
+            microsite_slug: data.slug,
+            cta_id: "tabbar_book_review",
+          })
+        }
       />
       <main
         className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-10 pt-28 md:pt-36 pb-16 md:pb-24 transition-all duration-400"
@@ -114,6 +140,7 @@ export default function MicrositeShell({ data }: Props) {
           buttonText={data.globalCta.buttonText}
           buttonUrl={data.globalCta.buttonUrl}
           label={data.globalCta.subtext}
+          micrositeSlug={data.slug}
         />
       )}
     </div>

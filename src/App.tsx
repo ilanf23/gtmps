@@ -31,6 +31,7 @@ import Aletheia from "./pages/Aletheia.tsx";
 import Ops from "./pages/Ops.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
 import SkipLink from "./components/SkipLink.tsx";
+import PostHogPageview from "./components/PostHogPageview.tsx";
 import useScrollRestoration from "./hooks/useScrollRestoration.ts";
 import useFocusOnRouteChange from "./hooks/useFocusOnRouteChange.ts";
 
@@ -55,6 +56,7 @@ const App = () => (
         <ScrollRestoration />
         <ScrollToTop />
         <FocusOnRouteChange />
+        <PostHogPageview />
         <SkipLink />
         <main id="main-content" tabIndex={-1} style={{ outline: "none" }}>
         <Routes>
