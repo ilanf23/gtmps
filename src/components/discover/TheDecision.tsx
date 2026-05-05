@@ -75,7 +75,7 @@ export default function TheDecision() {
     return () => cancelAnimationFrame(raf);
   }, [inView, reduced]);
 
-  const clamp = (n: number) => Math.max(6, Math.min(94, n));
+  const clamp = (n: number) => Math.max(0, Math.min(100, n));
 
   const setFromClientX = (clientX: number) => {
     const el = containerRef.current;
@@ -115,10 +115,10 @@ export default function TheDecision() {
       setSplit((s) => clamp(s + 2));
     } else if (e.key === 'Home') {
       e.preventDefault();
-      setSplit(6);
+      setSplit(0);
     } else if (e.key === 'End') {
       e.preventDefault();
-      setSplit(94);
+      setSplit(100);
     }
   };
 
