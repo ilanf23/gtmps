@@ -78,8 +78,8 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
         a: (
           <>
             Discovery audit: <span className="faq-accent">90 minutes</span>. RROS
-            map design: 1–2 weeks. Full implementation:{' '}
-            <span className="faq-accent">60–90 days</span> with weekly working
+            map design: 1 to 2 weeks. Full implementation:{' '}
+            <span className="faq-accent">60 to 90 days</span> with weekly working
             sessions.
             <br />
             <br />

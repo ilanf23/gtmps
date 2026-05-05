@@ -67,7 +67,7 @@ const TableRows: Array<{ label: string; tool: string; partner: string }> = [
   { label: "Onboarding", tool: "14-day free pilot", partner: "Discovery audit" },
   { label: "Time to value", tool: "Days", partner: "Weeks to months" },
   { label: "Owner", tool: "Your team", partner: "Mabbly's team + your team" },
-  { label: "Audience", tool: "Broad B2B · 100+ CRM contacts", partner: "PS firms $5M–$100M" },
+  { label: "Audience", tool: "Broad B2B · 100+ CRM contacts", partner: "PS firms $5M,$100M" },
   { label: "Commitment", tool: "Month-to-month · No contract", partner: "Long-term partnership" },
 ];
 
@@ -1082,7 +1082,7 @@ export default function AIvsCOM() {
               <div className="atm-callout">
                 <p className="atm-callout-label" style={{ color: "var(--color-care)" }}>Audience</p>
                 <p className="atm-callout-text">
-                  PS firms $5M–$100M - managing partners, CMOs, founders - that want a partner running the playbook
+                  PS firms $5M,$100M - managing partners, CMOs, founders - that want a partner running the playbook
                   with them, not software running it for them.
                 </p>
               </div>

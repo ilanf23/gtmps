@@ -31,11 +31,11 @@ const buildPlanet = (x: number, y: number, rx: number, ry: number, period: numbe
 // Each planet is snapped to one of the five existing orbit ellipses by closest distance.
 // Order matches the rotator words used as labels during the connect phase.
 const PLANETS: Planet[] = [
-  buildPlanet(595, 432, 105, 44, 18000),  // CLIENT — innermost, fastest
+  buildPlanet(595, 432, 105, 44, 18000),  // CLIENT, innermost, fastest
   buildPlanet(572, 290, 220, 92, 24000),  // PARTNER
   buildPlanet(508, 519, 345, 146, 30000), // RETAINER
   buildPlanet(390, 440, 475, 200, 36000), // DEAL
-  buildPlanet(1092, 340, 610, 252, 44000), // CASE — outermost, slowest
+  buildPlanet(1092, 340, 610, 252, 44000), // CASE, outermost, slowest
 ];
 
 export default function DiscoverHero() {
@@ -81,7 +81,7 @@ export default function DiscoverHero() {
 
   const rotatorWidthEm = rotatorEmWidths[rotatorIdx];
 
-  // Five Orbits — single rotating planet ("$400,000 deal closed") orbiting YOUR FIRM.
+  // Five Orbits, single rotating planet ("$400,000 deal closed") orbiting YOUR FIRM.
   useEffect(() => {
     const reduced =
       typeof window !== 'undefined' &&
@@ -759,7 +759,7 @@ export default function DiscoverHero() {
                   {/* ring 2 (rx 220, ry 92) */}
                   <circle cx={740 + 220 * Math.cos(-1.0)} cy={380 + 92 * Math.sin(-1.0)} r="7" />
                   <circle cx={740 + 220 * Math.cos(2.4)}  cy={380 + 92 * Math.sin(2.4)}  r="7" />
-                  {/* ring 3 (rx 345, ry 146) — orbit of the rotating red dot */}
+                  {/* ring 3 (rx 345, ry 146). orbit of the rotating red dot */}
                   <circle cx={740 + 345 * Math.cos(-2.6)} cy={380 + 146 * Math.sin(-2.6)} r="8" />
                   <circle cx={740 + 345 * Math.cos(1.4)}  cy={380 + 146 * Math.sin(1.4)}  r="8" />
                   {/* ring 4 (rx 475, ry 200) */}
@@ -770,7 +770,7 @@ export default function DiscoverHero() {
                   <circle cx={740 + 610 * Math.cos(0.5)}  cy={380 + 252 * Math.sin(0.5)}  r="9" />
                 </g>
 
-                {/* Atmospheric speckle dots — kept off the horizontal axis
+                {/* Atmospheric speckle dots, kept off the horizontal axis
                     and clearly outside the orbit ellipses. */}
                 <g fill="#0F1E1D" opacity="0.18">
                   <circle cx="160" cy="356" r="0.9" />
@@ -783,7 +783,7 @@ export default function DiscoverHero() {
                   <circle cx="870" cy="650" r="0.9" />
                 </g>
 
-                {/* Single orbiting planet — RED — with a "Dormant · $400K" label */}
+                {/* Single orbiting planet. RED, with a "Dormant · $400K" label */}
                 <g ref={(el) => { planetRefs.current[2] = el; }} style={{ willChange: 'transform' }}>
                   <ellipse cx="508" cy="525" rx="13" ry="3" fill="rgba(15, 30, 29, 0.20)" />
                   <circle cx="508" cy="519" r="9.5" fill="#BF461A" />

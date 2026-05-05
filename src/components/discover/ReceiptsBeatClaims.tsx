@@ -801,7 +801,7 @@ export default function ReceiptsBeatClaims() {
               <div className="tl-step tl-mid">
                 <span className="tl-eyebrow">Day 270</span>
                 <span className="tl-dot" aria-hidden />
-                <span className="tl-label">Dead Zone — silent</span>
+                <span className="tl-label">Dead Zone, silent</span>
               </div>
               <div className="tl-step tl-end">
                 <span className="tl-eyebrow">+ 7 min</span>

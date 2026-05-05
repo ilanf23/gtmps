@@ -67,7 +67,7 @@ function buildUtmUrl(
 }
 
 function rate(num: number, denom: number): string {
-  if (denom <= 0) return "—";
+  if (denom <= 0) return ",";
   return `${((num / denom) * 100).toFixed(1)}%`;
 }
 
@@ -249,7 +249,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
         {err && <div className="text-[#C02B0A] text-sm">{err}</div>}
         {!loading && !err && data && data.rows.length === 0 && (
           <div className="text-[12px] text-[#A1A9A0]">
-            No channel-tagged traffic yet — paste a UTM link from above into
+            No channel-tagged traffic yet, paste a UTM link from above into
             LinkedIn or an email and check back.
           </div>
         )}
@@ -277,13 +277,13 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
                   return (
                     <tr key={i} className={untagged ? "opacity-60" : ""}>
                       <td className="px-2 py-1 font-mono text-[#EDF5EC]">
-                        {r.utm_source ?? "—"}
+                        {r.utm_source ?? ","}
                       </td>
                       <td className="px-2 py-1 font-mono text-[#EDF5EC]">
-                        {r.utm_medium ?? "—"}
+                        {r.utm_medium ?? ","}
                       </td>
                       <td className="px-2 py-1 font-mono text-[#EDF5EC]">
-                        {r.utm_campaign ?? (untagged ? "(untagged)" : "—")}
+                        {r.utm_campaign ?? (untagged ? "(untagged)" : ",")}
                       </td>
                       <td className="px-2 py-1 text-right text-[#EDF5EC]">{r.views}</td>
                       <td className="px-2 py-1 text-right text-[#EDF5EC]">

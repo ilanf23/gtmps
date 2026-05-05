@@ -26,7 +26,7 @@ const SITE_DATA: SiteData = {
     },
     keyNumbers: [
       { end: 72, suffix: "%", label: "of cloud deals sourced from warm intros", accent: true },
-      { end: 14000, suffix: "+", label: "former Cloud Sales reps (2019–2025)", accent: true },
+      { end: 14000, suffix: "+", label: "former Cloud Sales reps (2019 to 2025)", accent: true },
       { end: 3, suffix: "M+", label: "enterprise relationships in the ecosystem" },
       { end: 0, suffix: "", label: "systems reactivating departed relationships", danger: true },
     ],
@@ -181,7 +181,7 @@ const SITE_DATA: SiteData = {
       subtitle: "Google Cloud",
       description: "Each of these networks represents tens of thousands of relationships. All are managed as programs, not as relationship capital.",
       engines: [
-        { num: 14000, role: "Former Cloud Sales Reps (2019–2025)", name: "Alumni Network", insight: "Every departed AE took relationships to AWS, Azure, or startups" },
+        { num: 14000, role: "Former Cloud Sales Reps (2019 to 2025)", name: "Alumni Network", insight: "Every departed AE took relationships to AWS, Azure, or startups" },
         { num: 500000, role: "Google Cloud Certified Professionals", name: "Partner Ecosystem", insight: "Certified ≠ activated. Each cert holder is a warm referral node" },
         { num: 3200, role: "Google Developer Experts Worldwide", name: "GDE Program", insight: "Trusted community voices with deep enterprise connections" },
         { num: 9000000, role: "Google Workspace Business Customers", name: "Workspace Install Base", insight: "Existing relationship - they already pay Google monthly" },
@@ -223,7 +223,7 @@ const SITE_DATA: SiteData = {
     },
     icp: [
       { title: "Fortune 500 CTOs & CIOs", text: "Technology leaders evaluating cloud migration or multi-cloud strategy. Often influenced by former colleagues who've already made the switch." },
-      { title: "PE & VC Portfolio Operators", text: "Operating partners standardizing cloud infrastructure across portfolio companies. One decision = 10–50 cloud accounts." },
+      { title: "PE & VC Portfolio Operators", text: "Operating partners standardizing cloud infrastructure across portfolio companies. One decision = 10 to 50 cloud accounts." },
       { title: "AI/ML Engineering Leaders", text: "VP Engineering and Chief Data Officers building ML pipelines. Google's Vertex AI and BigQuery are natural fits - but only if someone they trust recommends it." },
     ],
   },
@@ -259,7 +259,7 @@ const SITE_DATA: SiteData = {
     ],
     firstWeek: [
       { day: "Monday", text: "Review 25 system-generated drafts across 3 territories. Each paired with a signal, proof point, and relationship path." },
-      { day: "Tuesday–Thursday", text: "AEs send, edit, or skip. Average personalization: 45 seconds. System tracks opens, replies, and meeting conversions." },
+      { day: "Tuesday to Thursday", text: "AEs send, edit, or skip. Average personalization: 45 seconds. System tracks opens, replies, and meeting conversions." },
       { day: "Friday", text: "Weekly pipeline report: signals detected, messages sent, replies received, meetings booked. Relationship graph updated automatically." },
     ],
   },

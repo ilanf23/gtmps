@@ -133,7 +133,7 @@ export const type = {
   display: {
     font:      FONT_HEADING,
     weight:    900,
-    size:      "clamp(3rem, 5vw + 1rem, 4.5rem)", // 48–72px
+    size:      "clamp(3rem, 5vw + 1rem, 4.5rem)", // 48 to 72px
     line:      1.05,
     track:     "-0.005em",
     uppercase: true,
@@ -141,7 +141,7 @@ export const type = {
   headline: {
     font:      FONT_HEADING,
     weight:    900,
-    size:      "clamp(2rem, 3vw + 0.5rem, 2.5rem)", // 32–40px
+    size:      "clamp(2rem, 3vw + 0.5rem, 2.5rem)", // 32 to 40px
     line:      1.15,
     track:     "0",
     uppercase: true,
@@ -150,7 +150,7 @@ export const type = {
     // H3 per spec: 900 UPPERCASE, color = Dark Rust (#803402).
     font:      FONT_HEADING,
     weight:    900,
-    size:      "clamp(1.375rem, 1vw + 1rem, 1.5rem)", // 22–24px
+    size:      "clamp(1.375rem, 1vw + 1rem, 1.5rem)", // 22 to 24px
     line:      1.3,
     track:     "0.01em",
     uppercase: true,

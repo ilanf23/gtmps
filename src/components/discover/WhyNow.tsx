@@ -649,8 +649,7 @@ export default function WhyNow() {
               </span>
             </h2>
             <p className="wn-deck">
-              The window to position as <span className="wn-deck-strong">AI-native</span> is closing —
-              and buyers are already deciding who's on which side.
+              The window to position as <span className="wn-deck-strong">AI-native</span> is closing, and buyers are already deciding who's on which side.
             </p>
           </div>
         </div>

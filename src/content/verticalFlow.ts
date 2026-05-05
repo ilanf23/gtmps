@@ -64,7 +64,7 @@ const general: VerticalFlow = {
   peerBenchmarkPhrase: 'Firms in your size band',
   chapterRecommendationLead: 'How peer firms reactivate dormant relationships',
   emailSubject: 'Your RROS revenue map',
-  shareTemplate: 'I just got a custom GTM analysis for our firm. thought you should see it:',
+  shareTemplate: 'I just got a custom GTM analysis for our firm, thought you should see it:',
 };
 
 // ─── law ─────────────────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ const law: VerticalFlow = {
   peerBenchmarkPhrase: 'Law firms in your size band',
   chapterRecommendationLead: 'How AmLaw firms reactivate dormant partner books',
   emailSubject: 'Your law firm origination map',
-  shareTemplate: 'I just got an origination strategy analysis for our firm. worth a look:',
+  shareTemplate: 'I just got an origination strategy analysis for our firm, worth a look:',
 };
 
 // ─── consulting ──────────────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ const consulting: VerticalFlow = {
   peerBenchmarkPhrase: 'Consulting firms in your size band',
   chapterRecommendationLead: 'How peer consulting firms reactivate alumni and dormant accounts',
   emailSubject: 'Your consulting practice growth map',
-  shareTemplate: 'I just got a practice growth analysis for our firm. sharing in case it sparks something:',
+  shareTemplate: 'I just got a practice growth analysis for our firm, sharing in case it sparks something:',
 };
 
 // ─── accounting ──────────────────────────────────────────────────────────────
@@ -142,7 +142,7 @@ const accounting: VerticalFlow = {
   peerBenchmarkPhrase: 'Accounting firms in your size band',
   chapterRecommendationLead: 'How peer firms reactivate dormant client books and cross-sell advisory',
   emailSubject: 'Your client development map',
-  shareTemplate: 'I just got a client development analysis for our firm. worth a look:',
+  shareTemplate: 'I just got a client development analysis for our firm, worth a look:',
 };
 
 // ─── msp ─────────────────────────────────────────────────────────────────────
@@ -168,7 +168,7 @@ const msp: VerticalFlow = {
   peerBenchmarkPhrase: 'MSPs in your size band',
   chapterRecommendationLead: 'How peer MSPs reduce churn and expand dormant accounts',
   emailSubject: 'Your MSP GTM map',
-  shareTemplate: 'I just got a GTM, renewals, and churn analysis for our MSP. sharing it:',
+  shareTemplate: 'I just got a GTM, renewals, and churn analysis for our MSP, sharing it:',
 };
 
 // ─── advisory ────────────────────────────────────────────────────────────────
@@ -194,7 +194,7 @@ const advisory: VerticalFlow = {
   peerBenchmarkPhrase: 'Advisory practices in your size band',
   chapterRecommendationLead: 'How peer advisors reactivate dormant prospects and grow AUM',
   emailSubject: 'Your AUM growth map',
-  shareTemplate: 'I just got a prospecting and AUM growth analysis for our practice. worth a look:',
+  shareTemplate: 'I just got a prospecting and AUM growth analysis for our practice, worth a look:',
 };
 
 // ─── ae (architecture & engineering) ────────────────────────────────────────
@@ -220,7 +220,7 @@ const ae: VerticalFlow = {
   peerBenchmarkPhrase: 'A/E firms in your size band',
   chapterRecommendationLead: 'How peer A/E firms turn past projects into the next pursuit',
   emailSubject: 'Your BD pursuit map',
-  shareTemplate: 'I just got a BD and pursuit analysis for our firm. sharing it:',
+  shareTemplate: 'I just got a BD and pursuit analysis for our firm, sharing it:',
 };
 
 // ─── recruiting (executive search) ──────────────────────────────────────────
@@ -246,7 +246,7 @@ const recruiting: VerticalFlow = {
   peerBenchmarkPhrase: 'Search firms in your size band',
   chapterRecommendationLead: 'How peer search firms turn past placements into new mandates',
   emailSubject: 'Your mandate origination map',
-  shareTemplate: 'I just got a mandate origination analysis for our practice. worth a look:',
+  shareTemplate: 'I just got a mandate origination analysis for our practice, worth a look:',
 };
 
 // ─── agency (marketing & creative) ──────────────────────────────────────────
@@ -272,7 +272,7 @@ const agency: VerticalFlow = {
   peerBenchmarkPhrase: 'Agencies in your size band',
   chapterRecommendationLead: 'How peer agencies reactivate dormant clients and shorten the pitch cycle',
   emailSubject: 'Your agency new business map',
-  shareTemplate: 'I just got a new business analysis for our agency. sharing it:',
+  shareTemplate: 'I just got a new business analysis for our agency, sharing it:',
 };
 
 export const VERTICAL_FLOWS: Record<VerticalFlowSlug, VerticalFlow> = {

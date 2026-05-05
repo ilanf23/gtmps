@@ -24,7 +24,7 @@ export const consulting: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable practice growth gap. Reactivation potential: <strong>$1.2M–$2.4M</strong>.
+        A measurable practice growth gap. Reactivation potential: <strong>$1.2M,$2.4M</strong>.
       </>
     ),
     bars: [
@@ -50,7 +50,7 @@ export const consulting: VerticalConfig = {
     },
     smallStats: [
       { label: "Total US Firms", num: { type: "count", target: 150, format: "suffix-k" }, source: "IBISWorld 2024", viz: "density" },
-      { label: "Firms · $5M–$100M Revenue", num: { type: "count", target: 8200, format: "number" }, source: "Kennedy Research", viz: "bars" },
+      { label: "Firms · $5M,$100M Revenue", num: { type: "count", target: 8200, format: "number" }, source: "Kennedy Research", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 4.2, format: "pct-decimal" }, source: "IBISWorld 2024", viz: "sparkline" },
     ],
   },
@@ -62,16 +62,16 @@ export const consulting: VerticalConfig = {
     definitionBody:
       "Dormant accounts. Stalled proposals. Lost pursuits. The clients you used to serve and the prospects who went silent. The largest line item in every consulting firm's pipeline that nobody is measuring.",
     cards: [
-      { num: "01", stat: <>6–12<span className="unit-sm">mo</span></>, text: "Average sales cycle for $1M+ engagements.", source: "Industry Average" },
+      { num: "01", stat: <>6 to 12<span className="unit-sm">mo</span></>, text: "Average sales cycle for $1M+ engagements.", source: "Industry Average" },
       { num: "02", stat: <>80<span className="unit-sm">%</span></>, text: "Of new business at top firms comes from existing clients.", source: "McKinsey · Sales Force Effectiveness" },
-      { num: "03", stat: <>18–24<span className="unit-sm">mo</span></>, text: "Partner book turnover when partner leaves.", source: "Industry Research" },
+      { num: "03", stat: <>18 to 24<span className="unit-sm">mo</span></>, text: "Partner book turnover when partner leaves.", source: "Industry Research" },
       {
         num: "04",
         stat: (
           <>
             <span style={{ color: "var(--care)" }}>&lt;2%</span>
             <span style={{ color: "var(--muted-soft)", fontSize: "0.7em", margin: "0 4px" }}>/</span>
-            25–40<span className="unit-sm">%</span>
+            25 to 40<span className="unit-sm">%</span>
           </>
         ),
         text: "Win rate on cold outreach vs warm relationships.",
@@ -87,7 +87,7 @@ export const consulting: VerticalConfig = {
         text: "Most firms have no post-engagement relationship system.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical CRM are dormant.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical CRM are dormant.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -174,7 +174,7 @@ export const law: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable origination gap. Reactivation potential: <strong>$0.9M–$2.1M</strong> in matter pipeline.
+        A measurable origination gap. Reactivation potential: <strong>$0.9M,$2.1M</strong> in matter pipeline.
       </>
     ),
     bars: [
@@ -200,7 +200,7 @@ export const law: VerticalConfig = {
     },
     smallStats: [
       { label: "Active US Law Firms", num: { type: "count", target: 450, format: "suffix-k" }, source: "ABA Profile 2023", viz: "density" },
-      { label: "Firms · $5M–$100M Revenue", num: { type: "count", target: 6800, format: "number" }, source: "Altman Weil", viz: "bars" },
+      { label: "Firms · $5M,$100M Revenue", num: { type: "count", target: 6800, format: "number" }, source: "Altman Weil", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 3.5, format: "pct-decimal" }, source: "Altman Weil 2024", viz: "sparkline" },
     ],
   },
@@ -210,7 +210,7 @@ export const law: VerticalConfig = {
     sub: "Six numbers that explain why origination depends on individuals - and why the book leaves when the partner does.",
     definitionTerm: "The Dead Zone",
     definitionBody:
-      "Dormant clients. Lapsed prospects. Former matters that closed and went silent. The clients who knew you and stopped hearing from you. 60–80% of contacts in a typical law firm CRM live here right now.",
+      "Dormant clients. Lapsed prospects. Former matters that closed and went silent. The clients who knew you and stopped hearing from you. 60 to 80% of contacts in a typical law firm CRM live here right now.",
     cards: [
       { num: "01", stat: <>80<span className="unit-sm">%+</span></>, text: "Of new matters at AmLaw 200 firms come from existing clients.", source: "Altman Weil" },
       { num: "02", stat: <>{"<"}30<span className="unit-sm">%</span></>, text: "Average cross-sell rate at midmarket firms.", source: "Industry Research" },
@@ -226,7 +226,7 @@ export const law: VerticalConfig = {
         text: "Most firms have no relationship cadence beyond the partner's calendar.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical law firm CRM have no follow-up system.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical law firm CRM have no follow-up system.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -313,7 +313,7 @@ export const accounting: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable cross-sell gap. Advisory expansion potential: <strong>$0.6M–$1.4M</strong>.
+        A measurable cross-sell gap. Advisory expansion potential: <strong>$0.6M,$1.4M</strong>.
       </>
     ),
     bars: [
@@ -339,7 +339,7 @@ export const accounting: VerticalConfig = {
     },
     smallStats: [
       { label: "US CPA Firms", num: { type: "count", target: 140, format: "suffix-k" }, source: "AICPA 2024", viz: "density" },
-      { label: "Firms · $5M–$100M Revenue", num: { type: "count", target: 5400, format: "number" }, source: "Inside Public Accounting", viz: "bars" },
+      { label: "Firms · $5M,$100M Revenue", num: { type: "count", target: 5400, format: "number" }, source: "Inside Public Accounting", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 5.1, format: "pct-decimal" }, source: "Inside Public Accounting", viz: "sparkline" },
     ],
   },
@@ -349,7 +349,7 @@ export const accounting: VerticalConfig = {
     sub: "Six numbers that explain why high stickiness and low expansion is the wrong tradeoff.",
     definitionTerm: "The Dead Zone",
     definitionBody:
-      "Tax-only clients you never cross-sold. Lapsed advisory prospects. Former clients you have not contacted since the last engagement closed. 60–80% of contacts in a typical accounting CRM are dormant.",
+      "Tax-only clients you never cross-sold. Lapsed advisory prospects. Former clients you have not contacted since the last engagement closed. 60 to 80% of contacts in a typical accounting CRM are dormant.",
     cards: [
       { num: "01", stat: <>7<span className="unit-sm">+yr</span></>, text: "Average client tenure. High stickiness, low expansion.", source: "Industry Research" },
       { num: "02", stat: <>{"<"}20<span className="unit-sm">%</span></>, text: "Cross-sell rate from tax to advisory.", source: "Industry Research" },
@@ -365,7 +365,7 @@ export const accounting: VerticalConfig = {
         text: "Most firms touch clients once a year and call it a relationship.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical accounting CRM are dormant.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical accounting CRM are dormant.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -452,7 +452,7 @@ export const msp: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable expansion gap. Whitespace MRR potential: <strong>$0.5M–$1.3M</strong>.
+        A measurable expansion gap. Whitespace MRR potential: <strong>$0.5M,$1.3M</strong>.
       </>
     ),
     bars: [
@@ -478,7 +478,7 @@ export const msp: VerticalConfig = {
     },
     smallStats: [
       { label: "US MSPs", num: { type: "count", target: 40, format: "suffix-k" }, source: "ChannelE2E 2024", viz: "density" },
-      { label: "MSPs · $5M–$100M Revenue", num: { type: "count", target: 3900, format: "number" }, source: "ConnectWise State of SMB", viz: "bars" },
+      { label: "MSPs · $5M,$100M Revenue", num: { type: "count", target: 3900, format: "number" }, source: "ConnectWise State of SMB", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 12.5, format: "pct-decimal" }, source: "ConnectWise 2024", viz: "sparkline" },
     ],
   },
@@ -492,7 +492,7 @@ export const msp: VerticalConfig = {
     cards: [
       { num: "01", stat: <>12.5<span className="unit-sm">%</span></>, text: "Industry growth rate. Fastest-growing PS vertical.", source: "ChannelE2E 2024" },
       { num: "02", stat: <>{"<"}30<span className="unit-sm">%</span></>, text: "Of revenue from cross-sell at typical SMB MSP.", source: "ConnectWise" },
-      { num: "03", stat: <>3–5<span className="unit-sm">x</span></>, text: "Multiple of cost-to-acquire vs cost-to-expand.", source: "Industry Research" },
+      { num: "03", stat: <>3 to 5<span className="unit-sm">x</span></>, text: "Multiple of cost-to-acquire vs cost-to-expand.", source: "Industry Research" },
       { num: "04", stat: <>{"<"}20<span className="unit-sm">%</span></>, text: "MSPs with formal QBR cadence across all accounts.", source: "ConnectWise" },
       {
         num: "05",
@@ -504,7 +504,7 @@ export const msp: VerticalConfig = {
         text: "Most MSPs have no signal-driven expansion motion.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical MSP CRM are dormant or single-product.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical MSP CRM are dormant or single-product.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -513,7 +513,7 @@ export const msp: VerticalConfig = {
     blocks: [
       { num: "01", chart: "timeline", headline: "Land-and-expand stalls at land.", body: <>Most MSPs sell <strong>one product per account</strong> and never trigger the expansion signal. The whitespace map is dormant by default.</> },
       { num: "02", chart: "partnerWeek", headline: "Tech leadership runs sales.", body: <>The CTO or owner spends <strong>under 2 hours/week</strong> on expansion. Without a signal-driven motion, they only expand the accounts they remember.</> },
-      { num: "03", chart: "coldVsWarm", headline: "Cold prospecting beats expansion budget.", body: <>Most MSPs spend more on cold prospecting than expanding existing accounts. <strong>Expansion CAC is 3–5x cheaper</strong>.</> },
+      { num: "03", chart: "coldVsWarm", headline: "Cold prospecting beats expansion budget.", body: <>Most MSPs spend more on cold prospecting than expanding existing accounts. <strong>Expansion CAC is 3 to 5x cheaper</strong>.</> },
       { num: "04", chart: "networkDensity", headline: "Churn happens silently.", body: <>SMB accounts churn to competitors <strong>without warning</strong> when no one is watching the relationship signals.</> },
     ],
   },
@@ -591,7 +591,7 @@ export const advisory: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable organic growth gap. AUM expansion potential: <strong>$8M–$22M</strong> in next-12-month pipeline.
+        A measurable organic growth gap. AUM expansion potential: <strong>$8M,$22M</strong> in next-12-month pipeline.
       </>
     ),
     bars: [
@@ -617,7 +617,7 @@ export const advisory: VerticalConfig = {
     },
     smallStats: [
       { label: "US RIA Firms", num: { type: "count", target: 15, format: "suffix-k" }, source: "Cerulli 2024", viz: "density" },
-      { label: "RIAs · $5M–$100M AUM Tier", num: { type: "count", target: 2100, format: "number" }, source: "Cerulli 2024", viz: "bars" },
+      { label: "RIAs · $5M,$100M AUM Tier", num: { type: "count", target: 2100, format: "number" }, source: "Cerulli 2024", viz: "bars" },
       { label: "Annual AUM Growth", num: { type: "count", target: 7.8, format: "pct-decimal" }, source: "Cerulli 2024", viz: "sparkline" },
     ],
   },
@@ -630,7 +630,7 @@ export const advisory: VerticalConfig = {
       "Centers of influence you never followed up with. Referrals that stalled. Prospects who said 'not yet' two years ago. Former clients who left and never came back. The relationships every advisor knows by name and never re-engages.",
     cards: [
       { num: "01", stat: <>{"<"}5<span className="unit-sm">%</span></>, text: "Median annual organic growth at US RIAs.", source: "Schwab RIA Benchmarking" },
-      { num: "02", stat: <>2–3<span className="unit-sm">x</span></>, text: "Top-quartile firms grow 2–3x the median organically.", source: "Cerulli 2024" },
+      { num: "02", stat: <>2 to 3<span className="unit-sm">x</span></>, text: "Top-quartile firms grow 2 to 3x the median organically.", source: "Cerulli 2024" },
       { num: "03", stat: <>70<span className="unit-sm">%</span></>, text: "Of new AUM at top firms comes from referrals.", source: "Cerulli 2024" },
       { num: "04", stat: <>{"<"}30<span className="unit-sm">%</span></>, text: "RIAs with formal referral cadence with COIs.", source: "Industry Research" },
       {
@@ -643,14 +643,14 @@ export const advisory: VerticalConfig = {
         text: "The whole industry's referral playbook in five words.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical advisory CRM are dormant.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical advisory CRM are dormant.", source: "The Manuscript" },
     ],
   },
   breaks: {
     metaTag: "Where It Breaks",
     headline: "Where advisory growth breaks",
     blocks: [
-      { num: "01", chart: "timeline", headline: "Prospects say 'not yet'. Then silence.", body: <>Most prospects who decline today are in-market in <strong>9–18 months</strong>. No system to know when to re-engage.</> },
+      { num: "01", chart: "timeline", headline: "Prospects say 'not yet'. Then silence.", body: <>Most prospects who decline today are in-market in <strong>9 to 18 months</strong>. No system to know when to re-engage.</> },
       { num: "02", chart: "partnerWeek", headline: "Advisor time is the bottleneck.", body: <>Senior advisors spend <strong>under 2 hours a week</strong> on referral cultivation. The framework runs on signals, not calendars.</> },
       { num: "03", chart: "coldVsWarm", headline: "Cold campaigns destroy trust.", body: <>Templated newsletters are the opposite of fiduciary brand. Reply rates fall <strong>below 2%</strong>.</> },
       { num: "04", chart: "networkDensity", headline: "COIs decay silently.", body: <>Centers of influence - CPAs, attorneys, business owners - go quiet without a cadence. <strong>Hundreds of dormant referral relationships</strong> sit untouched.</> },
@@ -730,7 +730,7 @@ export const ae: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable pursuit gap. Reactivation potential: <strong>$1.5M–$3.6M</strong> in next-12-month bookings.
+        A measurable pursuit gap. Reactivation potential: <strong>$1.5M,$3.6M</strong> in next-12-month bookings.
       </>
     ),
     bars: [
@@ -742,7 +742,7 @@ export const ae: VerticalConfig = {
   numbers: {
     metaTag: "The Pursuit Gap",
     headline: "A&E in numbers",
-    sub: "A $420B industry. 110K firms. Pursuit cycles run 12–24 months. Most firms chase too many.",
+    sub: "A $420B industry. 110K firms. Pursuit cycles run 12 to 24 months. Most firms chase too many.",
     heroStat: {
       label: "US A&E Industry Revenue · 2024",
       num: <>$420<span className="unit">B</span></>,
@@ -756,7 +756,7 @@ export const ae: VerticalConfig = {
     },
     smallStats: [
       { label: "US A&E Firms", num: { type: "count", target: 110, format: "suffix-k" }, source: "ZweigWhite 2024", viz: "density" },
-      { label: "Firms · $5M–$100M Revenue", num: { type: "count", target: 4500, format: "number" }, source: "ZweigWhite 2024", viz: "bars" },
+      { label: "Firms · $5M,$100M Revenue", num: { type: "count", target: 4500, format: "number" }, source: "ZweigWhite 2024", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 5.4, format: "pct-decimal" }, source: "ZweigWhite 2024", viz: "sparkline" },
     ],
   },
@@ -768,8 +768,8 @@ export const ae: VerticalConfig = {
     definitionBody:
       "Stalled pursuits. Lost RFPs. Past clients you have not heard from in years. The 80% of pursuits that should never have been chased and the 20% you forgot to follow up with after award.",
     cards: [
-      { num: "01", stat: <>12–24<span className="unit-sm">mo</span></>, text: "Average pursuit cycle on $1M+ projects.", source: "Industry Average" },
-      { num: "02", stat: <>20–35<span className="unit-sm">%</span></>, text: "Median win rate at midmarket A&E firms.", source: "ZweigWhite" },
+      { num: "01", stat: <>12 to 24<span className="unit-sm">mo</span></>, text: "Average pursuit cycle on $1M+ projects.", source: "Industry Average" },
+      { num: "02", stat: <>20 to 35<span className="unit-sm">%</span></>, text: "Median win rate at midmarket A&E firms.", source: "ZweigWhite" },
       { num: "03", stat: <>60<span className="unit-sm">%+</span></>, text: "Of revenue at top firms is repeat-client work.", source: "Industry Research" },
       { num: "04", stat: <>3<span className="unit-sm">x</span></>, text: "Median firm chases 3x more pursuits than they win.", source: "Industry Research" },
       {
@@ -782,7 +782,7 @@ export const ae: VerticalConfig = {
         text: "Most firms have no formal go/no-go discipline.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical A&E CRM are dormant.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical A&E CRM are dormant.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -869,7 +869,7 @@ export const recruiting: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable mandate gap. Repeat-client potential: <strong>$0.4M–$1.1M</strong> in next-12-month fees.
+        A measurable mandate gap. Repeat-client potential: <strong>$0.4M,$1.1M</strong> in next-12-month fees.
       </>
     ),
     bars: [
@@ -895,7 +895,7 @@ export const recruiting: VerticalConfig = {
     },
     smallStats: [
       { label: "US Executive Search Firms", num: { type: "count", target: 12, format: "suffix-k" }, source: "AESC 2024", viz: "density" },
-      { label: "Firms · $5M–$100M Revenue", num: { type: "count", target: 1400, format: "number" }, source: "AESC 2024", viz: "bars" },
+      { label: "Firms · $5M,$100M Revenue", num: { type: "count", target: 1400, format: "number" }, source: "AESC 2024", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 6.3, format: "pct-decimal" }, source: "AESC 2024", viz: "sparkline" },
     ],
   },
@@ -908,9 +908,9 @@ export const recruiting: VerticalConfig = {
       "Past placements who never re-engaged. Stalled retainers. Candidates you placed who became hiring executives years later - and never came back to you. The flywheel that breaks every time a placement closes.",
     cards: [
       { num: "01", stat: <>60<span className="unit-sm">%+</span></>, text: "Of fees at top retained firms come from repeat clients.", source: "AESC" },
-      { num: "02", stat: <>3–6<span className="unit-sm">mo</span></>, text: "Average mandate cycle for VP+ retained search.", source: "Industry Average" },
+      { num: "02", stat: <>3 to 6<span className="unit-sm">mo</span></>, text: "Average mandate cycle for VP+ retained search.", source: "Industry Average" },
       { num: "03", stat: <>{"<"}2<span className="unit-sm">x/yr</span></>, text: "Median touch frequency with past placements.", source: "Industry Research" },
-      { num: "04", stat: <>5–10<span className="unit-sm">yr</span></>, text: "A candidate placed today is the buyer in 5–10 years.", source: "Industry Average" },
+      { num: "04", stat: <>5 to 10<span className="unit-sm">yr</span></>, text: "A candidate placed today is the buyer in 5 to 10 years.", source: "Industry Average" },
       {
         num: "05",
         stat: (
@@ -921,7 +921,7 @@ export const recruiting: VerticalConfig = {
         text: "The default post-placement cadence at most firms.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical search firm CRM are dormant.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical search firm CRM are dormant.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -930,7 +930,7 @@ export const recruiting: VerticalConfig = {
     blocks: [
       { num: "01", chart: "timeline", headline: "Placements close. Then silence.", body: <>Most firms have <strong>no post-placement cadence</strong>. The placed exec moves on, becomes the hiring buyer in 5 years, and goes elsewhere.</> },
       { num: "02", chart: "partnerWeek", headline: "Partner time goes to active mandates only.", body: <>Partners spend <strong>under 2 hours a week</strong> on relationship cultivation. Active mandates eat the rest. The flywheel breaks at every closeout.</> },
-      { num: "03", chart: "coldVsWarm", headline: "Cold BD lags candidate-network BD.", body: <>Cold prospecting wins <strong>below 2%</strong>. Past-placement and candidate-turned-buyer networks convert at 25–40%.</> },
+      { num: "03", chart: "coldVsWarm", headline: "Cold BD lags candidate-network BD.", body: <>Cold prospecting wins <strong>below 2%</strong>. Past-placement and candidate-turned-buyer networks convert at 25 to 40%.</> },
       { num: "04", chart: "networkDensity", headline: "The candidate network is the moat. The candidate network decays.", body: <>Hundreds of past placements and candidates sit silent - each one a potential <strong>retained mandate</strong> in 5 years if signaled correctly.</> },
     ],
   },
@@ -1008,7 +1008,7 @@ export const agency: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable new-business gap. Reactivation potential: <strong>$0.7M–$1.8M</strong> in next-12-month retainer.
+        A measurable new-business gap. Reactivation potential: <strong>$0.7M,$1.8M</strong> in next-12-month retainer.
       </>
     ),
     bars: [
@@ -1034,7 +1034,7 @@ export const agency: VerticalConfig = {
     },
     smallStats: [
       { label: "US Marketing Agencies", num: { type: "count", target: 60, format: "suffix-k" }, source: "AdAge 2024", viz: "density" },
-      { label: "Agencies · $5M–$100M Revenue", num: { type: "count", target: 4800, format: "number" }, source: "Provoke Insights", viz: "bars" },
+      { label: "Agencies · $5M,$100M Revenue", num: { type: "count", target: 4800, format: "number" }, source: "Provoke Insights", viz: "bars" },
       { label: "Annual Growth Rate", num: { type: "count", target: 6.8, format: "pct-decimal" }, source: "Provoke Insights", viz: "sparkline" },
     ],
   },
@@ -1048,7 +1048,7 @@ export const agency: VerticalConfig = {
     cards: [
       { num: "01", stat: <>4<span className="unit-sm">x</span></>, text: "Median pitch volume vs wins at independent agencies.", source: "Provoke Insights" },
       { num: "02", stat: <>50<span className="unit-sm">%+</span></>, text: "Of revenue at top firms is repeat or referral.", source: "Industry Research" },
-      { num: "03", stat: <>18–24<span className="unit-sm">mo</span></>, text: "Average client tenure at midmarket independents.", source: "RSW/US AgencyNew Business" },
+      { num: "03", stat: <>18 to 24<span className="unit-sm">mo</span></>, text: "Average client tenure at midmarket independents.", source: "RSW/US AgencyNew Business" },
       { num: "04", stat: <>{"<"}10<span className="unit-sm">%</span></>, text: "Pitch win rate at most agencies - including the silent loss tax.", source: "RSW/US" },
       {
         num: "05",
@@ -1060,7 +1060,7 @@ export const agency: VerticalConfig = {
         text: "The end of every lost pitch. Then nothing happens.",
         source: "The Manuscript",
       },
-      { num: "06", stat: <>60–80<span className="unit-sm">%</span></>, text: "Of contacts in a typical agency CRM are dormant.", source: "The Manuscript" },
+      { num: "06", stat: <>60 to 80<span className="unit-sm">%</span></>, text: "Of contacts in a typical agency CRM are dormant.", source: "The Manuscript" },
     ],
   },
   breaks: {
@@ -1070,7 +1070,7 @@ export const agency: VerticalConfig = {
       { num: "01", chart: "timeline", headline: "Pitches lose. Then silence.", body: <>Most agencies <strong>never re-engage second-place pitches</strong>. The marketer remembers the work; the agency never calls again.</> },
       { num: "02", chart: "partnerWeek", headline: "Founder time funds the pitch tax.", body: <>Founders spend <strong>2 hours a week</strong> on new business - and most of that on pitches the agency shouldn't be in.</> },
       { num: "03", chart: "coldVsWarm", headline: "Cold prospecting beats lost-pitch reactivation budget.", body: <>Most agencies invest more in cold prospecting than reactivating past clients. <strong>Reactivation CAC is 5x cheaper</strong>.</> },
-      { num: "04", chart: "networkDensity", headline: "The marketer network decays at every roster change.", body: <>Marketers you used to work with move every 18–24 months. Without a cadence, <strong>the relationship disappears</strong> with the role change.</> },
+      { num: "04", chart: "networkDensity", headline: "The marketer network decays at every roster change.", body: <>Marketers you used to work with move every 18 to 24 months. Without a cadence, <strong>the relationship disappears</strong> with the role change.</> },
     ],
   },
   audit: {

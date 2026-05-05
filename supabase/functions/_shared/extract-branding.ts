@@ -207,7 +207,7 @@ function extractAllColors(text: string): string[] {
     const n = rgbStringToHex(r);
     if (n) out.push(n);
   }
-  // hsl()/hsla() — including ones that wrap a var() like hsl(var(--primary))
+  // hsl()/hsla(), including ones that wrap a var() like hsl(var(--primary))
   // Those will fail to parse and be skipped silently, which is correct.
   const hslMatches = text.match(/hsla?\([^)]+\)/gi) ?? [];
   for (const h of hslMatches) {
@@ -344,7 +344,7 @@ async function validateLogoAsset(url: string): Promise<string | null> {
       "image/vnd.microsoft.icon",
       "image/avif",
     ];
-    // JPEG is intentionally excluded — real logos virtually never ship as JPEG,
+    // JPEG is intentionally excluded, real logos virtually never ship as JPEG,
     // and this is the format used by social-share photos.
     if (!allowed.some((a) => ct.includes(a))) return null;
     const len = parseInt(res.headers.get("content-length") ?? "0", 10);
@@ -367,7 +367,7 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
       /<img[^>]+src=["']([^"']+)["'][^>]+(?:alt|class|id)=["'][^"']*\blogo\b[^"']*["']/i,
     );
 
-  // 2. Inline <svg> inside header/nav — almost always the brand mark.
+  // 2. Inline <svg> inside header/nav, almost always the brand mark.
   const inlineSvg = findInlineHeaderSvg(html);
 
   // 3. <img> whose src filename screams "logo".
@@ -376,7 +376,7 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     /<img[^>]+src=["']([^"']*\/?[^"'\/]*logo[^"'\/]*\.(?:svg|png|webp))["']/i,
   );
 
-  // 4. SVG favicon — vector favicons are virtually always the real mark.
+  // 4. SVG favicon, vector favicons are virtually always the real mark.
   const svgIconLink = (() => {
     const m = html.match(
       /<link[^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]+type=["']image\/svg\+xml["'][^>]+href=["']([^"']+)["']/i,
@@ -413,11 +413,11 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     return null;
   })();
 
-  // og:image / twitter:image are deliberately NOT in this list — they are
+  // og:image / twitter:image are deliberately NOT in this list, they are
   // landscape marketing photos, not logos.
   const candidates = [
     explicitImg,
-    inlineSvg, // already a data URL — bypasses HEAD validation
+    inlineSvg, // already a data URL, bypasses HEAD validation
     logoFilenameImg,
     svgIconLink,
     maskIcon,
@@ -492,7 +492,7 @@ function detectBackground(
   themeColor: string | null,
   neutralsByFreq: Array<[string, number]>,
 ): { color: string | null; source: string } {
-  // 1. Theme-color meta — only trust as background when dark or saturated dark.
+  // 1. Theme-color meta, only trust as background when dark or saturated dark.
   if (themeColor) {
     const lum = relLuminance(themeColor);
     if (lum !== null && lum < 0.5) {
@@ -512,7 +512,7 @@ function detectBackground(
     if (vars[k]) return { color: vars[k], source: `css-var:--${k}` };
   }
 
-  // 4. body { background-color: ... } — resolve var() against vars map.
+  // 4. body { background-color: ... }, resolve var() against vars map.
   const bodyBg = css.match(/body[^{]*\{[^}]*background(?:-color)?\s*:\s*([^;}\n]+)/i);
   if (bodyBg) {
     const raw = bodyBg[1].trim();

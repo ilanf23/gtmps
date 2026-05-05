@@ -111,7 +111,7 @@ const TIMELINE = [
 ];
 
 const FAQS = [
-  { tag: "Eligibility", q: "Who is eligible?", a: "Any independent professional services firm in one of the eight verticals, with $5M–$100M in revenue and a US presence. The diagnostic determines fit." },
+  { tag: "Eligibility", q: "Who is eligible?", a: "Any independent professional services firm in one of the eight verticals, with $5M,$100M in revenue and a US presence. The diagnostic determines fit." },
   { tag: "Application", q: "Is there a separate application?", a: "No. Every firm that takes the 10-minute diagnostic is considered by default. Anonymous benchmarking applies; named recognition is opt-in." },
   { tag: "Cost", q: "Is there a fee?", a: "No fee to enter, finalist, or win. The Awards exist to recognize practice excellence - not to monetize entry." },
   { tag: "Privacy", q: "Can my firm participate confidentially?", a: "Yes. Participation defaults to anonymous benchmarking. Named cases are opt-in only. Unsuccessful firms are never publicly identified." },

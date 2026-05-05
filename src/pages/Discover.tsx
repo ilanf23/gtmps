@@ -201,7 +201,7 @@ const Discover = () => {
             <div>
               <img
                 src={bookCoverGm}
-                alt="The Relationship Revenue OS — book cover"
+                alt="The Relationship Revenue OS, book cover"
                 style={{
                   width: "100%",
                   maxWidth: 420,
@@ -248,7 +248,7 @@ const Discover = () => {
                   margin: "0 0 16px",
                 }}
               >
-                The Relationship Revenue OS is a field manual for professional services firms — a translation of how 30 cohort firms across 8 verticals turned reputation, relationships, and bench expertise into a repeatable revenue engine.
+                The Relationship Revenue OS is a field manual for professional services firms, a translation of how 30 cohort firms across 8 verticals turned reputation, relationships, and bench expertise into a repeatable revenue engine.
               </p>
               <p
                 style={{

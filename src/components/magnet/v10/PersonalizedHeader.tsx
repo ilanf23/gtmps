@@ -11,18 +11,9 @@ interface Props {
   primary: string;
   overall: number;
   band: ScoreBand;
-  perOrbit: number[];
 }
 
-const ORBIT_LABELS = [
-  "Core Proof",
-  "Active",
-  "Dead Zone",
-  "Warm Adjacency",
-  "New Gravity",
-];
-
-// Stroke palette per band — picks up the homepage rust/mustard while still
+// Stroke palette per band, picks up the homepage rust/mustard while still
 // signaling intensity. High borrows the FiveOrbitsViz green so the two
 // surfaces agree on what "Strong" looks like.
 const BAND_STROKE: Record<ScoreBand, string> = {
@@ -41,7 +32,6 @@ export default function PersonalizedHeader({
   primary,
   overall,
   band,
-  perOrbit,
 }: Props) {
   const accent = `var(--brand-accent, ${primary || MABBLY_GOLD})`;
   const upperFirm = (firmName || "Your Firm").toUpperCase();
@@ -54,7 +44,7 @@ export default function PersonalizedHeader({
   const firmSizeClass =
     firmLen >= 14 ? "ph-firm--xl" : firmLen >= 9 ? "ph-firm--lg" : "";
 
-  // Score ring geometry. r=86, circumference = 2π·86 ≈ 540.354.
+  // Score ring geometry, r=86, circumference = 2π·86 ≈ 540.354.
   const RING_R = 86;
   const RING_C = 2 * Math.PI * RING_R;
   const clampedOverall = Math.max(0, Math.min(100, Math.round(overall)));
@@ -399,57 +389,6 @@ export default function PersonalizedHeader({
           to { height: var(--ph-chart-h, 0%); }
         }
 
-        /* ── Per-orbit mini bars ─────────────────────────────────────── */
-        .ph-orbits {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .ph-orbit-row {
-          display: grid;
-          grid-template-columns: 28px 1fr 32px;
-          align-items: center;
-          gap: 12px;
-          font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
-          font-size: 11px;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: var(--kl-depth);
-        }
-        .ph-orbit-id {
-          opacity: 0.5;
-          font-weight: 700;
-        }
-        .ph-orbit-name {
-          opacity: 0.78;
-          font-weight: 600;
-          letter-spacing: 0.14em;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-        }
-        .ph-orbit-bar {
-          grid-column: 1 / -1;
-          height: 4px;
-          background: rgba(15,30,29,0.08);
-          border-radius: 999px;
-          overflow: hidden;
-          margin-top: -4px;
-        }
-        .ph-orbit-bar-fill {
-          height: 100%;
-          background: ${ringStroke};
-          border-radius: 999px;
-          transform: scaleX(0);
-          transform-origin: left center;
-          animation: phBarGrow 900ms cubic-bezier(0.16, 0.65, 0.3, 1) forwards;
-        }
-        .ph-orbit-val {
-          text-align: right;
-          opacity: 0.6;
-          font-weight: 700;
-        }
-
         /* Keyframes */
         @keyframes phFadeUp {
           from { opacity: 0; transform: translateY(24px); }
@@ -470,9 +409,6 @@ export default function PersonalizedHeader({
         @keyframes phRotateBlob2 { to { transform: rotate(-360deg); } }
         @keyframes phRingDraw {
           to { stroke-dashoffset: ${targetOffset.toFixed(3)}; }
-        }
-        @keyframes phBarGrow {
-          to { transform: scaleX(var(--ph-bar-target, 1)); }
         }
         @media (prefers-reduced-motion: reduce) {
           .ph-chart-bar-fill { animation: none !important; height: var(--ph-chart-h, 0%) !important; }
@@ -506,7 +442,7 @@ export default function PersonalizedHeader({
         @media (prefers-reduced-motion: reduce) {
           .ph-eyebrow, .ph-h1 .ph-word, .ph-sub, .ph-graphic,
           .ph-eyebrow-dot, .ph-period, .ph-blob.big, .ph-blob.small,
-          .ph-ring-progress, .ph-orbit-bar-fill {
+          .ph-ring-progress {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
@@ -514,7 +450,6 @@ export default function PersonalizedHeader({
           .ph-h1 .ph-word { opacity: 1; transform: none; }
           .ph-eyebrow, .ph-sub, .ph-graphic { opacity: 1; }
           .ph-ring-progress { stroke-dashoffset: ${targetOffset.toFixed(3)}; }
-          .ph-orbit-bar-fill { transform: scaleX(var(--ph-bar-target, 1)); }
         }
       `}</style>
 
@@ -564,8 +499,7 @@ export default function PersonalizedHeader({
                 <span className="ph-sub-inner">
                   You're inside our{" "}
                   <span className="ph-hl">30-firm research cohort</span>.{" "}
-                  <span className="ph-hl">Clear opportunities</span> identified
-                  — let's build your plan.
+                  <span className="ph-hl">Clear opportunities</span> identified, let's build your plan.
                 </span>
               </p>
             </div>
@@ -595,29 +529,6 @@ export default function PersonalizedHeader({
                 <span className="ph-band-chip">{bandLabel}</span>
               </div>
 
-              <div className="ph-orbits" aria-label="Per-orbit scores">
-                {ORBIT_LABELS.map((label, i) => {
-                  const v = Math.max(0, Math.min(100, Math.round(perOrbit[i] ?? 0)));
-                  return (
-                    <div key={label} className="ph-orbit-row">
-                      <span className="ph-orbit-id">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="ph-orbit-name">{label}</span>
-                      <span className="ph-orbit-val">{v}</span>
-                      <div className="ph-orbit-bar">
-                        <div
-                          className="ph-orbit-bar-fill"
-                          style={{
-                            ["--ph-bar-target" as string]: v / 100,
-                            animationDelay: `${1900 + i * 120}ms`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           </div>
         </div>

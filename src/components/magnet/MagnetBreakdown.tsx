@@ -164,16 +164,20 @@ export default function MagnetBreakdown({
   //  2. Remove em-dashes / en-dashes per project typography rule (use periods/commas).
   const stripDashes = (s: string): string =>
     s
-      .replace(/\s+[-–]\s+/g, ". ")
-      .replace(/(\w)[-–](\w)/g, "$1 to $2")
-      .replace(/[-–]/g, ",")
+      .replace(/\s+[–—]\s+/g, ". ")
+      .replace(/(\w)[–—](\w)/g, "$1 to $2")
+      .replace(/[–—]/g, ",")
       .replace(/\s{2,}/g, " ")
       .trim();
+
+  const STATUS_TAG_RE = /^\s*\[(strong|gap|dormant|untapped)\]\s*/i;
 
   const sanitizeLLM = (s: string | null | undefined): string | null => {
     if (!s) return null;
     const cleaned = stripDashes(
-      s.replace(/\s*\$\s*[\d,.]+\s*[KkMm]?\b(?: in (?:potential )?revenue)?/g, ""),
+      s
+        .replace(STATUS_TAG_RE, "")
+        .replace(/\s*\$\s*[\d,.]+\s*[KkMm]?\b(?: in (?:potential )?revenue)?/g, ""),
     );
     return cleaned || null;
   };
@@ -301,7 +305,6 @@ export default function MagnetBreakdown({
           primary={brand.primary}
           overall={scores.overall}
           band={scores.bandOverall}
-          perOrbit={scores.perOrbit}
         />
 
         <CohortRankCard

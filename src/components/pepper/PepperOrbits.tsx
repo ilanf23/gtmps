@@ -182,7 +182,7 @@ export default function PepperOrbits() {
       <PepperExpandable title="Pepper Group's ICP: Who Lives in Each Orbit">
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { title: "Manufacturing Decision Makers", text: "VP Marketing, CMO, and GM roles at mid-market manufacturers ($20M–$500M). Often PE-backed." },
+            { title: "Manufacturing Decision Makers", text: "VP Marketing, CMO, and GM roles at mid-market manufacturers ($20M,$500M). Often PE-backed." },
             { title: "PE Operating Partners", text: "Portfolio operators seeking marketing infrastructure for newly acquired B2B companies." },
             { title: "B2B Services Leaders", text: "Managing partners and BD leaders at professional services firms exploring systematic growth." },
           ].map((c) => (

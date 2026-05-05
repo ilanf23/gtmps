@@ -1,4 +1,4 @@
-import { Linkedin } from 'lucide-react';
+import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import adamPhoto from '@/assets/adam-fridman.png';
 import richardPhoto from '@/assets/richard-ashbaugh.png';
 
@@ -142,16 +142,14 @@ export default function Authors() {
           width: 44px;
           height: 44px;
           margin: -14px 0 -14px -10px;
-          color: #A8923A;
           border-radius: 4px;
-          transition: color 0.18s ease, transform 0.18s ease;
+          transition: transform 0.18s ease;
         }
         .au-li:hover {
-          color: #C4AC4A;
           transform: scale(1.1);
         }
         .au-li:focus-visible {
-          outline: 2px solid rgba(168, 146, 58,0.55);
+          outline: 2px solid rgba(10, 102, 194, 0.55);
           outline-offset: 2px;
         }
       `}</style>
@@ -262,7 +260,7 @@ export default function Authors() {
                   aria-label={`${a.name} on LinkedIn`}
                   className="au-li"
                 >
-                  <Linkedin size={16} strokeWidth={1.75} />
+                  <LinkedInIcon size={22} variant="blue" />
                 </a>
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>

@@ -149,7 +149,7 @@ export interface RawBranding {
  * is missing or invalid falls back to the Mabbly default - so existing
  * microsites without extracted branding still look right.
  */
-/** WCAG contrast ratio between two hex colors (1–21). */
+/** WCAG contrast ratio between two hex colors (1 to 21). */
 function contrastRatio(a: string, b: string): number {
   const la = relLuminance(a);
   const lb = relLuminance(b);
@@ -248,7 +248,7 @@ export function buildClientTheme(raw: RawBranding | null | undefined): ClientThe
 
   // ── Dual-color brand pair ───────────────────────────────────────────────
   // brandAccent = the highlight color used for text, links, CTA borders,
-  // orbit bars. brandBackground = the dark container color used for CTA
+  // orbit bars, brandBackground = the dark container color used for CTA
   // button backgrounds, orbit number badges, sticky header bar.
   // Sourced from palette.primary / palette.background (passed into raw via
   // useClientTheme). When the extracted background is near-white, we fall

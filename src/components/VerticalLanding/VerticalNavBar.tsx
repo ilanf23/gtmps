@@ -380,9 +380,7 @@ function MyMicrositePillFace({
 const CSS = `
 .vnav {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(248, 242, 229, 0.92);
-  backdrop-filter: saturate(140%) blur(12px);
-  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  background: #F5F1E8;
   border-bottom: 1px solid #E5E0CF;
   font-family: 'Inter', 'Inter Tight', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }

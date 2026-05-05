@@ -147,7 +147,7 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <h2 className="text-[11px] font-black tracking-[0.14em] uppercase text-[#EDF5EC]">
-                Activity — last 30 days
+                Activity, last 30 days
               </h2>
               <p className="text-[12px] text-[#A1A9A0] mt-1">
                 Submissions · Completions · Views · Shares · Bookings
@@ -371,7 +371,7 @@ function Funnel({
     <section className="rounded-xl border border-[#22332F] bg-[#1A2B2A] p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-[11px] font-black tracking-[0.14em] uppercase text-[#EDF5EC]">
-          Funnel — submitted through booked
+          Funnel, submitted through booked
         </h2>
         <span className="text-[11px] text-[#A1A9A0]">Last 30 days</span>
       </div>

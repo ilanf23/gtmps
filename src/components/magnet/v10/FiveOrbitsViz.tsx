@@ -104,6 +104,12 @@ export default function FiveOrbitsViz({
   const fallbackObs =
     "We could not read enough on the site to map this orbit confidently. We'll dig in on the call.";
 
+  // First-use definitions for orbits whose names are jargon to a first-time
+  // visitor. Surfaced inside the hover callout above the per-firm observation.
+  const ORBIT_DEFINITIONS: Record<number, string> = {
+    2: "Dormant relationships where trust still exists but no system reactivates them, past clients, lapsed prospects, stalled proposals. Typically the highest-ROI orbit.",
+  };
+
   // SVG geometry - 500x500 viewBox, center (250, 250).
   const CENTER = 250;
   const RADII = [50, 100, 150, 200, 250];
@@ -132,7 +138,7 @@ export default function FiveOrbitsViz({
       >
         Where your next client already orbits you.
       </h2>
-      <p className="text-sm md:text-base opacity-60 mb-8 max-w-lg leading-relaxed">
+      <p className="text-base md:text-lg opacity-90 mb-8 max-w-xl leading-relaxed font-medium">
         Color reflects what we observed on your site. Tap any orbit to read the
         full observation.
       </p>
@@ -338,7 +344,7 @@ export default function FiveOrbitsViz({
               );
             })}
 
-            {/* Callout overlay pass — paints after all pills, overlaps rings + pills + center.
+            {/* Callout overlay pass, paints after all pills, overlaps rings + pills + center.
                 Wrapper rotation groups stay mounted for every i so SMIL animations stay
                 in lock-step with the matching pill in the pass above. Only the
                 foreignObject is gated on shownIdx === i. */}
@@ -424,6 +430,35 @@ export default function FiveOrbitsViz({
                                 marginBottom: 10,
                               }}
                             />
+                            {ORBIT_DEFINITIONS[i] && (
+                              <p
+                                style={{
+                                  margin: "0 0 8px",
+                                  paddingBottom: 8,
+                                  borderBottom: "1px dashed rgba(255,255,255,0.18)",
+                                  color: "rgba(255,255,255,0.72)",
+                                  fontSize: 11.5,
+                                  fontStyle: "italic",
+                                  lineHeight: 1.5,
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    display: "block",
+                                    fontStyle: "normal",
+                                    fontWeight: 700,
+                                    fontSize: 9.5,
+                                    letterSpacing: "0.16em",
+                                    textTransform: "uppercase",
+                                    color: "rgba(255,255,255,0.5)",
+                                    marginBottom: 3,
+                                  }}
+                                >
+                                  What is this?
+                                </span>
+                                {ORBIT_DEFINITIONS[i]}
+                              </p>
+                            )}
                             <p style={{ margin: 0, color: "rgba(255,255,255,0.9)" }}>
                               {orbits[i]?.trim() || fallbackObs}
                             </p>
@@ -514,9 +549,19 @@ export default function FiveOrbitsViz({
               )}
 
               {isOpen && (
-                <p className="text-sm opacity-85 mt-4 leading-relaxed pl-[3.5rem]">
-                  {desc?.trim() || fallbackObs}
-                </p>
+                <div className="mt-4 pl-[3.5rem]">
+                  {ORBIT_DEFINITIONS[i] && (
+                    <p className="text-[12px] italic opacity-70 leading-relaxed mb-2 pb-2 border-b border-dashed border-black/15">
+                      <span className="not-italic font-bold tracking-[0.16em] uppercase text-[9.5px] opacity-70 block mb-0.5">
+                        What is this?
+                      </span>
+                      {ORBIT_DEFINITIONS[i]}
+                    </p>
+                  )}
+                  <p className="text-sm opacity-85 leading-relaxed">
+                    {desc?.trim() || fallbackObs}
+                  </p>
+                </div>
               )}
             </button>
           );

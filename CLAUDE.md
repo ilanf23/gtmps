@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Marketing/landing site for Mabbly's "Relationship Revenue OS" — a book + GTM operating system for professional services firms. Built with **React 18 + Vite + TypeScript** (not Next.js). Production: https://discover.mabbly.com. Originally scaffolded by Lovable; `lovable-tagger` is still in dev deps.
+Marketing/landing site for Mabbly's "Relationship Revenue OS", a book + GTM operating system for professional services firms. Built with **React 18 + Vite + TypeScript** (not Next.js). Production: https://discover.mabbly.com. Originally scaffolded by Lovable; `lovable-tagger` is still in dev deps.
 
 ## Commands
 
@@ -23,7 +23,7 @@ npx playwright test                    # E2E (config exists, minimal usage)
 ## Architecture
 
 ### Entry & Routing
-`index.html` → `src/main.tsx` → `src/App.tsx`. React Router DOM v6. `App.tsx` is the source of truth for routes — when adding a microsite, register it ABOVE the `*` catch-all (there's a comment marker).
+`index.html` → `src/main.tsx` → `src/App.tsx`. React Router DOM v6. `App.tsx` is the source of truth for routes, when adding a microsite, register it ABOVE the `*` catch-all (there's a comment marker).
 
 `ScrollToTop` component resets scroll on navigation. `QueryClientProvider` wraps the tree but TanStack Query is used sparingly; most pages fetch via direct Supabase calls or polling.
 
@@ -55,7 +55,7 @@ The site is really four overlapping product surfaces sharing one repo:
 | `/aletheia` | `pages/Aletheia.tsx` | Bespoke "Market Activation Profile" microsite (dark navy theme). Sections in `components/aletheia/`. |
 | `/pepper-group`, `/google` | `pages/microsites/*.tsx` | Per-client tabbed microsites. Each page is a thin wrapper that defines a `SiteData` object (typed by `src/types/microsite.ts`) and passes it to `MicrositeShell`. **Pattern: copy an existing file and edit the data block.** |
 | `/spr` | `pages/SPRGroup.tsx` | One-off SPR microsite using its own components in `components/spr/`. Predates the shared shell pattern. |
-| `/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency` | `pages/verticals/*.tsx` | One-line wrappers — `<VerticalLanding vertical={VERTICALS.<slug>} />`. All copy/config lives in `src/content/verticals.ts`. **Add a vertical by editing that file, not by writing components.** |
+| `/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency` | `pages/verticals/*.tsx` | One-line wrappers, `<VerticalLanding vertical={VERTICALS.<slug>} />`. All copy/config lives in `src/content/verticals.ts`. **Add a vertical by editing that file, not by writing components.** |
 | `/assess` | `pages/MagnetAssess.tsx` | Step 1 of the Magnet funnel. Single-field form (website URL). Generates a slug via `lib/magnetSlug.ts`, writes to Supabase, navigates to `/m/:slug`. |
 | `/m/:slug` | `pages/MagnetSite.tsx` | Step 2. Polls Supabase for enrichment status (`POLL_BASE_MS`/`POLL_MAX_MS`/`HARD_TIMEOUT_MS`), shows `MagnetWaitTheater` while pending, renders `MagnetShell` + `MagnetBreakdown` when complete. Theme is loaded per-slug via `useClientTheme`. |
 | `/m/:slug/chat` | `pages/MagnetBookChatPage.tsx` | `MagnetShell` + `BookChat` (calls `book-chat` edge function). |
@@ -70,19 +70,19 @@ The site is really four overlapping product surfaces sharing one repo:
 
 ### Microsite shell vs. one-off microsites
 
-Two coexisting patterns — don't mix them:
+Two coexisting patterns, don't mix them:
 - **Shared shell** (`MicrositeShell` in `components/microsite/`, driven by `SiteData` from `types/microsite.ts`): `/pepper-group`, `/google`. Tabbed layout (Overview / Identity / Signals / Orbits / Roadmap / Content Engine). New client microsites should use this.
 - **One-off** (`/spr`, `/aletheia`): own component folders, own composition. Only extend these if the client needs something the shell can't express.
 
 ### Component organization
 
-- `src/components/` — root contains v1 sections (`HeroSection`, `ApplySection`, etc.) plus shared `Footer`, `ScrollToTop`. Subfolders group per-surface components: `discover/`, `aletheia/`, `magnet/` (with `magnet/v10/` for the current iteration), `microsite/`, `pepper/`, `spr/`, `awards/`, `VerticalLanding/`, `v1/`.
-- `src/components/ui/` — shadcn/ui primitives (Radix-based).
-- `src/content/` — typed content modules driving content-driven pages (`verticals.ts`, `industryStats.ts`, `industryIcons.ts`, `manuscriptQuotes.ts`, `verticalFlow.ts`, `ctaVariants.ts`). **Editing copy usually means editing here, not JSX.**
-- `src/hooks/` — `useScrollReveal`, `useReducedMotion`, `useRevealRef`, `useScrollProgress`, `useFooterVisible`, `useInlineCtaVisible`, `useClientTheme` (per-slug branding cache), `useCountUp`, `useCursorParallax`, `useVerticalFlow`, `use-mobile`, `use-toast`.
-- `src/lib/` — `utils.ts` (`cn()`), `magnetSlug.ts`, `magnetScoring.ts`, `magnetAnalytics.ts`, `clientTheme.ts`, `calendly.ts`, `mabblyAnchors.ts`.
-- `src/integrations/supabase/` — auto-generated `client.ts` and `types.ts`. **Do not edit manually.**
-- `src/types/` — `magnet.ts`, `microsite.ts` shared types.
+- `src/components/`: root contains v1 sections (`HeroSection`, `ApplySection`, etc.) plus shared `Footer`, `ScrollToTop`. Subfolders group per-surface components: `discover/`, `aletheia/`, `magnet/` (with `magnet/v10/` for the current iteration), `microsite/`, `pepper/`, `spr/`, `awards/`, `VerticalLanding/`, `v1/`.
+- `src/components/ui/`: shadcn/ui primitives (Radix-based).
+- `src/content/`: typed content modules driving content-driven pages (`verticals.ts`, `industryStats.ts`, `industryIcons.ts`, `manuscriptQuotes.ts`, `verticalFlow.ts`, `ctaVariants.ts`). **Editing copy usually means editing here, not JSX.**
+- `src/hooks/`: `useScrollReveal`, `useReducedMotion`, `useRevealRef`, `useScrollProgress`, `useFooterVisible`, `useInlineCtaVisible`, `useClientTheme` (per-slug branding cache), `useCountUp`, `useCursorParallax`, `useVerticalFlow`, `use-mobile`, `use-toast`.
+- `src/lib/`: `utils.ts` (`cn()`), `magnetSlug.ts`, `magnetScoring.ts`, `magnetAnalytics.ts`, `clientTheme.ts`, `calendly.ts`, `mabblyAnchors.ts`.
+- `src/integrations/supabase/`: auto-generated `client.ts` and `types.ts`. **Do not edit manually.**
+- `src/types/`: `magnet.ts`, `microsite.ts` shared types.
 
 ### Path alias
 
@@ -91,9 +91,9 @@ Two coexisting patterns — don't mix them:
 ## Backend (Supabase)
 
 - Client: `src/integrations/supabase/client.ts`. Env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
-- Migrations live in `supabase/migrations/` (10+ migrations exist — schema is non-trivial despite what older docs may claim).
+- Migrations live in `supabase/migrations/` (10+ migrations exist, schema is non-trivial despite what older docs may claim).
 - Edge functions in `supabase/functions/`: `enrich-magnet`, `book-chat`, `magnet-chat`, `submit-feedback`, `og-pepper-group`, plus `_shared/`.
-- RLS-related fixes have been applied via RPCs — when adding a new table accessed from the client, plan for either RLS policies or an RPC wrapper.
+- RLS-related fixes have been applied via RPCs, when adding a new table accessed from the client, plan for either RLS policies or an RPC wrapper.
 
 ## Styling
 
@@ -102,21 +102,40 @@ Two coexisting patterns — don't mix them:
 - **Fonts**: `font-display` Inter Tight, `font-serif` Cormorant Garamond, `font-sans` Instrument Sans, `font-mono` DM Mono.
 - **Scroll reveal**: add `.scroll-reveal` (and optionally `.stagger-children`) to elements; `useScrollReveal` wires up the IntersectionObserver. Some newer pages use `useRevealRef` + `revealStyle` for per-element control instead.
 - **Glass surfaces**: `.glass-card` / `.glass-card-light` in `src/index.css`. Custom keyframes also defined there (goldPulse, bookFloat, countUp, etc.).
-- **Global CTA hook**: any `[data-cta="add-your-firm"]` element gets the hot-pink palette via a global rule in `src/index.css` — used because several "Add Your Firm" buttons set inline styles. Use the data-attribute rather than rewriting per-component styles.
+- **Global CTA hook**: any `[data-cta="add-your-firm"]` element gets the hot-pink palette via a global rule in `src/index.css`, used because several "Add Your Firm" buttons set inline styles. Use the data-attribute rather than rewriting per-component styles.
 
 ## TypeScript Config
 
-Loose mode: `strict: false`, `noImplicitAny: false`, `strictNullChecks: false`. Don't tighten without coordinating — many existing files rely on these defaults.
+Loose mode: `strict: false`, `noImplicitAny: false`, `strictNullChecks: false`. Don't tighten without coordinating, many existing files rely on these defaults.
 
 ## Testing
 
 - **Unit**: Vitest + jsdom + Testing Library. Test setup in `src/test/`.
 - **E2E**: Playwright config exists; coverage is minimal.
 
+## Copy / typography (HARD RULE)
+
+**No dashes in user-facing copy.** Forbidden characters: em dash (`—`, U+2014), en dash (`–`, U+2013), and ASCII hyphen-minus (`-`) when used as a punctuation dash between phrases. Use commas, periods, colons, semicolons, parentheses, or the word "to" (for ranges) instead.
+
+This rule applies to: JSX text content, string literals rendered to the page, content modules in `src/content/`, edge-function-generated copy (the LLM is told this in `supabase/functions/enrich-magnet/index.ts`), `aria-label` and other accessible-name strings, and CLAUDE.md / docs for consistency.
+
+**Hyphens are still fine in:** CSS class names (`text-gold`), URLs and route paths (`/pepper-group`), file names, HTML attributes (`data-cta`, `aria-label`), `kebab-case` identifiers, and any other code construct where `-` is syntactic. The rule is about *prose*, not *code*.
+
+**Replacement guide for prose:**
+- ` — ` (em dash with spaces) → `, ` (comma) by default; use `: ` if introducing a definition/list, or `. ` only if it really is a sentence break with a capitalized continuation.
+- `word—word` (em dash joining two words/numbers) → ` to ` for ranges, otherwise rewrite.
+- `–` en dash in numeric ranges (`6–12`, `$1.2M–$2.4M`) → ` to ` (`6 to 12`, `$1.2M to $2.4M`).
+- Compound modifiers in copy (e.g. `well-known`, `lead-gen`, `AI-native`): rewrite without the hyphen when feasible. Exceptions only for proper nouns or technical terms where the hyphenated form is canonical.
+
+**Existing enforcement:**
+- `src/components/magnet/MagnetBreakdown.tsx` (`stripDashes`) sanitizes em/en-dashes from LLM output at runtime.
+- The `enrich-magnet` system prompt instructs the LLM to never emit dashes.
+- When adding new LLM-generated copy paths, mirror both safeguards.
+
 ## Conventions worth knowing
 
 - **Adding a vertical landing**: edit `src/content/verticals.ts`, add a one-line wrapper in `pages/verticals/`, register the route in `App.tsx`.
 - **Adding a client microsite**: copy `pages/microsites/PepperGroup.tsx`, edit the `SITE_DATA` block, register the route. The shell handles the rest.
 - **Editing the homepage**: it's `pages/Discover.tsx`, not `pages/Index.tsx`. `Index` is the v1 landing at `/v1`.
-- **Editing copy**: check `src/content/` first — much of the user-facing text is data, not JSX.
+- **Editing copy**: check `src/content/` first, much of the user-facing text is data, not JSX.
 - **Magnet edge functions**: when changing `enrich-magnet` payload shape, update both the function and the polling/render code in `MagnetSite.tsx` + `MagnetBreakdown`.

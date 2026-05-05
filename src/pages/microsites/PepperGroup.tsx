@@ -141,7 +141,7 @@ const SITE_DATA: SiteData = {
             title: "Gaps",
             items: [
               "No Forbes or major publication bylines",
-              "Sparse LinkedIn cadence (2–3/year vs. 2/month target)",
+              "Sparse LinkedIn cadence (2 to 3/year vs. 2/month target)",
               "Buried insights - not accessible to prospects",
             ],
           },
@@ -221,7 +221,7 @@ const SITE_DATA: SiteData = {
       centerLabel: "PG",
     },
     icp: [
-      { title: "Manufacturing Decision Makers", text: "VP Marketing, CMO, and GM roles at mid-market manufacturers ($20M–$500M). Often PE-backed." },
+      { title: "Manufacturing Decision Makers", text: "VP Marketing, CMO, and GM roles at mid-market manufacturers ($20M,$500M). Often PE-backed." },
       { title: "PE Operating Partners", text: "Portfolio operators seeking marketing infrastructure for newly acquired B2B companies." },
       { title: "B2B Services Leaders", text: "Managing partners and BD leaders at professional services firms exploring systematic growth." },
     ],
@@ -258,7 +258,7 @@ const SITE_DATA: SiteData = {
     ],
     firstWeek: [
       { day: "Monday", text: "Review 10 system-generated drafts. Each paired with a signal and proof point." },
-      { day: "Tuesday–Thursday", text: "Send, edit, or skip. Each message takes 30 seconds to personalize." },
+      { day: "Tuesday to Thursday", text: "Send, edit, or skip. Each message takes 30 seconds to personalize." },
       { day: "Friday", text: "Check replies. Weekly report: messages sent, opened, replied. Pipeline activity." },
     ],
   },
@@ -305,7 +305,7 @@ const SITE_DATA: SiteData = {
     headline: "Your Content Engine,\nAlready Running",
     subtitle: "Before We Ask, We Give",
     description: "We didn't just analyze your business. We built you two pieces of content you can publish this week. In George's voice. On brand. Ready to go.",
-    cadenceNote: "George's cadence is 2–3 per year; it should be 2 per month. The gap isn't ideas - it's bandwidth. This is what the system does.",
+    cadenceNote: "George's cadence is 2 to 3 per year; it should be 2 per month. The gap isn't ideas - it's bandwidth. This is what the system does.",
     linkedInPost: {
       author: "George Couris",
       status: "Ready to publish",

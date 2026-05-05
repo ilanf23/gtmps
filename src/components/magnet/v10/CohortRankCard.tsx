@@ -37,7 +37,7 @@ function ordSuffix(n: number): string {
   }
 }
 
-// percentile is 0–100 with 100 = best. Convert to ordinal rank in cohort.
+// percentile is 0 to 100 with 100 = best. Convert to ordinal rank in cohort.
 export function rankFromPercentile(percentile: number, size: number): number {
   if (size <= 0) return 1;
   const clamped = Math.max(0, Math.min(100, percentile));

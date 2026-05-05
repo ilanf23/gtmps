@@ -150,7 +150,7 @@ export function captureAttribution(slug: string): AttributionContext {
   let stored = readStoredFirstTouch(slug);
 
   // First-touch: if nothing stored AND we have at least one UTM in the URL,
-  // persist it. document.referrer alone is not enough to mint a first-touch
+  // persist it, document.referrer alone is not enough to mint a first-touch
   // record - we want explicit channel intent.
   if (!stored && (urlUtmSource || urlUtmMedium || urlUtmCampaign)) {
     stored = {

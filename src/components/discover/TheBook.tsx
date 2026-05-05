@@ -10,7 +10,7 @@ const CHAPTERS: Chapter[] = [
   { num: '03', title: 'Building Your MAP', meta: 'Chapter 11 · 31 pages' },
 ];
 
-const BADGES = ['30 Chapters', '3 Frameworks', 'PS Firms $5M–$100M'];
+const BADGES = ['30 Chapters', '3 Frameworks', 'PS Firms $5M,$100M'];
 
 export default function TheBook() {
   return (

@@ -1,4 +1,5 @@
-import { Linkedin } from 'lucide-react';
+import LinkedInIcon from '@/components/icons/LinkedInIcon';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 type Stat = { value: string; label: string };
 
@@ -131,6 +132,18 @@ export default function AuthorityStrip() {
           margin: 0 0 4px;
           text-transform: uppercase;
         }
+        .au-name-tooltip {
+          cursor: help;
+          width: fit-content;
+          text-decoration: underline dotted rgba(213, 222, 212, 0.4);
+          text-underline-offset: 6px;
+          transition: text-decoration-color 200ms ease;
+        }
+        .au-name-tooltip:hover,
+        .au-name-tooltip:focus-visible {
+          text-decoration-color: #BF461A;
+          outline: none;
+        }
         .au-role {
           font-family: 'Inter Tight', sans-serif;
           font-size: 12.5px;
@@ -158,11 +171,7 @@ export default function AuthorityStrip() {
           border-radius: 50%;
           transition: color 200ms ease, background 200ms ease, border-color 200ms ease;
         }
-        .au-li svg {
-          fill: currentColor;
-        }
         .au-li:hover {
-          color: #FFFFFF;
           background: #A33C16;
           border-color: #A33C16;
         }
@@ -287,7 +296,20 @@ export default function AuthorityStrip() {
                 problems they solve, for whom, and what outcomes that produces. This book builds
                 the system around that clarity.”
               </p>
-              <p className="au-name">Jonathan Copulsky</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p
+                    className="au-name au-name-tooltip"
+                    tabIndex={0}
+                    aria-label="Jonathan Copulsky, former CMO Deloitte, Senior Lecturer Northwestern Kellogg"
+                  >
+                    Jonathan Copulsky
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[280px] text-center">
+                  Jonathan Copulsky, former CMO Deloitte · Senior Lecturer, Northwestern Kellogg
+                </TooltipContent>
+              </Tooltip>
               <p className="au-role" style={{ marginBottom: 16 }}>
                 Former CMO, Deloitte · Senior Lecturer, Northwestern Kellogg
               </p>
@@ -314,7 +336,7 @@ export default function AuthorityStrip() {
                   aria-label="Richard Ashbaugh on LinkedIn"
                   className="au-li"
                 >
-                  <Linkedin size={13} strokeWidth={2} />
+                  <LinkedInIcon size={18} variant="white" />
                 </a>
               </div>
               <div className="au-stats">
@@ -343,7 +365,7 @@ export default function AuthorityStrip() {
                   aria-label="Adam Fridman on LinkedIn"
                   className="au-li"
                 >
-                  <Linkedin size={13} strokeWidth={2} />
+                  <LinkedInIcon size={18} variant="white" />
                 </a>
               </div>
               <div className="au-stats">

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 type Key = 'contacts' | 'dealValue' | 'dormancy';
 
@@ -139,6 +140,18 @@ export default function DeadZone() {
           .dz-headline { font-size: 30px; }
         }
         .dz-period { color: #BF461A; }
+        .dz-term {
+          cursor: help;
+          text-decoration: underline dotted rgba(15, 30, 29, 0.28);
+          text-underline-offset: 8px;
+          text-decoration-thickness: 2px;
+          transition: text-decoration-color 200ms ease;
+        }
+        .dz-term:hover,
+        .dz-term:focus-visible {
+          text-decoration-color: #BF461A;
+          outline: none;
+        }
         .dz-sub {
           font-family: 'Inter', system-ui, sans-serif;
           font-size: 14px;
@@ -403,10 +416,32 @@ export default function DeadZone() {
         </p>
 
         <h2 className="dz-headline">
-          The Dead Zone<span className="dz-period">.</span>
+          The{' '}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className="dz-term"
+                tabIndex={0}
+                aria-label="Dead Zone, dormant relationships where trust still exists but no system reactivates them"
+              >
+                Dead Zone
+              </span>
+            </TooltipTrigger>
+            <TooltipContent
+              side="bottom"
+              sideOffset={12}
+              className="rr-tooltip"
+            >
+              <span className="rr-tooltip-eyebrow">Dead Zone</span>
+              <span className="rr-tooltip-body">
+                Dormant relationships where trust still exists but no system reactivates them — past clients, lapsed prospects, stalled proposals. Typically the highest-ROI orbit.
+              </span>
+            </TooltipContent>
+          </Tooltip>
+          <span className="dz-period">.</span>
         </h2>
         <p className="dz-sub">
-          <strong>60–80%</strong> of your CRM is sitting quiet, warm, and unactivated. Tune the inputs to see what it costs you.
+          <strong>60 to 80%</strong> of your CRM is sitting quiet, warm, and unactivated. Tune the inputs to see what it costs you.
         </p>
 
         <div className="dz-calc">

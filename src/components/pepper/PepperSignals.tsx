@@ -171,7 +171,7 @@ export default function PepperSignals() {
         <div className="grid md:grid-cols-3 gap-4">
           {[
             { day: "Monday", text: "Review 10 system-generated drafts. Each paired with a signal and proof point." },
-            { day: "Tuesday–Thursday", text: "Send, edit, or skip. Each message takes 30 seconds to personalize." },
+            { day: "Tuesday to Thursday", text: "Send, edit, or skip. Each message takes 30 seconds to personalize." },
             { day: "Friday", text: "Check replies. Weekly report: messages sent, opened, replied. Pipeline activity." },
           ].map((d) => (
             <div

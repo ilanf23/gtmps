@@ -9,14 +9,14 @@ const HTML = (origin: string) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <title>Pepper Group — Market Activation Profile | Mabbly</title>
+  <title>Pepper Group. Market Activation Profile | Mabbly</title>
   <meta property="og:type" content="website"/>
-  <meta property="og:title" content="Pepper Group — Market Activation Profile | Mabbly"/>
+  <meta property="og:title" content="Pepper Group. Market Activation Profile | Mabbly"/>
   <meta property="og:description" content="A personalized market activation profile prepared for Tim Padgett &amp; George Couris by Mabbly."/>
   <meta property="og:image" content="${origin}/og-pepper-group.jpg"/>
   <meta property="og:url" content="${origin}/pepper-group"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Pepper Group — Market Activation Profile | Mabbly"/>
+  <meta name="twitter:title" content="Pepper Group. Market Activation Profile | Mabbly"/>
   <meta name="twitter:description" content="A personalized market activation profile prepared for Tim Padgett &amp; George Couris by Mabbly."/>
   <meta name="twitter:image" content="${origin}/og-pepper-group.jpg"/>
 </head>

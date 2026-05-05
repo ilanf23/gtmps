@@ -24,7 +24,7 @@ const WELCOME: ChatMessage = {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/book-chat`;
 
 /**
- * Build 4–6 suggested prompts personalized to the firm in scope. Falls back
+ * Build 4 to 6 suggested prompts personalized to the firm in scope. Falls back
  * to generic-but-still-specific prompts when we don't have a firm name yet.
  */
 function buildSuggestedPrompts(

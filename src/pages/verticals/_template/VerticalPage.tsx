@@ -124,7 +124,7 @@ const BreakChart = ({ kind }: { kind: BreakBlock["chart"] }) => {
         <text x="14" y="60" fontFamily="var(--mono)" fontSize="7.5" letterSpacing="1.4" fill="#BF461A" fontWeight="700">WARM RELATIONSHIPS</text>
         <rect x="14" y="66" width="152" height="6" fill="#0F1E1D" opacity="0.10" />
         <rect x="14" y="66" width="49" height="6" fill="#BF461A" />
-        <text x="166" y="71" textAnchor="end" fontFamily="var(--display)" fontSize="11" letterSpacing="-0.03em" fill="#BF461A" fontWeight="900">25–40%</text>
+        <text x="166" y="71" textAnchor="end" fontFamily="var(--display)" fontSize="11" letterSpacing="-0.03em" fill="#BF461A" fontWeight="900">25 to 40%</text>
         <text x="14" y="92" fontFamily="var(--mono)" fontSize="6.5" letterSpacing="1" fill="#9AA09C" fontWeight="600">REPLY RATE BENCHMARK</text>
       </svg>
     );

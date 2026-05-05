@@ -38,7 +38,7 @@ const FEATURED: FeaturedSpec = {
     {
       eyebrow: 'The Setup',
       bodyHTML:
-        'Madcraft is a digital agency — strategy, design, development, performance. Stephen Cuccio runs new client strategy. They had a high-intent proposal sitting silent for <strong>9 to 10 months</strong>. The relationship was real. The work was real. But the timing was off, and the next outreach could not sound generic.',
+        'Madcraft is a digital agency, strategy, design, development, performance. Stephen Cuccio runs new client strategy. They had a high-intent proposal sitting silent for <strong>9 to 10 months</strong>. The relationship was real. The work was real. But the timing was off, and the next outreach could not sound generic.',
     },
     {
       eyebrow: 'The Move',
@@ -53,7 +53,7 @@ const FEATURED: FeaturedSpec = {
     {
       eyebrow: 'Why It Landed',
       bodyHTML:
-        'Not a "checking in" email. The note referenced something specific the buyer cared about <em>right now</em>. The agent surfaced the signal. A human approved the words. Then it sent. This is what "signal-based" looks like in practice — a specific acknowledgement, a value drop, a clean next step.',
+        'Not a "checking in" email. The note referenced something specific the buyer cared about <em>right now</em>. The agent surfaced the signal. A human approved the words. Then it sent. This is what "signal-based" looks like in practice, a specific acknowledgement, a value drop, a clean next step.',
     },
   ],
   closingHTML:

@@ -1,4 +1,4 @@
-// Required secrets — set in Supabase project dashboard:
+// Required secrets, set in Supabase project dashboard:
 // OPENAI_API_KEY              → platform.openai.com
 // SUPABASE_URL                → auto-available in Edge Functions
 // SUPABASE_SERVICE_ROLE_KEY   → auto-available in Edge Functions
@@ -6,7 +6,7 @@
 // LinkedIn enrichment note: this function does NOT use Proxycurl.
 // Both the website and the LinkedIn profile URL are fetched via the
 // Jina Reader proxy (https://r.jina.ai/<url>) which returns a clean
-// markdown rendering of any public page — no API key required.
+// markdown rendering of any public page, no API key required.
 // OpenAI then reads both sources to produce the RROS breakdown.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -26,17 +26,17 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-const SYSTEM_PROMPT = `You are Mabbly's GTM analyst. You have scraped a professional services firm's website. Your job is to generate a personalized microsite breakdown that reads like it was written by someone who has worked inside their industry for 20 years — not a chatbot that read their homepage.
+const SYSTEM_PROMPT = `You are Mabbly's GTM analyst. You have scraped a professional services firm's website. Your job is to generate a personalized microsite breakdown that reads like it was written by someone who has worked inside their industry for 20 years, not a chatbot that read their homepage.
 
 ═══ THE ICP ═══
-Managing partner at a $20M–$100M professional services firm. They have been building relationships for 15–25 years. They are not bad at BD — they are using the wrong map. They are smart, slightly exhausted, and deeply skeptical of anyone who has not earned the right to give them advice. They will close this tab in 8 seconds if the first sentence could apply to anyone else.
+Managing partner at a $20M,$100M professional services firm. They have been building relationships for 15 to 25 years. They are not bad at BD, they are using the wrong map. They are smart, slightly exhausted, and deeply skeptical of anyone who has not earned the right to give them advice. They will close this tab in 8 seconds if the first sentence could apply to anyone else.
 
-═══ THE EMOTIONAL JOURNEY — produce this in order ═══
-1. RECOGNITION — "This is written about MY firm specifically"
-2. VINDICATION — "I wasn't wrong, I had the wrong system"
-3. RELIEF — "There's a reason this has been hard"
-4. CHALLENGE — "I'm leaving real money on the table"
-5. CLARITY — "There is one specific next step"
+═══ THE EMOTIONAL JOURNEY, produce this in order ═══
+1. RECOGNITION. "This is written about MY firm specifically"
+2. VINDICATION. "I wasn't wrong, I had the wrong system"
+3. RELIEF. "There's a reason this has been hard"
+4. CHALLENGE. "I'm leaving real money on the table"
+5. CLARITY. "There is one specific next step"
 
 ═══ THE HORMOZI VALUE EQUATION ═══
 V = (Dream Outcome × Perceived Likelihood) / (Time Delay + Effort & Sacrifice)
@@ -47,7 +47,7 @@ Apply this to every field:
 - TIME DELAY: The first signal takes 7 minutes to send. Compress perceived time to first win in every quick win.
 - EFFORT & SACRIFICE: No new contacts. No cold calls. No content calendar. Only the relationships and proof they already have.
 
-═══ LOCKED RROS VOCABULARY — never deviate ═══
+═══ LOCKED RROS VOCABULARY, never deviate ═══
 The Formula (always verbatim): Signal + Proof + Context = Response, Not Pitch
 Five Orbits (exact names, exact symbols):
   ⊙01 Core Proof
@@ -60,11 +60,11 @@ Use "law" never "rule". Use "Dead Zone" never "dormant contacts" or "cold contac
 
 ═══ STRICT OUTPUT RULES ═══
 1. Every sentence must reference something SPECIFIC from the scraped website content
-2. NEVER give generic advice — "consider developing case studies" is forbidden
+2. NEVER give generic advice. "consider developing case studies" is forbidden
 3. NEVER fabricate statistics, dollar amounts, or client names
 4. The headline MUST contain a specific number or concrete asset tied to their firm
 5. quickWins: EXACTLY 3 entries, each completable in under 1 hour, each starting with an action verb
-6. chapterCallouts: EXACTLY 3 entries — "photographable sentences" the reader would screenshot and text to their business partner
+6. chapterCallouts: EXACTLY 3 entries. "photographable sentences" the reader would screenshot and text to their business partner
 7. orbits: EXACTLY 5 entries in order ⊙01 through ⊙05
 
 ═══ FIELD-BY-FIELD COPY FORMULAS ═══
@@ -77,8 +77,8 @@ Formula C: "You have [X specific thing from their site]. It's the proof [specifi
 NEVER use: "underutilized," "optimize," "leverage," "synergy," or any phrase that could apply to any business.
 
 **subheadline**
-One sentence. Perceived Likelihood — shows the reader they are already closer than they think. Reference a specific service, client type, or proof asset you see on their site.
-Formula: "Your [specific observable thing from their site] is exactly what [specific segment] needs to hear before they say yes — and they already know who you are."
+One sentence. Perceived Likelihood, shows the reader they are already closer than they think. Reference a specific service, client type, or proof asset you see on their site.
+Formula: "Your [specific observable thing from their site] is exactly what [specific segment] needs to hear before they say yes, and they already know who you are."
 
 **formulaAnalysis**
 signal: Name the specific signal opportunity you see in their content. What events, transitions, or triggers are present in their work that could be used as outreach signals? Be specific to their vertical and client type.
@@ -90,21 +90,21 @@ verdict: One sentence. The dollar-denominated or relationship-denominated cost o
 For each orbit:
   name: exact orbit name
   status: "strong" | "gap" | "dormant" | "untapped"
-  observation: 2–3 sentences. What you see in their website about this orbit's current state. Specific. No generic filler.
+  observation: 2 to 3 sentences. What you see in their website about this orbit's current state. Specific. No generic filler. Each sentence MUST be complete, never end with a dangling clause like "could yield an additional." If you are running low on space, write fewer sentences, not partial ones.
   opportunity: What ONE action in this orbit would unlock. Lead with a result (relationship count, response rate, or dollar amount if estimable). Never vague.
 
 **deadZone**
 The emotional peak of the microsite. Must produce VINDICATION then CHALLENGE.
 Return as a SINGLE STRING with these parts joined by line breaks:
-  Part 1 — Vindication: "You've already done the work to earn [X type of] relationships. [Observation from their site]. They're not gone — they're in your CRM, past the point where most firms stop reaching out."
-  Part 2 — The reframe: "The Dead Zone isn't lost pipeline. It's collection."
-  Part 3 — The math (only if crmEstimate and dealSizeEstimate are real): "[X dormant contacts] × $[Y avg deal] × 3% reactivation = $[Z] in Dead Zone Value. That number is yours whether you activate it or not."
-  Part 4 — The challenge: One sentence that makes inaction feel costly without being preachy.
+  Part 1. Vindication: "You've already done the work to earn [X type of] relationships. [Observation from their site]. They're not gone, they're in your CRM, past the point where most firms stop reaching out."
+  Part 2. The reframe: "The Dead Zone isn't lost pipeline. It's collection."
+  Part 3. The math (only if crmEstimate and dealSizeEstimate are real): "[X dormant contacts] × $[Y avg deal] × 3% reactivation = $[Z] in Dead Zone Value. That number is yours whether you activate it or not."
+  Part 4. The challenge: One sentence that makes inaction feel costly without being preachy.
 Also return deadZone.estimate as a dollar string like "$1.8M" so it can be parsed.
 
 **quickWins** (exactly 3)
 Each is a specific action completable in under 1 hour. Compress time delay. Reduce perceived effort.
-Required format: "[Action verb] [specific action tied to their firm/vertical/content] — [what it produces] — [how long it takes]."
+Required format: "[Action verb] [specific action tied to their firm/vertical/content]. [what it produces]. [how long it takes]."
 Every quick win must reference something you actually observed on their site.
 
 **layerRecommendation**
@@ -112,11 +112,11 @@ Which of the Five Layers to start on. Be specific and explain why based on your 
 Format: "Start at [LAYER]. Based on [specific observation from their site], the highest-leverage move is [specific action]. From here: [Layer] → [Layer] → [Layer]."
 
 **chapterCallouts** (exactly 3)
-"Photographable sentences" — the kind of insight a managing partner screenshots and texts to their business partner at 11pm. Feels like a discovery, not a description.
+"Photographable sentences", the kind of insight a managing partner screenshots and texts to their business partner at 11pm. Feels like a discovery, not a description.
 WRONG: "Chapter 3 covers the Formula in detail."
 RIGHT: "Chapter 3: The reason your emails get ignored is not that they are bad. It is that they ask for a response before they earn the right to one."
 Each callout must make the reader feel seen, not sold to.
-Format: { "chapter": [number 0–13], "title": "[exact chapter title]", "callout": "[the photographable sentence]" }
+Format: { "chapter": [number 0 to 13], "title": "[exact chapter title]", "callout": "[the photographable sentence]" }
 
 Valid chapters (use exact titles):
 0 = "Preface: Start Here"
@@ -171,7 +171,7 @@ NEVER use any of these characters in the output text: em dash (—), en dash (�
 ═══ NUMBERS RULE (HARD CONSTRAINT) ═══
 NEVER invent dollar figures, headcounts, percentages, or any quantitative claim that is not directly supported by the user-provided crmEstimate / dealSizeEstimate or the source website content. Phrases like "$36K in potential revenue" or "5 contacts × $7,200" are FORBIDDEN unless built from the user-provided numbers. When in doubt, omit the figure and describe the leverage qualitatively ("a handful of dormant contacts", "a measurable lift inside 90 days"). This applies to every string field, especially action_1, action_2, action_3, recommendedLayer, and observation.
 
-═══ BOOK CONTEXT — ground your analysis in the actual frameworks ═══
+═══ BOOK CONTEXT, ground your analysis in the actual frameworks ═══
 
 ${BOOK_FRAMEWORK_CONTEXT}`;
 
@@ -249,7 +249,7 @@ Deno.serve(async (req) => {
       .update({ status: "processing" })
       .eq("slug", slug);
 
-    // 3. Parallel fetches — website + LinkedIn (Jina Reader) + raw HTML/CSS for branding
+    // 3. Parallel fetches, website + LinkedIn (Jina Reader) + raw HTML/CSS for branding
     const [websiteResult, linkedinResult, brandingResult] = await Promise.allSettled([
       fetchViaJina(submission.website_url, 6000),
       fetchViaJina(submission.linkedin_url, 4000),
@@ -349,7 +349,7 @@ ${JSON.stringify(linkedin_data)}`;
         body: JSON.stringify({
           model: "gpt-4o-mini",
           temperature: 0.4,
-          max_tokens: 2000,
+          max_tokens: 3500,
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
@@ -422,7 +422,7 @@ ${JSON.stringify(linkedin_data)}`;
       if (typeof w === "string") return w.trim() || null;
       const title = typeof w.title === "string" ? w.title : "";
       const desc = typeof w.description === "string" ? w.description : "";
-      return [title, desc].filter(Boolean).join(" — ") || null;
+      return [title, desc].filter(Boolean).join(". ") || null;
     };
 
     // Parse "$1.8M" / "$250,000" → integer dollars
@@ -472,7 +472,7 @@ ${JSON.stringify(linkedin_data)}`;
     // Welcome message: prefer headline + subheadline
     const welcome = [asString(parsed.headline), asString(parsed.subheadline)]
       .filter(Boolean)
-      .join(" — ") || null;
+      .join(". ") || null;
 
     // Observed: signal + context. Assessment: proof + verdict + closing.
     const observed = [asString(formula.signal), asString(formula.context)]

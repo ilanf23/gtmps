@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Heuristic scoring for the V10 microsite. CALIBRATED v2 (post Apr 2026).
 //
-// Bands: 0–40 = low (Red), 41–65 = mid (Yellow), 66–100 = high (Strong).
+// Bands: 0 to 40 = low (Red), 41 to 65 = mid (Yellow), 66 to 100 = high (Strong).
 //
 // Key change vs v1: length alone is no longer evidence of a relationship system.
 // Each of the five orbits has its own qualitative signal gate. If the orbit
@@ -20,7 +20,7 @@ export type ScoreBand = "low" | "mid" | "high";
 export interface OrbitScores {
   /** 5-element array, indexed 0..4 → ⊙01..⊙05 */
   perOrbit: number[];
-  /** 0–100 average across mapped orbits. */
+  /** 0 to 100 average across mapped orbits. */
   overall: number;
   bandPerOrbit: ScoreBand[];
   bandOverall: ScoreBand;
@@ -65,7 +65,7 @@ function extractStatusTag(text: string | null | undefined): StatusTag {
 }
 
 /**
- * Score one orbit description (0–100):
+ * Score one orbit description (0 to 100):
  *  - If the LLM emitted a status tag, anchor the score to the tag baseline
  *    and let signal keywords nudge it ±10.
  *  - Otherwise, fall back to the heuristic length+keyword score (low base).

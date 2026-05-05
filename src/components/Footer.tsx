@@ -366,7 +366,7 @@ const Footer = () => {
               GTM for the market you <em>already own.</em>
             </h2>
             <p className="mf-top-deck">
-              The Relationship Revenue OS — in book and in product. Diagnose your dormancy in 90 seconds, then read the playbook.
+              The Relationship Revenue OS, in book and in product. Diagnose your dormancy in 90 seconds, then read the playbook.
             </p>
           </div>
           <div className="mf-top-cta-wrap">

@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Fallback — log the feedback so it's recoverable from edge function logs.
+  // Fallback, log the feedback so it's recoverable from edge function logs.
   console.log("submit-feedback received", {
     name: data.name,
     email: data.email,

@@ -78,6 +78,18 @@
 .hlm-09 .hlm-headline .accent {
   color: var(--burnt-orange);
 }
+.hlm-09 .hlm-term {
+  cursor: help;
+  text-decoration: underline dotted rgba(15, 30, 29, 0.32);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 3px;
+  transition: text-decoration-color 200ms ease;
+}
+.hlm-09 .hlm-term:hover,
+.hlm-09 .hlm-term:focus-visible {
+  text-decoration-color: var(--burnt-orange);
+  outline: none;
+}
 
 /* Lede */
 .hlm-09 .hlm-lede {

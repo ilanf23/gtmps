@@ -23,7 +23,7 @@ export type CohortMetricKey =
 
 /**
  * One row from `public.cohort_metrics`. Numeric columns are returned by
- * supabase-js as `number`. `cohort_percentile` is 0–100 (100 = best).
+ * supabase-js as `number`. `cohort_percentile` is 0 to 100 (100 = best).
  */
 export interface CohortMetric {
   /** Surrogate primary key. */
@@ -36,7 +36,7 @@ export interface CohortMetric {
   metric_key: CohortMetricKey | string;
   /** Raw numeric value of the metric for this firm. */
   metric_value: number;
-  /** 0–100. The firm's percentile within the cohort. 100 = best. */
+  /** 0 to 100. The firm's percentile within the cohort. 100 = best. */
   cohort_percentile: number;
   /** How many firms make up the cohort the percentile is computed against. */
   cohort_size: number;

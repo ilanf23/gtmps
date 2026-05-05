@@ -14,14 +14,10 @@ export function scrollToHero(opts: { focus?: boolean } = {}): void {
   const hero = document.getElementById('hero');
   if (!hero) return;
 
+  hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   const input = hero.querySelector<HTMLInputElement>('input[type="url"]');
-
-  if (!input) {
-    hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return;
-  }
-
-  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (!input) return;
 
   input.classList.remove('huf-input--attention');
   // Force reflow so the animation restarts on repeat clicks.

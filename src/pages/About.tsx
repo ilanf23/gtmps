@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, ChevronDown, Linkedin } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import LinkedInIcon from "@/components/icons/LinkedInIcon";
 import { NAV_VERTICAL_LINKS, type VerticalSlug } from "@/content/verticals";
 import { INDUSTRY_ICONS } from "@/content/industryIcons";
 import SectionRail from "@/components/discover/SectionRail";
@@ -1195,23 +1196,20 @@ const About = () => {
                         rel="noopener noreferrer"
                         aria-label={`${p.name} on LinkedIn`}
                         style={{
-                          color: "#A8923A",
                           display: "inline-flex",
                           alignItems: "center",
                           justifyContent: "center",
                           padding: 8,
-                          transition: "color 180ms ease, transform 180ms ease",
+                          transition: "transform 180ms ease",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#C4AC4A";
                           e.currentTarget.style.transform = "scale(1.1)";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "#A8923A";
                           e.currentTarget.style.transform = "scale(1)";
                         }}
                       >
-                        <Linkedin size={16} />
+                        <LinkedInIcon size={22} variant="blue" />
                       </a>
                     </h3>
                     <p

@@ -1,9 +1,10 @@
 // SECTION 09 - The Formula. Signal + Proof + Context = Response.
 // Universal Mabbly IP from Chapter 3 of the manuscript. Not personalized
 // per client by design (the formula is universal); upstream sections carry
-// the client name. Visuals are spec-locked — see HighestLeverageMove.css.
+// the client name. Visuals are spec-locked, see HighestLeverageMove.css.
 
 import type { FindingProfile } from "@/lib/magnetScoring";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import "./HighestLeverageMove.css";
 
 interface Props {
@@ -28,7 +29,25 @@ export default function HighestLeverageMove(_props: Props) {
         </p>
 
         <h2 id="hlm-09-headline" className="hlm-headline">
-          Reactivate Your Dead Zone in <span className="accent">7 Minutes</span>.
+          Reactivate Your{' '}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className="hlm-term"
+                tabIndex={0}
+                aria-label="Dead Zone, dormant relationships where trust still exists but no system reactivates them"
+              >
+                Dead Zone
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={12} className="rr-tooltip">
+              <span className="rr-tooltip-eyebrow">Dead Zone</span>
+              <span className="rr-tooltip-body">
+                Dormant relationships where trust still exists but no system reactivates them — past clients, lapsed prospects, stalled proposals. Typically the highest-ROI orbit.
+              </span>
+            </TooltipContent>
+          </Tooltip>
+          {' '}in <span className="accent">7 Minutes</span>.
         </h2>
 
         <p className="hlm-lede">

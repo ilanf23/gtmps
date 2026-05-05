@@ -6,10 +6,10 @@ import { useVerticalFlow } from '@/hooks/useVerticalFlow';
 // Four-stage cinematic wait theater.
 //
 // Stage cadence (from spec):
-//   1 - 0–22s   Reading your homepage
-//   2 - 22–45s  Mapping your services
-//   3 - 45–70s  Mapping your dormant relationships
-//   4 - 70–90s  Building your RROS map
+//   1 - 0 to 22s   Reading your homepage
+//   2 - 22 to 45s  Mapping your services
+//   3 - 45 to 70s  Mapping your dormant relationships
+//   4 - 70 to 90s  Building your RROS map
 //
 // Status tickers within each stage rotate every ~6s so the user always sees
 // fresh language. The top progress bar tracks elapsed time but caps at 88%

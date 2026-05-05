@@ -91,7 +91,7 @@ export function OpsAuthGate({ onAuthed }: OpsAuthGateProps) {
         if (until) setLockedUntil(until);
         const remaining = MAX_ATTEMPTS - readAttempts().length;
         setAttemptsRemaining(Math.max(0, remaining));
-        setError(`Incorrect password — ${Math.max(0, remaining)} attempts remaining`);
+        setError(`Incorrect password. ${Math.max(0, remaining)} attempts remaining`);
         setShake(true);
         setTimeout(() => setShake(false), 500);
       }

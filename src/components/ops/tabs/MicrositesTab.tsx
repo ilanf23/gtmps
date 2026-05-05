@@ -36,7 +36,7 @@ const PROJECT_REF = (import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefi
 const PAGE_SIZE = 50;
 
 function relTime(iso: string | null): string {
-  if (!iso) return "—";
+  if (!iso) return ",";
   const d = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
   if (d < 60) return `${d}s ago`;
   if (d < 3600) return `${Math.floor(d / 60)}m ago`;
@@ -257,7 +257,7 @@ function RowGroup({
   detailLoading: boolean;
 }) {
   const av = avatarColor(row.slug);
-  const recipient = row.first_name ?? "—";
+  const recipient = row.first_name ?? ",";
   return (
     <>
       <tr
@@ -288,7 +288,7 @@ function RowGroup({
             </div>
           </div>
         </td>
-        <td className="px-4 py-3 text-[#EDF5EC]">{row.firm_name ?? "—"}</td>
+        <td className="px-4 py-3 text-[#EDF5EC]">{row.firm_name ?? ","}</td>
         <td className="px-4 py-3">
           <StatusPill status={row.status} hasError={!!row.enrichment_error} />
         </td>
@@ -304,7 +304,7 @@ function RowGroup({
               {new Date(row.booking_at).toLocaleDateString()}
             </span>
           ) : (
-            <span className="text-[#6E7A72]">—</span>
+            <span className="text-[#6E7A72]">,</span>
           )}
         </td>
       </tr>
@@ -332,7 +332,7 @@ function StatusPill({ status, hasError }: { status: string; hasError: boolean })
     error: { dot: "#C02B0A", border: "#C02B0A", bg: "#2A1414", label: "Error" },
   };
   const key = hasError ? "error" : status;
-  const m = map[key] ?? { dot: "#6E7A72", border: "#22332F", bg: "#22332F", label: status || "—" };
+  const m = map[key] ?? { dot: "#6E7A72", border: "#22332F", bg: "#22332F", label: status || "," };
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[3px] text-[10px] font-black tracking-[0.1em] uppercase text-[#EDF5EC]"

@@ -1,4 +1,4 @@
-import { Linkedin } from 'lucide-react';
+import LinkedInIcon from '@/components/icons/LinkedInIcon';
 
 const ADAM_LINKEDIN_URL = 'https://www.linkedin.com/in/adamfridman/';
 
@@ -85,14 +85,12 @@ export default function AdamNote() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 18px;
-          height: 18px;
-          color: #A79014;
-          transition: color 200ms cubic-bezier(0.13, 0.28, 0.3, 1), transform 200ms cubic-bezier(0.13, 0.28, 0.3, 1);
+          width: 20px;
+          height: 20px;
+          transition: transform 200ms cubic-bezier(0.13, 0.28, 0.3, 1);
         }
         .adam-note .linkedin:hover,
         .adam-note .linkedin:focus-visible {
-          color: #0F1E1D;
           transform: translateY(-1px);
         }
         @keyframes adamFadeUp {
@@ -157,7 +155,7 @@ export default function AdamNote() {
           aria-label="Adam Fridman on LinkedIn (opens in new tab)"
           className="linkedin"
         >
-          <Linkedin size={14} strokeWidth={1.75} />
+          <LinkedInIcon size={20} variant="blue" />
         </a>
       </p>
       </div>

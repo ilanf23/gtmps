@@ -105,7 +105,7 @@ export default function CompactCtaCard({ slug, vertical }: Props) {
           <div className="cta-grid">
             <div className="illo" aria-hidden="true">
               <svg viewBox="0 0 600 510" xmlns="http://www.w3.org/2000/svg">
-                {/* Olive scribble blob — verified Mabbly 9-point polygon */}
+                {/* Olive scribble blob, verified Mabbly 9-point polygon */}
                 <g transform="translate(12 -50) scale(0.95)">
                   <path
                     className="blob"

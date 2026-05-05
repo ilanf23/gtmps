@@ -5,7 +5,7 @@ const PATH_I_BODY =
 const PATH_I_PULL = "You're building from scratch, every quarter.";
 
 const PATH_II_BODY =
-  'Systematic relationship reactivation. Your Dead Zone converts. Orbits I–II generate the majority of new revenue. The pipeline is a function, not a prayer.';
+  'Systematic relationship reactivation. Your Dead Zone converts. Orbits I to II generate the majority of new revenue. The pipeline is a function, not a prayer.';
 const PATH_II_PULL = "You're building on trust that already exists.";
 
 export default function TheDecision() {
@@ -275,7 +275,7 @@ export default function TheDecision() {
           align-items: center;
         }
 
-        /* Bottom layer — Path II (cream) */
+        /* Bottom layer. Path II (cream) */
         .td-panel-with {
           background:
             radial-gradient(ellipse 600px 360px at 100% 100%, rgba(184, 147, 58, 0.16), transparent 70%),
@@ -285,7 +285,7 @@ export default function TheDecision() {
           padding: 48px clamp(36px, 6vw, 80px);
         }
 
-        /* Top layer — Path I (dark), clipped */
+        /* Top layer. Path I (dark), clipped */
         .td-panel-without {
           background:
             radial-gradient(ellipse 500px 320px at 0% 0%, rgba(139, 58, 42, 0.30), transparent 70%),
@@ -502,7 +502,7 @@ export default function TheDecision() {
           border: 1px solid rgba(15, 30, 29, 0.10);
         }
 
-        /* Mobile stacked — hidden by default */
+        /* Mobile stacked, hidden by default */
         .td-mobile { display: none; }
 
         /* ── Responsive ──────────────────────────── */

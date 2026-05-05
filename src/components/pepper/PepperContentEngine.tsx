@@ -21,7 +21,7 @@ export default function PepperContentEngine() {
           We didn't just analyze your business. We built you two pieces of content you can publish this week. In George's voice. On brand. Ready to go.
         </p>
         <p className="text-[13px] text-[#A09890] leading-relaxed max-w-[560px]">
-          George's cadence is 2–3 per year; it should be 2 per month. The gap isn't ideas - it's bandwidth. This is what the system does.
+          George's cadence is 2 to 3 per year; it should be 2 per month. The gap isn't ideas - it's bandwidth. This is what the system does.
         </p>
       </section>
 
