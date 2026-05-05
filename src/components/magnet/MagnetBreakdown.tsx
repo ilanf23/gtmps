@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { useVerticalFlow } from "@/hooks/useVerticalFlow";
 import {
+  applyDemoBoost,
   computeOrbitScores,
   ctaHeadlineFor,
   profileFromScores,
@@ -134,14 +135,15 @@ export default function MagnetBreakdown({
   // so hook order stays stable across loading states).
   const scores = useMemo(() => {
     if (!data) return null;
-    return computeOrbitScores([
+    const base = computeOrbitScores([
       data.orbit_01,
       data.orbit_02,
       data.orbit_03,
       data.orbit_04,
       data.orbit_05,
     ]);
-  }, [data]);
+    return applyDemoBoost(base, slug, data.client_company_name);
+  }, [data, slug]);
 
   const variantId = useMemo(() => {
     if (!scores) return "C" as const;

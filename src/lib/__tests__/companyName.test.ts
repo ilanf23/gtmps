@@ -61,28 +61,16 @@ describe("getDisplayName", () => {
     expect(getDisplayName({ slug: "" })).not.toBe("");
   });
 
-  // Mabbly self-name guard: the Magnet flow is for OTHER firms, never Mabbly.
-  // Any path that yields "Mabbly" (extraction, slug, stale data) is treated
-  // as missing so the hero never renders "MABBLY" as the customer firm.
-  it("rejects companyName 'Mabbly' as a self-name", () => {
-    expect(getDisplayName({ companyName: "Mabbly", slug: "mabbly" })).toBe("Your firm");
+  it("returns 'Mabbly' when submitted as the firm (no self-name guard)", () => {
+    expect(getDisplayName({ companyName: "Mabbly", slug: "mabbly" })).toBe("Mabbly");
   });
 
-  it("rejects companyName 'Mabbly LLC' (legal suffix) as a self-name", () => {
-    expect(getDisplayName({ companyName: "Mabbly LLC" })).toBe("Your firm");
+  it("returns 'Mabbly LLC' verbatim", () => {
+    expect(getDisplayName({ companyName: "Mabbly LLC" })).toBe("Mabbly LLC");
   });
 
-  it("rejects slug-derived 'Mabbly' as a self-name", () => {
-    expect(getDisplayName({ companyName: null, slug: "mabbly" })).toBe("Your firm");
-  });
-
-  it("rejects slug-derived 'Mabbly' even with collision suffix", () => {
-    expect(getDisplayName({ companyName: "", slug: "mabbly-x7k" })).toBe("Your firm");
-  });
-
-  it("respects custom fallback when self-name is rejected", () => {
-    expect(getDisplayName({ companyName: "Mabbly", slug: "mabbly", fallback: "your firm" }))
-      .toBe("your firm");
+  it("derives 'Mabbly' from a mabbly slug when companyName is missing", () => {
+    expect(getDisplayName({ companyName: null, slug: "mabbly" })).toBe("Mabbly");
   });
 });
 
@@ -103,11 +91,11 @@ describe("isGenericFallback", () => {
     expect(isGenericFallback({ companyName: "", slug: "firm" })).toBe(true);
   });
 
-  it("true when companyName is the Mabbly self-name", () => {
-    expect(isGenericFallback({ companyName: "Mabbly" })).toBe(true);
+  it("false when companyName is 'Mabbly' (no self-name guard)", () => {
+    expect(isGenericFallback({ companyName: "Mabbly" })).toBe(false);
   });
 
-  it("true when slug resolves to the Mabbly self-name", () => {
-    expect(isGenericFallback({ companyName: null, slug: "mabbly" })).toBe(true);
+  it("false when slug resolves to 'Mabbly'", () => {
+    expect(isGenericFallback({ companyName: null, slug: "mabbly" })).toBe(false);
   });
 });

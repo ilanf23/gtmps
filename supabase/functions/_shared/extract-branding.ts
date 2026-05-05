@@ -387,6 +387,12 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
   // these, it's almost certainly a client/partner logo, not the brand mark.
   const NEGATIVE_CONTEXT = /(client|partner|trusted by|our work|case stud|portfolio|testimonial|logo[\s-]?wall|brands? we|featured in|as seen|press)/i;
 
+  // Decorative-purpose hints. When an <img>'s src/alt/class/id flags it as
+  // a hero photo, headshot, banner, or background pattern, it is almost
+  // never the brand mark, even if it sits in the header. The demotion is
+  // strong enough to lose to any reasonable inline-SVG candidate.
+  const DECORATIVE_HINT = /\b(hero|banner|background|bg[-_]|pattern|photo|headshot|portrait|team[-_]|people|cover|splash|illustration|avatar|profile)\b/i;
+
   type Candidate = { src: string; score: number; isData?: boolean };
   const candidates: Candidate[] = [];
 
@@ -413,10 +419,25 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
       /client|partner|testimonial/.test(cls) ||
       /client|partner|testimonial/.test(idAttr);
 
+    // Explicit logo signals on the tag itself.
+    const hasLogoSignal =
+      /\blogo\b/.test(alt) ||
+      /\blogo\b/.test(cls) ||
+      /\blogo\b/.test(idAttr) ||
+      /[\/_-]logo[\._-]|\blogo\.(svg|png|webp)/i.test(srcLower);
+
+    // Decorative signal (hero photo, headshot, banner, etc.). When set
+    // without a competing logo signal, this image is almost certainly
+    // not the brand mark.
+    const hasDecorativeHint =
+      DECORATIVE_HINT.test(srcLower) ||
+      DECORATIVE_HINT.test(alt) ||
+      DECORATIVE_HINT.test(cls) ||
+      DECORATIVE_HINT.test(idAttr);
+
     let score = 0;
     if (inHeader) score += 12;
-    if (/\blogo\b/.test(alt) || /\blogo\b/.test(cls) || /\blogo\b/.test(idAttr)) score += 5;
-    if (/[\/_-]logo[\._-]|\blogo\.(svg|png|webp)/i.test(srcLower)) score += 4;
+    if (hasLogoSignal) score += 9; // bumped from +5/+4 split, single signal
     if (domainRoot && domainRoot.length >= 3) {
       if (srcLower.includes(domainRoot)) score += 10;
       if (alt.includes(domainRoot)) score += 10;
@@ -425,15 +446,27 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     // (We can't know every client name, but the negative-context check
     // catches most logo-wall placements.)
     if (hasNegative) score -= 15;
+    // Decorative purpose drops the score below any reasonable real-logo
+    // candidate. We only apply it when there is no explicit logo signal
+    // (some sites legitimately use `team-logo.svg` for the brand mark).
+    if (hasDecorativeHint && !hasLogoSignal) score -= 18;
     // Skip pure tracking pixels and tiny icons.
     if (/sprite|icon-|pixel|tracking|spacer|blank\.gif/.test(srcLower)) score -= 8;
 
     if (score > 0) candidates.push({ src, score });
   }
 
-  // Inline <svg> inside header/nav — almost always the brand mark.
+  // Inline <svg> inside header/nav — almost always the brand mark. Score
+  // it above the maximum reachable <img> score (inHeader 12 + domain 10
+  // + domain-in-alt 10 + logoSignal 9 = 41 in pathological cases, but in
+  // practice domain-in-alt is rare alongside an inline SVG). Setting this
+  // to 30 keeps inline SVG dominant against any <img> that scored on
+  // circumstantial signals (header presence + domain hits) while still
+  // allowing an explicit-logo <img> with multiple confirming signals to
+  // win. This was the Mabbly bug: the real brand mark is inline SVG, but
+  // an `<img>` with `mabbly` in its src outscored it 22 to 11.
   const inlineSvg = findInlineHeaderSvg(html);
-  if (inlineSvg) candidates.push({ src: inlineSvg, score: 11, isData: true });
+  if (inlineSvg) candidates.push({ src: inlineSvg, score: 30, isData: true });
 
   // SVG favicon — vector favicons are virtually always the real mark.
   const svgIconLink = (() => {
@@ -672,13 +705,55 @@ function detectAccent(
   return { color: null, source: "none" };
 }
 
+// Derive a sentence-case firm name from the URL's domain root.
+// "https://www.aarete.com" -> "Aarete", "foo-bar.co.uk" -> "Foo Bar".
+function nameFromUrl(websiteUrl: string): string | null {
+  try {
+    const host = new URL(websiteUrl).hostname.replace(/^www\./, "");
+    const root = host.split(".")[0] ?? "";
+    if (!root) return null;
+    return root
+      .split("-")
+      .filter(Boolean)
+      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+      .join(" ");
+  } catch {
+    return null;
+  }
+}
+
+// Hostname-based logo fallback. Clearbit's public logo endpoint returns
+// a transparent brand mark for most established domains. The frontend
+// (FiveOrbitsViz) sets `logoOk = false` on <image> error, so a 404 here
+// gracefully degrades to the "YOUR FIRM" SVG text fallback.
+function logoFallbackFromUrl(websiteUrl: string): string | null {
+  try {
+    const host = new URL(websiteUrl).hostname.replace(/^www\./, "");
+    return host ? `https://logo.clearbit.com/${host}` : null;
+  } catch {
+    return null;
+  }
+}
+
+function profileFromUrlOnly(websiteUrl: string): BrandProfile {
+  return {
+    ...EMPTY,
+    logoUrl: logoFallbackFromUrl(websiteUrl),
+    companyName: nameFromUrl(websiteUrl),
+  };
+}
+
 export async function extractBrandProfile(
   websiteUrl: string,
 ): Promise<BrandProfile> {
   if (!websiteUrl) return EMPTY;
 
   const html = await safeFetch(websiteUrl);
-  if (!html) return EMPTY;
+  // When the site is unreachable (Cloudflare bot block, timeout, JS-only
+  // SPA returning empty markup), still produce a usable profile from the
+  // URL alone so the microsite hero shows a real firm name and the orbit
+  // center has a logo to attempt rather than the "YOUR FIRM" placeholder.
+  if (!html) return profileFromUrlOnly(websiteUrl);
 
   // Pull first 2 stylesheet hrefs and fetch them too (best-effort).
   const cssHrefs = pickAllAttr(
@@ -793,13 +868,13 @@ export async function extractBrandProfile(
   }
 
   return {
-    logoUrl,
+    logoUrl: logoUrl ?? logoFallbackFromUrl(websiteUrl),
     brandColor: themeColor ?? acc.color,
     accentColor: acc.color,
     backgroundColor: bg.color,
     textColor: txt.color,
     fontFamily,
-    companyName,
+    companyName: companyName ?? nameFromUrl(websiteUrl),
     raw: {
       candidateColors: scored.slice(0, 8).map((s) => s.hex),
       sources: {

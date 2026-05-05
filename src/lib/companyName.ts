@@ -12,7 +12,7 @@
  * non-empty firm name is needed.
  */
 
-import { displayNameFromSlug, normalizeFirmName } from "./magnetSlug";
+import { displayNameFromSlug } from "./magnetSlug";
 
 export interface DisplayNameInput {
   /** The extracted company name from enrichment. May be null, undefined,
@@ -25,29 +25,20 @@ export interface DisplayNameInput {
   fallback?: string;
 }
 
-// Mabbly is the operator of the Magnet flow, never a customer of it. Any
-// resolved name that normalizes to "mabbly" (e.g. extraction picked up
-// "Mabbly LLC" from a partner page, or the slug is literally "mabbly") is
-// treated as missing so the hero falls through to the customer-shaped
-// fallback instead of branding the page as Mabbly.
-function isSelfName(name: string): boolean {
-  return normalizeFirmName(name) === "mabbly";
-}
-
 /**
  * Always returns a non-empty, trimmed, sentence-case-ish firm name.
  *
  * Resolution order:
- *   1. companyName, if set and non-empty after trim (and not the self-name)
+ *   1. companyName, if set and non-empty after trim
  *   2. displayNameFromSlug(slug), if it yields a real name (rejects "firm")
  *   3. fallback (default "Your firm")
  */
 export function getDisplayName(input: DisplayNameInput): string {
   const trimmed = (input.companyName ?? "").trim();
-  if (trimmed.length > 0 && !isSelfName(trimmed)) return trimmed;
+  if (trimmed.length > 0) return trimmed;
 
   const fromSlug = displayNameFromSlug(input.slug);
-  if (fromSlug && fromSlug.trim().length > 0 && !isSelfName(fromSlug)) return fromSlug;
+  if (fromSlug && fromSlug.trim().length > 0) return fromSlug;
 
   return input.fallback ?? "Your firm";
 }
@@ -59,8 +50,8 @@ export function getDisplayName(input: DisplayNameInput): string {
  */
 export function isGenericFallback(input: DisplayNameInput): boolean {
   const trimmed = (input.companyName ?? "").trim();
-  if (trimmed.length > 0 && !isSelfName(trimmed)) return false;
+  if (trimmed.length > 0) return false;
   const fromSlug = displayNameFromSlug(input.slug);
-  if (fromSlug && fromSlug.trim().length > 0 && !isSelfName(fromSlug)) return false;
+  if (fromSlug && fromSlug.trim().length > 0) return false;
   return true;
 }

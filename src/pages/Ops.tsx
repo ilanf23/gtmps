@@ -54,6 +54,7 @@ const Ops = () => {
       onTabChange={setActive}
       onSignOut={() => setAuthed(false)}
       onRefresh={handleRefresh}
+      refreshNonce={refreshNonce}
       lastRefresh={lastRefresh}
     >
       {active === "overview" && <OverviewTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}

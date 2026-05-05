@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { opsGet } from "@/lib/opsClient";
 import {
   BarChart,
@@ -10,24 +11,44 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { TimeRangePicker } from "@/components/ops/TimeRangePicker";
+import {
+  type Grain,
+  type PeriodPreset,
+  type ResolvedGrain,
+  type CustomRange,
+  parsePeriodFromSearchParams,
+  periodToSearchParams,
+  resolvePeriod,
+  effectiveGrain,
+  formatBucketLabel,
+} from "@/lib/opsTimeRange";
+
+interface KpiBucket {
+  submissions: number;
+  completed: number;
+  views: number;
+  shares: number;
+  emails: number;
+  bookings: number;
+}
+
+interface TimeseriesPoint {
+  bucket: string;
+  date?: string; // legacy alias
+  submissions: number;
+  completions: number;
+  views: number;
+  shares: number;
+  bookings: number;
+}
 
 interface OverviewData {
-  kpis: {
-    submissions: number;
-    completed: number;
-    views: number;
-    shares: number;
-    emails: number;
-    bookings: number;
-  };
-  timeseries: Array<{
-    date: string;
-    submissions: number;
-    completions: number;
-    views: number;
-    shares: number;
-    bookings: number;
-  }>;
+  kpis: KpiBucket;
+  kpis_prev?: KpiBucket | null;
+  timeseries: TimeseriesPoint[];
+  grain?: ResolvedGrain;
+  range?: { from: string; to: string; prevFrom: string | null; prevTo: string | null; label: string };
   activity: Array<{ kind: string; at: string; slug: string; label: string }>;
 }
 
@@ -44,7 +65,27 @@ interface OverviewTabProps {
   onUnauth: () => void;
 }
 
+function pctDelta(curr: number, prev: number): number {
+  if (prev === 0) return curr > 0 ? 100 : 0;
+  return Math.round(((curr - prev) / prev) * 100);
+}
+
 export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const parsed = useMemo(() => parsePeriodFromSearchParams(searchParams), [searchParams]);
+
+  const customRange: CustomRange | undefined =
+    parsed.preset === "custom" && (parsed.from || parsed.to)
+      ? { from: parsed.from, to: parsed.to }
+      : undefined;
+
+  const resolved = useMemo(
+    () => resolvePeriod(parsed.preset, customRange),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [parsed.preset, parsed.from, parsed.to],
+  );
+  const grain: ResolvedGrain = effectiveGrain(resolved, parsed.grain);
+
   const [data, setData] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
@@ -53,7 +94,13 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
     let cancelled = false;
     setLoading(true);
     setErr(null);
-    opsGet<OverviewData>("/ops-overview")
+    opsGet<OverviewData>("/ops-overview", {
+      from: resolved.from,
+      to: resolved.to,
+      prevFrom: resolved.prevFrom ?? undefined,
+      prevTo: resolved.prevTo ?? undefined,
+      grain,
+    })
       .then((d) => {
         if (!cancelled) setData(d);
       })
@@ -68,11 +115,11 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
     return () => {
       cancelled = true;
     };
-  }, [refreshNonce, onUnauth]);
+  }, [refreshNonce, onUnauth, resolved.from, resolved.to, resolved.prevFrom, resolved.prevTo, grain]);
 
   const sparklines = useMemo(() => {
     if (!data) return null;
-    const pick = (key: keyof OverviewData["timeseries"][number]) =>
+    const pick = (key: "submissions" | "completions" | "views" | "shares" | "bookings") =>
       data.timeseries.map((t) => Number(t[key] ?? 0));
     return {
       submissions: pick("submissions"),
@@ -85,27 +132,47 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
 
   const deltas = useMemo(() => {
     if (!data) return null;
-    const halfA = (arr: number[]) => arr.slice(0, Math.floor(arr.length / 2)).reduce((a, b) => a + b, 0);
-    const halfB = (arr: number[]) => arr.slice(Math.floor(arr.length / 2)).reduce((a, b) => a + b, 0);
-    const pct = (arr: number[]) => {
-      const a = halfA(arr);
-      const b = halfB(arr);
-      if (a === 0) return b > 0 ? 100 : 0;
-      return Math.round(((b - a) / a) * 100);
-    };
-    if (!sparklines) return null;
+    const prev = data.kpis_prev;
+    if (!prev) {
+      return {
+        submissions: null,
+        completions: null,
+        views: null,
+        shares: null,
+        emails: null,
+        bookings: null,
+      } as Record<string, number | null>;
+    }
     return {
-      submissions: pct(sparklines.submissions),
-      completions: pct(sparklines.completions),
-      views: pct(sparklines.views),
-      shares: pct(sparklines.shares),
-      bookings: pct(sparklines.bookings),
-    };
-  }, [data, sparklines]);
+      submissions: pctDelta(data.kpis.submissions, prev.submissions),
+      completions: pctDelta(data.kpis.completed, prev.completed),
+      views: pctDelta(data.kpis.views, prev.views),
+      shares: pctDelta(data.kpis.shares, prev.shares),
+      emails: pctDelta(data.kpis.emails, prev.emails),
+      bookings: pctDelta(data.kpis.bookings, prev.bookings),
+    } as Record<string, number | null>;
+  }, [data]);
 
-  if (loading) {
+  const handlePickerChange = (next: { preset: PeriodPreset; custom?: CustomRange; grain: Grain }) => {
+    const updated = periodToSearchParams(next.preset, next.custom, next.grain);
+    const sp = new URLSearchParams(searchParams);
+    sp.delete("period");
+    sp.delete("from");
+    sp.delete("to");
+    sp.delete("grain");
+    for (const [k, v] of Object.entries(updated)) sp.set(k, v);
+    setSearchParams(sp, { replace: true });
+  };
+
+  const rangeLabel = data?.range?.label ?? resolved.label;
+
+  const timeseries = data?.timeseries ?? [];
+  const tickFormatter = (b: string) => formatBucketLabel(b, grain);
+
+  if (loading && !data) {
     return (
       <div className="space-y-6">
+        <div className="h-10 rounded-lg border border-[#22332F] bg-[#1A2B2A] animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-32 rounded-xl border border-[#22332F] bg-[#1A2B2A] animate-pulse" />
@@ -120,24 +187,41 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
   }
   if (err) {
     return (
-      <div className="rounded-md border border-[#C02B0A] bg-[#2A1414] px-4 py-3 text-[13px] text-[#EDF5EC]">
-        {err}
+      <div className="space-y-4">
+        <FilterRow
+          preset={parsed.preset}
+          custom={customRange}
+          grain={parsed.grain}
+          prevLabel={resolved.prevLabel}
+          onChange={handlePickerChange}
+        />
+        <div className="rounded-md border border-[#C02B0A] bg-[#2A1414] px-4 py-3 text-[13px] text-[#EDF5EC]">
+          {err}
+        </div>
       </div>
     );
   }
   if (!data || !sparklines || !deltas) return null;
 
-  const { kpis, timeseries, activity } = data;
+  const { kpis, activity } = data;
 
   return (
     <div className="space-y-6">
+      <FilterRow
+        preset={parsed.preset}
+        custom={customRange}
+        grain={parsed.grain}
+        prevLabel={resolved.prevLabel}
+        onChange={handlePickerChange}
+      />
+
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <KpiCard label="Submissions" value={kpis.submissions} delta={deltas.submissions} spark={sparklines.submissions} />
         <KpiCard label="Completed" value={kpis.completed} delta={deltas.completions} spark={sparklines.completions} />
         <KpiCard label="Views" value={kpis.views} delta={deltas.views} spark={sparklines.views} />
         <KpiCard label="Shares" value={kpis.shares} delta={deltas.shares} spark={sparklines.shares} />
-        <KpiCard label="Emails" value={kpis.emails} delta={null} spark={null} />
+        <KpiCard label="Emails" value={kpis.emails} delta={deltas.emails} spark={null} />
         <KpiCard label="Bookings" value={kpis.bookings} delta={deltas.bookings} spark={sparklines.bookings} />
       </div>
 
@@ -147,7 +231,7 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <h2 className="text-[11px] font-black tracking-[0.14em] uppercase text-[#EDF5EC]">
-                Activity, last 30 days
+                Activity, {rangeLabel.toLowerCase()}
               </h2>
               <p className="text-[12px] text-[#A1A9A0] mt-1">
                 Submissions · Completions · Views · Shares · Bookings
@@ -163,40 +247,47 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
             </div>
           </div>
           <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={timeseries} barGap={0} barCategoryGap={2}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#22332F" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  stroke="#6E7A72"
-                  fontSize={10}
-                  tickFormatter={(d) => String(d).slice(5)}
-                  axisLine={{ stroke: "#22332F" }}
-                  tickLine={false}
-                />
-                <YAxis
-                  stroke="#6E7A72"
-                  fontSize={10}
-                  allowDecimals={false}
-                  axisLine={{ stroke: "#22332F" }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "#0F1E1D",
-                    border: "1px solid #22332F",
-                    borderRadius: 6,
-                    fontSize: 11,
-                    color: "#EDF5EC",
-                  }}
-                  cursor={{ fill: "#22332F" }}
-                />
-                <Legend wrapperStyle={{ fontSize: 11, display: "none" }} />
-                {SERIES.map((s) => (
-                  <Bar key={s.key} dataKey={s.key} stackId="a" fill={s.color} radius={[0, 0, 0, 0]} />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
+            {timeseries.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-[12px] text-[#6E7A72]">
+                No activity in this window.
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={timeseries} barGap={0} barCategoryGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#22332F" vertical={false} />
+                  <XAxis
+                    dataKey={timeseries[0]?.bucket ? "bucket" : "date"}
+                    stroke="#6E7A72"
+                    fontSize={10}
+                    tickFormatter={tickFormatter}
+                    axisLine={{ stroke: "#22332F" }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    stroke="#6E7A72"
+                    fontSize={10}
+                    allowDecimals={false}
+                    axisLine={{ stroke: "#22332F" }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#0F1E1D",
+                      border: "1px solid #22332F",
+                      borderRadius: 6,
+                      fontSize: 11,
+                      color: "#EDF5EC",
+                    }}
+                    cursor={{ fill: "#22332F" }}
+                    labelFormatter={tickFormatter}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, display: "none" }} />
+                  {SERIES.map((s) => (
+                    <Bar key={s.key} dataKey={s.key} stackId="a" fill={s.color} radius={[0, 0, 0, 0]} />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </section>
 
@@ -255,7 +346,33 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
       </div>
 
       {/* Funnel */}
-      <Funnel kpis={kpis} />
+      <Funnel kpis={kpis} rangeLabel={rangeLabel} />
+    </div>
+  );
+}
+
+function FilterRow({
+  preset,
+  custom,
+  grain,
+  prevLabel,
+  onChange,
+}: {
+  preset: PeriodPreset;
+  custom: CustomRange | undefined;
+  grain: Grain;
+  prevLabel: string | null;
+  onChange: (next: { preset: PeriodPreset; custom?: CustomRange; grain: Grain }) => void;
+}) {
+  return (
+    <div className="rounded-xl border border-[#22332F] bg-[#1A2B2A] px-4 py-3">
+      <TimeRangePicker
+        preset={preset}
+        custom={custom}
+        grain={grain}
+        prevLabel={prevLabel}
+        onChange={onChange}
+      />
     </div>
   );
 }
@@ -356,8 +473,10 @@ function KindChip({ kind }: { kind: string }) {
 
 function Funnel({
   kpis,
+  rangeLabel,
 }: {
-  kpis: OverviewData["kpis"];
+  kpis: KpiBucket;
+  rangeLabel: string;
 }) {
   const stages = [
     { label: "Submitted", value: kpis.submissions, bg: "#225351", fg: "#EDF5EC" },
@@ -373,7 +492,7 @@ function Funnel({
         <h2 className="text-[11px] font-black tracking-[0.14em] uppercase text-[#EDF5EC]">
           Funnel, submitted through booked
         </h2>
-        <span className="text-[11px] text-[#A1A9A0]">Last 30 days</span>
+        <span className="text-[11px] text-[#A1A9A0]">{rangeLabel}</span>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-end">
         {stages.map((s, i) => {

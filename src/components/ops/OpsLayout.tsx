@@ -1,10 +1,13 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { opsAuth } from "@/lib/opsClient";
+import { relativeTime } from "@/lib/relativeTime";
+import { OpsNotificationBell } from "./OpsNotificationBell";
 
 interface OpsLayoutProps {
   onSignOut: () => void;
   lastRefresh: Date | null;
   onRefresh: () => void;
+  refreshNonce: number;
   active: string;
   onTabChange: (tab: string) => void;
   children: ReactNode;
@@ -21,16 +24,7 @@ const TABS: Array<{ id: string; label: string; icon: string }> = [
   { id: "health", label: "Health", icon: "♥" },
 ];
 
-function relativeTime(date: Date | null): string {
-  if (!date) return "never";
-  const diff = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (diff < 5) return "just now";
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  return `${Math.floor(diff / 3600)}h ago`;
-}
-
-export function OpsLayout({ onSignOut, lastRefresh, onRefresh, active, onTabChange, children }: OpsLayoutProps) {
+export function OpsLayout({ onSignOut, lastRefresh, onRefresh, refreshNonce, active, onTabChange, children }: OpsLayoutProps) {
   const [, force] = useState(0);
   // Re-render relative time every 30s.
   useEffect(() => {
@@ -115,14 +109,7 @@ export function OpsLayout({ onSignOut, lastRefresh, onRefresh, active, onTabChan
             Refresh
           </button>
 
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="relative inline-flex items-center justify-center w-9 h-9 rounded-lg border border-[#22332F] bg-[#1A2B2A] text-[#EDF5EC] hover:bg-[#22332F] transition-colors"
-          >
-            <span aria-hidden>🔔</span>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#BF461A]" />
-          </button>
+          <OpsNotificationBell refreshNonce={refreshNonce} />
         </header>
 
         {/* Body */}

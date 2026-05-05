@@ -1,3 +1,5 @@
+import { normalizeFirmName } from "./magnetSlug";
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Heuristic scoring for the V10 microsite. CALIBRATED v2 (post Apr 2026).
 //
@@ -131,6 +133,48 @@ function ensureVariance(scores: number[]): number[] {
     Math.max(8, Math.min(95, s + (NUDGES[i] ?? 0))),
   );
   return adjusted;
+}
+
+// ─── Mabbly demo boost ───────────────────────────────────────────────────────
+// When a submission resolves to Mabbly itself (slug or extracted company
+// name), we render a curated "what a fully-instrumented RROS firm looks
+// like" profile instead of letting the live scoring drag down the demo.
+// The shape is intentionally not flat-strong: Dead Zone (Orbit 03) sits
+// at the bottom of the high band and Cadence is the cleanest, so the
+// page reads as a credible top-tier firm rather than a 100/100 marketing
+// gimmick. This is the only firm with a hardcoded boost.
+const MABBLY_DEMO: OrbitScores = (() => {
+  const perOrbit = [92, 88, 74, 90, 85];
+  const overall = Math.round(perOrbit.reduce((s, n) => s + n, 0) / perOrbit.length);
+  return {
+    perOrbit,
+    overall,
+    bandPerOrbit: perOrbit.map(bandFor),
+    bandOverall: bandFor(overall),
+  };
+})();
+
+function isMabblyContext(
+  slug: string | null | undefined,
+  companyName: string | null | undefined,
+): boolean {
+  if (normalizeFirmName(slug ?? "") === "mabbly") return true;
+  if (normalizeFirmName(companyName ?? "") === "mabbly") return true;
+  return false;
+}
+
+/**
+ * Apply the Mabbly demo override to a score result. Pure pass-through
+ * for any non-Mabbly firm — this is the only branding override in the
+ * scoring layer.
+ */
+export function applyDemoBoost(
+  scores: OrbitScores,
+  slug: string | null | undefined,
+  companyName: string | null | undefined,
+): OrbitScores {
+  if (isMabblyContext(slug, companyName)) return MABBLY_DEMO;
+  return scores;
 }
 
 export function computeOrbitScores(orbits: (string | null | undefined)[]): OrbitScores {
