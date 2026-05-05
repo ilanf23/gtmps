@@ -1,13 +1,11 @@
-## Goal
-Make the "Dormant · $400K" pill on the hero orbit graphic smaller so it sits more proportionally next to the orbiting red planet.
+Save the mobile optimization research report as a markdown file in the project docs.
 
-## Change
-File: `src/components/discover/DiscoverHero.tsx` (lines ~823–838)
+## File to create
 
-Reduce the pill's geometry and text size:
-- `<rect>`: `width` 148 → 118, `height` 30 → 24, `y` -15 → -12, `rx` 15 → 12
-- `<text>`: `fontSize` 13 → 10.5, `x` 14 → 11, `y` 4 → 3
+`docs/mobile-optimization-research.md` — the full report content provided by the user, saved verbatim as Markdown.
 
-This keeps the same style (cream fill, rust border, Inter Tight 600) but ~20% smaller overall, matching the scale shown in the user's screenshot reference.
+## Notes
 
-No other elements change. The orbit animation and label tracking ref stay intact.
+- Placed under `docs/` alongside existing reference docs (`07-design-system.md`, `ANALYTICS_PAGE.md`, etc.) for discoverability.
+- No code changes, no other files touched.
+- Filename uses kebab-case to match neighbors like `edith-email-capture-strategy.md`.
