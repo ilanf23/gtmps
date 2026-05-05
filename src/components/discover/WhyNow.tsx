@@ -421,7 +421,7 @@ export default function WhyNow() {
         .wn-stat-box {
           background: linear-gradient(140deg, #FFFDF6 0%, #FAF3DF 100%);
           border: 1px solid rgba(167, 144, 20, 0.28);
-          border-radius: 14px;
+          border-radius: 16px;
           padding: 24px 22px 22px;
           position: relative;
           overflow: hidden;

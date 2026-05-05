@@ -435,7 +435,7 @@ export default function Results() {
         .proof-section .featured-card {
           background: var(--cream-card);
           border: 1px solid rgba(15, 30, 29, 0.10);
-          border-radius: 3px;
+          border-radius: 16px;
           padding: 0;
           position: relative;
           color: var(--depth);
@@ -845,7 +845,7 @@ export default function Results() {
         .proof-section .case-card {
           background: var(--cream-card);
           border: 1px solid rgba(15, 30, 29, 0.10);
-          border-radius: 2px;
+          border-radius: 16px;
           padding: 22px 22px 18px;
           display: flex;
           flex-direction: column;

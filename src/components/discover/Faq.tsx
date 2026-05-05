@@ -282,7 +282,7 @@ export default function Faq() {
         .faq-item {
           background: #fdfbf6;
           border: 1px solid rgba(15, 30, 29, 0.1);
-          border-radius: 12px;
+          border-radius: 16px;
           overflow: hidden;
           position: relative;
           transition: border-color 250ms, background 250ms;

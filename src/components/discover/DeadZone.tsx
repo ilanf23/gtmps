@@ -152,7 +152,7 @@ export default function DeadZone() {
         .dz-calc {
           background: #FCFAF4;
           border: 1px solid #E5E0CF;
-          border-radius: 4px;
+          border-radius: 16px;
           display: grid;
           grid-template-columns: 1fr 1px 1fr;
           align-items: stretch;

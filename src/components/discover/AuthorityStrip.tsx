@@ -78,7 +78,7 @@ export default function AuthorityStrip() {
         .au-card {
           background: #1A2B2A;
           border: 1px solid rgba(213, 222, 212, 0.10);
-          border-radius: 14px;
+          border-radius: 16px;
           padding: clamp(24px, 2.4vw, 32px);
           display: flex;
           flex-direction: column;
@@ -197,7 +197,7 @@ export default function AuthorityStrip() {
         .au-stat {
           background: rgba(15, 30, 29, 0.55);
           border: 1px solid rgba(213, 222, 212, 0.08);
-          border-radius: 8px;
+          border-radius: 16px;
           padding: 14px 16px;
           display: flex;
           align-items: baseline;

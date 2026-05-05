@@ -69,38 +69,38 @@ const StickyCTA = () => {
         <a
           href="#hero"
           onClick={handleAddYourFirmClick}
-          className="pointer-events-auto rounded-full font-sans"
+          className="pointer-events-auto rounded-full"
           style={{
-            background: "rgba(251,248,244,0.96)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid #D5DEC2",
-            color: "#0F1E1D",
+            background: "#BF461A",
+            border: "2px solid #BF461A",
+            color: "#F8F2E5",
             height: 56,
             padding: "0 28px",
-            fontSize: 14,
-            fontWeight: 600,
-            letterSpacing: "0.04em",
+            fontFamily: "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
+            fontSize: 12,
+            fontWeight: 900,
+            letterSpacing: "0.10em",
+            textTransform: "uppercase",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             textDecoration: "none",
-            boxShadow: "0 8px 24px -12px rgba(15,30,29,0.18)",
+            boxShadow: "0 10px 28px -10px rgba(191,70,26,0.45)",
             pointerEvents: show ? "auto" : "none",
-            transition: "color 200ms ease, background 200ms ease, border-color 200ms ease, box-shadow 200ms ease",
+            transition: "color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), background 300ms cubic-bezier(0.13, 0.28, 0.3, 1), border-color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), box-shadow 300ms cubic-bezier(0.13, 0.28, 0.3, 1), transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1)",
             maxWidth: "calc(100% - 16px)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#0F1E1D";
-            e.currentTarget.style.background = "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)";
-            e.currentTarget.style.borderColor = "#A8923A";
-            e.currentTarget.style.boxShadow = "0 10px 28px -10px rgba(168, 146, 58,0.45)";
+            e.currentTarget.style.background = "#0F1E1D";
+            e.currentTarget.style.borderColor = "#0F1E1D";
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 14px 32px -10px rgba(15,30,29,0.45)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#0F1E1D";
-            e.currentTarget.style.background = "rgba(251,248,244,0.96)";
-            e.currentTarget.style.borderColor = "#D5DEC2";
-            e.currentTarget.style.boxShadow = "0 8px 24px -12px rgba(15,30,29,0.18)";
+            e.currentTarget.style.background = "#BF461A";
+            e.currentTarget.style.borderColor = "#BF461A";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 10px 28px -10px rgba(191,70,26,0.45)";
           }}
         >
           {ADD_YOUR_FIRM_LABEL}
@@ -191,7 +191,7 @@ const Discover = () => {
               gap: 64,
               alignItems: "center",
               border: "1px solid rgba(15, 30, 29, 0.08)",
-              borderRadius: 8,
+              borderRadius: 16,
               padding: "48px 52px",
               background: "#FBF8F4",
               boxShadow: "0 30px 60px -20px rgba(0,0,0,0.35)",

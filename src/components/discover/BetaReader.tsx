@@ -1,6 +1,17 @@
+import { useState } from 'react';
 import { scrollToHero } from '@/lib/scrollToHero';
 
 export default function BetaReader() {
+  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setSubmitted(true);
+    scrollToHero();
+  };
+
   return (
     <section
       id="beta-reader"
@@ -106,7 +117,9 @@ export default function BetaReader() {
           font-size: 17px;
           letter-spacing: -0.01em;
           color: #EDF5EC;
-          padding: 17px 19px;
+          padding: 0 19px;
+          height: 56px;
+          box-sizing: border-box;
           background: rgba(237, 245, 236, 0.06);
           border: 1.5px solid rgba(237, 245, 236, 0.18);
           border-radius: 10px;
@@ -124,28 +137,32 @@ export default function BetaReader() {
         .ea-submit {
           position: relative;
           overflow: hidden;
-          font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+          font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', system-ui, sans-serif;
           font-weight: 900;
-          font-size: 16px;
-          letter-spacing: 0.05em;
+          font-size: 12px;
+          letter-spacing: 0.10em;
           text-transform: uppercase;
-          color: #EDF5EC;
+          color: #F8F2E5;
           background: #BF461A;
-          padding: 17px 26px;
-          border-radius: 10px;
-          border: none;
+          padding: 0 26px;
+          height: 56px;
+          box-sizing: border-box;
+          border-radius: 999px;
+          border: 2px solid #BF461A;
           cursor: pointer;
-          box-shadow: 0 6px 16px -6px rgba(191, 70, 26, 0.55);
+          box-shadow: 0 10px 28px -10px rgba(191, 70, 26, 0.45);
           display: inline-flex;
           align-items: center;
           gap: 10px;
           white-space: nowrap;
-          transition: background 200ms, color 200ms, transform 200ms;
+          transition: background 300ms cubic-bezier(0.13, 0.28, 0.3, 1), border-color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1), box-shadow 300ms cubic-bezier(0.13, 0.28, 0.3, 1);
         }
         .ea-submit:hover {
-          background: #EDF5EC;
-          color: #0F1E1D;
+          background: #0F1E1D;
+          border-color: #0F1E1D;
+          color: #F8F2E5;
           transform: translateY(-1px);
+          box-shadow: 0 14px 32px -10px rgba(15,30,29,0.45);
         }
         .ea-submit .ea-arrow {
           display: inline-block;
@@ -175,6 +192,55 @@ export default function BetaReader() {
           color: #FFBA1A;
           margin: 0 8px;
           opacity: 0.85;
+        }
+
+        .ea-success {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 22px 24px;
+          background: rgba(41, 207, 157, 0.08);
+          border: 1px solid rgba(41, 207, 157, 0.45);
+          border-radius: 12px;
+          animation: eaSuccessIn 480ms cubic-bezier(0.13, 0.28, 0.3, 1) both;
+        }
+        .ea-success-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .ea-success-check {
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          background: #29CF9D;
+          color: #0F1E1D;
+          font-weight: 900;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          flex-shrink: 0;
+        }
+        .ea-success-headline {
+          font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+          font-weight: 800;
+          font-size: 18px;
+          letter-spacing: -0.01em;
+          color: #EDF5EC;
+          margin: 0;
+        }
+        .ea-success-body {
+          font-family: 'DM Mono', 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+          font-size: 13px;
+          letter-spacing: 0.02em;
+          line-height: 1.5;
+          color: rgba(237, 245, 236, 0.78);
+          margin: 0;
+        }
+        @keyframes eaSuccessIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes eaBandIn {
@@ -225,32 +291,45 @@ export default function BetaReader() {
           </h2>
         </div>
 
-        <form
-          className="ea-form"
-          action="mailto:beta@mabbly.com"
-          onSubmit={(e) => {
-            e.preventDefault();
-            scrollToHero();
-          }}
-        >
-          <div className="ea-input-row">
-            <input
-              type="email"
-              name="email"
-              className="ea-input"
-              placeholder="you@firm.com"
-              aria-label="Work email"
-              autoComplete="email"
-            />
-            <button type="submit" className="ea-submit" data-cta="add-your-firm">
-              Add Your Firm
-              <span className="ea-arrow" aria-hidden>→</span>
-            </button>
+        {submitted ? (
+          <div className="ea-success" role="status" aria-live="polite">
+            <div className="ea-success-row">
+              <span className="ea-success-check" aria-hidden>✓</span>
+              <h3 className="ea-success-headline">You're on the list.</h3>
+            </div>
+            <p className="ea-success-body">
+              We'll review your application and respond within 48 hours. Add your firm's
+              website above to get your personalized MAP while you wait.
+            </p>
           </div>
-          <p className="ea-trust">
-            Free<span className="ea-sep">·</span>By application<span className="ea-sep">·</span>48hr decisions
-          </p>
-        </form>
+        ) : (
+          <form
+            className="ea-form"
+            action="mailto:beta@mabbly.com"
+            onSubmit={handleSubmit}
+          >
+            <div className="ea-input-row">
+              <input
+                type="email"
+                name="email"
+                className="ea-input"
+                placeholder="you@firm.com"
+                aria-label="Work email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit" className="ea-submit" data-cta="add-your-firm">
+                Add Your Firm
+                <span className="ea-arrow" aria-hidden>→</span>
+              </button>
+            </div>
+            <p className="ea-trust">
+              Free<span className="ea-sep">·</span>By application<span className="ea-sep">·</span>48hr decisions
+            </p>
+          </form>
+        )}
       </div>
     </section>
   );

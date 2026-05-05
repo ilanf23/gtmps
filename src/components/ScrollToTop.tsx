@@ -22,7 +22,7 @@ const ScrollToTop = () => {
       params.get("utm_anchor") === "diagnostic";
     if (isColdDiagnostic) return;
 
-    window.scrollTo({ top: 0, left: 0 });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }, [pathname, search, hash, navType]);
 
   return null;

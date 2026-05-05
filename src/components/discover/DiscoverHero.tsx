@@ -387,14 +387,15 @@ export default function DiscoverHero() {
           background: rgba(255,255,255,0.85);
           border: 1px solid rgba(15,30,29,0.22);
           border-radius: 8px;
-          padding: 14px 16px;
+          padding: 0 16px;
           font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
           font-size: 16px;
           letter-spacing: -0.02em;
           color: var(--kl-depth);
           outline: none;
           transition: border-color 250ms ease, box-shadow 250ms ease, background 250ms ease;
-          min-height: 54px;
+          height: 56px;
+          box-sizing: border-box;
         }
         .kl-input::placeholder { color: rgba(15,30,29,0.42); }
         .kl-input:focus {
@@ -404,20 +405,22 @@ export default function DiscoverHero() {
         }
         .kl-submit {
           position: relative;
-          background: var(--kl-care);
-          color: var(--kl-elevation);
-          font-family: 'Inter Tight', 'Arial Black', sans-serif;
+          background: #BF461A;
+          color: #F8F2E5;
+          font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', sans-serif;
           font-weight: 900;
-          font-size: 16px;
-          letter-spacing: 0.02em;
+          font-size: 12px;
+          letter-spacing: 0.10em;
           text-transform: uppercase;
-          border: none;
+          border: 2px solid #BF461A;
           border-radius: 999px;
-          padding: 0 28px;
-          min-height: 54px;
+          padding: 0 26px;
+          height: 56px;
+          box-sizing: border-box;
           cursor: pointer;
           overflow: hidden;
-          transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+          box-shadow: 0 10px 28px -10px rgba(191,70,26,0.45);
+          transition: background 300ms cubic-bezier(0.13, 0.28, 0.3, 1), border-color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1), box-shadow 300ms cubic-bezier(0.13, 0.28, 0.3, 1);
           white-space: nowrap;
           display: inline-flex;
           align-items: center;
@@ -440,8 +443,10 @@ export default function DiscoverHero() {
           pointer-events: none;
         }
         .kl-submit:hover:not(:disabled) {
-          background: var(--kl-depth);
+          background: #0F1E1D;
+          border-color: #0F1E1D;
           transform: translateY(-1px);
+          box-shadow: 0 14px 32px -10px rgba(15,30,29,0.45);
         }
         .kl-submit:hover:not(:disabled) .kl-submit-arrow {
           transform: translateX(6px);

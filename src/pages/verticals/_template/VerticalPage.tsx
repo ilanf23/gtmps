@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
+import Footer from "@/components/Footer";
 import { CSS } from "./css";
 import type { VerticalConfig, VerticalSlug, SmallStat, BreakBlock } from "./configs";
 
@@ -834,65 +835,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="cfooter">
-        <div className="container">
-          <div className="footer-grid">
-            <div>
-              <h4>For Your Firm</h4>
-              <ul>
-                {VERTICALS_LIST.map((v) => (
-                  <li key={v.href}>
-                    <a href={v.href}>{v.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4>Across Mabbly</h4>
-              <ul>
-                <li>
-                  <a href="https://discover.mabbly.com">discover.mabbly.com</a>
-                  <div className="footer-text">Research + the book</div>
-                </li>
-                <li>
-                  <a href="https://mabbly.com">mabbly.com →</a>
-                  <div className="footer-text">Agency. GTM for PS firms</div>
-                </li>
-                <li>
-                  <a href="https://mabbly.ai">mabbly.ai →</a>
-                  <div className="footer-text">Product. Activate dormant at scale</div>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4>Listen</h4>
-              <ul>
-                <li>
-                  <a href="https://www.youtube.com/@GTMforPS">The Podcast →</a>
-                  <div className="footer-text">500 practitioner interviews on YouTube</div>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <div className="footer-logo">
-              mabbly<span className="dot-care">.</span>
-            </div>
-            <div className="footer-tag">GTM for the market you already own</div>
-            <div className="footer-legal">
-              <a href="/about">About</a>
-              <span> / </span>
-              <a href="#">Privacy</a>
-              <span> / </span>
-              <a href="#">Terms</a>
-              <span> / </span>
-              <span>© 2026 Mabbly LLC</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

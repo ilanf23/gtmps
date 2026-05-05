@@ -254,7 +254,7 @@ export default function TheDecision() {
         .td-comparator {
           position: relative;
           height: clamp(440px, 60vh, 600px);
-          border-radius: 6px;
+          border-radius: 16px;
           overflow: hidden;
           touch-action: pan-y;
           user-select: none;
@@ -524,7 +524,7 @@ export default function TheDecision() {
 
           .td-card {
             position: relative;
-            border-radius: 6px;
+            border-radius: 16px;
             overflow: hidden;
             padding: 36px 28px 32px;
             min-height: 260px;

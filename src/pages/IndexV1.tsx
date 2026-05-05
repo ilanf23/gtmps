@@ -9,7 +9,7 @@ import AuthorsSection from "@/components/v1/AuthorsSection";
 
 import ResultsSection from "@/components/v1/ResultsSection";
 
-import Footer from "@/components/v1/Footer";
+import Footer from "@/components/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const IndexV1 = () => {

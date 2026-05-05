@@ -134,13 +134,14 @@ export const CSS = `
 }
 .cpage .hero-form input:focus { border-color: var(--care); box-shadow: 0 0 0 3px rgba(191, 70, 26, 0.10); }
 .cpage .trust-line {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.10em;
-  text-transform: uppercase; color: var(--muted); line-height: 1.6;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.10em;
+  text-transform: uppercase; font-weight: 600;
+  color: var(--depth-soft); line-height: 1.6;
   max-width: 520px;
 }
-.cpage .trust-line .dot { color: var(--muted-soft); margin: 0 6px; }
-.cpage .trust-line.dark { color: var(--ink-soft); }
-.cpage .trust-line.dark .dot { color: rgba(248, 242, 229, 0.30); }
+.cpage .trust-line .dot { color: var(--care); margin: 0 6px; }
+.cpage .trust-line.dark { color: var(--ink-medium); }
+.cpage .trust-line.dark .dot { color: var(--care-bright); }
 
 .cpage .hero-right { display: flex; justify-content: center; }
 .cpage .profile-stage { position: relative; width: 100%; max-width: 624px; }
@@ -402,9 +403,7 @@ export const CSS = `
   background: var(--cream-card); border: 1px solid var(--cream-border); border-radius: 2px;
   padding: 26px 26px 22px;
   display: flex; flex-direction: column;
-  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
-.cpage .author-tile:hover { border-color: var(--depth-line); transform: translateY(-3px); box-shadow: 0 14px 32px -22px rgba(15,30,29,0.18); }
 .cpage .author-tile-strip { position: absolute; top: 0; left: 0; width: 56px; height: 2px; }
 .cpage .strip-purpose { background: var(--purpose); }
 .cpage .strip-care { background: var(--care); }

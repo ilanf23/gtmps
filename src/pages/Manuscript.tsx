@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Footer from "@/components/Footer";
 
 type Chapter = { num: string; title: string; meta: string; body: string };
 
@@ -64,11 +65,11 @@ export default function Manuscript() {
   }, []);
 
   return (
+    <>
     <main
       className="px-6 md:px-10"
       style={{
         background: "#EDF5EC",
-        minHeight: "100vh",
         paddingTop: 96,
         paddingBottom: 144,
         fontFamily: "'Inter Tight', sans-serif",
@@ -251,5 +252,7 @@ export default function Manuscript() {
         </div>
       </article>
     </main>
+    <Footer />
+    </>
   );
 }

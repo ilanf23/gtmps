@@ -16,20 +16,32 @@ export default function FinalCta() {
         @media (min-width: 768px) {
           .fc-section { padding: 160px 40px; }
         }
-        /* Primary conversion CTA - reserved Burnt Orange per brand spec. */
+        /* Primary conversion CTA - matches the top-nav pill. */
         .fc-btn-primary {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
           background: #BF461A;
-          color: #FFFFFF;
-          border-radius: 2px;
-          padding: 13px 32px;
-          font-family: 'Inter Tight', system-ui, sans-serif;
+          color: #F8F2E5;
+          border: 2px solid #BF461A;
+          border-radius: 999px;
+          padding: 14px 28px;
+          font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif;
+          font-weight: 900;
           font-size: 12px;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.10em;
+          text-transform: uppercase;
           text-decoration: none;
-          transition: background 0.18s;
-          display: inline-block;
+          cursor: pointer;
+          box-shadow: 0 10px 28px -10px rgba(191,70,26,0.45);
+          transition: background 300ms cubic-bezier(0.13, 0.28, 0.3, 1), border-color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1), box-shadow 300ms cubic-bezier(0.13, 0.28, 0.3, 1);
         }
-        .fc-btn-primary:hover { background: #A33A14; }
+        .fc-btn-primary:hover {
+          background: #0F1E1D;
+          border-color: #0F1E1D;
+          transform: translateY(-1px);
+          box-shadow: 0 14px 32px -10px rgba(15,30,29,0.45);
+        }
         .fc-btn-secondary {
           background: transparent;
           border: 1px solid rgba(168, 146, 58,0.35);

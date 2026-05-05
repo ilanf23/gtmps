@@ -88,12 +88,13 @@ export default function HeroUrlField({
         .huf-input {
           flex: 1;
           min-width: 0;
-          padding: 14px 16px;
+          padding: 0 16px;
           font-family: 'Inter Tight', sans-serif;
           font-size: 15px;
           border-radius: 8px;
           outline: none;
-          min-height: 52px;
+          height: 56px;
+          box-sizing: border-box;
           transition: border-color 180ms ease, background 180ms ease;
         }
         .huf-input--dark {
@@ -142,7 +143,8 @@ export default function HeroUrlField({
           justify-content: center;
           gap: 8px;
           padding: 0 22px;
-          min-height: 52px;
+          height: 56px;
+          box-sizing: border-box;
           font-family: 'Inter Tight', sans-serif;
           font-weight: 600;
           font-size: 14px;
@@ -184,7 +186,6 @@ export default function HeroUrlField({
         .huf-foot--light { color: rgba(28,16,8,0.55); }
         @media (max-width: 640px) {
           .huf-row { flex-direction: column; }
-          .huf-go { padding: 14px 22px; }
         }
       `}</style>
 

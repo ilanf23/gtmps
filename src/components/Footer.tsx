@@ -144,21 +144,26 @@ const Footer = () => {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 11px 20px;
+          padding: 12px 24px;
           background: var(--mf-rust);
-          color: var(--mf-cream);
-          font-family: var(--mf-display);
-          font-weight: 600;
-          font-size: 14px;
-          letter-spacing: 0.02em;
+          color: #F8F2E5;
+          font-family: 'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif;
+          font-weight: 900;
+          font-size: 12px;
+          letter-spacing: 0.10em;
+          text-transform: uppercase;
           text-decoration: none;
-          border-radius: 2px;
-          border: 1px solid var(--mf-rust);
-          transition: background 0.25s var(--mf-ease), transform 0.25s var(--mf-ease);
+          border-radius: 999px;
+          border: 2px solid var(--mf-rust);
+          box-shadow: 0 10px 28px -10px rgba(191,70,26,0.45);
+          transition: background 0.3s var(--mf-ease), border-color 0.3s var(--mf-ease), transform 0.3s var(--mf-ease), box-shadow 0.3s var(--mf-ease);
         }
         .mf-cta:hover {
-          background: var(--mf-rust-bright);
+          background: #F8F2E5;
+          border-color: #F8F2E5;
+          color: var(--mf-ink);
           transform: translateY(-1px);
+          box-shadow: 0 14px 32px -10px rgba(245,242,229,0.35);
         }
         .mf-cta-arrow {
           display: inline-block;
@@ -172,13 +177,6 @@ const Footer = () => {
           letter-spacing: 0.18em;
           text-transform: uppercase;
           color: var(--mf-cream-low);
-          margin: 0;
-        }
-
-        /* DIVIDER */
-        .mf-div {
-          height: 1px;
-          background: var(--mf-line);
           margin: 0;
         }
 
@@ -384,8 +382,6 @@ const Footer = () => {
             </a>
           </div>
         </div>
-
-        <div className="mf-div" aria-hidden />
 
         {/* MID ROW - properties + sitemap */}
         <div className="mf-mid">
