@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useVerticalFlow } from '@/hooks/useVerticalFlow';
+import { supabase } from '@/integrations/supabase/client';
+import { trackMagnetEvent } from '@/lib/magnetAnalytics';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Four-stage cinematic wait theater.
@@ -24,6 +26,10 @@ interface Props {
   enrichmentReady?: boolean;
   /** Optional vertical override; otherwise read from ?vertical=<slug>. */
   vertical?: string | null;
+  /** Slug for telemetry + email capture fallback. */
+  slug?: string | null;
+  /** Optional retry handler. When provided, the soft-timeout surface shows a Try again button. */
+  onRetry?: () => void;
 }
 
 type Stage = {
@@ -86,6 +92,10 @@ const STAGES: Stage[] = [
 ];
 
 const TARGET_SECONDS = 90;
+// Soft timeout: when this elapses without the breakdown landing, surface
+// a recoverable "still working" panel with retry + email fallback. The
+// hard timeout in MagnetSite (120s) takes over after this if needed.
+const SOFT_TIMEOUT_SECONDS = 100;
 
 const formatTimer = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -110,10 +120,55 @@ export default function MagnetWaitTheater({
   companyName,
   enrichmentReady = false,
   vertical,
+  slug,
+  onRetry,
 }: Props) {
   const reduced = useReducedMotion();
   const [elapsed, setElapsed] = useState(0);
   const { flow } = useVerticalFlow(vertical);
+  const [softTimeoutLogged, setSoftTimeoutLogged] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const softTimedOut = !enrichmentReady && elapsed >= SOFT_TIMEOUT_SECONDS;
+
+  useEffect(() => {
+    if (softTimedOut && !softTimeoutLogged && slug) {
+      setSoftTimeoutLogged(true);
+      trackMagnetEvent(slug, 'wait_soft_timeout', {
+        elapsed_sec: Math.round(elapsed),
+        vertical: vertical ?? null,
+      });
+    }
+  }, [softTimedOut, softTimeoutLogged, slug, elapsed, vertical]);
+
+  const submitEmailFallback = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!slug) return;
+    const trimmed = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setEmailError('Please enter a valid email.');
+      return;
+    }
+    setEmailSubmitting(true);
+    setEmailError(null);
+    try {
+      const { error } = await supabase.from('magnet_map_emails').insert({
+        slug,
+        email: trimmed,
+        vertical: vertical ?? null,
+      });
+      if (error) throw error;
+      trackMagnetEvent(slug, 'wait_email_fallback', { vertical: vertical ?? null });
+      setEmailSent(true);
+    } catch (err) {
+      setEmailError('Could not save. Please try again.');
+    } finally {
+      setEmailSubmitting(false);
+    }
+  };
 
   // ── Tick the elapsed counter every 250ms ────────────────────────────────
   useEffect(() => {
@@ -239,6 +294,68 @@ export default function MagnetWaitTheater({
       <p className="mt-10 text-[10px] uppercase tracking-[0.28em] text-[#0F1E1D]/40 text-center">
         This usually takes 60 to 90 seconds
       </p>
+
+      {softTimedOut && (
+        <aside
+          role="status"
+          aria-live="polite"
+          className="max-w-2xl w-full mx-auto px-2 sm:px-4 mt-8"
+        >
+          <div className="border border-[#A8923A]/40 bg-white p-5 sm:p-6 text-left">
+            <p className="text-[10px] uppercase tracking-[0.28em] font-semibold text-[#A8923A]">
+              Still working
+            </p>
+            <h3 className="mt-1.5 text-base sm:text-lg font-serif text-[#0F1E1D]">
+              This site is taking a little longer than usual.
+            </h3>
+            <p className="mt-2 text-xs sm:text-sm text-[#0F1E1D]/70 leading-relaxed">
+              We're still reading and scoring. You can keep waiting, retry now,
+              or have us email you the moment your map is ready.
+            </p>
+
+            <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:items-center">
+              {onRetry && (
+                <button
+                  type="button"
+                  onClick={onRetry}
+                  className="h-10 px-5 text-[12px] uppercase tracking-[0.18em] font-semibold bg-[#A8923A] text-white rounded-full"
+                >
+                  Try again
+                </button>
+              )}
+              {!emailSent && (
+                <form onSubmit={submitEmailFallback} className="flex-1 flex gap-2">
+                  <input
+                    type="email"
+                    inputMode="email"
+                    placeholder="you@firm.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={emailSubmitting}
+                    className="flex-1 h-10 px-3 border border-black/15 rounded-full text-sm bg-[#EDF5EC] focus:outline-none focus:border-[#A8923A]"
+                    aria-label="Email me when ready"
+                  />
+                  <button
+                    type="submit"
+                    disabled={emailSubmitting}
+                    className="h-10 px-5 text-[12px] uppercase tracking-[0.18em] font-semibold border border-[#0F1E1D]/30 text-[#0F1E1D] rounded-full disabled:opacity-50"
+                  >
+                    {emailSubmitting ? 'Saving' : 'Email me'}
+                  </button>
+                </form>
+              )}
+              {emailSent && (
+                <p className="text-xs text-[#0F1E1D]/70 italic">
+                  Got it. We'll email you when your map lands.
+                </p>
+              )}
+            </div>
+            {emailError && (
+              <p className="mt-2 text-xs text-[#BF461A]">{emailError}</p>
+            )}
+          </div>
+        </aside>
+      )}
     </div>
   );
 }
