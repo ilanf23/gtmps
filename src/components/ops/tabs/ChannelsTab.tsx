@@ -110,6 +110,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
   const [medium, setMedium] = useState<string>("post");
   const [campaign, setCampaign] = useState<string>("");
   const [saved, setSaved] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [savedChannels, setSavedChannels] = useState<
     Array<{ utm_source: string; utm_medium: string; utm_campaign: string }>
   >(() => {
@@ -212,6 +213,25 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
       }));
     return [...synthetic, ...apiRows];
   }, [data, savedChannels]);
+
+  const handleCopyRow = async (r: ChannelRow) => {
+    const base = origin() + (path.trim() || "/");
+    const url = buildUtmUrl(
+      base,
+      r.utm_source ?? "",
+      r.utm_medium ?? "",
+      r.utm_campaign ?? "",
+    );
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      /* ignore */
+    }
+    const key = `${r.utm_source ?? ""}|${r.utm_medium ?? ""}|${r.utm_campaign ?? ""}`;
+    setCopiedKey(key);
+    window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
+  };
 
   return (
     <div className="space-y-4">
@@ -370,6 +390,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
                   <th className="text-right px-2 py-1 font-medium">Book clicks</th>
                   <th className="text-right px-2 py-1 font-medium">Shares</th>
                   <th className="text-right px-2 py-1 font-medium">Feedback</th>
+                  <th className="text-right px-2 py-1 font-medium"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#22332F]">
@@ -405,6 +426,20 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
                       </td>
                       <td className="px-2 py-1 text-right text-[#EDF5EC]">
                         {r.feedback_submits}
+                      </td>
+                      <td className="px-2 py-1 text-right">
+                        {!untagged && (
+                          <button
+                            type="button"
+                            onClick={() => handleCopyRow(r)}
+                            className="inline-flex items-center rounded border border-[#22332F] bg-[#0F1E1D] px-2 h-6 text-[11px] text-[#A1A9A0] hover:text-[#FFBA1A] hover:border-[#FFBA1A] transition-colors"
+                          >
+                            {copiedKey ===
+                            `${r.utm_source ?? ""}|${r.utm_medium ?? ""}|${r.utm_campaign ?? ""}`
+                              ? "Copied"
+                              : "Copy"}
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
