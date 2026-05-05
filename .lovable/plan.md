@@ -1,77 +1,92 @@
-# Lock forbidden vocabulary into ESLint
-
 ## Goal
 
-The `enrich-magnet` system prompt (line 77) forbids four words in AI output: **underutilized, optimize, leverage, synergy**. Hand-written JSX bypasses that guardrail, so `SPRSittingOn.tsx` ("highest-leverage opportunity") and `AwardsGrid.tsx` ("systematic origination") slipped through. Add a static check so future regressions fail lint.
+Let you create custom referral links inside `/ops`, hand them out (LinkedIn DM, email, partner, etc.), and see exactly which **new maps** each link generated.
 
-## Key finding before coding
+Today the Channels tab already mints `?utm_source/medium/campaign` URLs, but those UTMs only get captured **after** someone lands on `/m/:slug`. They are NOT captured when a brand-new visitor lands on the **homepage**, types their firm URL, and creates a new map. That's the gap. Result: a referral link that drives a new map shows up as "untagged / direct" in Ops.
 
-`leverage` is used in **legitimate product surface names**, not just stray copy:
+## What you'll get
 
-- `src/components/magnet/v10/HighestLeverageMove.tsx` (entire component, css file, eyebrow text "09 · Your Highest Leverage Move")
-- `MagnetBreakdown.tsx` nav label "Leverage"
-- `MagnetWaitTheater.tsx` loading copy "Drafting your highest leverage move…"
-- `CompactCtaCard.tsx` "highest leverage move"
-- `ctaVariants.ts` "highest-leverage move"
-- `verticalFlow.ts` "highest leverage move"
+1. **Ops → Referrals tab** (new, replaces/augments today's "Channels" link builder):
+   - Build a referral link: pick a label (e.g. `adam-linkedin-dm`, `pepper-email-blast`), source, medium, campaign. Get a short URL like `discover.mabbly.com/?ref=adam-linkedin-dm` (or `/consulting?ref=...`).
+   - Table of all referral codes you've minted: clicks, maps created, conversion rate, last activity.
+   - Per-code drill-down: list of every map created via that link (firm URL, slug, created at, status, opened/booked).
+   - Copy button + QR code for each link.
 
-These are the canonical name for Section 09. Banning the bare word breaks the product. Two options for handling them:
+2. **One special case honored**: any link tagged `?ref=hi.com` (or whatever you set) is excluded from the Slack notification, matching the existing rule.
 
-1. **Recommended**: ban the words generally, but allow the exact phrase **"highest leverage move"** / **"highest-leverage move"** (case-insensitive) as the only sanctioned use of `leverage`. Anything else (e.g. "highest-leverage opportunity") fails.
-2. Ban the four words with zero exceptions. Forces a global rename of Section 09. Bigger surgery, not what the prompt is doing either (the prompt itself uses "highest-leverage move" at line 112).
-
-I will plan for option 1 unless you say otherwise.
-
-## Plan
-
-### 1. ESLint rule (`eslint.config.js`)
-
-Add a `no-restricted-syntax` rule keyed on `Literal` and `JSXText` nodes. Use a single regex per word so the message points at the offender.
+## How it works
 
 ```text
-/\b(synergy|synergies)\b/i                      → forbidden
-/\b(optimize|optimized|optimizing|optimization)\b/i → forbidden
-/\b(underutilized|underutilised)\b/i            → forbidden
-/\bleverage(?!\s*move|-move|d\s+move)\b/i       → forbidden EXCEPT in "leverage move" / "leveraged move"
+Step 1  You create code "adam-li-dm" in Ops
+        → row in new `magnet_referral_codes` table
+
+Step 2  Visitor clicks https://discover.mabbly.com/?ref=adam-li-dm
+        → landing page reads ?ref=, stores it in localStorage + sessionStorage
+          (first-touch, survives across pages until they submit)
+
+Step 3  Visitor types "acme.com" in hero, hits submit
+        → submitMagnetUrl() reads the stored ref + UTMs
+        → writes ref_code, utm_source/medium/campaign onto the
+          new magnet_submissions row
+
+Step 4  Ops → Referrals tab joins magnet_referral_codes ←→ magnet_submissions
+        → shows "adam-li-dm: 12 clicks, 4 maps, 33% conversion"
 ```
 
-Implementation: use `no-restricted-syntax` selectors on `Literal[value=/.../i]` and `JSXText[value=/.../i]`. Severity = `error`. Message names the word and tells the author to rephrase.
+## Implementation
 
-The rule scans `src/**/*.{ts,tsx}` only; `supabase/functions/**` is already not in the lint set per current config (`files: ["**/*.{ts,tsx}"]` plus the project layout). No `eslint-disable` allowlist; if a future case truly needs the word, the author must justify and add a comment.
+### Database (migration)
 
-### 2. Clean the two cited violations
+- New table `public.magnet_referral_codes`:
+  - `code text primary key` (URL-safe, e.g. `adam-li-dm`)
+  - `label text` (human name)
+  - `utm_source/medium/campaign text` (auto-applied when the link is built)
+  - `destination_path text default '/'` (so a code can target `/consulting`, `/m/<existing-slug>`, etc.)
+  - `notes text`, `created_at`, `archived_at`
+  - `suppress_slack boolean default false` (covers the `hi.com` no-Slack rule)
+  - RLS: service-role only.
+- Add columns to `public.magnet_submissions`:
+  - `ref_code text` (FK soft-ref to `magnet_referral_codes.code`)
+  - `utm_source text`, `utm_medium text`, `utm_campaign text`
+  - `referrer_url text` (document.referrer at submit time)
+  - Indexes on `ref_code`, `(utm_source, utm_medium, utm_campaign)`.
+- New table `public.magnet_ref_clicks` (lightweight click log, append-only):
+  - `id`, `code`, `clicked_at`, `visitor_fingerprint`, `landing_path`, `user_agent`.
+  - Lets us show "12 clicks → 4 maps" even before submission.
 
-- `src/components/spr/SPRSittingOn.tsx:143` — rephrase "highest-leverage opportunity" as **"largest single opportunity"** (matches voice, no jargon).
-- `src/components/awards/AwardsGrid.tsx:28` and the matching string in `src/pages/Awards.tsx:35` and `src/content/verticals.ts` (×2 hits with "systematic origination") — note: "systematic origination" is **not in the forbidden list above**, so the lint rule won't flag it. The user mentioned it as an example of jargon that leaked, but we're scoped to the four words `enrich-magnet` already forbids. I'll leave "systematic origination" alone unless you want it added to the banlist.
+### Frontend
 
-### 3. Sweep current violations the new rule will catch
+- **New `src/lib/refAttribution.ts`** (mirror of `magnetAttribution.ts` but homepage-scoped):
+  - On any page load, read `?ref=`, `?utm_*`. If `?ref=` present and not yet stored, persist `{ref, utm_*, captured_at}` in `localStorage` under `mabbly:ref:firstTouch`. First-touch wins.
+  - Fire-and-forget POST to a tiny edge function `log-ref-click` (so `magnet_ref_clicks` gets a row).
+- **Wire into App shell** (likely `src/App.tsx` or a new `<RefCapture/>` mounted once like `PostHogPageview`).
+- **`src/lib/magnetSubmit.ts`**: when inserting into `magnet_submissions`, attach `ref_code` + `utm_*` from `refAttribution`. No other behavior change.
+- **Slack suppression** in `enrich-magnet`: extend the existing `hi.com` skip rule to also skip when the submission's `ref_code` resolves to a code with `suppress_slack = true`.
 
-Running the rule's regexes across `src/` today shows likely hits beyond the two flagged:
-- `Faq.tsx:71` — "not optimized for your stage" → "not built for your stage"
-- `DeeperSection.tsx:21` and `v1/DeeperSection.tsx:21` — "fully optimized machine" → "fully built machine"
-- `Google.tsx:114` — "underutilized" inside a microsite data row → "low usage"
+### Edge functions
 
-Plus the legitimate `leverage move` usages, which the regex exception preserves.
+- `log-ref-click` (new, public, no auth): validates code exists + not archived, inserts a `magnet_ref_clicks` row. Rate-limited per fingerprint to prevent log spam.
+- `ops-referrals` (new, ops-auth gated):
+  - `GET /` → list codes with aggregated `clicks`, `maps_created`, `last_map_at`, `bookings`.
+  - `POST /` → create a code (validate URL-safe slug, uniqueness).
+  - `PATCH /:code` → archive / edit label / toggle `suppress_slack`.
+  - `GET /:code/maps` → list of submissions tied to that code.
+- `ops-channels` stays for the legacy UTM-only funnel view; new tab is the primary surface going forward.
 
-I'll fix all of these in one pass so `npm run lint` is clean after the rule lands.
+### Ops UI
 
-### Out of scope
+- New `src/components/ops/tabs/ReferralsTab.tsx`:
+  - Top: "Create referral link" form (label, source, medium, campaign, destination path, suppress Slack toggle).
+  - Generated URL shown with Copy + QR.
+  - Below: sortable table (Code | Label | Clicks | Maps | CR% | Last activity | Actions).
+  - Click row → drawer showing the maps created via that code (firm, slug → link to microsite, status, opened, booked).
+- Register the tab in `src/pages/Ops.tsx` between `channels` and `health`.
 
-- Renaming Section 09 ("Highest Leverage Move").
-- Banning words beyond the four in the system prompt (e.g. "systematic origination", "world-class", "best-in-class"). Easy to add later if you give the list.
-- Scanning the edge function source — the prompt already constrains it; lint is for hand-written JSX.
+## Open question
 
-## Files modified
+The existing **Channels** tab already partly does this (UTM builder + funnel). Two paths:
 
-- `eslint.config.js` — add `no-restricted-syntax` rule.
-- `src/components/spr/SPRSittingOn.tsx` — rephrase line 143.
-- `src/components/discover/Faq.tsx` — rephrase line 71.
-- `src/components/DeeperSection.tsx`, `src/components/v1/DeeperSection.tsx` — rephrase line 21.
-- `src/pages/microsites/Google.tsx` — rephrase line 114.
+1. **Replace** Channels with the new Referrals tab (cleaner, one place for everything).
+2. **Add** Referrals as a new tab, leave Channels as the post-landing UTM funnel.
 
-## Verification
-
-1. `npm run lint` — clean.
-2. Add a temporary line `<p>This will leverage synergy</p>` in any component, run lint, confirm two errors fire on correct word and line. Revert.
-3. Confirm `<p>Your highest leverage move…</p>` still passes.
-4. Visit `/spr` — Sitting On section reads naturally with the new phrasing.
+I'll default to **option 2** unless you say otherwise — Channels is still useful for tracking shares from inside microsites, while Referrals is specifically about new-map acquisition.
