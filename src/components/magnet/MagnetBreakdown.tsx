@@ -349,6 +349,12 @@ export default function MagnetBreakdown({
           primary={brand.primary}
           overall={scores.overall}
           band={scores.bandOverall}
+          slug={slug}
+          onCorrected={(newName) =>
+            setData((prev) =>
+              prev ? { ...prev, client_company_name: newName } : prev,
+            )
+          }
         />
 
         <CohortRankCard

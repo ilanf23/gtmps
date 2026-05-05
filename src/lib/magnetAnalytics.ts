@@ -20,7 +20,8 @@ export type MagnetEventName =
   | "cta_section8_click"
   | "share_click"
   | "save_click"
-  | "save_submit";
+  | "save_submit"
+  | "firm_name_corrected";
 
 const SECTION_TO_CTA: Record<string, CtaId> = {
   cta_section5_click: "section5_compact",
