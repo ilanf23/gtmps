@@ -237,7 +237,7 @@ This rule applies to: JSX text content, string literals rendered to the page, co
 **Existing enforcement:**
 - `src/components/magnet/MagnetBreakdown.tsx` (`stripDashes`) sanitizes em/en-dashes from LLM output at runtime.
 - The `enrich-magnet` system prompt instructs the LLM to never emit dashes and forbids invented dollar figures + the words `leverage`, `synergy`, `optimize`, `underutilized`.
-- The forbidden vocabulary is also enforced in hand-written JSX via an ESLint `no-restricted-syntax` rule in `eslint.config.js`. When adding new LLM-generated copy paths, mirror both safeguards.
+- The forbidden vocabulary is also enforced in hand-written JSX via an ESLint `no-restricted-syntax` rule in `eslint.config.js`. Locked phrases: `synergy`, `optimize`, `underutilized`, `leverage` (except "leverage move"), and the AI tell `systematic origination`. When adding new LLM-generated copy paths, mirror both safeguards.
 
 ## Conventions worth knowing
 
