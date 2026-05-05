@@ -59,6 +59,14 @@ export default tseslint.config(
           selector: "JSXText[value=/\\bleverage(?!d?[ -]move)/i]",
           message: "Forbidden vocabulary: 'leverage'. Only allowed in the phrase 'leverage move' (Section 09 name).",
         },
+        {
+          selector: "Literal[value=/systematic\\s+origination/i]",
+          message: "Banned AI tell: 'systematic origination'. Use 'deliberate', 'repeatable', or 'named-account' origination.",
+        },
+        {
+          selector: "JSXText[value=/systematic\\s+origination/i]",
+          message: "Banned AI tell: 'systematic origination'. Use 'deliberate', 'repeatable', or 'named-account' origination.",
+        },
       ],
     },
   },
