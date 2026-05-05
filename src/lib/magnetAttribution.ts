@@ -11,6 +11,8 @@
 //
 // All reads/writes are wrapped in try/catch; private mode never breaks the UI.
 
+import { getRefAttribution } from "@/lib/refAttribution";
+
 const FIRST_TOUCH_PREFIX = "mabbly:magnet:firstTouch:";
 const FP_KEY = "mabbly:magnet:fp";
 const SESSION_KEY = "mabbly:magnet:session";
@@ -161,6 +163,24 @@ export function captureAttribution(slug: string): AttributionContext {
       captured_at: new Date().toISOString(),
     };
     writeStoredFirstTouch(slug, stored);
+  }
+
+  // Fallback: no per-slug record and no UTMs in the URL, but the visitor
+  // arrived at the homepage with UTMs earlier in this browser. Inherit
+  // those so post-submit redirects (which strip UTMs from the URL) still
+  // attribute the resulting magnet_views and analytics events.
+  if (!stored) {
+    const ref = getRefAttribution();
+    if (ref && (ref.utm_source || ref.utm_medium || ref.utm_campaign)) {
+      stored = {
+        utm_source: ref.utm_source,
+        utm_medium: ref.utm_medium,
+        utm_campaign: ref.utm_campaign,
+        referrer_url: ref.referrer_url ?? referrerUrl,
+        captured_at: ref.captured_at ?? new Date().toISOString(),
+      };
+      writeStoredFirstTouch(slug, stored);
+    }
   }
 
   const ctx: AttributionContext = {

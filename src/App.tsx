@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -48,6 +48,14 @@ const FocusOnRouteChange = () => {
   return null;
 };
 
+// Bare `/m` or `/m/` (no slug) is a common foot-gun in channel-tagged links.
+// Redirect to the homepage and preserve the query string so any UTMs ride
+// through and RefAttributionCapture can record them.
+const MagnetIndexRedirect = () => {
+  const location = useLocation();
+  return <Navigate to={{ pathname: "/", search: location.search }} replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -78,6 +86,8 @@ const App = () => (
           <Route path="/ae" element={<Ae />} />
           <Route path="/recruiting" element={<Recruiting />} />
           <Route path="/agency" element={<Agency />} />
+          <Route path="/m" element={<MagnetIndexRedirect />} />
+          <Route path="/m/" element={<MagnetIndexRedirect />} />
           <Route path="/m/:slug" element={<MagnetSite />} />
           <Route path="/m/:slug/chat" element={<MagnetBookChatPage />} />
           <Route path="/m/:slug/read" element={<MagnetBookReaderPage />} />

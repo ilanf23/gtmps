@@ -63,6 +63,36 @@ function buildUtmUrl(
   return url.toString();
 }
 
+type PathValidation = {
+  ok: boolean;
+  error: string | null;
+  notice: string | null;
+};
+
+/**
+ * Validate the destination path. `/m` and `/m/` (no slug) are accepted but
+ * surface a notice that the route will redirect to the homepage with UTMs
+ * preserved, since `MagnetSite` lives at `/m/:slug`.
+ */
+function validatePath(raw: string): PathValidation {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return { ok: false, error: "Destination path is required.", notice: null };
+  }
+  if (!trimmed.startsWith("/")) {
+    return { ok: false, error: "Path must start with /.", notice: null };
+  }
+  if (trimmed === "/m" || trimmed === "/m/") {
+    return {
+      ok: true,
+      error: null,
+      notice:
+        "/m/ has no slug, so this link redirects to the homepage. UTMs are preserved.",
+    };
+  }
+  return { ok: true, error: null, notice: null };
+}
+
 function rate(num: number, denom: number): string {
   if (denom <= 0) return ",";
   return `${((num / denom) * 100).toFixed(1)}%`;
@@ -107,10 +137,14 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
     };
   }, [refreshNonce, onUnauth, range]);
 
+  const pathValidation = useMemo(() => validatePath(path), [path]);
+
   const builtUrl = useMemo(() => {
-    const base = origin() + (path.startsWith("/") ? path : `/${path}`);
+    if (!pathValidation.ok) return "";
+    const trimmed = path.trim();
+    const base = origin() + trimmed;
     return buildUtmUrl(base, source.trim(), medium.trim(), campaign.trim());
-  }, [path, source, medium, campaign]);
+  }, [path, pathValidation.ok, source, medium, campaign]);
 
   const handleCopy = async () => {
     if (!builtUrl) return;
@@ -148,8 +182,23 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
               value={path}
               onChange={(e) => setPath(e.target.value)}
               placeholder="/m/<slug>"
-              className="w-full rounded border border-[#22332F] bg-[#0F1E1D] px-3 py-2 text-[13px] text-[#EDF5EC] font-mono focus:outline-none focus:border-[#FFBA1A]"
+              aria-invalid={!pathValidation.ok}
+              className={`w-full rounded border bg-[#0F1E1D] px-3 py-2 text-[13px] text-[#EDF5EC] font-mono focus:outline-none ${
+                pathValidation.ok
+                  ? "border-[#22332F] focus:border-[#FFBA1A]"
+                  : "border-[#C02B0A] focus:border-[#C02B0A]"
+              }`}
             />
+            {!pathValidation.ok && pathValidation.error && (
+              <span className="block text-[11px] text-[#C02B0A] mt-1">
+                {pathValidation.error}
+              </span>
+            )}
+            {pathValidation.ok && pathValidation.notice && (
+              <span className="block text-[11px] text-[#FFBA1A] mt-1">
+                {pathValidation.notice}
+              </span>
+            )}
           </label>
           <label className="block">
             <span className="block text-[10px] uppercase tracking-wider text-[#A1A9A0] mb-1">
