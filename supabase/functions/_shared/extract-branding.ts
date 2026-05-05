@@ -296,9 +296,14 @@ function parseIconSize(tagFragment: string): number {
  * found and the SVG payload is small enough to embed safely.
  */
 function findInlineHeaderSvg(html: string): string | null {
-  const headerMatch = html.match(/<(header|nav)[^>]*>([\s\S]{0,15000}?)<\/\1>/i);
-  if (!headerMatch) return null;
-  const svgMatch = headerMatch[2].match(/<svg[\s\S]*?<\/svg>/i);
+  // Take the first 20k chars after <header> or <nav> opening, without
+  // requiring the closing tag (modern WP/React templates often have
+  // 40k+ chars between header open and close).
+  const openMatch = html.match(/<(header|nav)\b[^>]*>/i);
+  if (!openMatch) return null;
+  const start = (openMatch.index ?? 0) + openMatch[0].length;
+  const slice = html.slice(start, start + 20_000);
+  const svgMatch = slice.match(/<svg[\s\S]*?<\/svg>/i);
   if (!svgMatch) return null;
   const svg = svgMatch[0];
   if (svg.length > 25_000) return null;
