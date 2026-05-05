@@ -109,7 +109,17 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
   const [source, setSource] = useState<string>("linkedin");
   const [medium, setMedium] = useState<string>("post");
   const [campaign, setCampaign] = useState<string>("");
-  const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [savedChannels, setSavedChannels] = useState<
+    Array<{ utm_source: string; utm_medium: string; utm_campaign: string }>
+  >(() => {
+    try {
+      const raw = localStorage.getItem("ops:savedChannels");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -146,16 +156,62 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
     return buildUtmUrl(base, source.trim(), medium.trim(), campaign.trim());
   }, [path, pathValidation.ok, source, medium, campaign]);
 
-  const handleCopy = async () => {
+  const handleSave = async () => {
     if (!builtUrl) return;
     try {
       await navigator.clipboard.writeText(builtUrl);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
     } catch {
       /* ignore */
     }
+    const entry = {
+      utm_source: source.trim(),
+      utm_medium: medium.trim(),
+      utm_campaign: campaign.trim(),
+    };
+    setSavedChannels((prev) => {
+      const exists = prev.some(
+        (p) =>
+          p.utm_source === entry.utm_source &&
+          p.utm_medium === entry.utm_medium &&
+          p.utm_campaign === entry.utm_campaign,
+      );
+      const next = exists ? prev : [entry, ...prev];
+      try {
+        localStorage.setItem("ops:savedChannels", JSON.stringify(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+    setSaved(true);
+    window.setTimeout(() => setSaved(false), 1500);
   };
+
+  const mergedRows: ChannelRow[] = useMemo(() => {
+    const apiRows = data?.rows ?? [];
+    const synthetic: ChannelRow[] = savedChannels
+      .filter(
+        (s) =>
+          !apiRows.some(
+            (r) =>
+              (r.utm_source ?? "") === s.utm_source &&
+              (r.utm_medium ?? "") === s.utm_medium &&
+              (r.utm_campaign ?? "") === s.utm_campaign,
+          ),
+      )
+      .map((s) => ({
+        utm_source: s.utm_source || null,
+        utm_medium: s.utm_medium || null,
+        utm_campaign: s.utm_campaign || null,
+        views: 0,
+        unique_visitors: 0,
+        save_submits: 0,
+        book_clicks: 0,
+        share_clicks: 0,
+        feedback_submits: 0,
+      }));
+    return [...synthetic, ...apiRows];
+  }, [data, savedChannels]);
 
   return (
     <div className="space-y-4">
@@ -258,11 +314,11 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
           />
           <button
             type="button"
-            onClick={handleCopy}
+            onClick={handleSave}
             disabled={!builtUrl}
             className="inline-flex items-center gap-2 rounded border border-[#22332F] bg-[#22332F] px-3 h-9 text-[12px] text-[#EDF5EC] hover:bg-[#2E423E] disabled:opacity-50 transition-colors"
           >
-            {copied ? "Copied" : "Copy"}
+            {saved ? "Saved" : "Save"}
           </button>
         </div>
       </section>
@@ -293,13 +349,13 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
 
         {loading && <div className="text-[#A1A9A0] text-sm">loading…</div>}
         {err && <div className="text-[#C02B0A] text-sm">{err}</div>}
-        {!loading && !err && data && data.rows.length === 0 && (
+        {!loading && !err && data && mergedRows.length === 0 && (
           <div className="text-[12px] text-[#A1A9A0]">
             No channel-tagged traffic yet, paste a UTM link from above into
             LinkedIn or an email and check back.
           </div>
         )}
-        {!loading && !err && data && data.rows.length > 0 && (
+        {!loading && !err && data && mergedRows.length > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead className="text-[#A1A9A0] uppercase tracking-wider">
@@ -317,7 +373,7 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#22332F]">
-                {data.rows.map((r, i) => {
+                {mergedRows.map((r, i) => {
                   const untagged =
                     !r.utm_source && !r.utm_medium && !r.utm_campaign;
                   return (
