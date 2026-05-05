@@ -41,7 +41,7 @@ const RANGE_PRESETS: Array<{ id: string; label: string; days: number | null }> =
 ];
 
 function origin(): string {
-  return "https://discover.mabbly.com";
+  return "https://discovermabbly.lovable.app";
 }
 
 function buildUtmUrl(
