@@ -889,15 +889,6 @@ export default function ReceiptsBeatClaims() {
                     <span className="arrow" aria-hidden>→</span>
                   </p>
                 </article>
-                <article className="rcpt-card rcpt-card-sm delay-4">
-                  <p className="card-firm">Workiva</p>
-                  <p className="card-stat qualitative">167% more SQOs</p>
-                  <p className="card-sub">After shifting from job-title to challenge-based outreach. Long-term advisory engagement, ongoing.</p>
-                  <p className="card-foot">
-                    <span>Discover Mabbly · Active</span>
-                    <span className="arrow" aria-hidden>→</span>
-                  </p>
-                </article>
               </div>
             </section>
           </div>

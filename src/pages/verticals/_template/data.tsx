@@ -24,7 +24,7 @@ export const consulting: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable practice growth gap. Reactivation potential: <strong>$1.2M,$2.4M</strong>.
+        A measurable practice growth gap.
       </>
     ),
     bars: [
@@ -174,7 +174,7 @@ export const law: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable origination gap. Reactivation potential: <strong>$0.9M,$2.1M</strong> in matter pipeline.
+        A measurable origination gap.
       </>
     ),
     bars: [
@@ -313,7 +313,7 @@ export const accounting: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable cross-sell gap. Advisory expansion potential: <strong>$0.6M,$1.4M</strong>.
+        A measurable cross-sell gap.
       </>
     ),
     bars: [
@@ -452,7 +452,7 @@ export const msp: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable expansion gap. Whitespace MRR potential: <strong>$0.5M,$1.3M</strong>.
+        A measurable expansion gap.
       </>
     ),
     bars: [
@@ -591,7 +591,7 @@ export const advisory: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable organic growth gap. AUM expansion potential: <strong>$8M,$22M</strong> in next-12-month pipeline.
+        A measurable organic growth gap.
       </>
     ),
     bars: [
@@ -730,7 +730,7 @@ export const ae: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable pursuit gap. Reactivation potential: <strong>$1.5M,$3.6M</strong> in next-12-month bookings.
+        A measurable pursuit gap.
       </>
     ),
     bars: [
@@ -869,7 +869,7 @@ export const recruiting: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable mandate gap. Repeat-client potential: <strong>$0.4M,$1.1M</strong> in next-12-month fees.
+        A measurable mandate gap.
       </>
     ),
     bars: [
@@ -1008,7 +1008,7 @@ export const agency: VerticalConfig = {
     tier: "Below Peer Median",
     msg: (
       <>
-        A measurable new-business gap. Reactivation potential: <strong>$0.7M,$1.8M</strong> in next-12-month retainer.
+        A measurable new-business gap.
       </>
     ),
     bars: [

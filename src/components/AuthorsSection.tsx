@@ -74,13 +74,13 @@ const AuthorsSection = () => {
             />
             <h3 className="font-display font-bold text-text-dark mt-6" style={{ fontSize: 28 }}>Richard Ashbaugh</h3>
             <p className="font-mono uppercase text-gold mt-1.5" style={{ fontSize: 10, letterSpacing: "0.14em" }}>
-              CEO, Mabbly · Former CMO, AArete · Former CMO, Lotis Blue Consulting
+              CEO, Mabbly · Former CMO, AArete
             </p>
             <p className="font-sans text-text-body mt-4" style={{ fontSize: 14, lineHeight: 1.78 }}>
-              Richard Ashbaugh has spent more than 26 years across nine professional services firms building and scaling go-to-market systems. As CMO of AArete, a global management consulting firm with more than 500 professionals and $125M in annual revenue, he built the GTM infrastructure that many professional services firms spend decades trying to replicate. Earlier in his career, he helped lead the growth of A.T. Kearney from a $250 million firm to a $1.2 billion firm over seven years by implementing the right go-to-market processes and commercial discipline. He later served as Partner and CMO of Lotis Blue Consulting, where he instilled the proper GTM processes to help position the firm for a successful acquisition. Richard has been the exact buyer that firms like Mabbly now serve. He is not explaining professional services GTM from the outside. Instead, he built it, ran it, and is now co-authoring the system designed to replace what is broken.
+              Richard Ashbaugh has spent more than 26 years across nine professional services firms building and scaling go-to-market systems. As CMO of AArete, a global management consulting firm with more than 500 professionals and $125M in annual revenue, he built the GTM infrastructure that many professional services firms spend decades trying to replicate. Earlier in his career, he helped lead the growth of A.T. Kearney from a $250 million firm to a $1.2 billion firm over seven years by implementing the right go-to-market processes and commercial discipline. Richard has been the exact buyer that firms like Mabbly now serve. He is not explaining professional services GTM from the outside. Instead, he built it, ran it, and is now co-authoring the system designed to replace what is broken.
             </p>
             <div className="flex flex-wrap gap-2 mt-5">
-              {["Former CMO, AArete ($125M+)", "Former CMO, Lotis Blue", "26 Years PS Experience", "CEO, Mabbly"].map((c) => (
+              {["Former CMO, AArete ($125M+)", "26 Years PS Experience", "CEO, Mabbly"].map((c) => (
                 <span
                   key={c}
                   className="font-mono uppercase rounded-full"

@@ -1,10 +1,8 @@
 const logos = [
-  "Workiva",
-  "Tiger 21",
-  "Lactation Network",
+  "Madcraft",
+  "Calliope",
+  "SPR",
   "AArete",
-  "NoDoz",
-  "Lotis Blue",
 ];
 
 const SocialProofBar = () => {

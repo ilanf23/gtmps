@@ -3,9 +3,6 @@ const ResultsSection = () => {
     { num: "$400K", label: "Deal closed from a 10 month dormant proposal. Reply in 7 minutes. Zero cold contact." },
     { num: "8.1%", label: "Reply rate vs 1.3% industry average. 37 signal activated messages to dormant contacts." },
     { num: "100%", label: "Reply rate from dormant reactivation when sender had personal context and precise signal. Two for two." },
-    { num: "167%", label: "More qualified opportunities for Workiva after shifting from job title to challenge based outreach." },
-    { num: "51%", label: "Lower cost per consultation. Lactation Network. Consultant network tripled in one year." },
-    { num: "288%", label: "Lift in conversions for NoDoz through proof based content matched to audience intent." },
   ];
 
   return (

@@ -5,12 +5,23 @@
 import { ReactNode, useEffect, useRef } from "react";
 import "./DeeperFindings.css";
 
+interface CardContent {
+  observed?: string | null;
+  hypothesis?: string | null;
+  question?: string | null;
+}
+
+interface DeeperFindingsContent {
+  "10A"?: CardContent | null;
+  "10B"?: CardContent | null;
+  "10C"?: CardContent | null;
+}
+
 interface Props {
   customerName: string;
   primary: string;
   slug?: string;
-  signalObserved?: string | null;
-  cadenceObserved?: string | null;
+  deeperFindings?: DeeperFindingsContent | null;
 }
 
 interface CardSpec {
@@ -25,8 +36,7 @@ export default function DeeperFindings({
   customerName,
   primary,
   slug,
-  signalObserved,
-  cadenceObserved,
+  deeperFindings,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -52,75 +62,86 @@ export default function DeeperFindings({
     return () => io.disconnect();
   }, []);
 
-  const signalText =
-    signalObserved?.trim() ||
-    `${customerName}'s site reads as a service catalog more than a signal source. Visitors learn what you do, not when to engage you.`;
+  // Per-card LLM content (already dash-stripped by MagnetBreakdown's sanitizeLLM).
+  const card10A = deeperFindings?.["10A"] ?? null;
+  const card10B = deeperFindings?.["10B"] ?? null;
+  const card10C = deeperFindings?.["10C"] ?? null;
 
-  const cadenceText =
-    cadenceObserved?.trim() ||
-    "Your public cadence (Insights, social, alumni touches) suggests episodic outreach rather than a scheduled rhythm.";
+  // 10A fallbacks. Hardcoded copy keeps substring bolding ("service catalog");
+  // LLM copy renders flat, since arbitrary substrings would not match.
+  const observed10A: ReactNode = card10A?.observed
+    ? card10A.observed
+    : (
+        <>
+          {`${customerName}'s site reads as a `}
+          <strong>service catalog</strong>
+          {` more than a signal source. Visitors learn what you do, not when to engage you.`}
+        </>
+      );
+  const hypothesis10A: ReactNode = card10A?.hypothesis ?? (
+    <>
+      If we surface <strong>1 to 2 trigger signals</strong> (org change, capability shift, named project), inbound qualifies before the first call.
+    </>
+  );
+  const question10A: string =
+    card10A?.question?.trim() ||
+    "Which signal would your team find most useful first?";
+
+  // 10B fallbacks.
+  const observed10B: ReactNode = card10B?.observed
+    ? card10B.observed
+    : (
+        <>
+          Your public cadence (Insights, social, alumni touches) suggests <strong>episodic outreach</strong> rather than a scheduled rhythm.
+        </>
+      );
+  const hypothesis10B: ReactNode = card10B?.hypothesis ?? (
+    <>
+      A <strong>4-week relationship rhythm</strong> tied to your top 100 contacts typically reactivates <strong>3 to 5 dormant deals</strong> per quarter.
+    </>
+  );
+  const question10B: string =
+    card10B?.question?.trim() ||
+    "What does your current touch cadence look like?";
+
+  // 10C fallbacks.
+  const observed10C: ReactNode = card10C?.observed
+    ? card10C.observed
+    : (
+        <>
+          {customerName} has at least one trait that does not fit the median PS firm in the cohort. We'd like to <strong>confirm it on the call</strong> before adding it to the manuscript.
+        </>
+      );
+  const hypothesis10C: ReactNode = card10C?.hypothesis ?? (
+    <>
+      Outliers often become the <strong>most useful chapters</strong>. Your input here directly shapes how this case is written.
+    </>
+  );
+  const question10C: string =
+    card10C?.question?.trim() ||
+    "What's the one thing about your firm you wish more people understood?";
 
   const cards: CardSpec[] = [
     {
       index: "10A",
       topic: "Signal Analysis",
-      observed: (
-        <>
-          {signalText.includes("service catalog") ? (
-            <>
-              {signalText.split("service catalog")[0]}
-              <strong>service catalog</strong>
-              {signalText.split("service catalog")[1]}
-            </>
-          ) : (
-            signalText
-          )}
-        </>
-      ),
-      hypothesis: (
-        <>
-          If we surface <strong>1 to 2 trigger signals</strong> (org change, capability shift, named project), inbound qualifies before the first call.
-        </>
-      ),
-      question: "Which signal would your team find most useful first?",
+      observed: observed10A,
+      hypothesis: hypothesis10A,
+      question: question10A,
     },
     {
       index: "10B",
       topic: "Cadence Read",
-      observed: (
-        <>
-          {cadenceText.includes("episodic outreach") ? (
-            <>
-              {cadenceText.split("episodic outreach")[0]}
-              <strong>episodic outreach</strong>
-              {cadenceText.split("episodic outreach")[1]}
-            </>
-          ) : (
-            cadenceText
-          )}
-        </>
-      ),
-      hypothesis: (
-        <>
-          A <strong>4-week relationship rhythm</strong> tied to your top 100 contacts typically reactivates <strong>3 to 5 dormant deals</strong> per quarter.
-        </>
-      ),
-      question: "What does your current touch cadence look like?",
+      observed: observed10B,
+      hypothesis: hypothesis10B,
+      question: question10B,
     },
     {
       index: "10C",
       topic: "Research Flag",
-      observed: (
-        <>
-          {customerName} has at least one trait that does not fit the median PS firm in the cohort. We'd like to <strong>confirm it on the call</strong> before adding it to the manuscript.
-        </>
-      ),
-      hypothesis: (
-        <>
-          Outliers often become the <strong>most useful chapters</strong>. Your input here directly shapes how this case is written.
-        </>
-      ),
-      question: "What's the one thing about your firm you wish more people understood?",
+      observed: observed10C,
+      hypothesis: hypothesis10C,
+      question: question10C,
     },
   ];
 

@@ -8,7 +8,7 @@ const BookSection = () => {
     {
       num: "01",
       title: "Chapter One: The Dead Zone",
-      body: "The named villain. The problem every PS firm lives and nobody has articulated clearly. The 96% of every CRM that is dormant, earned, and going to waste. This is where the book begins because this is where the money is hiding.",
+      body: "The named villain. The problem every PS firm lives and nobody has articulated clearly. The dormant majority of every CRM, earned relationships going to waste. This is where the book begins because this is where the money is hiding.",
     },
     {
       num: "02",

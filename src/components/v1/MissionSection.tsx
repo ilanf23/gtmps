@@ -43,7 +43,7 @@ const storyCards = [
   {
     icon: Layers,
     accent: "The Dead Zone",
-    headline: "96% of your CRM is dormant, earned, and going to waste.",
+    headline: "Most of your CRM is dormant, earned, and going to waste.",
     body: "The Dead Zone exists because no GTM system was built for how PS firms actually win. Through reputation. Relationships. The right message at the right moment.",
   },
   {
@@ -55,7 +55,7 @@ const storyCards = [
   {
     icon: TrendingUp,
     accent: "The Method",
-    headline: "Built from 50 Discovery Sessions with managing partners.",
+    headline: "Built from 500 practitioner interviews across 30 firms.",
     body: "Not theory. Not research from the outside. Their situations shape the chapters. The chapters become the framework. The framework changes how an entire industry grows.",
   },
 ];

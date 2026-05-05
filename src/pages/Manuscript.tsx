@@ -8,7 +8,7 @@ const CHAPTERS: Chapter[] = [
     num: "01",
     title: "The Dead Zone",
     meta: "Chapter 7 · 24 pages",
-    body: "The named villain: 96% of every CRM is dormant relationships earned and going to waste. The chapter every PS founder reads first.",
+    body: "The named villain: the dormant majority of every CRM, earned relationships going to waste. The chapter every PS founder reads first.",
   },
   {
     num: "02",

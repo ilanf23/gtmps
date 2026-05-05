@@ -138,6 +138,31 @@ Valid chapters (use exact titles):
 The Grand Slam setup. One or two sentences. Dream Outcome × no-risk first step. Must NOT sound like a sales pitch. Sounds like a colleague who has seen this before and knows exactly where to start.
 Formula: "The system is built. [Specific observation about their situation] is where it starts. The question is which layer you activate first."
 
+**deeperFindings**
+Three "Observation, Hypothesis, Question" research cards rendered at the bottom of the microsite. The reader is told these are "three more reads we'd like your feedback on." Each card MUST be specific to THIS firm. Generic boilerplate is the failure mode this field is meant to fix, never repeat phrases like "1 to 2 trigger signals", "4-week relationship rhythm", "service catalog", "episodic outreach" verbatim across firms. Vary structure and vocabulary. Each "hypothesis" must follow logically from THIS firm's "observed" text, not stand alone.
+
+Card 10A, Signal Analysis. How does THIS firm's public surface (website, recent posts, Insights) read as a signal source vs a static catalog? What kinds of triggers are visible, or visibly missing?
+  observed: 1 to 2 sentences. Concrete read of their site/feed as a source of outreach signals. Reference real elements (a specific service line, a recent post topic, a named practice area).
+  hypothesis: 1 to 2 sentences. The firm-specific consequence: if a particular kind of signal were surfaced first, what would change for them? Ground in observed.
+  question: 1 sentence, conversational. Something the Mabbly team would actually ask THIS firm on a call.
+
+Card 10B, Cadence Read. How does THIS firm's visible cadence (publishing rhythm, alumni touches, social cadence) read?
+  observed: 1 to 2 sentences. Specific read of what their public cadence looks like, frequency, channel mix, audience.
+  hypothesis: 1 to 2 sentences. The firm-specific upside if cadence were tied to relationships rather than channels. No fixed numbers ("4-week", "3 to 5") unless the firm's actual data supports them, qualitative is fine.
+  question: 1 sentence, conversational, about their internal cadence.
+
+Card 10C, Research Flag. One trait of THIS firm that does not fit the median professional services firm in the cohort. Frame as something we would want to confirm with them on a call before adding it to the manuscript.
+  observed: 1 to 2 sentences. Name the specific outlier trait you noticed. Reference the source (their website wording, a service line, a client type, a tenure pattern).
+  hypothesis: 1 to 2 sentences. Why this outlier, if confirmed, could become a useful chapter or example.
+  question: 1 sentence. Open invitation for them to share the thing about their firm they wish more people understood.
+
+Format:
+"deeperFindings": {
+  "10A": { "observed": "...", "hypothesis": "...", "question": "..." },
+  "10B": { "observed": "...", "hypothesis": "...", "question": "..." },
+  "10C": { "observed": "...", "hypothesis": "...", "question": "..." }
+}
+
 **crmEstimate** (integer or null)
 Estimate number of contacts in their CRM based on: years in business × average clients per year × relationship density (associates, referral contacts). If no reliable basis, return null.
 
@@ -503,6 +528,32 @@ ${JSON.stringify(linkedin_data)}`;
     };
     const mergedBrandProfile = { ...(branding ?? {}), palette };
 
+    // Deeper findings: shape { "10A"|"10B"|"10C": { observed, hypothesis, question } }.
+    // Defensive parse: keep whatever fields the LLM provided, drop the rest. The
+    // renderer falls back to hardcoded copy per missing field.
+    const deeperFindingsRaw = (parsed.deeperFindings && typeof parsed.deeperFindings === "object"
+      ? parsed.deeperFindings
+      : {}) as Record<string, unknown>;
+    const pickCard = (key: string): Record<string, string> | null => {
+      const card = deeperFindingsRaw[key];
+      if (!card || typeof card !== "object") return null;
+      const c = card as Record<string, unknown>;
+      const out: Record<string, string> = {};
+      const observed = asString(c.observed);
+      const hypothesis = asString(c.hypothesis);
+      const question = asString(c.question);
+      if (observed) out.observed = observed;
+      if (hypothesis) out.hypothesis = hypothesis;
+      if (question) out.question = question;
+      return Object.keys(out).length > 0 ? out : null;
+    };
+    const deeperFindings: Record<string, Record<string, string>> = {};
+    for (const k of ["10A", "10B", "10C"]) {
+      const card = pickCard(k);
+      if (card) deeperFindings[k] = card;
+    }
+    const deeperFindingsToStore = Object.keys(deeperFindings).length > 0 ? deeperFindings : null;
+
     const breakdownRow = {
       slug,
       welcome_message: welcome,
@@ -538,6 +589,7 @@ ${JSON.stringify(linkedin_data)}`;
         typeof parsed.dealSizeEstimate === "number" && isFinite(parsed.dealSizeEstimate)
           ? Math.round(parsed.dealSizeEstimate)
           : null,
+      deeper_findings: deeperFindingsToStore,
       enrichment_error: null,
     };
 

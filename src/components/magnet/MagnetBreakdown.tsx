@@ -34,6 +34,18 @@ import MobileProgressBar from "./v10/MobileProgressBar";
 import StickyShareFab from "./v10/StickyShareFab";
 import SectionRail from "@/components/discover/SectionRail";
 
+interface DeeperFindingCard {
+  observed?: string | null;
+  hypothesis?: string | null;
+  question?: string | null;
+}
+
+interface DeeperFindingsPayload {
+  "10A"?: DeeperFindingCard | null;
+  "10B"?: DeeperFindingCard | null;
+  "10C"?: DeeperFindingCard | null;
+}
+
 interface BreakdownRow {
   welcome_message: string | null;
   gtm_profile_observed: string | null;
@@ -48,6 +60,7 @@ interface BreakdownRow {
   client_company_name?: string | null;
   client_logo_url?: string | null;
   deal_size_estimate?: number | null;
+  deeper_findings?: DeeperFindingsPayload | null;
   client_brand_profile?: {
     palette?: {
       primary?: string | null;
@@ -204,6 +217,24 @@ export default function MagnetBreakdown({
   const sanitizedAction = sanitizeLLM(data.action_1);
   const sanitizedObserved = sanitizeLLM(data.gtm_profile_observed);
   const sanitizedAssessment = sanitizeLLM(data.gtm_profile_assessment);
+
+  const sanitizeCard = (
+    card: DeeperFindingCard | null | undefined,
+  ): DeeperFindingCard | null => {
+    if (!card) return null;
+    const observed = sanitizeLLM(card.observed);
+    const hypothesis = sanitizeLLM(card.hypothesis);
+    const question = sanitizeLLM(card.question);
+    if (!observed && !hypothesis && !question) return null;
+    return { observed, hypothesis, question };
+  };
+  const sanitizedDeeperFindings = data.deeper_findings
+    ? {
+        "10A": sanitizeCard(data.deeper_findings["10A"]),
+        "10B": sanitizeCard(data.deeper_findings["10B"]),
+        "10C": sanitizeCard(data.deeper_findings["10C"]),
+      }
+    : null;
 
   // Derive brand palette + run the legibility guard. If the extracted text
   // does not meet WCAG AA contrast against the extracted background, fall
@@ -372,7 +403,12 @@ export default function MagnetBreakdown({
       />
 
       <div className="max-w-[806px] mx-auto px-6 pb-24 ms-centered">
-        <DeeperFindings customerName={customerName} primary={brand.primary} slug={slug} />
+        <DeeperFindings
+          customerName={customerName}
+          primary={brand.primary}
+          slug={slug}
+          deeperFindings={sanitizedDeeperFindings}
+        />
 
         <ManuscriptShareSave
           slug={slug}

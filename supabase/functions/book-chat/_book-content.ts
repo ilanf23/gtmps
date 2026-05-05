@@ -318,8 +318,8 @@ Or, the $2.4 Million Parking Lot Nobody Walks Through
 J
 ay Russell knows exactly what a dying pipeline looks
 like. He has watched it happen a hundred times.
-Jay is a principal at Lotis Blue Consulting, a professional ser-
-vices firm that advises law firms and accounting firms on the
+Jay is a principal at a boutique advisory firm that advises
+law firms and accounting firms on the
 20
 
 THE DEAD ZONE
