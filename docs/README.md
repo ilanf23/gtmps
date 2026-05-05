@@ -44,8 +44,8 @@ Six docs, ordered for reading top-to-bottom on first read, but each is independe
 | Doc | What's inside | Read when |
 |---|---|---|
 | [`01-strategy.md`](./01-strategy.md) | The WHY. RROS thesis. ICP. Locked vocabulary (Five Orbits, Five Truths, Three Laws, The Formula, The MAP). Verified facts library. | You're touching copy, positioning, CTAs, or framework references |
-| [`02-architecture.md`](./02-architecture.md) | The WHAT. Stack, routing, page taxonomy, component organization, backend, styling, conventions. | You're shipping code or onboarding a new dev |
-| [`03-magnet-flow.md`](./03-magnet-flow.md) | The HOW. The Magnet flow (homepage hero submit → `/m/:slug` and sub-routes). AI enrichment pipeline. V10 spec. MAP 12-field schema. Failure modes. *Note: this doc still references `/assess` in places — the page was removed in Sprint 2 and submission now happens from the homepage hero.* | You're working on the Magnet hero submit, `/m/:slug`, the AI pipeline, or anything Magnet-related |
+| [`../CLAUDE.md`](../CLAUDE.md) | The WHAT. Stack, routing, page taxonomy, component organization, backend, styling, conventions. **Single source of truth** (replaces the retired `02-architecture.md`). | You're shipping code or onboarding a new dev |
+| [`03-magnet-flow.md`](./03-magnet-flow.md) | The HOW. The Magnet flow (homepage hero submit → `/m/:slug` and sub-routes). AI enrichment pipeline. V10 spec. MAP 12-field schema. Failure modes. *Note: this doc still references `/assess` in places, the page was removed in Sprint 2 and submission now happens from the homepage hero.* | You're working on the Magnet hero submit, `/m/:slug`, the AI pipeline, or anything Magnet-related |
 | [`04-roadmap.md`](./04-roadmap.md) | The NEXT. Audit findings. P0/P1/P2 priority queue. Week 1–4 ship plan. Email capture strategy. Ops dashboard plan. | You're deciding what to build next or status-checking the trajectory |
 | [`05-playbook.md`](./05-playbook.md) | The DAILY. Local dev setup. Common tasks (add vertical, add microsite, edit copy, deploy). Lovable→Vercel migration plan. | You're sitting down to work today |
 | [`06-references.md`](./06-references.md) | The SOURCES. Notion link library. Lovable prompt archive. Glossary. Killed-stats list. Recommended reading order. | You need a citation or a backstop |
@@ -154,7 +154,7 @@ If no, kill it.
 
 | Reader | Start with |
 |---|---|
-| **First-time engineer** | [02-architecture.md](./02-architecture.md) → [05-playbook.md](./05-playbook.md) |
+| **First-time engineer** | [`../CLAUDE.md`](../CLAUDE.md) → [05-playbook.md](./05-playbook.md) |
 | **First-time content/marketing collaborator** | [01-strategy.md](./01-strategy.md) → [03-magnet-flow.md](./03-magnet-flow.md) |
 | **Adam / Richard reviewing the build** | This file → [04-roadmap.md](./04-roadmap.md) |
 | **Ilan deciding what to ship next** | [04-roadmap.md](./04-roadmap.md) |
@@ -196,7 +196,7 @@ discover-mabbly/
 → [01-strategy.md](./01-strategy.md). Read it cover to cover. It is the contract.
 
 **"Something broke in the Magnet flow."**
-→ [03-magnet-flow.md](./03-magnet-flow.md) for the architecture, then [02-architecture.md](./02-architecture.md) for backend specifics.
+→ [03-magnet-flow.md](./03-magnet-flow.md) for the architecture, then [`../CLAUDE.md`](../CLAUDE.md) for backend specifics.
 
 **"I want the full picture."**
 → Read this file, then 01 → 02 → 03 → 04 → 05 → 06 in order. ~30 minutes of focused reading.
