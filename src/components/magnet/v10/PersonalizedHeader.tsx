@@ -3,14 +3,20 @@
 // reads as the same product family. Two-column layout on desktop: text left,
 // score ring + per-orbit bars right. Stacks on narrow viewports.
 
+import { useState } from "react";
 import type { ScoreBand } from "@/lib/magnetScoring";
 import { MABBLY_GOLD } from "@/lib/mabblyAnchors";
+import { supabase } from "@/integrations/supabase/client";
+import { trackMagnetEvent } from "@/lib/magnetAnalytics";
+import { toast } from "sonner";
 
 interface Props {
   firmName: string;
   primary: string;
   overall: number;
   band: ScoreBand;
+  slug: string;
+  onCorrected?: (newName: string) => void;
 }
 
 // Stroke palette per band, picks up the homepage rust/mustard while still
@@ -32,8 +38,13 @@ export default function PersonalizedHeader({
   primary,
   overall,
   band,
+  slug,
+  onCorrected,
 }: Props) {
   const accent = `var(--brand-accent, ${primary || MABBLY_GOLD})`;
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(firmName || "");
+  const [saving, setSaving] = useState(false);
   const upperFirm = (firmName || "Your Firm").toUpperCase();
   // Length-bucketed scale. The default `.ph-firm` clamp is sized for short
   // single-word brands ("Acme") and overflows the column for 9+ char compound
@@ -43,6 +54,38 @@ export default function PersonalizedHeader({
   const firmLen = upperFirm.replace(/\s/g, "").length;
   const firmSizeClass =
     firmLen >= 14 ? "ph-firm--xl" : firmLen >= 9 ? "ph-firm--lg" : "";
+
+  const submitCorrection = async () => {
+    const trimmed = draft.trim();
+    if (!trimmed || trimmed.length > 120) {
+      toast.error("Please enter a name between 1 and 120 characters.");
+      return;
+    }
+    if (trimmed.toLowerCase() === (firmName || "").toLowerCase()) {
+      setEditing(false);
+      return;
+    }
+    setSaving(true);
+    try {
+      const { data, error } = await supabase.rpc("correct_magnet_firm_name", {
+        _slug: slug,
+        _corrected_name: trimmed,
+        _visitor_fingerprint: null,
+      });
+      if (error) throw error;
+      trackMagnetEvent(slug, "firm_name_corrected", {
+        previous: firmName,
+        corrected: trimmed,
+      });
+      onCorrected?.((data as string) || trimmed);
+      toast.success("Thanks. Updated.");
+      setEditing(false);
+    } catch (e) {
+      toast.error("Could not save the correction. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Score ring geometry, r=86, circumference = 2π·86 ≈ 540.354.
   const RING_R = 86;
