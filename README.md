@@ -11,7 +11,7 @@
 Three product surfaces in one repo:
 
 1. **Discover** — the editorial book microsite at `/` and `/discover`
-2. **The Magnet** — personalized AI lead-gen funnel at `/assess` → `/m/:slug` → `/book`
+2. **The Magnet** — personalized AI lead gen funnel from the homepage hero to `/m/:slug` → `/book`
 3. **Vertical & client surfaces** — eight industry landings, bespoke client microsites, and editorial pages
 
 Production: **https://discover.mabbly.com**
@@ -48,7 +48,7 @@ The full source of truth lives in [`docs/`](./docs/README.md). Six docs, ordered
 |---|---|
 | [`docs/README.md`](./docs/README.md) | Master index + project at-a-glance |
 | [`docs/01-strategy.md`](./docs/01-strategy.md) | The WHY: RROS, ICP, locked vocabulary, verified facts |
-| [`docs/02-architecture.md`](./docs/02-architecture.md) | The WHAT: stack, routing, components, backend |
+| [`CLAUDE.md`](./CLAUDE.md) | The WHAT: stack, routing, components, backend |
 | [`docs/03-magnet-flow.md`](./docs/03-magnet-flow.md) | The HOW: V10 Magnet flow, AI pipeline, MAP spec |
 | [`docs/04-roadmap.md`](./docs/04-roadmap.md) | The NEXT: P0/P1/P2 priority queue, 14-day ship plan |
 | [`docs/05-playbook.md`](./docs/05-playbook.md) | The DAILY: setup, common tasks, deployment |
@@ -101,11 +101,20 @@ discover-mabbly/
 
 | | |
 |---|---|
-| **Last release** | V10 Magnet microsite (Apr 27 2026) |
+| **Baseline release** | Sprint 2 and post audit updates. See `docs/changelog/2026-05-05-baseline.md` |
 | **MAP quality** | 5.3/10 today (per May 1 audit) — target 9.0/10 over next 14 days |
 | **In flight** | Firm name extraction · Hypothesis de-templating · "Did we nail it?" capture · PostHog event taxonomy · Ops dashboard at `/ops` |
 
 See [`docs/04-roadmap.md`](./docs/04-roadmap.md) for the full priority queue.
+
+## Review and rollback workflow
+
+- Open a branch for each coherent change
+- Review through GitHub PRs before merge
+- Add a changelog entry for notable product, content, routing, AI, or data-shape changes
+- Write rollback notes in the PR so reversions are fast under pressure
+
+The old detailed commit history is not available in this repo. Treat the current codebase as the baseline and preserve decision history from here forward.
 
 ---
 
