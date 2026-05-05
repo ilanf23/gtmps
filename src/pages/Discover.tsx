@@ -183,7 +183,7 @@ const Discover = () => {
           <DiscoverHero />
         </div>
         <IndustryGrid />
-        <section style={{ background: "#0F1E1D", padding: "96px 24px" }}>
+        <section id="the-book" style={{ background: "#0F1E1D", padding: "96px 24px" }}>
           <div
             style={{
               maxWidth: 1200,
