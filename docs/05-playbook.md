@@ -307,6 +307,18 @@ The project was scaffolded by Lovable. The migration is partially complete:
 
 ## Branching & commits
 
+### Minimum shipping workflow
+
+This repo now uses a simple review trail for every meaningful change from the current baseline forward.
+
+1. Create a branch before you start.
+2. Keep the work to one coherent change set.
+3. Open a PR before merge, even if the code was drafted in Lovable.
+4. Add or update a changelog entry for any change that touches routes, AI prompts, data shape, migrations, or shared content.
+5. Write a rollback note in the PR so the next person knows what to revert, restore, or disable.
+
+If you ship from Lovable UI, sync through GitHub and still use the same PR flow. Lovable History is the fastest emergency restore. GitHub PRs are the review record.
+
 ### Branch naming
 
 ```
@@ -343,6 +355,14 @@ Examples:
 - For any change touching the AI prompt
 - For any new database migration
 - For any change to `App.tsx` routing
+
+### PR must include
+
+- What changed
+- Why it changed
+- What to review
+- Rollback steps
+- Screens or preview links when UI changed
 
 Coordinate with Ilan before merging schema changes or anything that touches `enrich-magnet` payload shape (it's coupled to client render code).
 
