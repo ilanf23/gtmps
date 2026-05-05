@@ -349,12 +349,12 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   background: var(--rc-cream-card);
   border: 1px solid var(--rc-cream-border);
-  border-radius: 18px;
+  border-radius: 22px;
   font-family: var(--rc-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--rc-depth);
@@ -365,8 +365,8 @@
 }
 .rc-feedback-chip:hover { border-color: var(--rc-care); }
 .rc-feedback-chip .rc-pulse {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   background: var(--rc-care);
   border-radius: 50%;
   position: relative;
@@ -402,7 +402,7 @@
 .rc-feedback-question {
   font-family: var(--rc-serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--rc-muted);
   margin-left: 4px;
   text-transform: none;

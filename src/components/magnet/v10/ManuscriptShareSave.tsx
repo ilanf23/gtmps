@@ -675,7 +675,7 @@ export default function ManuscriptShareSave({
                 className="mss-cta-pill"
                 onClick={handleEmailForward}
               >
-                Email Forward
+                Email This Map
                 <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M2 7h10m0 0L8 3m4 4l-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
