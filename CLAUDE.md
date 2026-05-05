@@ -277,7 +277,7 @@ It's `src/pages/Discover.tsx`, **not** `src/pages/Index.tsx`. `Index` is the v1 
 
 ### Editing copy
 
-Check `src/content/` first. Most user-facing text is data, not JSX. Editing JSX directly is often a mistake.
+For the eight vertical landings (`/consulting`, `/law`, `/accounting`, `/msp`, `/advisory`, `/ae`, `/recruiting`, `/agency`), copy lives in `src/pages/verticals/_template/data.tsx`. For everything else (homepage stat cards, industry icons, manuscript quotes, vertical-flow variants, CTA variants, cross-surface vertical nav metadata), check `src/content/` first. Editing JSX directly is usually a mistake on both surfaces.
 
 ### Magnet edge function changes
 
