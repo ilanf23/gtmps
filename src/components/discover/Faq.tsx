@@ -510,7 +510,7 @@ export default function Faq() {
 
         <p className="faq-more-hint">
           More questions?{' '}
-          <a href="mailto:adam@mabbly.com">Email Adam directly →</a>
+          <a href="mailto:adam@mabbly.com,richard@mabbly.com">Email Adam and Richard directly →</a>
         </p>
       </div>
     </section>
