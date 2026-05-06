@@ -6,7 +6,6 @@ import { MicrositesTab } from "@/components/ops/tabs/MicrositesTab";
 import { SharesTab } from "@/components/ops/tabs/SharesTab";
 import { EmailsTab } from "@/components/ops/tabs/EmailsTab";
 import { BookingsTab } from "@/components/ops/tabs/BookingsTab";
-import { ChannelsTab } from "@/components/ops/tabs/ChannelsTab";
 import { HealthTab } from "@/components/ops/tabs/HealthTab";
 import { opsAuth } from "@/lib/opsClient";
 
