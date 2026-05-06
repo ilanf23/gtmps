@@ -1,5 +1,4 @@
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 type Stat = { value: string; label: string };
 
@@ -73,7 +72,7 @@ export default function AuthorityStrip() {
           gap: 18px;
         }
         @media (min-width: 900px) {
-          .au-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+          .au-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 880px; margin-left: auto; margin-right: auto; }
         }
 
         .au-card {
@@ -280,51 +279,15 @@ export default function AuthorityStrip() {
           <header className="au-header">
             <p className="au-eyebrow">04 · The Authors</p>
             <h2 className="au-title">Built by the people who built it.</h2>
-            <p className="au-deck">Three signatures. Foreword, practitioner, author.</p>
+            <p className="au-deck">Two signatures. Practitioner and author.</p>
           </header>
 
           <div className="au-grid">
-            {/* Jonathan - Foreword */}
-            <article className="au-card">
-              <div className="au-card-head">
-                <span className="au-card-label">Foreword</span>
-                <span className="au-card-pos">01 / 03</span>
-              </div>
-              <p className="au-quote">
-                “Go to market in professional services is as much a mindset issue as it is an
-                operational one. The firms that grow are the ones with real clarity about the
-                problems they solve, for whom, and what outcomes that produces. This book builds
-                the system around that clarity.”
-              </p>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <p
-                    className="au-name au-name-tooltip"
-                    tabIndex={0}
-                    aria-label="Jonathan Copulsky, former CMO Deloitte, Senior Lecturer Northwestern Kellogg"
-                  >
-                    Jonathan Copulsky
-                  </p>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-[280px] text-center">
-                  Jonathan Copulsky, former CMO Deloitte · Senior Lecturer, Northwestern Kellogg
-                </TooltipContent>
-              </Tooltip>
-              <p className="au-role" style={{ marginBottom: 16 }}>
-                Former CMO, Deloitte · Senior Lecturer, Northwestern Kellogg
-              </p>
-              <div className="au-affil">
-                <span className="au-affil-mark">Deloitte.</span>
-                <span className="au-affil-dot" aria-hidden>·</span>
-                <span className="au-affil-mark kellogg">Kellogg</span>
-              </div>
-            </article>
-
             {/* Richard - Practitioner */}
             <article className="au-card">
               <div className="au-card-head">
                 <span className="au-card-label">Practitioner</span>
-                <span className="au-card-pos">02 / 03</span>
+                <span className="au-card-pos">01 / 02</span>
               </div>
               <p className="au-name">Richard Ashbaugh</p>
               <div className="au-role-row">
@@ -353,7 +316,7 @@ export default function AuthorityStrip() {
             <article className="au-card">
               <div className="au-card-head">
                 <span className="au-card-label">Author</span>
-                <span className="au-card-pos">03 / 03</span>
+                <span className="au-card-pos">02 / 02</span>
               </div>
               <p className="au-name">Adam Fridman</p>
               <div className="au-role-row">
