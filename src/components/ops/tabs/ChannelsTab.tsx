@@ -18,6 +18,10 @@ interface ChannelRow {
 interface ChannelsResponse {
   since: string;
   rows: ChannelRow[];
+  health?: {
+    tagged_home_views_24h: number | null;
+    tagged_submissions_24h: number | null;
+  };
 }
 
 interface ChannelsTabProps {
@@ -127,8 +131,6 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
   // Layer 5: pipeline health checks. Run once on mount.
   type Check = "pending" | "pass" | "fail";
   const [healthInsert, setHealthInsert] = useState<Check>("pending");
-  const [healthHomeUtm, setHealthHomeUtm] = useState<Check>("pending");
-  const [healthSubUtm, setHealthSubUtm] = useState<Check>("pending");
   const [testStatus, setTestStatus] = useState<string | null>(null);
 
   useEffect(() => {
@@ -142,37 +144,24 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
         utm_campaign: "probe",
       });
       if (!cancelled) setHealthInsert(ins.error ? "fail" : "pass");
-
-      const sinceIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      const homeRes = await supabase
-        .from("magnet_views")
-        .select("utm_source")
-        .eq("slug", "__home__")
-        .gte("viewed_at", sinceIso)
-        .not("utm_source", "is", null)
-        .limit(1);
-      if (!cancelled) {
-        setHealthHomeUtm(
-          !homeRes.error && (homeRes.data ?? []).length > 0 ? "pass" : "fail",
-        );
-      }
-
-      const subRes = await supabase
-        .from("magnet_submissions")
-        .select("utm_source")
-        .gte("created_at", sinceIso)
-        .not("utm_source", "is", null)
-        .limit(1);
-      if (!cancelled) {
-        setHealthSubUtm(
-          !subRes.error && (subRes.data ?? []).length > 0 ? "pass" : "fail",
-        );
-      }
     })();
     return () => {
       cancelled = true;
     };
   }, [refreshNonce]);
+
+  const healthHomeUtm: Check =
+    data?.health?.tagged_home_views_24h == null
+      ? "pending"
+      : data.health.tagged_home_views_24h > 0
+        ? "pass"
+        : "fail";
+  const healthSubUtm: Check =
+    data?.health?.tagged_submissions_24h == null
+      ? "pending"
+      : data.health.tagged_submissions_24h > 0
+        ? "pass"
+        : "fail";
 
   useEffect(() => {
     let cancelled = false;
