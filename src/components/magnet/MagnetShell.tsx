@@ -66,15 +66,34 @@ export default function MagnetShell({
     } catch {
       /* ignore */
     }
+    // URL attribution beats localStorage. If the visitor lands on /m/:slug
+    // directly via a UTM-tagged share link, that click should win even if
+    // their localStorage holds a stale first-touch from an earlier visit.
+    let utmSource = attribution.utm_source;
+    let utmMedium = attribution.utm_medium;
+    let utmCampaign = attribution.utm_campaign;
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const u = sp.get("utm_source");
+      const m = sp.get("utm_medium");
+      const c = sp.get("utm_campaign");
+      if (u || m || c) {
+        utmSource = u ?? utmSource;
+        utmMedium = m ?? utmMedium;
+        utmCampaign = c ?? utmCampaign;
+      }
+    } catch {
+      /* ignore */
+    }
     void supabase
       .from("magnet_views")
       .insert({
         slug,
         session_id: attribution.session_id,
         visitor_fingerprint: attribution.visitor_fingerprint,
-        utm_source: attribution.utm_source,
-        utm_medium: attribution.utm_medium,
-        utm_campaign: attribution.utm_campaign,
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
         referrer_url: attribution.referrer_url,
       })
       .then((res) => {
