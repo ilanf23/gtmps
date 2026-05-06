@@ -19,7 +19,6 @@ const TABS: Array<{ id: string; label: string; icon: string }> = [
   { id: "shares", label: "Shares", icon: "⤳" },
   { id: "emails", label: "Emails", icon: "✉" },
   { id: "bookings", label: "Bookings", icon: "★" },
-  { id: "channels", label: "Channels", icon: "↗" },
   { id: "referrals", label: "Referrals", icon: "⇆" },
   { id: "health", label: "Health", icon: "♥" },
 ];
