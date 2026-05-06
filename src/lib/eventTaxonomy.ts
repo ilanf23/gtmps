@@ -123,6 +123,24 @@ export type EventProps = {
 
   // Identity
   email_captured: { source: "assess" | "feedback" | "save" };
+
+  // Channel attribution mirror (PostHog backstop for the per-channel funnel)
+  channel_view: {
+    path: string;
+    utm_source: string | null;
+    utm_medium: string | null;
+    utm_campaign: string | null;
+    ref_code: string | null;
+    referrer_url: string | null;
+  };
+  channel_map_submitted: {
+    slug: string;
+    utm_source: string | null;
+    utm_medium: string | null;
+    utm_campaign: string | null;
+    ref_code: string | null;
+    source: "url" | "localStorage" | "referrer" | "none";
+  };
 };
 
 export type EventName = keyof EventProps;
