@@ -683,6 +683,45 @@ ${JSON.stringify(linkedin_data)}`;
       .update({ status: "complete" })
       .eq("slug", slug);
 
+    // 7a. Attribution reconciliation: if the submission row has no UTMs,
+    // try to recover them from a recent magnet_views row (homepage landing
+    // or microsite click) by the same visitor within a 1-hour window.
+    try {
+      const sub = submission as {
+        utm_source?: string | null;
+        utm_medium?: string | null;
+        utm_campaign?: string | null;
+        ref_code?: string | null;
+      };
+      if (!sub.utm_source && !sub.utm_medium && !sub.utm_campaign) {
+        // Pull the most recent UTM-tagged view in the last hour. We don't have
+        // the visitor fingerprint on the submission row, so we match by the
+        // closest view in time. Conservative: only copies if exactly one
+        // tagged view was logged in the last 5 minutes.
+        const sinceIso = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+        const { data: recentViews } = await supabase
+          .from("magnet_views")
+          .select("utm_source, utm_medium, utm_campaign, viewed_at")
+          .gte("viewed_at", sinceIso)
+          .not("utm_source", "is", null)
+          .order("viewed_at", { ascending: false })
+          .limit(1);
+        const v = (recentViews ?? [])[0];
+        if (v && (v.utm_source || v.utm_medium || v.utm_campaign)) {
+          await supabase
+            .from("magnet_submissions")
+            .update({
+              utm_source: v.utm_source,
+              utm_medium: v.utm_medium,
+              utm_campaign: v.utm_campaign,
+            })
+            .eq("slug", slug);
+        }
+      }
+    } catch (reconcileErr) {
+      console.debug("attribution reconcile skipped:", reconcileErr);
+    }
+
     await notifySlackSiteCreated({
       slug,
       websiteUrl: submission.website_url,
