@@ -581,7 +581,7 @@ const FounderMarks = ({ name }: { name: string }) => {
         }}
       >
         <span style={chipStyle}>AArete · CMO</span>
-        <span style={chipStyle}>A.T. Kearney · GTM</span>
+        <span style={chipStyle}>Kearney · GTM</span>
       </div>
     );
   }
@@ -1159,7 +1159,7 @@ const About = () => {
                   bullets: [
                     "26 years across 9 professional services firms",
                     "$125M AArete revenue as CMO",
-                    "$1.2B A.T. Kearney scaled from $250M",
+                    "$1.2B Kearney scaled from $250M",
                   ],
                 },
               ].map((p) => (
