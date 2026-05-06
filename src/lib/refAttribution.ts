@@ -65,6 +65,81 @@ export function getRefAttribution(): RefAttribution | null {
 }
 
 /**
+ * Read UTM/ref values directly from the current window URL. Returns null if
+ * none are present. Used as the highest-priority attribution source at submit
+ * time, ahead of localStorage first-touch.
+ */
+export function readUrlAttribution(): RefAttribution | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const url = new URL(window.location.href);
+    const ref = trim(url.searchParams.get("ref"));
+    const utmS = trim(url.searchParams.get("utm_source"));
+    const utmM = trim(url.searchParams.get("utm_medium"));
+    const utmC = trim(url.searchParams.get("utm_campaign"));
+    if (!ref && !utmS && !utmM && !utmC) return null;
+    return {
+      ref_code: ref,
+      utm_source: utmS,
+      utm_medium: utmM,
+      utm_campaign: utmC,
+      referrer_url:
+        typeof document !== "undefined" ? trim(document.referrer) : null,
+      captured_at: new Date().toISOString(),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Best-effort inference from document.referrer when no UTMs/ref are present.
+ * Maps known referrer hosts to a `utm_source`. Last-resort fallback only.
+ */
+export function inferFromReferrer(): RefAttribution | null {
+  if (typeof document === "undefined") return null;
+  const ref = trim(document.referrer);
+  if (!ref) return null;
+  let host = "";
+  try {
+    host = new URL(ref).hostname.toLowerCase().replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+  const map: Record<string, string> = {
+    "linkedin.com": "linkedin",
+    "lnkd.in": "linkedin",
+    "twitter.com": "twitter",
+    "x.com": "twitter",
+    "t.co": "twitter",
+    "facebook.com": "facebook",
+    "fb.com": "facebook",
+    "google.com": "google",
+    "bing.com": "bing",
+    "duckduckgo.com": "duckduckgo",
+    "youtube.com": "youtube",
+    "youtu.be": "youtube",
+  };
+  let source: string | null = null;
+  for (const k of Object.keys(map)) {
+    if (host === k || host.endsWith(`.${k}`)) {
+      source = map[k];
+      break;
+    }
+  }
+  if (!source) source = host || null;
+  if (!source) return null;
+  return {
+    ref_code: null,
+    utm_source: source,
+    utm_medium: "referral",
+    utm_campaign: null,
+    referrer_url: ref,
+    captured_at: new Date().toISOString(),
+  };
+}
+
+/**
  * Read the URL on landing. If a ?ref= or ?utm_* is present and we have not
  * yet stored a first-touch, persist it. Then fire-and-forget log the click.
  * Idempotent: safe to call from a top-level effect on every page.
