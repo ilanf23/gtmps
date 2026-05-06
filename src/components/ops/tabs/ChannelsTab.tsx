@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { opsGet } from "@/lib/opsClient";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ChannelRow {
   utm_source: string | null;
@@ -123,6 +124,56 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
     }
   });
 
+  // Layer 5: pipeline health checks. Run once on mount.
+  type Check = "pending" | "pass" | "fail";
+  const [healthInsert, setHealthInsert] = useState<Check>("pending");
+  const [healthHomeUtm, setHealthHomeUtm] = useState<Check>("pending");
+  const [healthSubUtm, setHealthSubUtm] = useState<Check>("pending");
+  const [testStatus, setTestStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const probeSlug = `__ops_health_${Math.random().toString(36).slice(2, 8)}`;
+      const ins = await supabase.from("magnet_views").insert({
+        slug: probeSlug,
+        utm_source: "ops",
+        utm_medium: "health",
+        utm_campaign: "probe",
+      });
+      if (!cancelled) setHealthInsert(ins.error ? "fail" : "pass");
+
+      const sinceIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const homeRes = await supabase
+        .from("magnet_views")
+        .select("utm_source")
+        .eq("slug", "__home__")
+        .gte("viewed_at", sinceIso)
+        .not("utm_source", "is", null)
+        .limit(1);
+      if (!cancelled) {
+        setHealthHomeUtm(
+          !homeRes.error && (homeRes.data ?? []).length > 0 ? "pass" : "fail",
+        );
+      }
+
+      const subRes = await supabase
+        .from("magnet_submissions")
+        .select("utm_source")
+        .gte("created_at", sinceIso)
+        .not("utm_source", "is", null)
+        .limit(1);
+      if (!cancelled) {
+        setHealthSubUtm(
+          !subRes.error && (subRes.data ?? []).length > 0 ? "pass" : "fail",
+        );
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshNonce]);
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -189,6 +240,24 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
     window.setTimeout(() => setSaved(false), 1500);
   };
 
+  const handleTestPipeline = async () => {
+    if (!builtUrl) return;
+    setTestStatus("Writing probe view…");
+    const ins = await supabase.from("magnet_views").insert({
+      slug: "__home__",
+      utm_source: source.trim() || null,
+      utm_medium: medium.trim() || null,
+      utm_campaign: campaign.trim() || null,
+    });
+    if (ins.error) {
+      setTestStatus(`Probe insert failed: ${ins.error.message}`);
+      return;
+    }
+    window.open(builtUrl, "_blank", "noopener,noreferrer");
+    setTestStatus("Probe written. Opening URL in new tab. Refresh in ~5s.");
+    window.setTimeout(() => setTestStatus(null), 6000);
+  };
+
   const mergedRows: ChannelRow[] = useMemo(() => {
     const apiRows = data?.rows ?? [];
     const synthetic: ChannelRow[] = savedChannels
@@ -239,6 +308,33 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
     <div className="space-y-4">
       {/* Link builder */}
       <section className="rounded-lg border border-[#22332F] bg-[#1A2B2A] p-4">
+        {/* Pipeline health badge */}
+        <div className="flex flex-wrap items-center gap-2 mb-3 text-[11px]">
+          <span className="text-[#A1A9A0] uppercase tracking-wider">
+            Pipeline health:
+          </span>
+          {(
+            [
+              ["Anon insert", healthInsert],
+              ["Tagged home views (24h)", healthHomeUtm],
+              ["Tagged submissions (24h)", healthSubUtm],
+            ] as Array<[string, Check]>
+          ).map(([label, status]) => (
+            <span
+              key={label}
+              className={`px-2 py-0.5 rounded border ${
+                status === "pass"
+                  ? "border-[#3D5A4A] text-[#9CC2B0] bg-[#16231F]"
+                  : status === "fail"
+                    ? "border-[#C02B0A] text-[#FF6E4F] bg-[#2A130C]"
+                    : "border-[#22332F] text-[#A1A9A0] bg-[#0F1E1D]"
+              }`}
+            >
+              {label}: {status === "pending" ? "…" : status === "pass" ? "ok" : "fail"}
+            </span>
+          ))}
+        </div>
+
         <h2 className="text-sm font-medium text-[#EDF5EC] mb-1">Link builder</h2>
         <p className="text-[11px] text-[#A1A9A0] mb-4">
           Mint a channel-tagged URL. First-touch attribution: a viewer who lands
@@ -342,7 +438,18 @@ export function ChannelsTab({ refreshNonce, onUnauth }: ChannelsTabProps) {
           >
             {saved ? "Saved" : "Save"}
           </button>
+          <button
+            type="button"
+            onClick={handleTestPipeline}
+            disabled={!builtUrl}
+            className="inline-flex items-center gap-2 rounded border border-[#FFBA1A] bg-transparent px-3 h-9 text-[12px] text-[#FFBA1A] hover:bg-[#352B0E] disabled:opacity-50 transition-colors"
+          >
+            Test pipeline
+          </button>
         </div>
+        {testStatus && (
+          <div className="mt-2 text-[11px] text-[#FFBA1A]">{testStatus}</div>
+        )}
       </section>
 
       {/* Funnel report */}
