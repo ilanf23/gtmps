@@ -61,7 +61,6 @@ const Ops = () => {
       {active === "shares" && <SharesTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "emails" && <EmailsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "bookings" && <BookingsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
-      {active === "channels" && <ChannelsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "health" && <HealthTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
     </OpsLayout>
   );
