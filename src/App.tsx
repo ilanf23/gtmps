@@ -1,40 +1,47 @@
+import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import IndexV1 from "./pages/IndexV1.tsx";
+// Eager: the homepage. It is the most-visited route and we want it in the
+// main bundle for the fastest possible LCP. Everything else is code-split
+// by route via React.lazy below so a homepage hit no longer drags the PDF
+// reader, ops dashboard, microsites, vertical landings, etc. into the wire.
 import Discover from "./pages/Discover.tsx";
-import Manuscript from "./pages/Manuscript.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import PepperGroup from "./pages/microsites/PepperGroup.tsx";
-import Google from "./pages/microsites/Google.tsx";
-import SPRGroup from "./pages/SPRGroup.tsx";
-import Consulting from "./pages/verticals/Consulting.tsx";
-import Law from "./pages/verticals/Law.tsx";
-import Accounting from "./pages/verticals/Accounting.tsx";
-import Msp from "./pages/verticals/Msp.tsx";
-import Advisory from "./pages/verticals/Advisory.tsx";
-import Ae from "./pages/verticals/Ae.tsx";
-import Recruiting from "./pages/verticals/Recruiting.tsx";
-import Agency from "./pages/verticals/Agency.tsx";
-import MagnetSite from "./pages/MagnetSite.tsx";
-import MagnetBook from "./pages/MagnetBook.tsx";
-import MagnetBookChatPage from "./pages/MagnetBookChatPage.tsx";
-import MagnetBookReaderPage from "./pages/MagnetBookReaderPage.tsx";
-import MagnetFeedbackPage from "./pages/MagnetFeedbackPage.tsx";
-import MagnetCohortPage from "./pages/MagnetCohortPage.tsx";
-import Awards from "./pages/Awards.tsx";
-import About from "./pages/About.tsx";
-import Aletheia from "./pages/Aletheia.tsx";
-import Ops from "./pages/Ops.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
 import SkipLink from "./components/SkipLink.tsx";
 import PostHogPageview from "./components/PostHogPageview.tsx";
 import RefAttributionCapture from "./components/RefAttributionCapture.tsx";
 import useScrollRestoration from "./hooks/useScrollRestoration.ts";
 import useFocusOnRouteChange from "./hooks/useFocusOnRouteChange.ts";
+
+// Lazy route chunks. Each becomes its own JS file fetched on navigation.
+const Index = lazy(() => import("./pages/Index.tsx"));
+const IndexV1 = lazy(() => import("./pages/IndexV1.tsx"));
+const Manuscript = lazy(() => import("./pages/Manuscript.tsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const PepperGroup = lazy(() => import("./pages/microsites/PepperGroup.tsx"));
+const Google = lazy(() => import("./pages/microsites/Google.tsx"));
+const SPRGroup = lazy(() => import("./pages/SPRGroup.tsx"));
+const Consulting = lazy(() => import("./pages/verticals/Consulting.tsx"));
+const Law = lazy(() => import("./pages/verticals/Law.tsx"));
+const Accounting = lazy(() => import("./pages/verticals/Accounting.tsx"));
+const Msp = lazy(() => import("./pages/verticals/Msp.tsx"));
+const Advisory = lazy(() => import("./pages/verticals/Advisory.tsx"));
+const Ae = lazy(() => import("./pages/verticals/Ae.tsx"));
+const Recruiting = lazy(() => import("./pages/verticals/Recruiting.tsx"));
+const Agency = lazy(() => import("./pages/verticals/Agency.tsx"));
+const MagnetSite = lazy(() => import("./pages/MagnetSite.tsx"));
+const MagnetBook = lazy(() => import("./pages/MagnetBook.tsx"));
+const MagnetBookChatPage = lazy(() => import("./pages/MagnetBookChatPage.tsx"));
+const MagnetBookReaderPage = lazy(() => import("./pages/MagnetBookReaderPage.tsx"));
+const MagnetFeedbackPage = lazy(() => import("./pages/MagnetFeedbackPage.tsx"));
+const MagnetCohortPage = lazy(() => import("./pages/MagnetCohortPage.tsx"));
+const Awards = lazy(() => import("./pages/Awards.tsx"));
+const About = lazy(() => import("./pages/About.tsx"));
+const Aletheia = lazy(() => import("./pages/Aletheia.tsx"));
+const Ops = lazy(() => import("./pages/Ops.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -56,6 +63,13 @@ const MagnetIndexRedirect = () => {
   return <Navigate to={{ pathname: "/", search: location.search }} replace />;
 };
 
+// Transparent fallback. Sub-200ms route chunks finish before any spinner
+// would even be useful, and a flash of empty cream is less jarring than a
+// loading indicator.
+const RouteFallback = () => (
+  <div style={{ minHeight: "100vh", background: "#F5F1E8" }} aria-hidden />
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -69,6 +83,7 @@ const App = () => (
         <RefAttributionCapture />
         <SkipLink />
         <main id="main-content" tabIndex={-1} style={{ outline: "none" }}>
+        <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Discover />} />
           <Route path="/v1" element={<Index />} />
@@ -101,6 +116,7 @@ const App = () => (
           {/* ADD NEW MICROSITE ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
         </main>
       </BrowserRouter>
     </TooltipProvider>
