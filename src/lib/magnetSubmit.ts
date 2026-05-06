@@ -12,7 +12,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { generateMagnetSlug, magnetSlugSuffix } from '@/lib/magnetSlug';
 import { track } from '@/lib/posthog';
 import type { CtaId } from '@/lib/eventTaxonomy';
-import { getRefAttribution, clearRefAttribution } from '@/lib/refAttribution';
+import {
+  getRefAttribution,
+  readUrlAttribution,
+  inferFromReferrer,
+} from '@/lib/refAttribution';
 
 /** Trim, prepend `https://` if missing, and validate via WHATWG URL. */
 export function normalizeUrl(input: string): string | null {
@@ -101,7 +105,20 @@ export async function submitMagnetUrl(
   let slug = baseSlug;
   let insertError: { code?: string; message?: string } | null = null;
 
-  const refAttr = getRefAttribution();
+  // Layered attribution: URL wins, then localStorage first-touch, then a
+  // best-effort inference from document.referrer. Whichever source is used
+  // is mirrored to PostHog so we can cross-check the per-channel funnel.
+  let attrSource: 'url' | 'localStorage' | 'referrer' | 'none' = 'none';
+  let refAttr = readUrlAttribution();
+  if (refAttr) attrSource = 'url';
+  if (!refAttr) {
+    refAttr = getRefAttribution();
+    if (refAttr) attrSource = 'localStorage';
+  }
+  if (!refAttr) {
+    refAttr = inferFromReferrer();
+    if (refAttr) attrSource = 'referrer';
+  }
 
   // Collision-retry loop: if the slug exists for a prior submitter, append
   // a 3-char suffix and try again, up to 4 attempts total.
@@ -156,6 +173,21 @@ export async function submitMagnetUrl(
       ok: false,
       error: 'Something went wrong. Please try again.',
     };
+  }
+
+  // Layer 4: PostHog mirror so the funnel has a backstop independent of
+  // Supabase. Fired only on successful submit.
+  try {
+    track('channel_map_submitted', {
+      slug,
+      utm_source: refAttr?.utm_source ?? null,
+      utm_medium: refAttr?.utm_medium ?? null,
+      utm_campaign: refAttr?.utm_campaign ?? null,
+      ref_code: refAttr?.ref_code ?? null,
+      source: attrSource,
+    });
+  } catch {
+    /* ignore */
   }
 
   try {
