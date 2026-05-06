@@ -227,7 +227,7 @@ export default function WhyResearchMatters({ primary }: Props) {
             </div>
             <p className="body-text">
               <strong>500 practitioner interviews.</strong> 26 years of PS firm leadership.{" "}
-              <strong>Richard Ashbaugh</strong> scaled A.T. Kearney from $250M to $1.2B as CMO. The
+              <strong>Richard Ashbaugh</strong> scaled Kearney from $250M to $1.2B as CMO. The
               methodology is real. Validated. Documented.
             </p>
           </div>

@@ -6,7 +6,7 @@ type Stat = { value: string; label: string };
 const RICHARD_STATS: Stat[] = [
   { value: '26', label: 'years across 9 professional services firms' },
   { value: '$125M', label: 'AArete revenue as CMO' },
-  { value: '$1.2B', label: 'A.T. Kearney, scaled from $250M' },
+  { value: '$1.2B', label: 'Kearney, scaled from $250M' },
 ];
 
 const ADAM_STATS: Stat[] = [
@@ -386,7 +386,7 @@ export default function AuthorityStrip() {
             </p>
             <div className="au-badges">
               <a className="au-badge" href="https://www.deloitte.com" target="_blank" rel="noopener noreferrer">Deloitte</a>
-              <a className="au-badge" href="https://www.kearney.com" target="_blank" rel="noopener noreferrer">A.T. Kearney</a>
+              <a className="au-badge" href="https://www.kearney.com" target="_blank" rel="noopener noreferrer">Kearney</a>
               <a className="au-badge" href="https://mabbly.com" target="_blank" rel="noopener noreferrer">Mabbly</a>
             </div>
           </div>

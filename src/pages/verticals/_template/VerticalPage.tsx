@@ -729,12 +729,12 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
                 title: "Co-author · Operator",
                 bio: (
                   <>
-                    <strong>$1.2B at A.T. Kearney.</strong> $125M AArete revenue as CMO. The framework was forged in his
+                    <strong>$1.2B at Kearney.</strong> $125M AArete revenue as CMO. The framework was forged in his
                     books before it became the manuscript.
                   </>
                 ),
                 stats: [
-                  { num: "$1.2B", label: "A.T. Kearney" },
+                  { num: "$1.2B", label: "Kearney" },
                   { num: "$125M", label: "AArete CMO" },
                 ],
               },
