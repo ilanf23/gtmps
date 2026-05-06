@@ -283,18 +283,22 @@ const Discover = () => {
             }
           `}</style>
         </section>
-        <AuthorityStrip />
-        <DeadZone />
-        <WhyNow />
-        <BetaReader />
-        <Results />
-        <TheDecision />
-        <Faq />
-        <FinalCta />
+        <Suspense fallback={<div style={{ minHeight: 400 }} aria-hidden />}>
+          <AuthorityStrip />
+          <DeadZone />
+          <WhyNow />
+          <BetaReader />
+          <Results />
+          <TheDecision />
+          <Faq />
+          <FinalCta />
+        </Suspense>
       </main>
       <Footer />
       <StickyCTA />
-      <FloatingHeroVideo />
+      <Suspense fallback={null}>
+        <FloatingHeroVideo />
+      </Suspense>
     </>
   );
 };
