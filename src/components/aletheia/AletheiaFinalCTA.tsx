@@ -48,7 +48,7 @@ const AletheiaFinalCTA = () => {
           <AletheiaSectionReveal delay={120}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
-                href="https://calendly.com/adam-fridman/30min"
+                href="https://calendly.com/richard-mabbly"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-8 py-4 text-sm tracking-[0.18em] font-semibold transition-transform"

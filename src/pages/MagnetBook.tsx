@@ -115,7 +115,7 @@ export default function MagnetBook() {
           </p>
           <div
             className="calendly-inline-widget w-full"
-            data-url="https://calendly.com/adam-mabbly/gtm?hide_gdpr_banner=1&background_color=FBF8F4&text_color=1C1008&primary_color=B8933A"
+            data-url="https://calendly.com/richard-mabbly?hide_gdpr_banner=1&background_color=FBF8F4&text_color=1C1008&primary_color=B8933A"
             style={{ minWidth: "320px", height: "700px" }}
           />
         </section>

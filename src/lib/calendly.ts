@@ -1,12 +1,12 @@
 // Centralized Calendly URL + popup helpers for the V10 microsite.
 //
-// All "Book Adam" CTAs route to https://calendly.com/adam-fridman/30min, with:
+// All "Book Adam" CTAs route to https://calendly.com/richard-mabbly, with:
 //  - UTM params for source attribution
 //  - Prefilled name + firm from the breakdown
 //  - Theme colors that match the brand-extracted microsite palette
 //  - Confirmation redirect back to /m/<slug>?booked=true
 
-const BASE_URL = "https://calendly.com/adam-fridman/30min";
+const BASE_URL = "https://calendly.com/richard-mabbly";
 const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
 const STYLE_HREF = "https://assets.calendly.com/assets/external/widget.css";
 

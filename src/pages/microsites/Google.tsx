@@ -10,7 +10,7 @@ const SITE_DATA: SiteData = {
 
   globalCta: {
     buttonText: "Book with Adam",
-    buttonUrl: "https://calendly.com/adam-fridman/30min",
+    buttonUrl: "https://calendly.com/richard-mabbly",
     subtext: "15-min MAP Review",
   },
 
@@ -74,7 +74,7 @@ const SITE_DATA: SiteData = {
     expandables: [],
     cta: {
       buttonText: "Schedule MAP Review",
-      buttonUrl: "https://calendly.com/adam-fridman/30min",
+      buttonUrl: "https://calendly.com/richard-mabbly",
       subtext: "This is a mirror, not a pitch. Book 15 minutes with Adam to review what's here, correct what's off, and discuss what's next.",
     },
     rrosCurrentStage: 0,
@@ -354,7 +354,7 @@ const SITE_DATA: SiteData = {
     },
     cta: {
       buttonText: "Schedule 15-Min MAP Review",
-      buttonUrl: "https://calendly.com/adam-fridman/30min",
+      buttonUrl: "https://calendly.com/richard-mabbly",
       subtext: "No pitch. Just: what's right, what's wrong, what's next.",
     },
     footer: {
