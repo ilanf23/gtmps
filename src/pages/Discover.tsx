@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { scrollToHero } from "@/lib/scrollToHero";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -8,21 +8,25 @@ import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
 import SkipLink from "@/components/SkipLink";
 import PaperGrain from "@/components/discover/PaperGrain";
-import AuthorityStrip from "@/components/discover/AuthorityStrip";
 import ScrollProgressRail from "@/components/discover/ScrollProgressRail";
 import SectionRail from "@/components/discover/SectionRail";
 import DiscoverHero from '@/components/discover/DiscoverHero';
 import IndustryGrid from '@/components/discover/IndustryGrid';
-import FloatingHeroVideo from '@/components/discover/FloatingHeroVideo';
-import DeadZone from '@/components/discover/DeadZone';
-import WhyNow from '@/components/discover/WhyNow';
-import BetaReader from '@/components/discover/BetaReader';
-import Results from '@/components/discover/Results';
-import TheDecision from '@/components/discover/TheDecision';
-import Faq from '@/components/discover/Faq';
-import FinalCta from '@/components/discover/FinalCta';
-import EarlyAccessReminder from '@/components/discover/EarlyAccessReminder';
 import bookCoverGm from '@/assets/book-cover-gm.png';
+
+// Below-the-fold sections. Lazy-loaded so they do not bloat the initial
+// homepage bundle. Each becomes its own small chunk fetched as the user
+// scrolls (React.lazy mounts on first render of the element). Suspense
+// fallback below preserves layout height to prevent CLS jumps.
+const AuthorityStrip = lazy(() => import("@/components/discover/AuthorityStrip"));
+const FloatingHeroVideo = lazy(() => import("@/components/discover/FloatingHeroVideo"));
+const DeadZone = lazy(() => import("@/components/discover/DeadZone"));
+const WhyNow = lazy(() => import("@/components/discover/WhyNow"));
+const BetaReader = lazy(() => import("@/components/discover/BetaReader"));
+const Results = lazy(() => import("@/components/discover/Results"));
+const TheDecision = lazy(() => import("@/components/discover/TheDecision"));
+const Faq = lazy(() => import("@/components/discover/Faq"));
+const FinalCta = lazy(() => import("@/components/discover/FinalCta"));
 
 const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
 
@@ -279,18 +283,22 @@ const Discover = () => {
             }
           `}</style>
         </section>
-        <AuthorityStrip />
-        <DeadZone />
-        <WhyNow />
-        <BetaReader />
-        <Results />
-        <TheDecision />
-        <Faq />
-        <FinalCta />
+        <Suspense fallback={<div style={{ minHeight: 400 }} aria-hidden />}>
+          <AuthorityStrip />
+          <DeadZone />
+          <WhyNow />
+          <BetaReader />
+          <Results />
+          <TheDecision />
+          <Faq />
+          <FinalCta />
+        </Suspense>
       </main>
       <Footer />
       <StickyCTA />
-      <FloatingHeroVideo />
+      <Suspense fallback={null}>
+        <FloatingHeroVideo />
+      </Suspense>
     </>
   );
 };
