@@ -183,7 +183,7 @@ const ApplySection = () => {
             Free. 60 minutes with Adam and Richard. No pitch. No sales deck. Just the research.
           </p>
           <span className="font-mono block text-center" style={{ fontSize: 9, color: "rgba(255,255,255,0.3)" }}>
-            Prefer to book directly? calendly.com/adam-fridman/30min
+            Prefer to book directly? calendly.com/richard-mabbly
           </span>
         </div>
 

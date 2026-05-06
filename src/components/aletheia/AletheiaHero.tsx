@@ -52,7 +52,7 @@ const AletheiaHero = () => {
         </p>
 
         <a
-          href="https://calendly.com/adam-fridman/30min"
+          href="https://calendly.com/richard-mabbly"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block px-7 py-4 text-sm tracking-[0.18em] font-semibold transition-transform"

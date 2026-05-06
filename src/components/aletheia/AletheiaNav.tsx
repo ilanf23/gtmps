@@ -40,7 +40,7 @@ const AletheiaNav = () => {
           ALETHEIA · MAP · APRIL 2026
         </div>
         <a
-          href="https://calendly.com/adam-fridman/30min"
+          href="https://calendly.com/richard-mabbly"
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs tracking-[0.18em] font-semibold px-4 py-2 border transition-colors"

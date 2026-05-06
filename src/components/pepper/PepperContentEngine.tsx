@@ -226,7 +226,7 @@ export default function PepperContentEngine() {
       {/* CTA */}
       <section className="text-center space-y-5 py-4">
         <a
-          href="https://calendly.com/adam-fridman/30min"
+          href="https://calendly.com/richard-mabbly"
           target="_blank"
           rel="noopener noreferrer"
           className="relative overflow-hidden font-semibold px-12 py-5 rounded-xl text-lg transition-all duration-300 cursor-pointer inline-block no-underline"
