@@ -855,7 +855,7 @@ export default function ReceiptsBeatClaims() {
                   </p>
                 </article>
                 <article className="rcpt-card rcpt-card-sm delay-2">
-                  <p className="card-firm">A.T. Kearney</p>
+                  <p className="card-firm">Kearney</p>
                   <p className="card-stat">
                     <CountUpStat
                       active={revealed}
