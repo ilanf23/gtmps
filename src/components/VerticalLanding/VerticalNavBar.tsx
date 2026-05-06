@@ -261,7 +261,7 @@ export default function VerticalNavBar({
             <a className="vnav-link" href="/awards">Awards</a>
             <a
               className="vnav-link"
-              href="https://www.youtube.com/@GTMforPS"
+              href="https://www.youtube.com/watch?v=6eb4aZzi74A&t=1757s"
               target="_blank"
               rel="noopener noreferrer"
             >
