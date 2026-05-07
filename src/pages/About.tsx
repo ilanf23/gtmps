@@ -838,7 +838,7 @@ const About = () => {
               <p style={eyebrowStyle}>The Book</p>
               <h2 style={h2Dark}>GTM for Professional Services: The Relationship Revenue OS.</h2>
               <p style={bodyDark}>
-                30 chapters. Three frameworks. Built from 500 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026.
+                30 chapters. Three frameworks. Built from 200 practitioner interviews. Validated by Jonathan Copulsky (Former CMO Deloitte, Senior Lecturer Northwestern Kellogg). The manuscript is in research validation now. Public launch Q3 2026.
               </p>
               <Link
                 to="/discover#beta-reader"
@@ -1146,7 +1146,7 @@ const About = () => {
                   photo: adamPhoto,
                   linkedin: "https://www.linkedin.com/in/adamfridman/",
                   bullets: [
-                    "500 practitioner interviews (Science of Story)",
+                    "200 practitioner interviews (Science of Story)",
                     "180 podcast episodes on GTM for Professional Services",
                     "2 yrs Inc. columnist",
                   ],

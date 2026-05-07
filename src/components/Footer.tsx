@@ -22,7 +22,7 @@ const PROPERTIES = [
   },
   {
     label: "The Podcast",
-    desc: "500 practitioner interviews on YouTube.",
+    desc: "200 practitioner interviews on YouTube.",
     href: "https://www.youtube.com/@GTMforPS",
     current: false,
   },
