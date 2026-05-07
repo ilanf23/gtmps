@@ -25,7 +25,7 @@ const GROUPS: { label: string; honest?: boolean; items: Item[] }[] = [
         a: (
           <>
             <span className="faq-accent">
-              500 practitioner interviews. 30 firms in the research cohort.
+              200 practitioner interviews. 30 firms in the research cohort.
             </span>{' '}
             Foreword by Copulsky, former CMO of Deloitte and Senior Lecturer at
             Northwestern Kellogg.

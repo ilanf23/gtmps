@@ -5,14 +5,14 @@ export const consulting: VerticalConfig = {
   shortLabel: "Consulting",
   pageTitle: "Consulting - Practice Growth Score | Mabbly",
   pageDescription:
-    "The first research on practice growth in management consulting. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "The first research on practice growth in management consulting. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Practice Growth Research / Management Consulting",
     headlineLine1: "Your next consulting",
     headlineLine2: "client already knows you",
     lede: (
       <>
-        The first research on <strong>practice growth in management consulting</strong>. 500 practitioner interviews.
+        The first research on <strong>practice growth in management consulting</strong>. 200 practitioner interviews.
         Validated against the firms running it now.
       </>
     ),
@@ -155,14 +155,14 @@ export const law: VerticalConfig = {
   shortLabel: "Law",
   pageTitle: "Law Firms - Origination Score | Mabbly",
   pageDescription:
-    "The first research on origination strategy in law. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "The first research on origination strategy in law. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Origination Strategy Research / Law Firms",
     headlineLine1: "Your next matter",
     headlineLine2: "already knows you",
     lede: (
       <>
-        The first research on <strong>origination strategy in law firms</strong>. 500 practitioner interviews.
+        The first research on <strong>origination strategy in law firms</strong>. 200 practitioner interviews.
         Designed to surface dormant client relationships and benchmark partner pipeline depth.
       </>
     ),
@@ -294,14 +294,14 @@ export const accounting: VerticalConfig = {
   shortLabel: "Accounting",
   pageTitle: "Accounting Firms - Client Development Score | Mabbly",
   pageDescription:
-    "Client development research for accounting firms. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "Client development research for accounting firms. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Client Development Research / Accounting",
     headlineLine1: "Your next client",
     headlineLine2: "already knows you",
     lede: (
       <>
-        The first research on <strong>client development in accounting</strong>. 500 practitioner interviews.
+        The first research on <strong>client development in accounting</strong>. 200 practitioner interviews.
         Designed to surface tax-only clients you never cross-sold and benchmark advisory expansion capability.
       </>
     ),
@@ -433,14 +433,14 @@ export const msp: VerticalConfig = {
   shortLabel: "MSP",
   pageTitle: "MSPs - Account Expansion Score | Mabbly",
   pageDescription:
-    "Account expansion research for MSPs. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "Account expansion research for MSPs. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Account Expansion Research / Managed Services",
     headlineLine1: "Your next contract",
     headlineLine2: "already runs your stack",
     lede: (
       <>
-        The first research on <strong>account expansion in managed services</strong>. 500 practitioner interviews.
+        The first research on <strong>account expansion in managed services</strong>. 200 practitioner interviews.
         Designed to surface dormant SMB accounts and benchmark land-and-expand performance.
       </>
     ),
@@ -572,14 +572,14 @@ export const advisory: VerticalConfig = {
   shortLabel: "Advisory",
   pageTitle: "Financial Advisory - AUM Growth Score | Mabbly",
   pageDescription:
-    "AUM growth research for RIAs and wealth advisors. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "AUM growth research for RIAs and wealth advisors. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "AUM Growth Research / Financial Advisory",
     headlineLine1: "Your next client",
     headlineLine2: "already trusts you",
     lede: (
       <>
-        The first research on <strong>AUM growth in independent advisory</strong>. 500 practitioner interviews.
+        The first research on <strong>AUM growth in independent advisory</strong>. 200 practitioner interviews.
         Designed to surface dormant prospects, referral networks, and benchmark organic growth capability.
       </>
     ),
@@ -711,7 +711,7 @@ export const ae: VerticalConfig = {
   shortLabel: "Architecture",
   pageTitle: "Architecture & Engineering - Win Rate Score | Mabbly",
   pageDescription:
-    "Pursuit and origination research for A&E firms. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "Pursuit and origination research for A&E firms. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Pursuit Research / Architecture & Engineering",
     headlineLine1: "Your next project",
@@ -850,14 +850,14 @@ export const recruiting: VerticalConfig = {
   shortLabel: "Executive Search",
   pageTitle: "Executive Search - Mandate Velocity Score | Mabbly",
   pageDescription:
-    "Mandate velocity research for executive search firms. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "Mandate velocity research for executive search firms. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Mandate Research / Executive Search",
     headlineLine1: "Your next mandate",
     headlineLine2: "already placed with you",
     lede: (
       <>
-        The first research on <strong>mandate velocity in executive search</strong>. 500 practitioner interviews.
+        The first research on <strong>mandate velocity in executive search</strong>. 200 practitioner interviews.
         Designed to surface dormant search clients, candidate networks, and benchmark partner pipeline depth.
       </>
     ),
@@ -989,14 +989,14 @@ export const agency: VerticalConfig = {
   shortLabel: "Marketing",
   pageTitle: "Marketing Agencies - New Business Score | Mabbly",
   pageDescription:
-    "New business research for marketing agencies. 500 practitioner interviews. Score your firm in 10 minutes.",
+    "New business research for marketing agencies. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "New Business Research / Marketing Agencies",
     headlineLine1: "Your next account",
     headlineLine2: "already worked with you",
     lede: (
       <>
-        The first research on <strong>new business in independent agencies</strong>. 500 practitioner interviews.
+        The first research on <strong>new business in independent agencies</strong>. 200 practitioner interviews.
         Designed to surface dormant clients, lost pitches, and benchmark new-business velocity.
       </>
     ),

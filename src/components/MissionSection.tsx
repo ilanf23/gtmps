@@ -55,7 +55,7 @@ const storyCards = [
   {
     icon: TrendingUp,
     accent: "The Method",
-    headline: "Built from 500 practitioner interviews across 30 firms.",
+    headline: "Built from 200 practitioner interviews across 30 firms.",
     body: "Not theory. Not research from the outside. Their situations shape the chapters. The chapters become the framework. The framework changes how an entire industry grows.",
   },
 ];

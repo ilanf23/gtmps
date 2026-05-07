@@ -897,7 +897,7 @@ export default function ReceiptsBeatClaims() {
         <div className="rcpt-foot">
           <p>
             <strong>30 firms</strong> in the research cohort.{' '}
-            <strong>500 practitioner interviews.</strong> The full case index lives in Chapter 1.
+            <strong>200 practitioner interviews.</strong> The full case index lives in Chapter 1.
           </p>
         </div>
       </div>

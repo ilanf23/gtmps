@@ -49,7 +49,7 @@ const C: CtaVariant = {
   id: "C",
   label: "operational",
   paragraphs: [
-    "You identified your highest-leverage move in 90 seconds. Let's validate it against 500 practitioner interviews and your peers.",
+    "You identified your highest-leverage move in 90 seconds. Let's validate it against 200 practitioner interviews and your peers.",
   ],
   bullets: [
     "Your personalized revenue map",
