@@ -718,7 +718,7 @@ export const ae: VerticalConfig = {
     headlineLine2: "already met your team",
     lede: (
       <>
-        The first research on <strong>pursuit strategy in architecture and engineering</strong>. 500 practitioner
+        The first research on <strong>pursuit strategy in architecture and engineering</strong>. 200 practitioner
         interviews. Designed to surface stalled pursuits, dormant clients, and benchmark go-no-go discipline.
       </>
     ),
