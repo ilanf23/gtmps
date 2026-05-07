@@ -647,8 +647,8 @@ export default function DiscoverHero() {
               <span className="kl-sub-inner">
                 The largest research on GTM in professional services.<br />
                 <span className="kl-hl">200 practitioner interviews.</span><br />
-                The map shows where your firm sits in the <span className="kl-hl">Dead Zone</span>{' '}
-                - and the one chapter that fixes your biggest gap.
+                The map shows where your firm sits in the <span className="kl-hl">Dead Zone</span>,{' '}
+                and the one chapter that fixes your biggest gap.
               </span>
             </p>
 
