@@ -325,7 +325,6 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
         <div className="container">
           <div className="hero-grid">
             <div className="hero-left">
-              <Meta num="01" tag="Hero" />
               <div className="hero-eyebrow reveal d1">
                 <span className="eyebrow-rule" />
                 <span className="eyebrow-text">{config.hero.eyebrow}</span>
