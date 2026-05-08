@@ -50,7 +50,7 @@ export const CSS = `
 .cpage .section.dark + .section, .cpage .section + .section.dark { border-top: 1px solid var(--depth); }
 @media (max-width: 720px) { .cpage .section { padding: 64px 0; } }
 
-.cpage .section-head { text-align: center; margin: 0 auto 44px; max-width: 760px; }
+.cpage .section-head { text-align: center; margin: 0 auto 44px; max-width: 920px; }
 .cpage .meta-row {
   display: inline-flex; align-items: center; gap: 10px;
   margin-bottom: 16px;
@@ -397,11 +397,11 @@ export const CSS = `
 .cpage .score-form input::placeholder { color: var(--ink-soft); }
 .cpage .score-form input:focus { border-color: var(--care-bright); background: rgba(248, 242, 229, 0.08); }
 
-.cpage .authors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: stretch; }
+.cpage .authors-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: stretch; max-width: 920px; margin: 0 auto; }
 .cpage .author-tile {
   position: relative;
   background: var(--cream-card); border: 1px solid var(--cream-border); border-radius: 2px;
-  padding: 26px 26px 22px;
+  padding: 36px 36px 30px;
   display: flex; flex-direction: column;
 }
 .cpage .author-tile-strip { position: absolute; top: 0; left: 0; width: 56px; height: 2px; }
@@ -409,11 +409,11 @@ export const CSS = `
 .cpage .strip-care { background: var(--care); }
 .cpage .strip-depth { background: var(--depth); }
 
-.cpage .author-monogram-wrap { width: 64px; height: 64px; position: relative; margin-bottom: 18px; }
+.cpage .author-monogram-wrap { width: 76px; height: 76px; position: relative; margin-bottom: 22px; }
 .cpage .author-monogram {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--display); font-weight: 900; font-size: 22px; letter-spacing: -0.04em;
+  font-family: var(--display); font-weight: 900; font-size: 26px; letter-spacing: -0.04em;
   background: var(--depth); color: var(--cream);
 }
 .cpage .tick { position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--depth); }
@@ -422,18 +422,18 @@ export const CSS = `
 .cpage .tick-bl { bottom: -4px; left: -4px; border-right: none; border-top: none; }
 .cpage .tick-br { bottom: -4px; right: -4px; border-left: none; border-top: none; }
 
-.cpage .author-name { font-family: var(--display); font-weight: 900; font-size: 21px; letter-spacing: -0.02em; line-height: 1.0; color: var(--depth); margin-bottom: 6px; }
-.cpage .author-role { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; margin-bottom: 14px; }
+.cpage .author-name { font-family: var(--display); font-weight: 900; font-size: 26px; letter-spacing: -0.02em; line-height: 1.0; color: var(--depth); margin-bottom: 8px; }
+.cpage .author-role { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; margin-bottom: 18px; }
 .cpage .role-purpose { color: var(--purpose); }
 .cpage .role-care { color: var(--care); }
 .cpage .role-depth { color: var(--depth); }
-.cpage .author-bio { font-size: 12.5px; line-height: 1.55; color: var(--depth-soft); margin: 0 0 18px; flex: 1; }
+.cpage .author-bio { font-size: 14px; line-height: 1.65; color: var(--depth-soft); margin: 0 0 22px; flex: 1; }
 .cpage .author-bio strong { color: var(--depth); font-weight: 600; }
-.cpage .author-stat-row { display: flex; gap: 14px; padding-top: 14px; border-top: 1px solid var(--cream-line); flex-wrap: wrap; }
-.cpage .author-stat-num { font-family: var(--display); font-weight: 900; font-size: 17px; letter-spacing: -0.025em; line-height: 1.0; color: var(--depth); }
-.cpage .author-stat-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-top: 4px; }
+.cpage .author-stat-row { display: flex; gap: 28px; padding-top: 18px; border-top: 1px solid var(--cream-line); flex-wrap: wrap; }
+.cpage .author-stat-num { font-family: var(--display); font-weight: 900; font-size: 22px; letter-spacing: -0.025em; line-height: 1.0; color: var(--depth); }
+.cpage .author-stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-top: 5px; }
 
-@media (max-width: 980px) { .cpage .authors-grid { grid-template-columns: 1fr; } }
+@media (max-width: 820px) { .cpage .authors-grid { grid-template-columns: 1fr; max-width: 520px; } }
 
 .cpage .faq-list { max-width: 820px; margin: 0 auto; }
 .cpage .faq-item { border-bottom: 1px solid var(--cream-line); }
