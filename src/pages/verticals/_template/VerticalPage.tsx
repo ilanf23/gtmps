@@ -738,23 +738,6 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
                   { num: "$125M", label: "AArete CMO" },
                 ],
               },
-              {
-                strip: "depth",
-                role: "depth",
-                initials: "JC",
-                name: "Jonathan Copulsky",
-                title: "Foreword · Kellogg · Deloitte",
-                bio: (
-                  <>
-                    Northwestern Kellogg faculty. Former <strong>Deloitte CMO</strong>. Validated the research
-                    methodology and wrote the foreword.
-                  </>
-                ),
-                stats: [
-                  { num: "Kellogg", label: "Faculty" },
-                  { num: "Deloitte", label: "Former CMO" },
-                ],
-              },
             ].map((a, i) => (
               <article className={`author-tile reveal d${i + 2}`} key={a.initials}>
                 <span className={`author-tile-strip strip-${a.strip}`} />
