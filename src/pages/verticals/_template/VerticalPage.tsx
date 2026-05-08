@@ -585,13 +585,19 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
             })}
 
             <div className={`audit-result${alert ? " alert" : ""}`}>
-              {alert ? (
-                <>
-                  <span style={{ color: "var(--care)", fontWeight: 700 }}>→</span> {config.audit.alertMessage}
-                </>
-              ) : (
-                "Click any question to begin your audit"
-              )}
+              {(() => {
+                const answered = Object.values(audit).filter((v) => v !== null).length;
+                if (alert) {
+                  return (
+                    <>
+                      <span style={{ color: "var(--care)", fontWeight: 700 }}>→</span> {config.audit.alertMessage}
+                    </>
+                  );
+                }
+                if (answered === 0) return "Click any question to begin your audit";
+                if (answered < 6) return `${answered} of 6 answered. Keep going.`;
+                return "No critical gaps flagged. Strong baseline.";
+              })()}
             </div>
           </div>
         </div>
