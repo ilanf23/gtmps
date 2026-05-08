@@ -441,45 +441,6 @@ export default function MagnetBreakdown({
           emailSubject={flow.emailSubject}
           shareTemplate={flow.shareTemplate}
         />
-
-        <section className="pt-10 pb-6 border-t border-black/10 mt-8">
-          <div className="flex items-center gap-2 mb-3">
-            <span
-              className="h-px w-6"
-              style={{ backgroundColor: `var(--brand-accent, ${brand.primary})` }}
-              aria-hidden
-            />
-            <p
-              className="text-[11px] uppercase tracking-[0.3em] font-semibold opacity-70"
-              style={{ color: `var(--brand-accent, ${brand.primary})` }}
-            >
-              More Resources
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-            <a
-              href={`/m/${slug}/cohort`}
-              className="underline underline-offset-4 hover:opacity-80 transition-opacity"
-              style={{ color: `var(--brand-accent, ${brand.primary})` }}
-            >
-              How you compare →
-            </a>
-            <a
-              href={`/m/${slug}/chat`}
-              className="underline underline-offset-4 hover:opacity-80 transition-opacity"
-              style={{ color: `var(--brand-accent, ${brand.primary})` }}
-            >
-              Talk to the Book →
-            </a>
-            <a
-              href={`/m/${slug}/read`}
-              className="underline underline-offset-4 hover:opacity-80 transition-opacity"
-              style={{ color: `var(--brand-accent, ${brand.primary})` }}
-            >
-              Read the Manuscript →
-            </a>
-          </div>
-        </section>
       </div>
     </div>
   );
