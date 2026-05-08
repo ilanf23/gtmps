@@ -1,0 +1,1 @@
+UPDATE public.magnet_breakdowns SET client_logo_url = 'https://narrio.app/wp-content/uploads/2026/03/narrio.svg' WHERE slug = 'narrio';
