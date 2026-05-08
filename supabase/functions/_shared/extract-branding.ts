@@ -365,12 +365,48 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
   // Used to disambiguate the brand's own logo from client-wall logos
   // (e.g. "Griffith-logo.svg" sitting on mabbly.com).
   let domainRoot = "";
+  let baseHost = "";
   try {
     const host = new URL(baseUrl).hostname.replace(/^www\./, "");
+    baseHost = host;
     domainRoot = (host.split(".")[0] ?? "").toLowerCase();
   } catch {
     /* ignore */
   }
+
+  // Third-party SaaS hosts whose logos commonly appear in "works with" /
+  // integrations / partners strips on prospect homepages. When a candidate
+  // resolves to one of these hosts, it is almost never the prospect's own
+  // brand mark — disqualify outright. (Narrio failure: a Zendesk integration
+  // logo on narrio.app outscored the real narrio.svg.)
+  const THIRD_PARTY_HOST_DENYLIST = [
+    "zendesk.com", "intercom.com", "intercomcdn.com", "hubspot.com",
+    "salesforce.com", "segment.com", "slack.com", "slack-edge.com",
+    "zapier.com", "stripe.com", "shopify.com", "mailchimp.com",
+    "atlassian.com", "atlassian.net", "asana.com", "monday.com",
+    "notion.so", "gravatar.com", "linkedin.com", "twitter.com",
+    "x.com", "facebook.com", "instagram.com", "youtube.com",
+    "ytimg.com", "googleusercontent.com", "gstatic.com",
+  ];
+
+  const sameOrigin = (resolvedSrc: string): boolean => {
+    if (!baseHost) return false;
+    try {
+      const h = new URL(resolvedSrc).hostname.replace(/^www\./, "");
+      return h === baseHost || h.endsWith("." + baseHost) || baseHost.endsWith("." + h);
+    } catch {
+      return false;
+    }
+  };
+
+  const isDenylistedHost = (resolvedSrc: string): boolean => {
+    try {
+      const h = new URL(resolvedSrc).hostname.toLowerCase();
+      return THIRD_PARTY_HOST_DENYLIST.some((d) => h === d || h.endsWith("." + d));
+    } catch {
+      return false;
+    }
+  };
 
   // Slice the first 20k chars of markup after the opening <header>/<nav>.
   // Brand marks almost always sit at the top of the header. We do NOT
@@ -393,7 +429,15 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
   // strong enough to lose to any reasonable inline-SVG candidate.
   const DECORATIVE_HINT = /\b(hero|banner|background|bg[-_]|pattern|photo|headshot|portrait|team[-_]|people|cover|splash|illustration|avatar|profile)\b/i;
 
-  type Candidate = { src: string; score: number; isData?: boolean };
+  type Candidate = {
+    src: string;
+    score: number;
+    isData?: boolean;
+    kind: "inline-svg" | "img" | "favicon-svg" | "mask-icon" | "apple-touch" | "sized-icon";
+    hasLogoSignal?: boolean;
+    inHeader?: boolean;
+    domainMatch?: boolean;
+  };
   const candidates: Candidate[] = [];
 
   // Walk every <img> tag, score it.
@@ -453,7 +497,49 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     // Skip pure tracking pixels and tiny icons.
     if (/sprite|icon-|pixel|tracking|spacer|blank\.gif/.test(srcLower)) score -= 8;
 
-    if (score > 0) candidates.push({ src, score });
+    // Same-origin / cross-origin gating. We resolve the URL against baseUrl
+    // so relative paths (the common case for the real brand mark) are
+    // treated as same-origin.
+    const resolvedForOriginCheck = resolveUrl(src, baseUrl);
+    if (resolvedForOriginCheck) {
+      if (isDenylistedHost(resolvedForOriginCheck)) {
+        // Hard disqualify — third-party SaaS logo embedded on the page.
+        score = 0;
+      } else if (!sameOrigin(resolvedForOriginCheck)) {
+        // Cross-origin: heavily penalize. Most legitimate logos are served
+        // from the prospect's own domain or an asset subdomain.
+        score -= 25;
+      } else {
+        // Same-origin bonus.
+        score += 8;
+      }
+    }
+
+    // Whole-token brand-name match in the basename (narrio.svg, narrio-logo.png).
+    if (domainRoot && domainRoot.length >= 3) {
+      const basename = srcLower.split("/").pop() ?? "";
+      const tokenRe = new RegExp(`(^|[^a-z0-9])${domainRoot}([^a-z0-9]|$)`, "i");
+      if (tokenRe.test(basename)) score += 6;
+    }
+
+    if (score > 0) {
+      const resolvedHost = resolvedForOriginCheck
+        ? sameOrigin(resolvedForOriginCheck)
+        : true; // data: / inline candidates count as same-origin
+      candidates.push({
+        src,
+        score,
+        kind: "img",
+        hasLogoSignal,
+        inHeader: !!inHeader,
+        domainMatch:
+          !!(domainRoot && domainRoot.length >= 3 &&
+            (srcLower.includes(domainRoot) || alt.includes(domainRoot))),
+      });
+      // Re-tag for downstream confidence gate.
+      const last = candidates[candidates.length - 1];
+      (last as Candidate & { _sameOrigin?: boolean })._sameOrigin = resolvedHost;
+    }
   }
 
   // Inline <svg> inside header/nav — almost always the brand mark. Score
@@ -466,7 +552,7 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
   // win. This was the Mabbly bug: the real brand mark is inline SVG, but
   // an `<img>` with `mabbly` in its src outscored it 22 to 11.
   const inlineSvg = findInlineHeaderSvg(html);
-  if (inlineSvg) candidates.push({ src: inlineSvg, score: 30, isData: true });
+  if (inlineSvg) candidates.push({ src: inlineSvg, score: 30, isData: true, kind: "inline-svg" });
 
   // SVG favicon — vector favicons are virtually always the real mark.
   const svgIconLink = (() => {
@@ -477,19 +563,19 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     );
     return m?.[1] ?? null;
   })();
-  if (svgIconLink) candidates.push({ src: svgIconLink, score: 8 });
+  if (svgIconLink) candidates.push({ src: svgIconLink, score: 8, kind: "favicon-svg" });
 
   const maskIcon = pickAttr(
     html,
     /<link[^>]+rel=["']mask-icon["'][^>]+href=["']([^"']+)["']/i,
   );
-  if (maskIcon) candidates.push({ src: maskIcon, score: 7 });
+  if (maskIcon) candidates.push({ src: maskIcon, score: 7, kind: "mask-icon" });
 
   const appleTouch = pickAttr(
     html,
     /<link[^>]+rel=["'](?:apple-touch-icon|apple-touch-icon-precomposed)["'][^>]+href=["']([^"']+)["']/i,
   );
-  if (appleTouch) candidates.push({ src: appleTouch, score: 6 });
+  if (appleTouch) candidates.push({ src: appleTouch, score: 6, kind: "apple-touch" });
 
   const sizedIcon = (() => {
     const re = /<link[^>]+rel=["'][^"']*\bicon\b[^"']*["'][^>]*>/gi;
@@ -504,7 +590,7 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     }
     return null;
   })();
-  if (sizedIcon) candidates.push({ src: sizedIcon, score: 5 });
+  if (sizedIcon) candidates.push({ src: sizedIcon, score: 5, kind: "sized-icon" });
 
   // og:image / twitter:image are deliberately NOT used — they are
   // landscape marketing photos, not logos.
@@ -520,12 +606,38 @@ async function findLogoUrl(html: string, baseUrl: string): Promise<string | null
     });
 
   for (const c of ranked) {
-    if (c.src.startsWith("data:")) return c.src;
+    // Confidence gate: top candidate must have a positive logo signal.
+    // Trusted kinds (inline SVG, favicon links) pass automatically.
+    // <img> candidates must be same-origin AND carry at least one of:
+    // explicit logo token, brand-name match, or header placement.
+    const trustedKind =
+      c.kind === "inline-svg" ||
+      c.kind === "favicon-svg" ||
+      c.kind === "mask-icon" ||
+      c.kind === "apple-touch" ||
+      c.kind === "sized-icon";
+    if (!trustedKind) {
+      const sameOrig = (c as Candidate & { _sameOrigin?: boolean })._sameOrigin;
+      const positiveSignal = c.hasLogoSignal || c.domainMatch || c.inHeader;
+      if (!sameOrig || !positiveSignal) {
+        // Skip — not confident enough. Keep looking.
+        continue;
+      }
+    }
+
+    if (c.src.startsWith("data:")) {
+      console.log("[extract-branding] logo selected", { kind: c.kind, score: c.score, source: "data-url" });
+      return c.src;
+    }
     const resolved = resolveUrl(c.src, baseUrl);
     if (!resolved) continue;
     const ok = await validateLogoAsset(resolved);
-    if (ok) return ok;
+    if (ok) {
+      console.log("[extract-branding] logo selected", { kind: c.kind, score: c.score, src: ok });
+      return ok;
+    }
   }
+  console.log("[extract-branding] no confident logo found", { baseHost, candidateCount: ranked.length });
   return null;
 }
 
