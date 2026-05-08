@@ -480,7 +480,6 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
       <section className="section">
         <div className="container">
           <aside className="definition-pull reveal d1">
-            <span className="definition-pull-mark">Definition · First Use</span>
             <div className="definition-pull-term">{config.reality.definitionTerm}</div>
             <p className="definition-pull-body">{config.reality.definitionBody}</p>
           </aside>
