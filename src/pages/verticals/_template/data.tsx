@@ -158,7 +158,7 @@ export const law: VerticalConfig = {
     "The first research on origination strategy in law. 200 practitioner interviews. Score your firm in 10 minutes.",
   hero: {
     eyebrow: "Origination Strategy Research / Law Firms",
-    headlineLine1: "Your next matter",
+    headlineLine1: "Your next case",
     headlineLine2: "already knows you",
     lede: (
       <>
@@ -284,7 +284,7 @@ export const law: VerticalConfig = {
     ],
   },
   begin: {
-    headline: "Your next matter already knows you",
+    headline: "Your next case already knows you",
     ctaLabel: "Add Your Firm",
   },
 };
