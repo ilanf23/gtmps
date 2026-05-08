@@ -50,7 +50,7 @@ export const CSS = `
 .cpage .section.dark + .section, .cpage .section + .section.dark { border-top: 1px solid var(--depth); }
 @media (max-width: 720px) { .cpage .section { padding: 64px 0; } }
 
-.cpage .section-head { text-align: center; margin: 0 auto 44px; max-width: 760px; }
+.cpage .section-head { text-align: center; margin: 0 auto 44px; max-width: 920px; }
 .cpage .meta-row {
   display: inline-flex; align-items: center; gap: 10px;
   margin-bottom: 16px;
