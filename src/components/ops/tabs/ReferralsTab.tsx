@@ -454,7 +454,7 @@ function HelpDot({ tip }: { tip: string }) {
           type="button"
           aria-label="Help"
           title={tip}
-          className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#3D4D49] text-[9px] font-bold text-[#C8D1C7] leading-none transition-colors hover:border-[#FFBA1A]/60 hover:text-[#FFBA1A]"
+          className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#FFBA1A]/50 bg-[#352B0E] text-[11px] font-bold text-[#FFBA1A] leading-none transition-colors hover:border-[#FFBA1A] hover:bg-[#4A3A12]"
         >
           H
         </button>
