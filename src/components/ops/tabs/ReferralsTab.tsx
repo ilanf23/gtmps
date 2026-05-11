@@ -439,3 +439,21 @@ function FunnelRow({ icon, label, value, pct, highlight }: { icon: React.ReactNo
     </div>
   );
 }
+
+function HelpDot({ tip }: { tip: string }) {
+  return (
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label="Help"
+          title={tip}
+          className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#3D4D49] text-[9px] font-bold text-[#C8D1C7] leading-none transition-colors hover:border-[#FFBA1A]/60 hover:text-[#FFBA1A]"
+        >
+          H
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-[280px] normal-case tracking-normal">{tip}</TooltipContent>
+    </Tooltip>
+  );
+}
