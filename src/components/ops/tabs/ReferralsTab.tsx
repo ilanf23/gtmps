@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { call, opsGet } from "@/lib/opsClient";
+import { Copy, Check, ExternalLink, Archive, ArchiveRestore, BellOff, MousePointerClick, Users, Sparkles } from "lucide-react";
 
 interface RefCodeRow {
   code: string;
@@ -172,60 +173,122 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
       </section>
 
       {/* Codes table */}
-      <section className="rounded-lg border border-[#22332F] bg-[#1A2B2A] p-4">
-        <h2 className="text-sm font-medium text-[#EDF5EC] mb-3">Referral links</h2>
-        {loading && <div className="text-[#A1A9A0] text-sm">loading…</div>}
-        {err && <div className="text-[#C02B0A] text-sm">{err}</div>}
+      {/* Codes grid */}
+      <section>
+        <div className="flex items-baseline justify-between mb-3 px-1">
+          <h2 className="text-sm font-medium text-[#EDF5EC]">Referral links</h2>
+          {!loading && sortedRows.length > 0 && (
+            <span className="text-[11px] text-[#A1A9A0]">
+              {sortedRows.filter((r) => !r.archived_at).length} active
+              {sortedRows.some((r) => r.archived_at) && ` · ${sortedRows.filter((r) => r.archived_at).length} archived`}
+            </span>
+          )}
+        </div>
+        {loading && <div className="text-[#A1A9A0] text-sm px-1">loading…</div>}
+        {err && <div className="text-[#C02B0A] text-sm px-1">{err}</div>}
         {!loading && !err && sortedRows.length === 0 && (
-          <div className="text-[12px] text-[#A1A9A0]">No referral links yet. Create one above.</div>
+          <div className="rounded-lg border border-dashed border-[#22332F] bg-[#1A2B2A]/40 px-4 py-8 text-center">
+            <p className="text-[13px] text-[#EDF5EC] mb-1">No referral links yet</p>
+            <p className="text-[11px] text-[#A1A9A0]">Create your first one above to start tracking attribution.</p>
+          </div>
         )}
         {!loading && sortedRows.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead className="text-[#A1A9A0] uppercase tracking-wider">
-                <tr>
-                  <th className="text-left px-2 py-1 font-medium">Code</th>
-                  <th className="text-left px-2 py-1 font-medium">Label</th>
-                  <th className="text-right px-2 py-1 font-medium">Clicks</th>
-                  <th className="text-right px-2 py-1 font-medium">Unique</th>
-                  <th className="text-right px-2 py-1 font-medium">Maps</th>
-                  <th className="text-right px-2 py-1 font-medium">CR</th>
-                  <th className="text-left px-2 py-1 font-medium">Last activity</th>
-                  <th className="text-left px-2 py-1 font-medium">Link</th>
-                  <th className="text-left px-2 py-1 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#22332F]">
-                {sortedRows.map((r) => {
-                  const url = buildUrl(r);
-                  return (
-                    <tr key={r.code} className={r.archived_at ? "opacity-50" : ""}>
-                      <td className="px-2 py-1 font-mono text-[#FFBA1A]">{r.code}</td>
-                      <td className="px-2 py-1 text-[#EDF5EC]">
-                        {r.label}
-                        {r.suppress_slack && <span className="ml-1 text-[10px] text-[#A1A9A0]">(no slack)</span>}
-                      </td>
-                      <td className="px-2 py-1 text-right text-[#EDF5EC]">{r.clicks}</td>
-                      <td className="px-2 py-1 text-right text-[#EDF5EC]">{r.unique_clicks}</td>
-                      <td className="px-2 py-1 text-right text-[#EDF5EC]">{r.maps_created}</td>
-                      <td className="px-2 py-1 text-right text-[#FFBA1A]">{(r.conversion_rate * 100).toFixed(1)}%</td>
-                      <td className="px-2 py-1 text-[#A1A9A0]">{relative(r.last_activity_at)}</td>
-                      <td className="px-2 py-1">
-                        <button type="button" onClick={() => copy(r.code, url)} className="font-mono text-[11px] text-[#A1A9A0] hover:text-[#FFBA1A] truncate max-w-[260px]" title={url}>
-                          {copiedCode === r.code ? "Copied!" : url.replace(/^https?:\/\//, "")}
-                        </button>
-                      </td>
-                      <td className="px-2 py-1">
-                        <div className="flex gap-2">
-                          <button type="button" onClick={() => setDetailCode(r.code)} className="text-[11px] text-[#A1A9A0] hover:text-[#EDF5EC]">View</button>
-                          <button type="button" onClick={() => handleArchive(r.code, !r.archived_at)} className="text-[11px] text-[#A1A9A0] hover:text-[#EDF5EC]">{r.archived_at ? "Unarchive" : "Archive"}</button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {sortedRows.map((r) => {
+              const url = buildUrl(r);
+              const cr = r.conversion_rate * 100;
+              const crColor =
+                cr >= 50 ? "text-emerald-400 bg-emerald-400/10 border-emerald-400/20"
+                : cr >= 10 ? "text-[#FFBA1A] bg-[#FFBA1A]/10 border-[#FFBA1A]/20"
+                : "text-[#A1A9A0] bg-[#A1A9A0]/5 border-[#22332F]";
+              const isCopied = copiedCode === r.code;
+              const isArchived = !!r.archived_at;
+              const maxFunnel = Math.max(r.clicks, 1);
+              const uniquePct = (r.unique_clicks / maxFunnel) * 100;
+              const mapsPct = (r.maps_created / maxFunnel) * 100;
+              return (
+                <article
+                  key={r.code}
+                  className={`group relative rounded-lg border bg-[#1A2B2A] p-4 transition-colors ${
+                    isArchived
+                      ? "border-[#22332F]/60 opacity-60"
+                      : "border-[#22332F] hover:border-[#FFBA1A]/40 hover:bg-[#1F302F]"
+                  }`}
+                >
+                  {/* Header: code + CR pill */}
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div className="min-w-0">
+                      <div className="font-mono text-[15px] text-[#FFBA1A] truncate">{r.code}</div>
+                      <div className="text-[12px] text-[#EDF5EC] truncate mt-0.5">{r.label}</div>
+                    </div>
+                    <span className={`shrink-0 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-mono ${crColor}`}>
+                      {cr.toFixed(1)}%
+                    </span>
+                  </div>
+
+                  {/* Meta strip */}
+                  <div className="flex items-center gap-2 text-[10px] text-[#A1A9A0] mb-3">
+                    <span>{relative(r.last_activity_at)}</span>
+                    {r.suppress_slack && (
+                      <>
+                        <span className="opacity-40">·</span>
+                        <span className="inline-flex items-center gap-1"><BellOff size={10} /> no slack</span>
+                      </>
+                    )}
+                    {isArchived && (
+                      <>
+                        <span className="opacity-40">·</span>
+                        <span>archived</span>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Funnel */}
+                  <div className="space-y-2 mb-4">
+                    <FunnelRow icon={<MousePointerClick size={11} />} label="Clicks" value={r.clicks} pct={100} />
+                    <FunnelRow icon={<Users size={11} />} label="Unique" value={r.unique_clicks} pct={uniquePct} />
+                    <FunnelRow icon={<Sparkles size={11} />} label="Maps" value={r.maps_created} pct={mapsPct} highlight />
+                  </div>
+
+                  {/* Link + actions */}
+                  <div className="flex items-center gap-1.5 pt-3 border-t border-[#22332F]">
+                    <button
+                      type="button"
+                      onClick={() => copy(r.code, url)}
+                      className="flex-1 inline-flex items-center gap-1.5 rounded border border-[#22332F] bg-[#0F1E1D] px-2 h-7 text-[11px] text-[#A1A9A0] hover:text-[#FFBA1A] hover:border-[#FFBA1A]/40 transition-colors min-w-0"
+                      title={url}
+                    >
+                      {isCopied ? <Check size={12} className="text-emerald-400 shrink-0" /> : <Copy size={12} className="shrink-0" />}
+                      <span className="font-mono truncate">{isCopied ? "Copied" : url.replace(/^https?:\/\//, "")}</span>
+                    </button>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center w-7 h-7 rounded border border-[#22332F] bg-[#0F1E1D] text-[#A1A9A0] hover:text-[#EDF5EC] hover:border-[#22332F] transition-colors"
+                      title="Open link"
+                    >
+                      <ExternalLink size={12} />
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setDetailCode(r.code)}
+                      className="inline-flex items-center justify-center h-7 px-2 rounded border border-[#22332F] bg-[#0F1E1D] text-[11px] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
+                    >
+                      View
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleArchive(r.code, !r.archived_at)}
+                      className="inline-flex items-center justify-center w-7 h-7 rounded border border-[#22332F] bg-[#0F1E1D] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
+                      title={isArchived ? "Unarchive" : "Archive"}
+                    >
+                      {isArchived ? <ArchiveRestore size={12} /> : <Archive size={12} />}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
@@ -285,5 +348,21 @@ function Input({ label, value, onChange, placeholder, required, mono }: { label:
         className={`w-full rounded border border-[#22332F] bg-[#0F1E1D] px-3 py-2 text-[13px] text-[#EDF5EC] focus:outline-none focus:border-[#FFBA1A] ${mono ? "font-mono" : ""}`}
       />
     </label>
+  );
+}
+
+function FunnelRow({ icon, label, value, pct, highlight }: { icon: React.ReactNode; label: string; value: number; pct: number; highlight?: boolean }) {
+  const bar = highlight ? "bg-[#FFBA1A]" : "bg-[#3D5A4A]";
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 w-16 text-[10px] uppercase tracking-wider text-[#A1A9A0]">
+        <span className="text-[#A1A9A0]">{icon}</span>
+        <span>{label}</span>
+      </div>
+      <div className="flex-1 h-1.5 rounded-full bg-[#0F1E1D] overflow-hidden">
+        <div className={`h-full ${bar} transition-all`} style={{ width: `${Math.max(pct, value > 0 ? 4 : 0)}%` }} />
+      </div>
+      <div className={`w-8 text-right text-[12px] font-mono ${highlight ? "text-[#FFBA1A]" : "text-[#EDF5EC]"}`}>{value}</div>
+    </div>
   );
 }
