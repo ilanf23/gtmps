@@ -38,7 +38,7 @@ npx playwright test                    # E2E (config exists, minimal usage)
 | **Backend** | Supabase (Postgres + Edge Functions + RLS) | Auth-free anon access where appropriate, RPC for protected ops |
 | **AI** | OpenAI gpt-4o-mini via edge function | ~$0.002/MAP, sufficient quality post-tuning |
 | **Web scraping** | Jina Reader (`https://r.jina.ai/{url}`) | Free tier, clean text extraction |
-| **Hosting** | Vercel (post-Lovable migration) | Auto-deploy on push, edge config |
+| **Hosting** | Lovable (Lovable Cloud) | Lovable reads `.env` at build time; `VITE_SUPABASE_*` are auto-managed by Lovable Cloud and re-written into `.env`. A Vercel migration was once planned in `docs/05-playbook.md` but was not executed; ignore Vercel references in that doc. |
 | **Test** | Vitest + jsdom + Testing Library, Playwright (minimal) | Unit-first, E2E backstop |
 
 ## Architecture
