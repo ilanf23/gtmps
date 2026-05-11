@@ -365,6 +365,78 @@ export type Database = {
         }
         Relationships: []
       }
+      magnet_ref_clicks: {
+        Row: {
+          clicked_at: string
+          code: string
+          created_at: string
+          id: string
+          landing_path: string | null
+          referrer_url: string | null
+          user_agent: string | null
+          visitor_fingerprint: string | null
+        }
+        Insert: {
+          clicked_at?: string
+          code: string
+          created_at?: string
+          id?: string
+          landing_path?: string | null
+          referrer_url?: string | null
+          user_agent?: string | null
+          visitor_fingerprint?: string | null
+        }
+        Update: {
+          clicked_at?: string
+          code?: string
+          created_at?: string
+          id?: string
+          landing_path?: string | null
+          referrer_url?: string | null
+          user_agent?: string | null
+          visitor_fingerprint?: string | null
+        }
+        Relationships: []
+      }
+      magnet_referral_codes: {
+        Row: {
+          archived_at: string | null
+          code: string
+          created_at: string
+          destination_path: string
+          label: string
+          notes: string | null
+          suppress_slack: boolean
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          archived_at?: string | null
+          code: string
+          created_at?: string
+          destination_path?: string
+          label: string
+          notes?: string | null
+          suppress_slack?: boolean
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          archived_at?: string | null
+          code?: string
+          created_at?: string
+          destination_path?: string
+          label?: string
+          notes?: string | null
+          suppress_slack?: boolean
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       magnet_share_events: {
         Row: {
           channel: string
