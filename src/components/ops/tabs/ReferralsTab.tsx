@@ -151,8 +151,8 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
         </div>
         <form onSubmit={handleCreate} className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end">
-            <Input label="Code" hint="Short URL slug appended as ?ref=… on every link. Lowercase letters, numbers, hyphens. This is what shows up in attribution." value={form.code} onChange={(v) => setForm({ ...form, code: v.toLowerCase().replace(/[^a-z0-9_-]/g, "") })} placeholder="adam-li-dm" required mono />
-            <Input label="Label" hint="Human-readable name only you see. Helps you remember which link is which when reviewing performance." value={form.label} onChange={(v) => setForm({ ...form, label: v })} placeholder="Adam LinkedIn DM, May" required />
+            <Input label="Code" hint={"The URL slug for this link. Lowercase letters, numbers, dashes, and underscores only. Appears in the URL as ?ref=<code> and is used to attribute every click, page view, magnet submission, and booking that comes through this link.\n\nExample: adam-li-dm, partner-john-q2"} value={form.code} onChange={(v) => setForm({ ...form, code: v.toLowerCase().replace(/[^a-z0-9_-]/g, "") })} placeholder="adam-li-dm" required mono />
+            <Input label="Label" hint={"A human-readable name for this link, for your own reference. Shown in the codes table and Slack notifications so you can tell links apart at a glance. Never shown to the partner or visitor.\n\nExample: Adam LinkedIn DM, May 5 batch"} value={form.label} onChange={(v) => setForm({ ...form, label: v })} placeholder="Adam LinkedIn DM, May" required />
             <button type="submit" disabled={saving || !form.code || !form.label} className="inline-flex items-center justify-center gap-2 rounded border border-[#FFBA1A] bg-[#352B0E] px-4 h-9 text-[12px] text-[#FFBA1A] hover:bg-[#4A3A12] disabled:opacity-50 transition-colors whitespace-nowrap">
               {saving ? "Creating…" : "Create link"}
             </button>
@@ -171,29 +171,17 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
 
           {showAdvanced && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[#22332F]">
-              <Input label="UTM source" hint="Where the link was shared. Picked up by analytics tools like PostHog and GA. Examples: linkedin, twitter, newsletter." value={form.utm_source} onChange={(v) => setForm({ ...form, utm_source: v })} placeholder="linkedin" mono />
-              <Input label="UTM medium" hint="The channel type. Examples: dm, email, social, cpc, organic." value={form.utm_medium} onChange={(v) => setForm({ ...form, utm_medium: v })} placeholder="dm" mono />
-              <Input label="UTM campaign" hint="The campaign or push this link belongs to. Examples: may-launch, q2-newsletter, partner-blast." value={form.utm_campaign} onChange={(v) => setForm({ ...form, utm_campaign: v })} placeholder="may-launch" mono />
-              <Input label="Destination path" hint="Page on the site the link should land on. Defaults to the homepage. Use a path like /book or /pepper-group." value={form.destination_path} onChange={(v) => setForm({ ...form, destination_path: v })} placeholder="/" mono />
+              <Input label="UTM source" hint={"The channel this link will go out through. Standard UTM tracking, stamped on every page view, magnet submission, and analytics event from this link. Visible in PostHog and the funnel reports.\n\nExample: linkedin, email, newsletter, podcast"} value={form.utm_source} onChange={(v) => setForm({ ...form, utm_source: v })} placeholder="linkedin" mono />
+              <Input label="UTM medium" hint={"The format of the share. Subdivides the source so you can tell \"linkedin / post\" from \"linkedin / dm\" in the funnel.\n\nExample: dm, post, signature, comment, inline"} value={form.utm_medium} onChange={(v) => setForm({ ...form, utm_medium: v })} placeholder="dm" mono />
+              <Input label="UTM campaign" hint={"The named campaign or batch this link belongs to. Use it to group multiple links into one rollup for aggregate reporting.\n\nExample: may-launch, q2-partners, book-presale"} value={form.utm_campaign} onChange={(v) => setForm({ ...form, utm_campaign: v })} placeholder="may-launch" mono />
+              <Input label="Destination path" hint={"Where on the site the link should land. Leave as / for the homepage (the right answer for almost every partner share). The path you enter is appended to discover.mabbly.com, so /awards lands on the awards page, /m/<slug> lands on a specific magnet.\n\nImportant: must match a real route in the app, or visitors get a 404. When in doubt, leave it as /."} value={form.destination_path} onChange={(v) => setForm({ ...form, destination_path: v })} placeholder="/" mono />
               <div className="md:col-span-2">
-                <Input label="Notes" hint="Private context for your team. Not shown to visitors." value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} placeholder="Sent to 50 partners on May 5" />
+                <Input label="Notes" hint={"Free-text notes for your own reference. Shown only in the codes table and the per-code detail drawer. Never shown to visitors or partners.\n\nExample: Sent to 50 partners on May 5 via LinkedIn DM blast."} value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} placeholder="Sent to 50 partners on May 5" />
               </div>
-              <label className="md:col-span-2 flex items-center gap-2 text-[12px] text-[#A1A9A0]" title="Skip the Slack ping when a map is created from this link. Useful for high-volume tests or internal links you don't want to be noisy.">
+              <label className="md:col-span-2 flex items-center gap-2 text-[12px] text-[#A1A9A0]">
                 <input type="checkbox" checked={form.suppress_slack} onChange={(e) => setForm({ ...form, suppress_slack: e.target.checked })} />
-                Suppress Slack notification when a map is created via this link
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      title="Skip the Slack ping when a map is created from this link. Useful for high-volume tests or internal links you don't want to be noisy."
-                      aria-label="Explain Slack suppression"
-                      className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#3D4D49] text-[#C8D1C7] transition-colors hover:border-[#FFBA1A]/60 hover:text-[#FFBA1A]"
-                    >
-                      <Info size={10} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-[260px]">Skip the Slack ping when a map is created from this link. Useful for high-volume tests or internal links you don't want to be noisy.</TooltipContent>
-                </Tooltip>
+                <span>Suppress Slack notification when a map is created via this link</span>
+                <FieldInfo label="Suppress Slack notification" tip={"When checked, no Slack ping fires when someone creates a magnet via this link. Useful for high-volume blasts (e.g. a big newsletter send) where pings would be noisy. Conversion and attribution data are still recorded, only the live notification is suppressed."} />
               </label>
             </div>
           )}
@@ -397,26 +385,35 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
   );
 }
 
+function FieldInfo({ label, tip }: { label: string; tip: string }) {
+  return (
+    <Tooltip delayDuration={150}>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          tabIndex={0}
+          aria-label={`About the ${label} field`}
+          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[#A1A9A0] transition-colors hover:text-[#EDF5EC] focus:text-[#EDF5EC] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#22332F]"
+        >
+          <Info size={12} />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent
+        side="top"
+        className="max-w-[280px] whitespace-pre-line normal-case tracking-normal bg-[#1A2B2A] border border-[#22332F] text-[#EDF5EC] motion-reduce:animate-none motion-reduce:data-[state=delayed-open]:animate-none"
+      >
+        {tip}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function Input({ label, hint, value, onChange, placeholder, required, mono }: { label: string; hint?: string; value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean; mono?: boolean }) {
   return (
     <label className="block">
       <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-[#A1A9A0] mb-1">
         <span>{label}{required && " *"}</span>
-        {hint && (
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                title={hint}
-                aria-label={`Explain ${label}`}
-                className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#3D4D49] text-[#C8D1C7] transition-colors hover:border-[#FFBA1A]/60 hover:text-[#FFBA1A]"
-              >
-                <Info size={10} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[280px] normal-case tracking-normal">{hint}</TooltipContent>
-          </Tooltip>
-        )}
+        {hint && <FieldInfo label={label} tip={hint} />}
       </span>
       <input
         type="text"
