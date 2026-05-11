@@ -393,9 +393,9 @@ function FieldInfo({ label, tip }: { label: string; tip: string }) {
           type="button"
           tabIndex={0}
           aria-label={`About the ${label} field`}
-          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[#A1A9A0] transition-colors hover:text-[#EDF5EC] focus:text-[#EDF5EC] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#22332F]"
+          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#B8933A] text-[#B8933A] text-[9px] font-semibold leading-none transition-colors hover:bg-[#B8933A] hover:text-[#0D1117] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#B8933A]"
         >
-          <Info size={12} />
+          H
         </button>
       </TooltipTrigger>
       <TooltipContent
