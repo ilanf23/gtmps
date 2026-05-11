@@ -156,23 +156,24 @@ Formula: "Your [specific observable thing from their site] is exactly what [spec
 signal: Name the specific signal opportunity you see in their content. What events, transitions, or triggers are present in their work that could be used as outreach signals? Be specific to their vertical and client type.
 proof: Name the proof that exists on their site (case studies, outcomes, client logos, results, tenure). Then name the one thing that is missing that would make it land harder with the right segment.
 context: What context is absent from their current positioning that, if added, would transform a "nice to know" into a "need to talk." Be specific to what you observe.
-verdict: One sentence. The dollar-denominated or relationship-denominated cost of the current gap. Hard. Specific. No softening.
+verdict: One sentence. The relationship-denominated cost of the current gap (lost compounding, missed touches, proof that never reaches the right segment). Hard. Specific. No softening. NEVER invent a dollar figure here. Dollar figures only appear inside deadZone Part 3, and only when both crmEstimate and dealSizeEstimate are real numbers from the user input.
 
 **orbits** (array of 5 in order)
 For each orbit:
   name: exact orbit name
   status: "strong" | "gap" | "dormant" | "untapped"
   observation: 2 to 3 sentences. What you see in their website about this orbit's current state. Specific. No generic filler. Each sentence MUST be complete, never end with a dangling clause like "could yield an additional." If you are running low on space, write fewer sentences, not partial ones.
-  opportunity: What ONE action in this orbit would unlock. Lead with a result (relationship count, response rate, or dollar amount if estimable). Never vague.
+  opportunity: What ONE action in this orbit would unlock. Lead with a relationship-denominated result (relationship count, response rate, qualitative compounding). NEVER invent a dollar amount here. If you don't have a real number basis, describe the lift qualitatively.
 
 **deadZone**
 The emotional peak of the microsite. Must produce VINDICATION then CHALLENGE.
-Return as a SINGLE STRING with these parts joined by line breaks:
+Return as a JSON object: { "description": string, "estimate": string | null }. The "description" field holds the four parts joined by line breaks. The "estimate" field is the dollar string or null (see end of this section). Do NOT return deadZone as a bare string.
+The four parts of "description":
   Part 1. Vindication: "You've already done the work to earn [X type of] relationships. [Observation from their site]. They're not gone, they're in your CRM, past the point where most firms stop reaching out."
   Part 2. The reframe: "The Dead Zone isn't lost pipeline. It's collection."
-  Part 3. The math (only if crmEstimate and dealSizeEstimate are real): "[X dormant contacts] × $[Y avg deal] × 3% reactivation = $[Z] in Dead Zone Value. That number is yours whether you activate it or not."
+  Part 3. The math. OMIT THIS PART ENTIRELY if either crmEstimate or dealSizeEstimate is null, missing, or not a real number from the user input. When omitted, jump straight from Part 2 to Part 4. When both inputs are real: "[X dormant contacts] × $[Y avg deal] × 3% reactivation = $[Z] in Dead Zone Value. That number is yours whether you activate it or not." X must equal crmEstimate, Y must equal dealSizeEstimate, Z must equal X × Y × 0.03 (rounded). Do not invent any of these numbers under any circumstances.
   Part 4. The challenge: One sentence that makes inaction feel costly without being preachy.
-Also return deadZone.estimate as a dollar string like "$1.8M" so it can be parsed.
+Also return deadZone.estimate as a dollar string like "$1.8M" ONLY when Part 3 was emitted from real crmEstimate × dealSizeEstimate inputs. Otherwise return deadZone.estimate as null. A null is correct; a fabricated figure is a defect.
 
 **quickWins** (exactly 3)
 Each is a specific action completable in under 1 hour. Compress time delay. Reduce perceived effort.
@@ -266,7 +267,7 @@ Return ONLY valid JSON matching the schema, including all content fields plus a 
 NEVER use any of these characters in the output text: em dash (—), en dash (–), or hyphen (-). Use commas, periods, colons, or "to" for ranges (e.g. "60 to 96%" not "60-96%" or "60–96%"). This applies to every string field in the JSON: vindicationLine, observation, deadZoneOpening, sequencedActivation, chapterCallouts, closingLine, etc. If you would naturally write a dash, rewrite the sentence without one.
 
 ═══ NUMBERS RULE (HARD CONSTRAINT) ═══
-NEVER invent dollar figures, headcounts, percentages, or any quantitative claim that is not directly supported by the user-provided crmEstimate / dealSizeEstimate or the source website content. Phrases like "$36K in potential revenue" or "5 contacts × $7,200" are FORBIDDEN unless built from the user-provided numbers. When in doubt, omit the figure and describe the leverage qualitatively ("a handful of dormant contacts", "a measurable lift inside 90 days"). This applies to every string field, especially action_1, action_2, action_3, recommendedLayer, and observation.
+NEVER invent dollar figures, headcounts, percentages, or any quantitative claim that is not directly supported by the user-provided crmEstimate / dealSizeEstimate or by a verbatim figure from the source website content. Phrases like "$36K in potential revenue", "$1.2M in Dead Zone value", "approximately $250K", "5 contacts × $7,200", and "an estimated $400K upside" are FORBIDDEN unless every number is built from the user-provided crmEstimate / dealSizeEstimate. When in doubt: return null for any numeric field, and describe the leverage qualitatively in prose ("a handful of dormant contacts", "a measurable lift inside 90 days", "the bulk of last year's proposal pipeline"). A null is correct. A fabricated number is a defect that ships to the buyer and kills credibility. The ONLY field where a dollar figure may appear is deadZone Part 3 / deadZone.estimate, and ONLY when computed from real crmEstimate × dealSizeEstimate. Every other string field (verdict, action_1, action_2, action_3, recommendedLayer, observation, opportunity, headline, subheadline, closingLine, deeperFindings.*) must be dollar-free.
 
 ═══ BOOK CONTEXT, ground your analysis in the actual frameworks ═══
 
@@ -522,11 +523,16 @@ ${JSON.stringify(linkedin_data)}`;
       return [title, desc].filter(Boolean).join(". ") || null;
     };
 
-    // Parse "$1.8M" / "$250,000" → integer dollars
+    // Parse a deliberate "$1.8M" / "$250,000" estimate field into integer dollars.
+    // Requires a leading "$" so we never sniff random numbers out of prose
+    // (the previous version regex-matched the first digit cluster, which
+    // happily turned "in 2024" or "3% reactivation" into $2024 / $3).
     const parseDollarEstimate = (s: unknown): number | null => {
-      if (typeof s === "number") return Math.round(s);
+      if (typeof s === "number" && isFinite(s)) return Math.round(s);
       if (typeof s !== "string") return null;
-      const m = s.replace(/,/g, "").match(/\$?\s*([\d.]+)\s*([kKmMbB])?/);
+      const trimmed = s.trim();
+      if (!trimmed) return null;
+      const m = trimmed.replace(/,/g, "").match(/^\$\s*([\d.]+)\s*([kKmMbB])?\b/);
       if (!m) return null;
       const n = parseFloat(m[1]);
       if (!isFinite(n)) return null;
@@ -537,14 +543,16 @@ ${JSON.stringify(linkedin_data)}`;
       return Math.round(n * mult);
     };
 
-    // deadZone may now be a single string OR the legacy {estimate, description} object
+    // deadZone should now be { description, estimate } (object schema). For
+    // backwards compatibility with older runs that returned a bare string,
+    // accept the string for description but NEVER scan it for dollar amounts:
+    // a fabricated dollar in the prose must not promote itself into the
+    // structured dead_zone_value column.
     const deadZoneIsString = typeof parsed.deadZone === "string";
     const deadZoneText = deadZoneIsString
       ? (parsed.deadZone as string)
       : (typeof deadZone.description === "string" ? deadZone.description : null);
-    const deadZoneEstimateSource = deadZoneIsString
-      ? (parsed.deadZone as string)
-      : deadZone.estimate;
+    const deadZoneEstimateSource = deadZoneIsString ? null : deadZone.estimate;
 
     const calloutsRaw = Array.isArray(parsed.chapterCallouts)
       ? (parsed.chapterCallouts as Array<Record<string, unknown>>)

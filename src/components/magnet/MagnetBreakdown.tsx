@@ -188,7 +188,10 @@ export default function MagnetBreakdown({
   }
 
   // Universal LLM text sanitizer:
-  //  1. Strip invented dollar figures (only real CRM-size x deal-size calcs allowed).
+  //  1. Strip invented dollar figures (the only legitimate $ path is deadZone
+  //     Part 3 from real crmEstimate × dealSizeEstimate, which does NOT pass
+  //     through this sanitizer; every field that does is supposed to be
+  //     dollar-free per the enrich-magnet NUMBERS RULE). Runtime fail-safe.
   //  2. Remove em-dashes / en-dashes per project typography rule (use periods/commas).
   const stripDashes = (s: string): string =>
     s
@@ -200,13 +203,33 @@ export default function MagnetBreakdown({
 
   const STATUS_TAG_RE = /^\s*\[(strong|gap|dormant|untapped)\]\s*/i;
 
+  // Matches a dollar figure plus any leading qualifier ("approximately $X",
+  // "an estimated $X", "up to $X") and any trailing claim ("$X in revenue",
+  // "$X in Dead Zone value", "$X upside"). Greedy on the noise so the
+  // surrounding sentence reads cleanly after removal.
+  const MONEY_PHRASE_RE =
+    /(?:\b(?:approximately|roughly|around|about|an?\s+estimated|estimated|up\s+to|over|nearly)\s+)?\$\s*\d[\d,.]*\s*[KkMmBb]?\b(?:\s+(?:(?:in|of)\s+)?(?:potential\s+|projected\s+|estimated\s+|incremental\s+)?(?:revenue|pipeline|upside|upsell|value|reactivation|opportunity|recovery|new\s+business|dead\s+zone\s+value|annual\s+recurring\s+revenue|arr))?/gi;
+
+  // Matches fabricated arithmetic like "5 contacts × $7,200" or "12 × $250K".
+  const MONEY_ARITHMETIC_RE =
+    /\b\d[\d,.]*\s*(?:contacts|leads|relationships|deals|clients|accounts|prospects)?\s*[×x*]\s*\$\s*\d[\d,.]*\s*[KkMmBb]?\b/gi;
+
+  // Cleanup orphaned punctuation/whitespace left behind after stripping.
+  const tidyPunctuation = (s: string): string =>
+    s
+      .replace(/\(\s*\)/g, "")
+      .replace(/\s+([.,;:!?])/g, "$1")
+      .replace(/([.,;:])(?:\s*\1)+/g, "$1")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
   const sanitizeLLM = (s: string | null | undefined): string | null => {
     if (!s) return null;
-    const cleaned = stripDashes(
-      s
-        .replace(STATUS_TAG_RE, "")
-        .replace(/\s*\$\s*[\d,.]+\s*[KkMm]?\b(?: in (?:potential )?revenue)?/g, ""),
-    );
+    const stripped = s
+      .replace(STATUS_TAG_RE, "")
+      .replace(MONEY_ARITHMETIC_RE, "")
+      .replace(MONEY_PHRASE_RE, "");
+    const cleaned = tidyPunctuation(stripDashes(stripped));
     return cleaned || null;
   };
 
