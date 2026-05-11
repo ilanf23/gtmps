@@ -147,7 +147,6 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
       <section className="rounded-lg border border-[#22332F] bg-[#1A2B2A] p-4">
         <div className="flex items-center gap-1.5 mb-3">
           <h2 className="text-sm font-medium text-[#EDF5EC]">Create referral link</h2>
-          <HelpDot tip="Generate a tracked URL with a unique ?ref= code. Use it in DMs, emails, or posts to attribute clicks and maps back to a specific channel or person." />
         </div>
         <form onSubmit={handleCreate} className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end">
@@ -196,7 +195,6 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
         <div className="flex items-baseline justify-between mb-3 px-1">
           <div className="flex items-center gap-1.5">
             <h2 className="text-sm font-medium text-[#EDF5EC]">Referral links</h2>
-            <HelpDot tip="All tracked links you've created. Each card shows the funnel (clicks, unique visitors, maps), conversion rate, and quick actions to copy, test, inspect, or archive." />
           </div>
           {!loading && sortedRows.length > 0 && (
             <span className="text-[11px] text-[#A1A9A0]">
