@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { call, opsGet } from "@/lib/opsClient";
 import { Copy, Check, ExternalLink, Archive, ArchiveRestore, BellOff, MousePointerClick, Users, Sparkles, ChevronDown } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface RefCodeRow {
   code: string;
@@ -265,39 +266,58 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
 
                   {/* Link + actions */}
                   <div className="flex items-center gap-1.5 pt-3 border-t border-[#22332F]">
-                    <button
-                      type="button"
-                      onClick={() => copy(r.code, url)}
-                      className="flex-1 inline-flex items-center gap-1.5 rounded border border-[#22332F] bg-[#0F1E1D] px-2 h-7 text-[11px] text-[#A1A9A0] hover:text-[#FFBA1A] hover:border-[#FFBA1A]/40 transition-colors min-w-0"
-                      title={url}
-                    >
-                      {isCopied ? <Check size={12} className="text-emerald-400 shrink-0" /> : <Copy size={12} className="shrink-0" />}
-                      <span className="font-mono truncate">{isCopied ? "Copied" : url.replace(/^https?:\/\//, "")}</span>
-                    </button>
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center w-7 h-7 rounded border border-[#22332F] bg-[#0F1E1D] text-[#A1A9A0] hover:text-[#EDF5EC] hover:border-[#22332F] transition-colors"
-                      title="Open link"
-                    >
-                      <ExternalLink size={12} />
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => setDetailCode(r.code)}
-                      className="inline-flex items-center justify-center h-7 px-2 rounded border border-[#22332F] bg-[#0F1E1D] text-[11px] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
-                    >
-                      View
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleArchive(r.code, !r.archived_at)}
-                      className="inline-flex items-center justify-center w-7 h-7 rounded border border-[#22332F] bg-[#0F1E1D] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
-                      title={isArchived ? "Unarchive" : "Archive"}
-                    >
-                      {isArchived ? <ArchiveRestore size={12} /> : <Archive size={12} />}
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => copy(r.code, url)}
+                          className="flex-1 inline-flex items-center gap-1.5 rounded border border-[#22332F] bg-[#0F1E1D] px-2 h-7 text-[11px] text-[#A1A9A0] hover:text-[#FFBA1A] hover:border-[#FFBA1A]/40 transition-colors min-w-0"
+                        >
+                          {isCopied ? <Check size={12} className="text-emerald-400 shrink-0" /> : <Copy size={12} className="shrink-0" />}
+                          <span className="font-mono truncate">{isCopied ? "Copied" : url.replace(/^https?:\/\//, "")}</span>
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Copy the full tracking link to your clipboard</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center justify-center w-7 h-7 rounded border border-[#22332F] bg-[#0F1E1D] text-[#A1A9A0] hover:text-[#EDF5EC] hover:border-[#22332F] transition-colors"
+                        >
+                          <ExternalLink size={12} />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Open the link in a new tab to test it</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => setDetailCode(r.code)}
+                          className="inline-flex items-center justify-center h-7 px-2 rounded border border-[#22332F] bg-[#0F1E1D] text-[11px] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
+                        >
+                          View
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">See the firms and clicks attributed to this code</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => handleArchive(r.code, !r.archived_at)}
+                          className="inline-flex items-center justify-center w-7 h-7 rounded border border-[#22332F] bg-[#0F1E1D] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
+                        >
+                          {isArchived ? <ArchiveRestore size={12} /> : <Archive size={12} />}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
+                        {isArchived ? "Restore this link to active" : "Hide this link from the active list (data is kept)"}
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </article>
               );
