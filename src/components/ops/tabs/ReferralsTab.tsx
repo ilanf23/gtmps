@@ -248,9 +248,12 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
                       <div className="font-mono text-[15px] text-[#FFBA1A] truncate">{r.code}</div>
                       <div className="text-[12px] text-[#EDF5EC] truncate mt-0.5">{r.label}</div>
                     </div>
-                    <span className={`shrink-0 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-mono ${crColor}`}>
-                      {cr.toFixed(1)}%
-                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-mono ${crColor}`}>
+                        {cr.toFixed(1)}%
+                      </span>
+                      <HelpDot tip={`Conversion rate: percent of unique clicks that became maps. ${cr.toFixed(1)}% here. Green ≥50%, gold ≥10%.`} />
+                    </div>
                   </div>
 
                   {/* Meta strip */}
@@ -268,10 +271,16 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
                         <span>archived</span>
                       </>
                     )}
+                    <span className="ml-auto">
+                      <HelpDot tip="Status strip: time since the last click or map for this link, plus flags like Slack suppression and archived state." />
+                    </span>
                   </div>
 
                   {/* Funnel */}
-                  <div className="space-y-2 mb-4">
+                  <div className="relative space-y-2 mb-4">
+                    <div className="absolute -top-1 right-0">
+                      <HelpDot tip="Funnel: total clicks, unique visitors (deduped by fingerprint), and maps created. Bar widths are relative to total clicks." />
+                    </div>
                     <FunnelRow icon={<MousePointerClick size={11} />} label="Clicks" value={r.clicks} pct={100} />
                     <FunnelRow icon={<Users size={11} />} label="Unique" value={r.unique_clicks} pct={uniquePct} />
                     <FunnelRow icon={<Sparkles size={11} />} label="Maps" value={r.maps_created} pct={mapsPct} highlight />
@@ -331,6 +340,7 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
                         {isArchived ? "Restore this link to active" : "Hide this link from the active list (data is kept)"}
                       </TooltipContent>
                     </Tooltip>
+                    <HelpDot tip="Actions row: copy the tracking URL, open it in a new tab to test, view attributed firms and clicks, or archive/restore the link." />
                   </div>
                 </article>
               );
