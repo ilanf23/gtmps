@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { call, opsGet } from "@/lib/opsClient";
-import { Copy, Check, ExternalLink, Archive, ArchiveRestore, BellOff, MousePointerClick, Users, Sparkles } from "lucide-react";
+import { Copy, Check, ExternalLink, Archive, ArchiveRestore, BellOff, MousePointerClick, Users, Sparkles, ChevronDown } from "lucide-react";
 
 interface RefCodeRow {
   code: string;
@@ -72,6 +72,7 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
   const [saving, setSaving] = useState(false);
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -143,32 +144,44 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
     <div className="space-y-4">
       {/* Create form */}
       <section className="rounded-lg border border-[#22332F] bg-[#1A2B2A] p-4">
-        <h2 className="text-sm font-medium text-[#EDF5EC] mb-1">Create referral link</h2>
-        <p className="text-[11px] text-[#A1A9A0] mb-4">
-          Each code gets its own trackable URL. When someone clicks the link
-          and creates a new map, that map is attributed to this code. You can
-          drill in to see the firms that came from each link.
-        </p>
-        <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Input label="Code (URL slug)" value={form.code} onChange={(v) => setForm({ ...form, code: v.toLowerCase().replace(/[^a-z0-9_-]/g, "") })} placeholder="adam-li-dm" required mono />
-          <Input label="Label (your name for it)" value={form.label} onChange={(v) => setForm({ ...form, label: v })} placeholder="Adam LinkedIn DM, May" required />
-          <Input label="UTM source" value={form.utm_source} onChange={(v) => setForm({ ...form, utm_source: v })} placeholder="linkedin" mono />
-          <Input label="UTM medium" value={form.utm_medium} onChange={(v) => setForm({ ...form, utm_medium: v })} placeholder="dm" mono />
-          <Input label="UTM campaign" value={form.utm_campaign} onChange={(v) => setForm({ ...form, utm_campaign: v })} placeholder="may-launch" mono />
-          <Input label="Destination path" value={form.destination_path} onChange={(v) => setForm({ ...form, destination_path: v })} placeholder="/" mono />
-          <div className="md:col-span-2">
-            <Input label="Notes (optional)" value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} placeholder="Sent to 50 partners on May 5" />
-          </div>
-          <label className="md:col-span-2 flex items-center gap-2 text-[12px] text-[#A1A9A0]">
-            <input type="checkbox" checked={form.suppress_slack} onChange={(e) => setForm({ ...form, suppress_slack: e.target.checked })} />
-            Suppress Slack notification when a map is created via this link
-          </label>
-          <div className="md:col-span-2 flex items-center gap-3">
-            <button type="submit" disabled={saving || !form.code || !form.label} className="inline-flex items-center gap-2 rounded border border-[#FFBA1A] bg-[#352B0E] px-4 h-9 text-[12px] text-[#FFBA1A] hover:bg-[#4A3A12] disabled:opacity-50 transition-colors">
+        <h2 className="text-sm font-medium text-[#EDF5EC] mb-3">Create referral link</h2>
+        <form onSubmit={handleCreate} className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end">
+            <Input label="Code" value={form.code} onChange={(v) => setForm({ ...form, code: v.toLowerCase().replace(/[^a-z0-9_-]/g, "") })} placeholder="adam-li-dm" required mono />
+            <Input label="Label" value={form.label} onChange={(v) => setForm({ ...form, label: v })} placeholder="Adam LinkedIn DM, May" required />
+            <button type="submit" disabled={saving || !form.code || !form.label} className="inline-flex items-center justify-center gap-2 rounded border border-[#FFBA1A] bg-[#352B0E] px-4 h-9 text-[12px] text-[#FFBA1A] hover:bg-[#4A3A12] disabled:opacity-50 transition-colors whitespace-nowrap">
               {saving ? "Creating…" : "Create link"}
             </button>
-            {saveErr && <span className="text-[12px] text-[#C02B0A]">{saveErr}</span>}
           </div>
+
+          <div>
+            <button
+              type="button"
+              onClick={() => setShowAdvanced((v) => !v)}
+              className="inline-flex items-center gap-1 text-[11px] text-[#A1A9A0] hover:text-[#EDF5EC] transition-colors"
+            >
+              <ChevronDown size={12} className={`transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+              {showAdvanced ? "Hide" : "Show"} advanced options
+            </button>
+          </div>
+
+          {showAdvanced && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[#22332F]">
+              <Input label="UTM source" value={form.utm_source} onChange={(v) => setForm({ ...form, utm_source: v })} placeholder="linkedin" mono />
+              <Input label="UTM medium" value={form.utm_medium} onChange={(v) => setForm({ ...form, utm_medium: v })} placeholder="dm" mono />
+              <Input label="UTM campaign" value={form.utm_campaign} onChange={(v) => setForm({ ...form, utm_campaign: v })} placeholder="may-launch" mono />
+              <Input label="Destination path" value={form.destination_path} onChange={(v) => setForm({ ...form, destination_path: v })} placeholder="/" mono />
+              <div className="md:col-span-2">
+                <Input label="Notes" value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} placeholder="Sent to 50 partners on May 5" />
+              </div>
+              <label className="md:col-span-2 flex items-center gap-2 text-[12px] text-[#A1A9A0]">
+                <input type="checkbox" checked={form.suppress_slack} onChange={(e) => setForm({ ...form, suppress_slack: e.target.checked })} />
+                Suppress Slack notification when a map is created via this link
+              </label>
+            </div>
+          )}
+
+          {saveErr && <div className="text-[12px] text-[#C02B0A]">{saveErr}</div>}
         </form>
       </section>
 
