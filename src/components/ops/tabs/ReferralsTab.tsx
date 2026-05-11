@@ -145,7 +145,10 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
     <div className="space-y-4">
       {/* Create form */}
       <section className="rounded-lg border border-[#22332F] bg-[#1A2B2A] p-4">
-        <h2 className="text-sm font-medium text-[#EDF5EC] mb-3">Create referral link</h2>
+        <div className="flex items-center gap-1.5 mb-3">
+          <h2 className="text-sm font-medium text-[#EDF5EC]">Create referral link</h2>
+          <HelpDot tip="Generate a tracked URL with a unique ?ref= code. Use it in DMs, emails, or posts to attribute clicks and maps back to a specific channel or person." />
+        </div>
         <form onSubmit={handleCreate} className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-end">
             <Input label="Code" hint="Short URL slug appended as ?ref=… on every link. Lowercase letters, numbers, hyphens. This is what shows up in attribution." value={form.code} onChange={(v) => setForm({ ...form, code: v.toLowerCase().replace(/[^a-z0-9_-]/g, "") })} placeholder="adam-li-dm" required mono />
@@ -203,7 +206,10 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
       {/* Codes grid */}
       <section>
         <div className="flex items-baseline justify-between mb-3 px-1">
-          <h2 className="text-sm font-medium text-[#EDF5EC]">Referral links</h2>
+          <div className="flex items-center gap-1.5">
+            <h2 className="text-sm font-medium text-[#EDF5EC]">Referral links</h2>
+            <HelpDot tip="All tracked links you've created. Each card shows the funnel (clicks, unique visitors, maps), conversion rate, and quick actions to copy, test, inspect, or archive." />
+          </div>
           {!loading && sortedRows.length > 0 && (
             <span className="text-[11px] text-[#A1A9A0]">
               {sortedRows.filter((r) => !r.archived_at).length} active
