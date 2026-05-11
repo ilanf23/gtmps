@@ -178,9 +178,16 @@ export function ReferralsTab({ refreshNonce, onUnauth }: Props) {
               <label className="md:col-span-2 flex items-center gap-2 text-[12px] text-[#A1A9A0]" title="Skip the Slack ping when a map is created from this link. Useful for high-volume tests or internal links you don't want to be noisy.">
                 <input type="checkbox" checked={form.suppress_slack} onChange={(e) => setForm({ ...form, suppress_slack: e.target.checked })} />
                 Suppress Slack notification when a map is created via this link
-                <Tooltip>
+                <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
-                    <span className="inline-flex"><Info size={11} className="text-[#A1A9A0]/60" /></span>
+                    <button
+                      type="button"
+                      title="Skip the Slack ping when a map is created from this link. Useful for high-volume tests or internal links you don't want to be noisy."
+                      aria-label="Explain Slack suppression"
+                      className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#3D4D49] text-[#C8D1C7] transition-colors hover:border-[#FFBA1A]/60 hover:text-[#FFBA1A]"
+                    >
+                      <Info size={10} />
+                    </button>
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-[260px]">Skip the Slack ping when a map is created from this link. Useful for high-volume tests or internal links you don't want to be noisy.</TooltipContent>
                 </Tooltip>
@@ -380,9 +387,16 @@ function Input({ label, hint, value, onChange, placeholder, required, mono }: { 
       <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-[#A1A9A0] mb-1">
         <span>{label}{required && " *"}</span>
         {hint && (
-          <Tooltip>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
-              <span className="inline-flex cursor-help"><Info size={11} className="text-[#A1A9A0]/60 hover:text-[#FFBA1A] transition-colors" /></span>
+              <button
+                type="button"
+                title={hint}
+                aria-label={`Explain ${label}`}
+                className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#3D4D49] text-[#C8D1C7] transition-colors hover:border-[#FFBA1A]/60 hover:text-[#FFBA1A]"
+              >
+                <Info size={10} />
+              </button>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[280px] normal-case tracking-normal">{hint}</TooltipContent>
           </Tooltip>
