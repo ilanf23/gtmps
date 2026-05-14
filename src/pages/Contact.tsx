@@ -6,6 +6,13 @@ import { scrollToHero } from "@/lib/scrollToHero";
 
 const CALENDLY_URL = "https://calendly.com/richard-mabbly";
 
+const DISPLAY =
+  "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif";
+const MONO =
+  "'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace";
+const BODY = "'Inter', 'Inter Tight', sans-serif";
+const SERIF = "'Cormorant Garamond', 'Playfair Display', Georgia, serif";
+
 export default function Contact() {
   useEffect(() => {
     document.title = "Contact, Mabbly";
@@ -35,7 +42,7 @@ export default function Contact() {
   }, []);
 
   return (
-    <div style={{ background: "#F5F1E8", minHeight: "100vh", color: "#0F1E1D" }}>
+    <div style={{ background: "#FBF9F6", minHeight: "100vh", color: "#0F1E1D" }}>
       <VerticalNavBar
         addYourFirmHref="/#hero"
         onAddYourFirm={() => {
@@ -46,158 +53,257 @@ export default function Contact() {
 
       <main
         style={{
-          maxWidth: 1180,
+          position: "relative",
+          maxWidth: 1280,
           margin: "0 auto",
-          padding: "96px 32px 120px",
+          padding: "80px 32px 120px",
+          overflow: "hidden",
         }}
       >
-        <p
+        {/* Decorative orbit rings (desktop only) */}
+        <div
+          aria-hidden
+          className="contact-orbit-lg"
           style={{
-            fontFamily:
-              "'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace",
-            fontSize: 11,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "#BF461A",
-            fontWeight: 700,
-            margin: "0 0 24px",
+            position: "absolute",
+            top: -120,
+            left: -120,
+            width: 600,
+            height: 600,
+            border: "1px solid rgba(191, 70, 26, 0.10)",
+            borderRadius: "50%",
+            pointerEvents: "none",
           }}
-        >
-          Contact
-        </p>
-        <h1
+        />
+        <div
+          aria-hidden
+          className="contact-orbit-md"
           style={{
-            fontFamily:
-              "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
-            fontSize: "clamp(44px, 6.4vw, 84px)",
-            lineHeight: 1.02,
-            letterSpacing: "-0.025em",
-            fontWeight: 900,
-            margin: "0 0 28px",
-            color: "#0F1E1D",
-            maxWidth: 880,
+            position: "absolute",
+            top: 220,
+            left: -60,
+            width: 400,
+            height: 400,
+            border: "1px solid rgba(191, 70, 26, 0.06)",
+            borderRadius: "50%",
+            pointerEvents: "none",
           }}
-        >
-          Get in touch.
-        </h1>
-        <p
-          style={{
-            fontFamily: "'Inter', 'Inter Tight', sans-serif",
-            fontSize: 19,
-            lineHeight: 1.55,
-            color: "rgba(15, 30, 29, 0.72)",
-            maxWidth: 640,
-            margin: "0 0 72px",
-          }}
-        >
-          Tell us about your firm and what you are trying to solve. We read every
-          message and reply within one business day.
-        </p>
+        />
 
         <div
+          className="contact-grid"
           style={{
+            position: "relative",
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 0.8fr)",
-            gap: 64,
+            gridTemplateColumns: "5fr 7fr",
+            gap: 96,
             alignItems: "start",
           }}
-          className="contact-grid"
         >
-          <div
-            style={{
-              background: "#FBF7EC",
-              border: "1px solid #E5E0CF",
-              borderRadius: 16,
-              padding: "40px 36px",
-              boxShadow: "0 1px 0 rgba(15, 30, 29, 0.04)",
-            }}
-          >
-            <ContactForm />
-          </div>
-
-          <aside
-            style={{
-              padding: "36px 32px",
-              border: "1px solid #E5E0CF",
-              borderRadius: 16,
-              background: "#FBF7EC",
-            }}
-          >
-            <p
+          {/* LEFT — editorial header + call card */}
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <span
               style={{
-                fontFamily:
-                  "'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace",
+                display: "inline-block",
+                padding: "5px 12px",
+                background: "#BF461A",
+                color: "#FBF9F6",
+                fontFamily: MONO,
                 fontSize: 10,
-                letterSpacing: "0.18em",
+                letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                color: "#BF461A",
                 fontWeight: 700,
-                margin: "0 0 16px",
+                marginBottom: 28,
               }}
             >
-              Prefer a call?
-            </p>
-            <h2
+              Contact
+            </span>
+
+            <h1
               style={{
-                fontFamily:
-                  "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
-                fontSize: 24,
-                lineHeight: 1.2,
+                fontFamily: DISPLAY,
+                fontSize: "clamp(56px, 8vw, 128px)",
+                lineHeight: 0.85,
+                letterSpacing: "-0.035em",
                 fontWeight: 900,
-                letterSpacing: "-0.01em",
-                margin: "0 0 14px",
+                margin: "0 0 28px",
                 color: "#0F1E1D",
               }}
             >
-              Book a 30 minute working session.
-            </h2>
+              Get in <br />
+              <span style={{ color: "#BF461A" }}>touch.</span>
+            </h1>
+
             <p
               style={{
-                fontFamily: "'Inter', 'Inter Tight', sans-serif",
-                fontSize: 15,
-                lineHeight: 1.6,
-                color: "rgba(15, 30, 29, 0.7)",
-                margin: "0 0 24px",
+                fontFamily: BODY,
+                fontSize: 20,
+                lineHeight: 1.55,
+                fontWeight: 500,
+                color: "rgba(15, 30, 29, 0.78)",
+                maxWidth: 460,
+                margin: "0 0 44px",
               }}
             >
-              Skip the form. Pick a time on Richard's calendar and we will walk
-              through your situation live.
+              Tell us about your firm and what you are trying to solve. We read
+              every message and reply within one business day.
             </p>
-            <a
-              href={CALENDLY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+
+            {/* Call card with soft glow */}
+            <div style={{ position: "relative" }}>
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: -6,
+                  background: "rgba(191, 70, 26, 0.18)",
+                  borderRadius: 18,
+                  filter: "blur(14px)",
+                  opacity: 0.45,
+                }}
+              />
+              <div
+                style={{
+                  position: "relative",
+                  background: "#FFFFFF",
+                  border: "1px solid #E5E0D8",
+                  borderRadius: 14,
+                  padding: "32px 32px 30px",
+                  boxShadow: "0 1px 0 rgba(15, 30, 29, 0.04)",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    color: "#BF461A",
+                    fontWeight: 700,
+                    margin: "0 0 18px",
+                  }}
+                >
+                  Prefer a call?
+                </p>
+                <h3
+                  style={{
+                    fontFamily: DISPLAY,
+                    fontSize: 26,
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.02em",
+                    fontWeight: 900,
+                    margin: "0 0 12px",
+                    color: "#0F1E1D",
+                  }}
+                >
+                  Book a 30 minute working session.
+                </h3>
+                <p
+                  style={{
+                    fontFamily: BODY,
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    color: "rgba(15, 30, 29, 0.55)",
+                    margin: "0 0 24px",
+                  }}
+                >
+                  Skip the form. Pick a time on Richard's calendar and we will
+                  walk through your situation live.
+                </p>
+                <a
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    fontWeight: 700,
+                    color: "#0F1E1D",
+                    paddingBottom: 4,
+                    borderBottom: "2px solid #BF461A",
+                    textDecoration: "none",
+                    transition: "color 200ms ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#BF461A")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#0F1E1D")}
+                >
+                  Open Calendly →
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — premium form with watermark numeral */}
+          <div style={{ position: "relative", paddingTop: 12 }}>
+            <div
+              aria-hidden
+              className="contact-watermark"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                fontFamily:
-                  "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
+                position: "absolute",
+                top: -80,
+                right: 0,
+                fontFamily: DISPLAY,
+                fontSize: 320,
+                lineHeight: 1,
                 fontWeight: 900,
-                fontSize: 11,
-                letterSpacing: "0.10em",
-                textTransform: "uppercase",
-                color: "#BF461A",
-                padding: "12px 22px",
-                borderRadius: 999,
-                border: "1.5px solid #BF461A",
-                background: "transparent",
-                textDecoration: "none",
+                color: "rgba(191, 70, 26, 0.06)",
+                userSelect: "none",
+                pointerEvents: "none",
               }}
             >
-              Open Calendly →
-            </a>
-          </aside>
+              01
+            </div>
+
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <ContactForm />
+
+              <div
+                style={{
+                  marginTop: 64,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 20,
+                }}
+              >
+                <div
+                  style={{
+                    height: 1,
+                    width: 72,
+                    background: "rgba(191, 70, 26, 0.35)",
+                  }}
+                />
+                <p
+                  style={{
+                    fontFamily: SERIF,
+                    fontStyle: "italic",
+                    fontSize: 18,
+                    color: "#BF461A",
+                    margin: 0,
+                  }}
+                >
+                  We respond within 24 hours. Guaranteed.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
       <Footer />
 
       <style>{`
-        @media (max-width: 860px) {
+        @media (max-width: 1023px) {
           .contact-grid {
             grid-template-columns: 1fr !important;
-            gap: 32px !important;
+            gap: 56px !important;
+          }
+          .contact-orbit-lg, .contact-orbit-md, .contact-watermark {
+            display: none !important;
           }
         }
       `}</style>
