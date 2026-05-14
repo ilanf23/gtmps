@@ -204,9 +204,9 @@ export const CSS = `
 .cpage .profile-foot-doc { color: var(--depth); }
 .cpage .profile-foot-conf { display: inline-flex; align-items: center; gap: 5px; }
 
-.cpage .numbers-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; }
+.cpage .numbers-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: stretch; }
 .cpage .hero-stat {
-  position: relative; overflow: hidden;
+  position: relative; overflow: hidden; height: 100%;
   background: var(--cream-card); border: 1px solid var(--cream-border); border-radius: 2px;
   padding: 36px 40px 32px;
 }
