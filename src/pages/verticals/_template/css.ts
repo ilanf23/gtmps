@@ -221,18 +221,18 @@ export const CSS = `
 .cpage .is-in .hero-stat-fill { width: 78%; }
 .cpage .hero-stat-source { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--muted-soft); }
 
-.cpage .small-stats { display: flex; flex-direction: column; gap: 12px; height: 100%; }
+.cpage .small-stats { display: flex; flex-direction: column; gap: 18px; height: 100%; }
 .cpage .small-stat {
   flex: 1;
-  display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;
+  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
   background: var(--cream-card); border: 1px solid var(--cream-border); border-radius: 2px;
-  padding: 20px 22px;
+  padding: 36px 40px;
   transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
 }
 .cpage .small-stat:hover { border-color: var(--depth-line); transform: translateX(2px); }
-.cpage .small-stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
-.cpage .small-stat-num { font-family: var(--display); font-weight: 900; font-size: 30px; letter-spacing: -0.03em; line-height: 0.95; color: var(--depth); margin-bottom: 6px; }
-.cpage .small-stat-source { font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; color: var(--muted-soft); text-transform: uppercase; font-weight: 600; }
+.cpage .small-stat-label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 14px; }
+.cpage .small-stat-num { font-family: var(--display); font-weight: 900; font-size: 56px; letter-spacing: -0.04em; line-height: 0.95; color: var(--depth); margin-bottom: 12px; }
+.cpage .small-stat-source { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted-soft); text-transform: uppercase; font-weight: 600; }
 
 .cpage .definition-pull {
   position: relative;
