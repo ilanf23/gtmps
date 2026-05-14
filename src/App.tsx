@@ -42,6 +42,7 @@ const Awards = lazy(() => import("./pages/Awards.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const Aletheia = lazy(() => import("./pages/Aletheia.tsx"));
 const Ops = lazy(() => import("./pages/Ops.tsx"));
+const Contact = lazy(() => import("./pages/Contact.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -113,6 +114,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/aletheia" element={<Aletheia />} />
           <Route path="/ops" element={<Ops />} />
+          <Route path="/contact" element={<Contact />} />
           {/* ADD NEW MICROSITE ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

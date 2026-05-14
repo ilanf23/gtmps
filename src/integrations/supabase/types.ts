@@ -70,6 +70,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          message: string | null
           page_path: string | null
           referrer_url: string | null
           session_id: string | null
@@ -88,6 +89,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          message?: string | null
           page_path?: string | null
           referrer_url?: string | null
           session_id?: string | null
@@ -106,6 +108,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          message?: string | null
           page_path?: string | null
           referrer_url?: string | null
           session_id?: string | null

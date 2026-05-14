@@ -15,6 +15,7 @@ interface LeadRow {
   utm_medium: string | null;
   utm_campaign: string | null;
   referrer_url: string | null;
+  message: string | null;
 }
 
 interface LeadsData {
@@ -26,7 +27,7 @@ interface LeadsData {
   pageSize: number;
 }
 
-const SOURCE_OPTIONS = ["beta_reader", "notify_ai", "notify_com"];
+const SOURCE_OPTIONS = ["beta_reader", "notify_ai", "notify_com", "contact"];
 
 interface LeadsTabProps {
   refreshNonce: number;
@@ -144,13 +145,14 @@ export function LeadsTab({ refreshNonce, onUnauth }: LeadsTabProps) {
               <th className="text-left px-3 py-2 font-medium">Source</th>
               <th className="text-left px-3 py-2 font-medium">Page</th>
               <th className="text-left px-3 py-2 font-medium">UTM</th>
+              <th className="text-left px-3 py-2 font-medium">Message</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#22332F]">
             {loading ? (
-              <tr><td colSpan={7} className="px-3 py-6 text-center text-[#A1A9A0]">loading…</td></tr>
+              <tr><td colSpan={8} className="px-3 py-6 text-center text-[#A1A9A0]">loading…</td></tr>
             ) : !data || data.rows.length === 0 ? (
-              <tr><td colSpan={7} className="px-3 py-6 text-center text-[#A1A9A0]">no leads captured</td></tr>
+              <tr><td colSpan={8} className="px-3 py-6 text-center text-[#A1A9A0]">no leads captured</td></tr>
             ) : (
               data.rows.map((r) => {
                 const name = [r.first_name, r.last_name].filter(Boolean).join(" ") || "-";
@@ -164,6 +166,11 @@ export function LeadsTab({ refreshNonce, onUnauth }: LeadsTabProps) {
                     <td className="px-3 py-2 text-[#A1A9A0] text-xs font-mono">{r.source}</td>
                     <td className="px-3 py-2 text-[#A1A9A0] text-xs font-mono">{r.page_path ?? "-"}</td>
                     <td className="px-3 py-2 text-[#A1A9A0] text-xs">{utm}</td>
+                    <td className="px-3 py-2 text-[#A1A9A0] text-xs max-w-[280px]">
+                      {r.message ? (
+                        <span title={r.message} className="line-clamp-2 whitespace-pre-wrap">{r.message}</span>
+                      ) : "-"}
+                    </td>
                   </tr>
                 );
               })

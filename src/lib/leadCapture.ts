@@ -11,6 +11,7 @@ export interface LeadInput {
   first_name?: string | null;
   last_name?: string | null;
   firm?: string | null;
+  message?: string | null;
 }
 
 /** Fire-and-forget insert into lead_signups. Never throws. */
@@ -25,6 +26,7 @@ export async function captureLead(input: LeadInput): Promise<{ ok: boolean; erro
       first_name: input.first_name?.trim() || null,
       last_name: input.last_name?.trim() || null,
       firm: input.firm?.trim() || null,
+      message: input.message?.trim() || null,
       page_path: typeof window !== "undefined" ? window.location.pathname : null,
       referrer_url: typeof document !== "undefined" ? document.referrer || null : null,
       utm_source: params?.get("utm_source") || null,
