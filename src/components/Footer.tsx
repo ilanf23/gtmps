@@ -39,6 +39,7 @@ const SITEMAP: SitemapCol[] = [
       { label: "Manuscript", to: "/manuscript" },
       { label: "About", to: "/about" },
       { label: "Awards", to: "/awards" },
+      { label: "Contact", to: "/contact" },
     ],
   },
   {
