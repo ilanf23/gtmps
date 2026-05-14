@@ -428,11 +428,51 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
         </div>
       </section>
 
-      {/* SECTION 02 · NUMBERS */}
+      {/* SECTION 02 · TWO PATHS (NotifySignup dual) */}
       <section className="section">
         <div className="container">
           <header className="section-head">
-            <Meta num="02" tag={config.numbers.metaTag} />
+            <Meta num="02" tag="Two paths forward" />
+            <h2 className="section-headline reveal d1">
+              Pick the door that fits<span className="period">.</span>
+            </h2>
+            <p className="section-sub reveal d2">
+              Free signal scan, or a conversation about your GTM. Either way, four fields and we take it from there.
+            </p>
+          </header>
+
+          <div
+            className="reveal d3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 24,
+              marginTop: 32,
+            }}
+          >
+            <NotifySignup
+              variant="ai"
+              source={`vertical:${config.slug}`}
+              headline="Someone in your market just changed jobs, raised a round, or published."
+              sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
+              buttonLabel="Get signal scan"
+            />
+            <NotifySignup
+              variant="com"
+              source={`vertical:${config.slug}`}
+              headline="GTM strategy, brand, and content that opens doors."
+              sub="Tell us about your firm. We'll show you what's possible."
+              buttonLabel="Talk to us"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 03 · NUMBERS */}
+      <section className="section">
+        <div className="container">
+          <header className="section-head">
+            <Meta num="03" tag={config.numbers.metaTag} />
             <h2 className="section-headline reveal d1">
               {config.numbers.headline}
               <span className="period">.</span>
@@ -720,46 +760,6 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
                 <p className="faq-answer">{f.a}</p>
               </details>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 11 · TWO PATHS (NotifySignup dual) */}
-      <section className="section">
-        <div className="container">
-          <header className="section-head">
-            <Meta num="11" tag="Two paths forward" />
-            <h2 className="section-headline reveal d1">
-              Pick the door that fits<span className="period">.</span>
-            </h2>
-            <p className="section-sub reveal d2">
-              Free signal scan, or a conversation about your GTM. Either way, four fields and we take it from there.
-            </p>
-          </header>
-
-          <div
-            className="reveal d3"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-              gap: 24,
-              marginTop: 32,
-            }}
-          >
-            <NotifySignup
-              variant="ai"
-              source={`vertical:${config.slug}`}
-              headline="Someone in your market just changed jobs, raised a round, or published."
-              sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
-              buttonLabel="Get signal scan"
-            />
-            <NotifySignup
-              variant="com"
-              source={`vertical:${config.slug}`}
-              headline="GTM strategy, brand, and content that opens doors."
-              sub="Tell us about your firm. We'll show you what's possible."
-              buttonLabel="Talk to us"
-            />
           </div>
         </div>
       </section>
