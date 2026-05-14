@@ -66,19 +66,6 @@ export default function FinalCta() {
           animation: 'fadeUp 0.8s ease 0.15s both',
         }}
       >
-        <p
-          style={{
-            fontFamily: "'DM Mono', 'Courier New', monospace",
-            fontSize: 9,
-            letterSpacing: '0.32em',
-            textTransform: 'uppercase',
-            color: '#A8923A',
-            marginBottom: 12,
-            margin: '0 0 12px',
-          }}
-        >
-          11 · BEGIN
-        </p>
         <div
           aria-hidden
           style={{

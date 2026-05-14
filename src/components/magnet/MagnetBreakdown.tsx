@@ -28,6 +28,7 @@ import CompactCtaCard from "./v10/CompactCtaCard";
 import WhyResearchMatters from "./v10/WhyResearchMatters";
 import ValueInTheirWords from "./v10/ValueInTheirWords";
 import FullCtaSection from "./v10/FullCtaSection";
+import NotifySignup from "@/components/forms/NotifySignup";
 import HighestLeverageMove from "./v10/HighestLeverageMove";
 import DeeperFindings from "./v10/DeeperFindings";
 import ManuscriptShareSave from "./v10/ManuscriptShareSave";
@@ -403,6 +404,60 @@ export default function MagnetBreakdown({
             text: brand.text,
           }}
         />
+
+        <div style={{ padding: '48px 0 32px', textAlign: 'left' }}>
+          <header style={{ textAlign: 'center', marginBottom: 24 }}>
+            <h2
+              style={{
+                fontFamily: "'Inter Tight', system-ui, sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(24px, 2.6vw, 32px)',
+                lineHeight: 1.15,
+                letterSpacing: '-0.02em',
+                color: brand.text,
+                margin: '0 0 10px',
+              }}
+            >
+              Two paths forward.
+            </h2>
+            <p
+              style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic',
+                fontSize: 'clamp(15px, 1.3vw, 18px)',
+                lineHeight: 1.5,
+                color: brand.text,
+                opacity: 0.7,
+                margin: 0,
+              }}
+            >
+              Get scanned by the AI, or talk strategy with the team.
+            </p>
+          </header>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: 20,
+            }}
+          >
+            <NotifySignup
+              variant="ai"
+              source={`magnet:${slug}`}
+              headline="Someone in your market just changed jobs, raised a round, or published."
+              sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
+              buttonLabel="Get signal scan"
+            />
+            <NotifySignup
+              variant="com"
+              source={`magnet:${slug}`}
+              headline="GTM strategy, brand, and content that opens doors."
+              sub="Tell us about your firm. We'll show you what's possible."
+              buttonLabel="Talk to us"
+            />
+          </div>
+        </div>
 
         <CoreProofAnalysisSection
           observedCore={sanitizedObserved}

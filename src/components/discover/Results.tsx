@@ -1081,15 +1081,9 @@ export default function Results() {
       <div className="frame-top" aria-hidden />
       <div className="frame-bottom" aria-hidden />
       <span className="running-head">Discover Mabbly</span>
-      <span className="running-head-r">Section 08 · Proof</span>
 
       <div className="section">
         <header className="section-head">
-          <p className="meta-row">
-            <span className="meta-num">08</span>
-            <span className="meta-pip">·</span>
-            <span className="meta-word">Proof</span>
-          </p>
           <h2 className="headline">
             {HEADLINE_WORDS.map((word, i) => {
               const isLast = i === HEADLINE_WORDS.length - 1;

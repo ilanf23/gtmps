@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
+import NotifySignup from "@/components/forms/NotifySignup";
 import { CSS } from "./css";
 import type { VerticalConfig, VerticalSlug, SmallStat, BreakBlock } from "./configs";
 import { track } from "@/lib/posthog";
@@ -172,7 +173,7 @@ const SmallStatNumberDisplay = ({ stat }: { stat: SmallStat }) => {
 
 const ROADMAP_DEFAULTS = [
   { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-  { day: "Day 7", label: "Practice Growth Profile", desc: "Benchmarked against peer firms. Confidential." },
+  { day: "Day 7", label: "Practice Growth Profile", desc: "Benchmarked against peer firms." },
   { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
   { day: "Day 90", label: "First Reactivation", desc: "Your first warm reply from a dormant relationship." },
 ];
@@ -297,17 +298,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
       return next;
     });
 
-  const Meta = ({ num, tag }: { num: string; tag: string }) => (
-    <div className="meta-row">
-      <span className="rule" />
-      <span className="meta-tag">
-        <span className="num">{num}</span>
-        <span className="pip">·</span>
-        {tag}
-      </span>
-      <span className="rule" />
-    </div>
-  );
+  const Meta = (_: { num: string; tag: string }) => null;
 
   const stops = config.roadmap.stops ?? ROADMAP_DEFAULTS;
   const splitWords = (s: string) => s.split(" ").filter(Boolean);
@@ -318,7 +309,20 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
     <div ref={rootRef} className="cpage">
       <style>{CSS}</style>
 
-      <VerticalNavBar addYourFirmLabel="Add Your Firm" />
+      <VerticalNavBar
+        addYourFirmLabel="Add Your Firm"
+        addYourFirmHref="#hero"
+        onAddYourFirm={() => {
+          const root = rootRef.current;
+          const input = root?.querySelector<HTMLInputElement>(".hero-form input");
+          if (input) {
+            input.scrollIntoView({ behavior: "smooth", block: "center" });
+            input.focus({ preventScroll: true });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }}
+      />
 
       {/* SECTION 01 · HERO */}
       <section className="section section-hero">
@@ -352,10 +356,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
               <p className="hero-lede reveal d3">{config.hero.lede}</p>
               <form
                 className="hero-form reveal d4"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  document.getElementById("begin")?.scrollIntoView({ behavior: "smooth" });
-                }}
+                onSubmit={(e) => e.preventDefault()}
               >
                 <input type="url" placeholder="yourfirm.com" aria-label="Firm website URL" />
                 <button type="submit" className="cta-pill">
@@ -365,7 +366,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
               </form>
               <div className="trust-line reveal d5">
                 Free <span className="dot">·</span> 90 sec to build <span className="dot">·</span> 10 min to read{" "}
-                <span className="dot">·</span> Confidential <span className="dot">·</span> Benchmarked against peer firms
+                <span className="dot">·</span> Benchmarked against peer firms
               </div>
             </div>
 
@@ -419,13 +420,6 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
 
                   <footer className="profile-foot">
                     <span className="profile-foot-doc">10 Questions · 10 Minutes</span>
-                    <span className="profile-foot-conf">
-                      <svg viewBox="0 0 12 12" fill="none" width="9" height="9">
-                        <rect x="2" y="5" width="8" height="6" stroke="currentColor" strokeWidth="1.2" rx="0.5" />
-                        <path d="M4 5V3.5a2 2 0 0 1 4 0V5" stroke="currentColor" strokeWidth="1.2" fill="none" />
-                      </svg>
-                      Confidential
-                    </span>
                   </footer>
                 </div>
               </div>
@@ -630,71 +624,6 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
         </div>
       </section>
 
-      {/* SECTION 07 · SCORE DARK */}
-      <section className="section dark" id="score">
-        <div className="score-bg" aria-hidden="true">
-          <svg viewBox="0 0 1200 400" preserveAspectRatio="none">
-            <g stroke="#F8F2E5" strokeWidth="0.5" fill="none" opacity="0.5">
-              <line x1="40" y1="320" x2="1160" y2="320" />
-              <line x1="40" y1="240" x2="1160" y2="240" />
-              <line x1="40" y1="160" x2="1160" y2="160" />
-              <line x1="40" y1="80" x2="1160" y2="80" />
-            </g>
-            <polyline
-              points="40,300 200,260 360,250 520,200 680,180 840,140 1000,110 1160,80"
-              fill="none"
-              stroke="#FFBA1A"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <polyline
-              points="40,310 200,300 360,290 520,280 680,290 840,300 1000,310 1160,300"
-              fill="none"
-              stroke="#F8F2E5"
-              strokeWidth="1"
-              strokeLinecap="round"
-              opacity="0.45"
-            />
-            <g fill="#BF461A">
-              <circle cx="200" cy="260" r="2.5" />
-              <circle cx="520" cy="200" r="2.5" />
-              <circle cx="840" cy="140" r="2.5" />
-              <circle cx="1160" cy="80" r="2.5" />
-            </g>
-          </svg>
-        </div>
-        <div className="container score-inner">
-          <header className="section-head">
-            <Meta num="07" tag={config.score.metaTag} />
-            <h2 className="score-headline reveal d1">
-              {config.score.headline}
-              <span className="period">.</span>
-            </h2>
-            <p className="score-sub reveal d2">{config.score.sub}</p>
-          </header>
-
-          <form
-            className="score-form reveal d3"
-            onSubmit={(e) => {
-              e.preventDefault();
-              document.getElementById("begin")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            <input type="url" placeholder="yourfirm.com" aria-label="Firm website URL" />
-            <button type="submit" className="cta-pill">
-              {config.score.ctaLabel}
-              <ArrowSvg />
-            </button>
-          </form>
-
-          <div className="trust-line dark reveal d4">
-            Free <span className="dot">·</span> 90 sec to build <span className="dot">·</span> 10 min to read{" "}
-            <span className="dot">·</span> Confidential
-          </div>
-        </div>
-      </section>
-
       {/* SECTION 08 · AUTHORS */}
       <section className="section">
         <div className="container">
@@ -795,32 +724,42 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
         </div>
       </section>
 
-      {/* SECTION 10 · BEGIN */}
-      <section className="section" id="begin">
+      {/* SECTION 11 · TWO PATHS (NotifySignup dual) */}
+      <section className="section">
         <div className="container">
           <header className="section-head">
-            <Meta num="10" tag="Begin" />
-          </header>
-          <div className="begin-inner">
-            <h2 className="begin-headline reveal d1">
-              {config.begin.headline}
-              <span className="period">.</span>
+            <Meta num="11" tag="Two paths forward" />
+            <h2 className="section-headline reveal d1">
+              Pick the door that fits<span className="period">.</span>
             </h2>
-            <form
-              className="hero-form reveal d2"
-              style={{ margin: "0 auto" }}
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input type="url" placeholder="yourfirm.com" aria-label="Firm website URL" />
-              <button type="submit" className="cta-pill">
-                {config.begin.ctaLabel}
-                <ArrowSvg />
-              </button>
-            </form>
-            <div className="trust-line reveal d3" style={{ textAlign: "center", margin: "18px auto 0" }}>
-              Free <span className="dot">·</span> 90 sec to build <span className="dot">·</span> 10 min to read{" "}
-              <span className="dot">·</span> Confidential <span className="dot">·</span> Benchmarked against peer firms
-            </div>
+            <p className="section-sub reveal d2">
+              Free signal scan, or a conversation about your GTM. Either way, four fields and we take it from there.
+            </p>
+          </header>
+
+          <div
+            className="reveal d3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 24,
+              marginTop: 32,
+            }}
+          >
+            <NotifySignup
+              variant="ai"
+              source={`vertical:${config.slug}`}
+              headline="Someone in your market just changed jobs, raised a round, or published."
+              sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
+              buttonLabel="Get signal scan"
+            />
+            <NotifySignup
+              variant="com"
+              source={`vertical:${config.slug}`}
+              headline="GTM strategy, brand, and content that opens doors."
+              sub="Tell us about your firm. We'll show you what's possible."
+              buttonLabel="Talk to us"
+            />
           </div>
         </div>
       </section>

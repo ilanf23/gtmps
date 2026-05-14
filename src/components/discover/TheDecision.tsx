@@ -592,11 +592,6 @@ export default function TheDecision() {
 
       <div className="td-inner">
         <header className="td-head">
-          <p className="td-eyebrow">
-            <span className="num">09</span>
-            <span className="pip">·</span>
-            <span className="word">The Decision</span>
-          </p>
           <h2 id="td-heading" className="td-headline">
             Two firms. Same market. <em>Different systems.</em>
           </h2>

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { CSS } from "@/pages/verticals/_template/css";
 import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
+import NotifySignup from "@/components/forms/NotifySignup";
 
 const ArrowSvg = () => (
   <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -283,6 +284,45 @@ export default function Awards() {
                 </span>
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 03B · TWO PATHS (NotifySignup dual) */}
+      <section className="section">
+        <div className="container">
+          <header className="section-head">
+            <h2 className="section-headline reveal d1">
+              Pick the door that fits<span className="period">.</span>
+            </h2>
+            <p className="section-sub reveal d2">
+              Get scanned by the AI, or talk strategy with the team. Either way, four fields and we take it from there.
+            </p>
+          </header>
+
+          <div
+            className="reveal d3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 24,
+              marginTop: 32,
+            }}
+          >
+            <NotifySignup
+              variant="ai"
+              source="awards"
+              headline="Someone in your market just changed jobs, raised a round, or published."
+              sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
+              buttonLabel="Get signal scan"
+            />
+            <NotifySignup
+              variant="com"
+              source="awards"
+              headline="GTM strategy, brand, and content that opens doors."
+              sub="Tell us about your firm. We'll show you what's possible."
+              buttonLabel="Talk to us"
+            />
           </div>
         </div>
       </section>

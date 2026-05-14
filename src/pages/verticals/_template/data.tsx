@@ -120,7 +120,7 @@ export const consulting: VerticalConfig = {
     sub: <>Most firms see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "Practice Growth Profile", desc: "Benchmarked against peer consulting firms. Confidential." },
+      { day: "Day 7", label: "Practice Growth Profile", desc: "Benchmarked against peer consulting firms." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Reactivation", desc: "Your first warm reply from a dormant relationship." },
     ],
@@ -259,7 +259,7 @@ export const law: VerticalConfig = {
     sub: <>Most firms see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "Origination Profile", desc: "Benchmarked against peer law firms. Confidential." },
+      { day: "Day 7", label: "Origination Profile", desc: "Benchmarked against peer law firms." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the firm." },
       { day: "Day 90", label: "First Reactivation", desc: "Your first warm reply from a dormant client." },
     ],
@@ -398,7 +398,7 @@ export const accounting: VerticalConfig = {
     sub: <>Most firms see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "Client Development Profile", desc: "Benchmarked against peer accounting firms. Confidential." },
+      { day: "Day 7", label: "Client Development Profile", desc: "Benchmarked against peer accounting firms." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Cross-Sell", desc: "Your first advisory engagement from a tax-only client." },
     ],
@@ -537,7 +537,7 @@ export const msp: VerticalConfig = {
     sub: <>Most MSPs see their first expansion conversation <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "Account Expansion Profile", desc: "Benchmarked against peer MSPs. Confidential." },
+      { day: "Day 7", label: "Account Expansion Profile", desc: "Benchmarked against peer MSPs." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Expansion", desc: "Your first new product line in an existing account." },
     ],
@@ -676,7 +676,7 @@ export const advisory: VerticalConfig = {
     sub: <>Most firms see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "AUM Growth Profile", desc: "Benchmarked against peer RIAs. Confidential." },
+      { day: "Day 7", label: "AUM Growth Profile", desc: "Benchmarked against peer RIAs." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Reactivation", desc: "Your first warm reply from a dormant prospect or COI." },
     ],
@@ -815,7 +815,7 @@ export const ae: VerticalConfig = {
     sub: <>Most firms see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "Pursuit Profile", desc: "Benchmarked against peer A&E firms. Confidential." },
+      { day: "Day 7", label: "Pursuit Profile", desc: "Benchmarked against peer A&E firms." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Reactivation", desc: "Your first warm reply from a past or stalled client." },
     ],
@@ -954,7 +954,7 @@ export const recruiting: VerticalConfig = {
     sub: <>Most firms see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "Mandate Profile", desc: "Benchmarked against peer search firms. Confidential." },
+      { day: "Day 7", label: "Mandate Profile", desc: "Benchmarked against peer search firms." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Repeat Mandate", desc: "Your first new search from a past placement or candidate-turned-buyer." },
     ],
@@ -1093,7 +1093,7 @@ export const agency: VerticalConfig = {
     sub: <>Most agencies see their first warm reply <strong>within 14 days</strong> of their first outreach round.</>,
     stops: [
       { day: "Day 0", label: "The Score", desc: "90 seconds to build. 10 minutes to read. Free." },
-      { day: "Day 7", label: "New Business Profile", desc: "Benchmarked against peer agencies. Confidential." },
+      { day: "Day 7", label: "New Business Profile", desc: "Benchmarked against peer agencies." },
       { day: "Day 30", label: "Discovery", desc: "Where partnership begins. Run the framework with the team." },
       { day: "Day 90", label: "First Reactivation", desc: "Your first warm reply from a past client or lost pitch." },
     ],

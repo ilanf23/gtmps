@@ -1,4 +1,6 @@
 // RETIRED: this section was removed from /discover. Subscribe links now live in the Footer (#footer-podcast). File kept for easy restore.
+import NotifySignup from '@/components/forms/NotifySignup';
+
 const PLATFORMS = ['Apple Podcasts', 'Spotify', 'YouTube'];
 
 const STATS = [
@@ -85,6 +87,30 @@ export default function ThePodcast() {
             marginBottom: 48,
           }}
         />
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: 24,
+            marginBottom: 56,
+          }}
+        >
+          <NotifySignup
+            variant="ai"
+            source="podcast"
+            headline="Someone in your market just changed jobs, raised a round, or published."
+            sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
+            buttonLabel="Get signal scan"
+          />
+          <NotifySignup
+            variant="com"
+            source="podcast"
+            headline="GTM strategy, brand, and content that opens doors."
+            sub="Tell us about your firm. We'll show you what's possible."
+            buttonLabel="Talk to us"
+          />
+        </div>
 
         <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', flexWrap: 'wrap' }}>
           <div

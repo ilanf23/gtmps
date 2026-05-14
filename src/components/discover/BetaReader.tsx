@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { scrollToHero } from '@/lib/scrollToHero';
 
 export default function BetaReader() {
   const [submitted, setSubmitted] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [firm, setFirm] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !firm.trim()) return;
     setSubmitted(true);
-    scrollToHero();
   };
 
   return (
@@ -100,6 +101,15 @@ export default function BetaReader() {
         .ea-headline .ea-period {
           color: #FFBA1A;
         }
+        .ea-sub {
+          font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+          font-style: italic;
+          font-size: clamp(17px, 1.5vw, 20px);
+          line-height: 1.5;
+          color: rgba(237, 245, 236, 0.7);
+          max-width: 32ch;
+          margin: 0;
+        }
         .ea-form {
           display: flex;
           flex-direction: column;
@@ -164,6 +174,12 @@ export default function BetaReader() {
           transform: translateY(-1px);
           box-shadow: 0 14px 32px -10px rgba(15,30,29,0.45);
         }
+        .ea-submit-block {
+          width: 100%;
+          justify-content: center;
+        }
+        .ea-input-row-email > .ea-input:first-child { flex: 2; }
+        .ea-input-row-email > .ea-input:last-child  { flex: 1; }
         .ea-submit .ea-arrow {
           display: inline-block;
           transition: transform 350ms cubic-bezier(0.85, 0, 0.15, 1);
@@ -280,15 +296,12 @@ export default function BetaReader() {
 
       <div className="ea-row">
         <div className="ea-left">
-          <span className="ea-pill">
-            <span className="ea-dot" aria-hidden />
-            <span>
-              <span className="ea-num">07 ·</span>Early Access · Open
-            </span>
-          </span>
           <h2 className="ea-headline">
-            Get this system 90 days before launch<span className="ea-period">.</span>
+            Get notified when the book launches. Free<span className="ea-period">.</span>
           </h2>
+          <p className="ea-sub">
+            We'll email you the moment it opens. Nothing else in between.
+          </p>
         </div>
 
         {submitted ? (
@@ -298,16 +311,35 @@ export default function BetaReader() {
               <h3 className="ea-success-headline">You're on the list.</h3>
             </div>
             <p className="ea-success-body">
-              We'll review your application and respond within 48 hours. Add your firm's
-              website above to get your personalized MAP while you wait.
+              We'll email you the day the book opens. Nothing else in between.
             </p>
           </div>
         ) : (
-          <form
-            className="ea-form"
-            action="mailto:beta@mabbly.com"
-            onSubmit={handleSubmit}
-          >
+          <form className="ea-form" onSubmit={handleSubmit} noValidate>
+            <div className="ea-input-row ea-input-row-pair">
+              <input
+                type="text"
+                name="firstName"
+                className="ea-input"
+                placeholder="First name"
+                aria-label="First name"
+                autoComplete="given-name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                name="lastName"
+                className="ea-input"
+                placeholder="Last name"
+                aria-label="Last name"
+                autoComplete="family-name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
             <div className="ea-input-row">
               <input
                 type="email"
@@ -320,13 +352,26 @@ export default function BetaReader() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+            </div>
+            <div className="ea-input-row">
+              <input
+                type="text"
+                name="firm"
+                className="ea-input"
+                placeholder="Firm"
+                aria-label="Firm"
+                autoComplete="organization"
+                value={firm}
+                onChange={(e) => setFirm(e.target.value)}
+                required
+              />
               <button type="submit" className="ea-submit" data-cta="add-your-firm">
-                Add Your Firm
+                Notify me
                 <span className="ea-arrow" aria-hidden>→</span>
               </button>
             </div>
             <p className="ea-trust">
-              Free<span className="ea-sep">·</span>By application<span className="ea-sep">·</span>48hr decisions
+              One email<span className="ea-sep">·</span>No spam<span className="ea-sep">·</span>Unsubscribe anytime
             </p>
           </form>
         )}

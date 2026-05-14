@@ -635,10 +635,6 @@ export default function WhyNow() {
       <div className="wn-inner">
         <div className="wn-header">
           <div className="wn-header-left">
-            <span className="wn-eyebrow-row">
-              <span className="wn-eyebrow-dot" aria-hidden />
-              <p className="wn-eyebrow">06 · Why Now</p>
-            </span>
             <h2 className="wn-headline">
               <span className="wn-word">Why</span>
               <span className="wn-word">this</span>

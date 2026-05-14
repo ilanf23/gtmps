@@ -442,9 +442,6 @@ export default function Faq() {
       </svg>
 
       <div className="faq-inner">
-        <p className="faq-eyebrow">
-          10 · Common Questions
-        </p>
         <span className="faq-underline" aria-hidden="true" />
         <h2 className="faq-headline">
           {HEADLINE_WORDS.map((w, i) => {

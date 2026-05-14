@@ -277,8 +277,7 @@ export default function AuthorityStrip() {
       <section id="authority" className="au-root">
         <div className="au-inner">
           <header className="au-header">
-            <p className="au-eyebrow">04 · The Authors</p>
-            <h2 className="au-title">Written by the architects of the GTM platform.</h2>
+            <h2 className="au-title">Built by the people who built it.</h2>
             <p className="au-deck">Two signatures. Practitioner and author.</p>
           </header>
 

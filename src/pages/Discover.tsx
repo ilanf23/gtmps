@@ -1,9 +1,7 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { scrollToHero } from "@/lib/scrollToHero";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useFooterVisible } from "@/hooks/useFooterVisible";
-import { useInlineCtaVisible } from "@/hooks/useInlineCtaVisible";
 import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
 import SkipLink from "@/components/SkipLink";
@@ -26,94 +24,15 @@ const BetaReader = lazy(() => import("@/components/discover/BetaReader"));
 const Results = lazy(() => import("@/components/discover/Results"));
 const TheDecision = lazy(() => import("@/components/discover/TheDecision"));
 const Faq = lazy(() => import("@/components/discover/Faq"));
-const FinalCta = lazy(() => import("@/components/discover/FinalCta"));
 
-const ADD_YOUR_FIRM_LABEL = "Add Your Firm →";
-
-const handleAddYourFirmClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.preventDefault();
-  scrollToHero();
-};
-
-/* ─────────────────────────────────────────────
-   STICKY BOTTOM CTA - restyled, lower visual weight
-   ───────────────────────────────────────────── */
-const StickyCTA = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const footerVisible = useFooterVisible(0.05);
-  const inlineVisible = useInlineCtaVisible(0.5);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const show = scrolled && !footerVisible && !inlineVisible;
-
-  return (
-    <>
-      {/* Always-visible scroll progress rail at very bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-[80] pointer-events-none">
-        <div className="pointer-events-auto">
-          <ScrollProgressRail />
-        </div>
-      </div>
-
-      {/* Floating pill */}
-      <div
-        className="fixed left-0 right-0 z-[90] flex justify-center pointer-events-none"
-        style={{
-          bottom: 24,
-          opacity: show ? 1 : 0,
-          transform: show ? "translateY(0)" : "translateY(20px)",
-          transition: "opacity 200ms ease, transform 200ms cubic-bezier(0.16, 1, 0.3, 1)",
-          padding: "0 16px",
-        }}
-      >
-        <a
-          href="#hero"
-          onClick={handleAddYourFirmClick}
-          className="pointer-events-auto rounded-full"
-          style={{
-            background: "#BF461A",
-            border: "2px solid #BF461A",
-            color: "#F8F2E5",
-            height: 56,
-            padding: "0 28px",
-            fontFamily: "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
-            fontSize: 12,
-            fontWeight: 900,
-            letterSpacing: "0.10em",
-            textTransform: "uppercase",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textDecoration: "none",
-            boxShadow: "0 10px 28px -10px rgba(191,70,26,0.45)",
-            pointerEvents: show ? "auto" : "none",
-            transition: "color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), background 300ms cubic-bezier(0.13, 0.28, 0.3, 1), border-color 300ms cubic-bezier(0.13, 0.28, 0.3, 1), box-shadow 300ms cubic-bezier(0.13, 0.28, 0.3, 1), transform 300ms cubic-bezier(0.13, 0.28, 0.3, 1)",
-            maxWidth: "calc(100% - 16px)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#0F1E1D";
-            e.currentTarget.style.borderColor = "#0F1E1D";
-            e.currentTarget.style.transform = "translateY(-1px)";
-            e.currentTarget.style.boxShadow = "0 14px 32px -10px rgba(15,30,29,0.45)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#BF461A";
-            e.currentTarget.style.borderColor = "#BF461A";
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "0 10px 28px -10px rgba(191,70,26,0.45)";
-          }}
-        >
-          {ADD_YOUR_FIRM_LABEL}
-        </a>
-      </div>
-    </>
-  );
-};
+/* Always-visible scroll progress rail at the bottom of the viewport. */
+const BottomProgressRail = () => (
+  <div className="fixed bottom-0 left-0 right-0 z-[80] pointer-events-none">
+    <div className="pointer-events-auto">
+      <ScrollProgressRail />
+    </div>
+  </div>
+);
 
 /* ─────────────────────────────────────────────
    PAGE ROOT
@@ -169,7 +88,6 @@ const Discover = () => {
     { id: "results", label: "08 · Proof" },
     { id: "decision", label: "09 · Decision" },
     { id: "faq", label: "10 · FAQ" },
-    { id: "final-cta", label: "11 · Begin" },
   ];
 
   return (
@@ -284,18 +202,17 @@ const Discover = () => {
           `}</style>
         </section>
         <Suspense fallback={<div style={{ minHeight: 400 }} aria-hidden />}>
+          <BetaReader />
           <AuthorityStrip />
           <DeadZone />
           <WhyNow />
-          <BetaReader />
           <Results />
           <TheDecision />
           <Faq />
-          <FinalCta />
         </Suspense>
       </main>
       <Footer />
-      <StickyCTA />
+      <BottomProgressRail />
       <Suspense fallback={null}>
         <FloatingHeroVideo />
       </Suspense>
