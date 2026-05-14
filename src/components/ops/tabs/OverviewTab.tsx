@@ -31,6 +31,7 @@ interface KpiBucket {
   shares: number;
   emails: number;
   bookings: number;
+  leads?: number;
 }
 
 interface TimeseriesPoint {
@@ -141,6 +142,7 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
         shares: null,
         emails: null,
         bookings: null,
+        leads: null,
       } as Record<string, number | null>;
     }
     return {
@@ -150,6 +152,7 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
       shares: pctDelta(data.kpis.shares, prev.shares),
       emails: pctDelta(data.kpis.emails, prev.emails),
       bookings: pctDelta(data.kpis.bookings, prev.bookings),
+      leads: pctDelta(data.kpis.leads ?? 0, prev.leads ?? 0),
     } as Record<string, number | null>;
   }, [data]);
 
@@ -222,6 +225,7 @@ export function OverviewTab({ refreshNonce, onUnauth }: OverviewTabProps) {
         <KpiCard label="Views" value={kpis.views} delta={deltas.views} spark={sparklines.views} />
         <KpiCard label="Shares" value={kpis.shares} delta={deltas.shares} spark={sparklines.shares} />
         <KpiCard label="Emails" value={kpis.emails} delta={deltas.emails} spark={null} />
+        <KpiCard label="Leads" value={kpis.leads ?? 0} delta={deltas.leads} spark={null} />
         <KpiCard label="Bookings" value={kpis.bookings} delta={deltas.bookings} spark={sparklines.bookings} />
       </div>
 
