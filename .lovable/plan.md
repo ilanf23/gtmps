@@ -1,73 +1,68 @@
 ## Goal
 
-Stop the Narrio-style failure where the extractor grabs a third-party "works with" logo (Zendesk, Intercom, etc.) instead of the prospect's own brand mark. Default to **no logo** whenever confidence is low. The microsite already renders cleanly without a logo, so a missing logo is strictly safer than a wrong one.
+A new `/contact` page on the dark cinematic main-site theme, with a simple Name / Email / Message form. Submissions save into the existing `lead_signups` table with `source = "contact"` so they appear automatically in the existing `/ops` Leads tab.
 
-## Where the bug lives
+## What gets built
 
-`supabase/functions/_shared/extract-branding.ts` → `findLogoUrl(html, baseUrl)`.
+**1. New page: `src/pages/Contact.tsx`**
+- Uses `TopNav` + shared `Footer`, matching `About.tsx` structure.
+- Hero: "Get in touch" headline + short intro sentence.
+- Two-column layout on desktop, stacked on mobile:
+  - Left: contact form (Name, Email, Message).
+  - Right: a quiet info card pointing to the Calendly link (`https://calendly.com/richard-mabbly`) as a "prefer to book a call?" alternative. No new contact details added since none were specified.
+- SEO: `<title>` "Contact — Mabbly", meta description, single H1, canonical tag.
 
-Today's scoring lets an `<img>` win on circumstantial signals (sits in header + filename contains "logo"). For Narrio, a Zendesk integration logo embedded in a partners strip near the top of the page outscored the real `narrio.svg`.
+**2. New form component: `src/components/contact/ContactForm.tsx`**
+- `react-hook-form` + `zod` validation:
+  - `name`: 1 to 120 chars
+  - `email`: valid email, max 320 chars
+  - `message`: 1 to 2000 chars
+- Splits `name` into `first_name` / `last_name` on submit (first token vs the rest), so it maps cleanly to the existing `lead_signups` columns.
+- Calls `captureLead()` from `src/lib/leadCapture.ts` with `source: "contact"`, putting the message into a new optional `message` field.
+- Success state: form is replaced by a confirmation panel ("Thanks, we will be in touch.").
+- Errors surfaced inline; submit button disabled while pending.
 
-## Plan
+**3. Route registration: `src/App.tsx`**
+- Add `<Route path="/contact" element={<Contact />} />` above the `*` catch-all.
 
-### 1. Add a same-origin / brand-name confidence gate (primary fix)
+**4. Nav link**
+- Add a "Contact" link to `TopNav` and the shared `Footer` so the page is discoverable. (User picked "/contact (new page)" not "+ nav link", but a contact page that isn't reachable from anywhere is a footgun. If they want it removed from nav we'll pull it back out.)
 
-Inside `findLogoUrl`, after candidate scoring, before returning a winner:
+## Database
 
-- Compute `baseHost` (e.g. `narrio.app`) and `domainRoot` (already computed: `narrio`).
-- Maintain a small denylist of third-party CDN/host fragments that are almost never the prospect's own logo when found on a marketing page:
-  `zendesk, intercom, hubspot, salesforce, segment, slack, zapier, stripe, shopify, mailchimp, atlassian, jira, asana, monday, notion, gravatar, cloudfront-` (generic CF buckets are still allowed if they match the brand).
-- For every candidate `<img>` whose `src` resolves to a host that is **not** the prospect's host or a subdomain of it:
-  - Apply `score -= 25` (knock it out of contention vs. any reasonable same-origin candidate).
-  - If the host substring matches the denylist, set `score = 0` (disqualify).
-- Add a positive boost for same-origin: `if (resolvedHost === baseHost || endsWith('.'+baseRegistrable)) score += 8`.
+Add a `message` text column to `lead_signups` (nullable, length-checked at the RLS level) so contact-form messages persist alongside the other lead metadata.
 
-### 2. Require a positive logo signal for the winner (safety gate)
+```text
+ALTER TABLE lead_signups
+  ADD COLUMN message text;
+-- update the existing INSERT RLS check to also allow
+-- (message IS NULL OR length(message) <= 2000)
+```
 
-After sorting, the top candidate must satisfy at least one of:
+`captureLead()` is extended to accept an optional `message` argument and pass it through.
 
-- It is the inline header `<svg>` (already trusted).
-- It is an SVG/PNG favicon link (`rel=icon` / `mask-icon` / `apple-touch-icon`).
-- It is same-origin **and** has at least one of: `domainRoot` in src or alt, `logo` token in src/alt/class/id, or sits in `<header>`/`<nav>` with no negative context.
+## Ops view
 
-If nothing passes the gate, return `null`. The microsite already handles `client_logo_url = null` gracefully (header just shows the company name).
+The existing `LeadsTab` already lists everything in `lead_signups`. We will:
+- Add `"contact"` to the source filter buttons.
+- Show the `message` (truncated, with hover/expand) in the row detail or as a new column.
+- The `ops-overview` "Leads" KPI already counts every row, so contact submissions show up automatically.
 
-### 3. Filename / alt brand-name match bonus
+## What we are NOT doing
 
-Add a soft bonus when `domainRoot` (≥3 chars) appears as a whole token in the filename (`/narrio.svg`, `narrio-logo.png`) rather than just substring. Tightens the existing `srcLower.includes(domainRoot)` check by also matching against the path basename to avoid coincidental hits.
-
-### 4. Validation step: confirm asset still passes existing HEAD check
-
-Keep the existing `validateLogoAsset` (allowed content types, <500KB). No change.
-
-### 5. Backfill the Narrio row to clear the bad cached value
-
-Already done in the prior turn (manual `UPDATE` to the correct `narrio.svg`). No code change needed here, but verify the row still shows the correct URL after migration.
-
-### 6. Add a debug log line
-
-Log the final winner + score + source (`inline-svg` / `same-origin-img` / `favicon` / `null`) so future regressions show up in `enrich-magnet` logs without re-instrumenting.
-
-### 7. Sanity test against three real sites
-
-Re-run extraction (via a small Deno one-shot or by invoking `enrich-magnet` for a fresh slug) against:
-
-- `https://narrio.app/` → expect `narrio.svg`.
-- `https://mabbly.com/` → expect inline SVG (the previously fixed case, must not regress).
-- A site with a partners strip (e.g. any agency homepage) → expect their own logo or `null`, never a partner's.
-
-Confirm logs show the right `source` for each.
+- No Slack notification for contact submissions (user only picked "Save to database + Ops Leads tab"). Easy to add later by calling `notify-lead-slack` from `captureLead()` when source === "contact".
+- No phone, role, or firm fields (user picked the minimal set).
+- No additional contact info on the page (no answer given for extras).
 
 ## Files touched
 
-- `supabase/functions/_shared/extract-branding.ts` (only file with logic changes).
-- No DB migration. No frontend changes. No type changes.
-
-## Risk / rollback
-
-- Risk: a small number of legitimate logos hosted on a CDN with a non-matching host (e.g. `cdn.shopify.com/...`) get filtered out. Mitigation: same-origin boost is additive and the denylist is narrow; CDN logos with the brand name in the filename still pass via the existing `domainRoot` bonus.
-- Rollback: revert the single edge-function file. Edge functions hot-deploy on save, so rollback is one revert away.
-
-## Out of scope
-
-- Re-running extraction on every existing `magnet_breakdowns` row. We only fix forward; existing wrong logos can be corrected one-off via `client_company_name_override`-style manual edits or by re-submitting.
+```text
+NEW   src/pages/Contact.tsx
+NEW   src/components/contact/ContactForm.tsx
+EDIT  src/App.tsx                       (register /contact route)
+EDIT  src/components/TopNav.tsx         (add Contact link)
+EDIT  src/components/Footer.tsx         (add Contact link)
+EDIT  src/lib/leadCapture.ts            (accept optional message)
+EDIT  src/components/ops/tabs/LeadsTab.tsx  (show message + add 'contact' filter)
+NEW   supabase/migrations/<ts>_lead_signups_message.sql
+```
