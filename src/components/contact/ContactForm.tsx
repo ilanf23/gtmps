@@ -12,6 +12,12 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
+const MONO =
+  "'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace";
+const DISPLAY =
+  "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif";
+const BODY = "'Inter', 'Inter Tight', sans-serif";
+
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -45,42 +51,41 @@ export default function ContactForm() {
     return (
       <div
         style={{
-          padding: "32px 28px",
-          border: "1px solid rgba(168, 146, 58, 0.4)",
-          borderRadius: 8,
-          background: "rgba(168, 146, 58, 0.06)",
+          padding: "8px 4px",
         }}
       >
         <p
           style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 11,
+            fontFamily: MONO,
+            fontSize: 10,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: "#A8923A",
-            margin: "0 0 12px",
+            color: "#BF461A",
+            fontWeight: 700,
+            margin: "0 0 14px",
           }}
         >
           Message received
         </p>
         <h3
           style={{
-            fontFamily: "var(--font-display, 'Inter Tight', sans-serif)",
-            fontSize: 24,
-            lineHeight: 1.2,
-            color: "#EDF5EC",
-            margin: "0 0 10px",
-            fontWeight: 500,
+            fontFamily: DISPLAY,
+            fontSize: 28,
+            lineHeight: 1.15,
+            color: "#0F1E1D",
+            margin: "0 0 12px",
+            fontWeight: 900,
+            letterSpacing: "-0.015em",
           }}
         >
           Thanks. We will be in touch.
         </h3>
         <p
           style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 15,
+            fontFamily: BODY,
+            fontSize: 16,
             lineHeight: 1.6,
-            color: "rgba(237, 245, 236, 0.72)",
+            color: "rgba(15, 30, 29, 0.72)",
             margin: 0,
           }}
         >
@@ -91,36 +96,37 @@ export default function ContactForm() {
   }
 
   const labelStyle: React.CSSProperties = {
-    fontFamily: "'DM Mono', monospace",
-    fontSize: 11,
+    fontFamily: MONO,
+    fontSize: 10,
     letterSpacing: "0.18em",
     textTransform: "uppercase",
-    color: "rgba(237, 245, 236, 0.6)",
-    marginBottom: 8,
+    color: "rgba(15, 30, 29, 0.6)",
+    fontWeight: 700,
+    marginBottom: 10,
     display: "block",
   };
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    background: "rgba(255, 255, 255, 0.04)",
-    border: "1px solid rgba(237, 245, 236, 0.16)",
-    borderRadius: 4,
-    padding: "12px 14px",
-    color: "#EDF5EC",
-    fontFamily: "'Inter Tight', sans-serif",
+    background: "#FFFFFF",
+    border: "1px solid #E5E0CF",
+    borderRadius: 8,
+    padding: "13px 14px",
+    color: "#0F1E1D",
+    fontFamily: BODY,
     fontSize: 15,
     outline: "none",
-    transition: "border-color 200ms ease, background 200ms ease",
+    transition: "border-color 200ms ease, box-shadow 200ms ease",
   };
   const errStyle: React.CSSProperties = {
-    fontFamily: "'Inter Tight', sans-serif",
+    fontFamily: BODY,
     fontSize: 12,
-    color: "#E5582B",
+    color: "#BF461A",
     marginTop: 6,
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 22 }}>
         <label htmlFor="contact-name" style={labelStyle}>Name</label>
         <input
           id="contact-name"
@@ -129,11 +135,19 @@ export default function ContactForm() {
           maxLength={120}
           {...register("name")}
           style={inputStyle}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = "#BF461A";
+            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(191, 70, 26, 0.12)";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = "#E5E0CF";
+            e.currentTarget.style.boxShadow = "none";
+          }}
         />
         {errors.name && <p style={errStyle}>{errors.name.message}</p>}
       </div>
 
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 22 }}>
         <label htmlFor="contact-email" style={labelStyle}>Email</label>
         <input
           id="contact-email"
@@ -142,18 +156,34 @@ export default function ContactForm() {
           maxLength={320}
           {...register("email")}
           style={inputStyle}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = "#BF461A";
+            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(191, 70, 26, 0.12)";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = "#E5E0CF";
+            e.currentTarget.style.boxShadow = "none";
+          }}
         />
         {errors.email && <p style={errStyle}>{errors.email.message}</p>}
       </div>
 
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 28 }}>
         <label htmlFor="contact-message" style={labelStyle}>Message</label>
         <textarea
           id="contact-message"
           rows={6}
           maxLength={2000}
           {...register("message")}
-          style={{ ...inputStyle, resize: "vertical", minHeight: 140, fontFamily: "'Inter Tight', sans-serif" }}
+          style={{ ...inputStyle, resize: "vertical", minHeight: 150, fontFamily: BODY }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = "#BF461A";
+            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(191, 70, 26, 0.12)";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = "#E5E0CF";
+            e.currentTarget.style.boxShadow = "none";
+          }}
         />
         {errors.message && <p style={errStyle}>{errors.message.message}</p>}
       </div>
@@ -169,18 +199,25 @@ export default function ContactForm() {
           display: "inline-flex",
           alignItems: "center",
           gap: 8,
-          fontFamily: "'Inter Tight', sans-serif",
-          fontWeight: 600,
-          fontSize: 13,
-          letterSpacing: "0.04em",
-          padding: "13px 26px",
+          fontFamily: DISPLAY,
+          fontWeight: 900,
+          fontSize: 11,
+          letterSpacing: "0.10em",
+          textTransform: "uppercase",
+          padding: "14px 26px",
           borderRadius: 999,
           border: "none",
-          background: "linear-gradient(135deg, #A8923A 0%, #C4AC4A 100%)",
-          color: "#0F1E1D",
+          background: "#BF461A",
+          color: "#F5F1E8",
           cursor: isSubmitting ? "not-allowed" : "pointer",
           opacity: isSubmitting ? 0.6 : 1,
-          transition: "transform 180ms ease, opacity 180ms ease",
+          transition: "transform 180ms ease, background 180ms ease",
+        }}
+        onMouseEnter={(e) => {
+          if (!isSubmitting) e.currentTarget.style.background = "#A53A14";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "#BF461A";
         }}
       >
         {isSubmitting ? "Sending…" : "Send message →"}
