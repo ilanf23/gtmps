@@ -60,36 +60,6 @@ export default function Contact() {
           overflow: "hidden",
         }}
       >
-        {/* Decorative orbit rings (desktop only) */}
-        <div
-          aria-hidden
-          className="contact-orbit-lg"
-          style={{
-            position: "absolute",
-            top: -120,
-            left: -120,
-            width: 600,
-            height: 600,
-            border: "1px solid rgba(191, 70, 26, 0.10)",
-            borderRadius: "50%",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          aria-hidden
-          className="contact-orbit-md"
-          style={{
-            position: "absolute",
-            top: 220,
-            left: -60,
-            width: 400,
-            height: 400,
-            border: "1px solid rgba(191, 70, 26, 0.06)",
-            borderRadius: "50%",
-            pointerEvents: "none",
-          }}
-        />
-
         <div
           className="contact-grid"
           style={{
@@ -240,25 +210,6 @@ export default function Contact() {
 
           {/* RIGHT — premium form with watermark numeral */}
           <div style={{ position: "relative", paddingTop: 12 }}>
-            <div
-              aria-hidden
-              className="contact-watermark"
-              style={{
-                position: "absolute",
-                top: -80,
-                right: 0,
-                fontFamily: DISPLAY,
-                fontSize: 320,
-                lineHeight: 1,
-                fontWeight: 900,
-                color: "rgba(191, 70, 26, 0.06)",
-                userSelect: "none",
-                pointerEvents: "none",
-              }}
-            >
-              01
-            </div>
-
             <div style={{ position: "relative", zIndex: 1 }}>
               <ContactForm />
 
