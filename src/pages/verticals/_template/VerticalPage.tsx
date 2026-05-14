@@ -432,31 +432,24 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
       <section className="section">
         <div className="container">
           <header className="section-head">
-            <Meta num="02" tag="Two paths forward" />
+            <Meta num="02" tag={config.numbers.metaTag} />
             <h2 className="section-headline reveal d1">
-              Pick the door that fits<span className="period">.</span>
+              {config.numbers.headline}
+              <span className="period">.</span>
             </h2>
-            <p className="section-sub reveal d2">
-              Free signal scan, or a conversation about your GTM. Either way, four fields and we take it from there.
-            </p>
+            <p className="section-sub reveal d2">{config.numbers.sub}</p>
           </header>
 
-          <div
-            className="reveal d3"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-              gap: 24,
-              marginTop: 32,
-            }}
-          >
-            <NotifySignup
-              variant="ai"
-              source={`vertical:${config.slug}`}
-              headline="Someone in your market just changed jobs, raised a round, or published."
-              sub="Curious how many of your cold contacts are showing buying signals right now? Let's find out."
-              buttonLabel="Get signal scan"
-            />
+          <div className="numbers-grid reveal d3" style={{ marginTop: 32 }}>
+            <div className="hero-stat reveal d3">
+              <div className="hero-stat-label">{config.numbers.heroStat.label}</div>
+              <div className="hero-stat-num">{config.numbers.heroStat.num}</div>
+              <div className="hero-stat-sub">{config.numbers.heroStat.sub}</div>
+              <div className="hero-stat-bar">
+                <div className="hero-stat-fill" />
+              </div>
+              <div className="hero-stat-source">{config.numbers.heroStat.source}</div>
+            </div>
             <NotifySignup
               variant="com"
               source={`vertical:${config.slug}`}
@@ -469,27 +462,16 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
       </section>
 
       {/* SECTION 03 · NUMBERS */}
-      <section className="section">
+      <section className="section" style={{ paddingTop: 0, paddingBottom: 48, borderTop: 0, marginTop: -64 }}>
         <div className="container">
-          <header className="section-head">
-            <Meta num="03" tag={config.numbers.metaTag} />
-            <h2 className="section-headline reveal d1">
-              {config.numbers.headline}
-              <span className="period">.</span>
-            </h2>
-            <p className="section-sub reveal d2">{config.numbers.sub}</p>
-          </header>
-
           <div className="numbers-grid">
-            <div className="hero-stat reveal d3">
-              <div className="hero-stat-label">{config.numbers.heroStat.label}</div>
-              <div className="hero-stat-num">{config.numbers.heroStat.num}</div>
-              <div className="hero-stat-sub">{config.numbers.heroStat.sub}</div>
-              <div className="hero-stat-bar">
-                <div className="hero-stat-fill" />
-              </div>
-              <div className="hero-stat-source">{config.numbers.heroStat.source}</div>
-            </div>
+            <NotifySignup
+              variant="ai"
+              source={`vertical:${config.slug}`}
+              headline="Someone in your market just changed jobs, raised a round, or published."
+              sub="Curious how many of your cold contacts are showing buying signals right now? Let's find out."
+              buttonLabel="Get signal scan"
+            />
 
             <div className="small-stats">
               {config.numbers.smallStats.map((s, i) => (

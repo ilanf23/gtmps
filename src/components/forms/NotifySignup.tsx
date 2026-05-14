@@ -74,30 +74,30 @@ export default function NotifySignup({
           box-sizing: border-box;
         }
         .ns-ai {
-          background: #0F1E1D;
+          background: #1F3A2F;
           color: #EDF5EC;
-          border: 1px solid rgba(255, 186, 26, 0.22);
+          border: 1px solid rgba(191, 70, 26, 0.28);
         }
         .ns-ai::before {
           content: "";
           position: absolute;
           inset: 0;
-          background: radial-gradient(120% 80% at 0% 0%, rgba(255, 186, 26, 0.10) 0%, transparent 55%),
-                      radial-gradient(120% 80% at 100% 100%, rgba(191, 70, 26, 0.14) 0%, transparent 55%);
+          background: radial-gradient(120% 80% at 0% 0%, rgba(61, 90, 74, 0.30) 0%, transparent 55%),
+                      radial-gradient(120% 80% at 100% 100%, rgba(191, 70, 26, 0.18) 0%, transparent 55%);
           pointer-events: none;
           z-index: 0;
         }
         .ns-com {
-          background: #F8F2E5;
-          color: #0F1E1D;
-          border: 1px solid rgba(61, 90, 74, 0.22);
+          background: #1F3A2F;
+          color: #EDF5EC;
+          border: 1px solid rgba(191, 70, 26, 0.28);
         }
         .ns-com::before {
           content: "";
           position: absolute;
           inset: 0;
-          background: radial-gradient(120% 80% at 100% 0%, rgba(61, 90, 74, 0.08) 0%, transparent 55%),
-                      radial-gradient(120% 80% at 0% 100%, rgba(184, 147, 58, 0.10) 0%, transparent 55%);
+          background: radial-gradient(120% 80% at 0% 0%, rgba(61, 90, 74, 0.30) 0%, transparent 55%),
+                      radial-gradient(120% 80% at 100% 100%, rgba(191, 70, 26, 0.18) 0%, transparent 55%);
           pointer-events: none;
           z-index: 0;
         }
@@ -122,14 +122,14 @@ export default function NotifySignup({
           width: fit-content;
         }
         .ns-ai .ns-eyebrow {
-          background: rgba(255, 186, 26, 0.10);
-          border: 1px solid rgba(255, 186, 26, 0.40);
-          color: #FFBA1A;
+          background: rgba(191, 70, 26, 0.12);
+          border: 1px solid rgba(191, 70, 26, 0.45);
+          color: #F0B49A;
         }
         .ns-com .ns-eyebrow {
-          background: rgba(61, 90, 74, 0.08);
-          border: 1px solid rgba(61, 90, 74, 0.40);
-          color: #3D5A4A;
+          background: rgba(191, 70, 26, 0.12);
+          border: 1px solid rgba(191, 70, 26, 0.45);
+          color: #F0B49A;
         }
         .ns-dot {
           width: 6px;
@@ -137,11 +137,12 @@ export default function NotifySignup({
           border-radius: 50%;
         }
         .ns-ai .ns-dot {
-          background: #FFBA1A;
-          box-shadow: 0 0 8px rgba(255, 186, 26, 0.7);
+          background: #BF461A;
+          box-shadow: 0 0 8px rgba(191, 70, 26, 0.6);
         }
         .ns-com .ns-dot {
-          background: #3D5A4A;
+          background: #BF461A;
+          box-shadow: 0 0 8px rgba(191, 70, 26, 0.6);
         }
         .ns-headline {
           font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
@@ -153,7 +154,7 @@ export default function NotifySignup({
           max-width: 28ch;
         }
         .ns-ai .ns-headline { color: #EDF5EC; }
-        .ns-com .ns-headline { color: #0F1E1D; }
+        .ns-com .ns-headline { color: #EDF5EC; }
         .ns-sub {
           font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
           font-style: italic;
@@ -163,7 +164,7 @@ export default function NotifySignup({
           max-width: 36ch;
         }
         .ns-ai .ns-sub { color: rgba(237, 245, 236, 0.72); }
-        .ns-com .ns-sub { color: rgba(15, 30, 29, 0.66); }
+        .ns-com .ns-sub { color: rgba(237, 245, 236, 0.74); }
 
         .ns-form {
           display: flex;
@@ -206,14 +207,15 @@ export default function NotifySignup({
           box-shadow: 0 0 0 3px rgba(191, 70, 26, 0.18);
         }
         .ns-com .ns-input {
-          background: #FFFFFF;
-          border: 1.5px solid rgba(15, 30, 29, 0.16);
-          color: #0F1E1D;
+          background: rgba(237, 245, 236, 0.06);
+          border: 1.5px solid rgba(237, 245, 236, 0.18);
+          color: #EDF5EC;
         }
-        .ns-com .ns-input::placeholder { color: rgba(15, 30, 29, 0.40); }
+        .ns-com .ns-input::placeholder { color: rgba(237, 245, 236, 0.42); }
         .ns-com .ns-input:focus {
-          border-color: #3D5A4A;
-          box-shadow: 0 0 0 3px rgba(61, 90, 74, 0.16);
+          border-color: #BF461A;
+          background: rgba(237, 245, 236, 0.10);
+          box-shadow: 0 0 0 3px rgba(191, 70, 26, 0.18);
         }
         .ns-submit {
           width: 100%;
@@ -239,19 +241,19 @@ export default function NotifySignup({
           box-shadow: 0 10px 24px -10px rgba(191, 70, 26, 0.5);
         }
         .ns-ai .ns-submit:hover {
-          background: #0F1E1D;
-          border-color: #0F1E1D;
+          background: #1F3A2F;
+          border-color: #1F3A2F;
           transform: translateY(-1px);
         }
         .ns-com .ns-submit {
-          background: #0F1E1D;
+          background: #BF461A;
           color: #F8F2E5;
-          border-color: #0F1E1D;
-          box-shadow: 0 10px 24px -10px rgba(15, 30, 29, 0.35);
+          border-color: #BF461A;
+          box-shadow: 0 10px 24px -10px rgba(191, 70, 26, 0.5);
         }
         .ns-com .ns-submit:hover {
-          background: #3D5A4A;
-          border-color: #3D5A4A;
+          background: #1F3A2F;
+          border-color: #1F3A2F;
           transform: translateY(-1px);
         }
         .ns-arrow { display: inline-block; transition: transform 280ms cubic-bezier(0.85, 0, 0.15, 1); }
