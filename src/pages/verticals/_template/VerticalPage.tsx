@@ -454,7 +454,7 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
               variant="ai"
               source={`vertical:${config.slug}`}
               headline="Someone in your market just changed jobs, raised a round, or published."
-              sub="Don't miss it. Get your free signal scan, four fields and 60 seconds."
+              sub="Curious how many of your cold contacts are showing buying signals right now? Let's find out."
               buttonLabel="Get signal scan"
             />
             <NotifySignup
