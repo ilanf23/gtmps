@@ -5,6 +5,7 @@ import { OverviewTab } from "@/components/ops/tabs/OverviewTab";
 import { MicrositesTab } from "@/components/ops/tabs/MicrositesTab";
 import { SharesTab } from "@/components/ops/tabs/SharesTab";
 import { EmailsTab } from "@/components/ops/tabs/EmailsTab";
+import { LeadsTab } from "@/components/ops/tabs/LeadsTab";
 import { BookingsTab } from "@/components/ops/tabs/BookingsTab";
 import { ReferralsTab } from "@/components/ops/tabs/ReferralsTab";
 import { HealthTab } from "@/components/ops/tabs/HealthTab";
@@ -61,6 +62,7 @@ const Ops = () => {
       {active === "microsites" && <MicrositesTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "shares" && <SharesTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "emails" && <EmailsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
+      {active === "leads" && <LeadsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "bookings" && <BookingsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "referrals" && <ReferralsTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}
       {active === "health" && <HealthTab refreshNonce={refreshNonce} onUnauth={handleUnauth} />}

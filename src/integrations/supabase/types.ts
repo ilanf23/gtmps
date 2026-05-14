@@ -62,6 +62,63 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_signups: {
+        Row: {
+          created_at: string
+          email: string
+          firm: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          page_path: string | null
+          referrer_url: string | null
+          session_id: string | null
+          source: string
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          variant: string | null
+          visitor_fingerprint: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          firm?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          page_path?: string | null
+          referrer_url?: string | null
+          session_id?: string | null
+          source: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          variant?: string | null
+          visitor_fingerprint?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          firm?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          page_path?: string | null
+          referrer_url?: string | null
+          session_id?: string | null
+          source?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          variant?: string | null
+          visitor_fingerprint?: string | null
+        }
+        Relationships: []
+      }
       magnet_analytics_events: {
         Row: {
           created_at: string
