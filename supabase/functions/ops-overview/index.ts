@@ -33,6 +33,7 @@ interface KpiBucket {
   shares: number;
   emails: number;
   bookings: number;
+  leads: number;
 }
 
 function isoOrNull(v: string | null): string | null {
@@ -175,6 +176,7 @@ Deno.serve(async (req) => {
       sharesRows,
       bookingsRows,
       emailsCount,
+      leadsCount,
     ] = await Promise.all([
       fetchTimestamps("magnet_submissions", "created_at", from, to),
       fetchTimestamps("magnet_submissions", "created_at", from, to, { status: "complete" }),
@@ -182,6 +184,7 @@ Deno.serve(async (req) => {
       fetchTimestamps("magnet_share_events", "created_at", from, to),
       fetchTimestamps("magnet_call_bookings", "created_at", from, to),
       fetchCount("magnet_emails", "captured_at", from, to),
+      fetchCount("lead_signups", "created_at", from, to),
     ]);
 
     const kpis: KpiBucket = {
@@ -191,18 +194,20 @@ Deno.serve(async (req) => {
       shares: sharesRows.length,
       emails: emailsCount,
       bookings: bookingsRows.length,
+      leads: leadsCount,
     };
 
     // Previous-period KPIs (counts only, no buckets needed).
     let kpis_prev: KpiBucket | null = null;
     if (prevFrom && prevTo) {
-      const [pSub, pComp, pView, pShare, pBook, pEmail] = await Promise.all([
+      const [pSub, pComp, pView, pShare, pBook, pEmail, pLeads] = await Promise.all([
         fetchCount("magnet_submissions", "created_at", prevFrom, prevTo),
         fetchCount("magnet_submissions", "created_at", prevFrom, prevTo, { status: "complete" }),
         fetchCount("magnet_views", "viewed_at", prevFrom, prevTo),
         fetchCount("magnet_share_events", "created_at", prevFrom, prevTo),
         fetchCount("magnet_call_bookings", "created_at", prevFrom, prevTo),
         fetchCount("magnet_emails", "captured_at", prevFrom, prevTo),
+        fetchCount("lead_signups", "created_at", prevFrom, prevTo),
       ]);
       kpis_prev = {
         submissions: pSub,
@@ -211,6 +216,7 @@ Deno.serve(async (req) => {
         shares: pShare,
         emails: pEmail,
         bookings: pBook,
+        leads: pLeads,
       };
     }
 
