@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import VerticalNavBar from "@/components/VerticalLanding/VerticalNavBar";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/contact/ContactForm";
+import { scrollToHero } from "@/lib/scrollToHero";
 
 const CALENDLY_URL = "https://calendly.com/richard-mabbly";
 
@@ -34,151 +35,133 @@ export default function Contact() {
   }, []);
 
   return (
-    <div style={{ background: "#0A0807", minHeight: "100vh", color: "#EDF5EC" }}>
-      {/* Minimal nav */}
-      <nav
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          height: 64,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 24px",
-          background: "rgba(10, 8, 7, 0.85)",
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(168, 146, 58, 0.15)",
+    <div style={{ background: "#F5F1E8", minHeight: "100vh", color: "#0F1E1D" }}>
+      <VerticalNavBar
+        addYourFirmHref="/#hero"
+        onAddYourFirm={() => {
+          window.location.href = "/#hero";
+          requestAnimationFrame(() => scrollToHero({ focus: true }));
         }}
-      >
-        <Link
-          to="/"
-          style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 14,
-            letterSpacing: "0.22em",
-            color: "rgba(245, 241, 232, 0.85)",
-            textTransform: "uppercase",
-            fontWeight: 600,
-            textDecoration: "none",
-          }}
-        >
-          Discover · Mabbly
-        </Link>
-        <Link
-          to="/"
-          style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 13,
-            color: "rgba(245, 241, 232, 0.65)",
-            textDecoration: "none",
-          }}
-        >
-          ← Back to home
-        </Link>
-      </nav>
+      />
 
       <main
         style={{
-          maxWidth: 1100,
+          maxWidth: 1180,
           margin: "0 auto",
-          padding: "120px 24px 120px",
+          padding: "96px 32px 120px",
         }}
       >
         <p
           style={{
-            fontFamily: "'DM Mono', monospace",
+            fontFamily:
+              "'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace",
             fontSize: 11,
-            letterSpacing: "0.22em",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: "#A8923A",
-            margin: "0 0 20px",
+            color: "#BF461A",
+            fontWeight: 700,
+            margin: "0 0 24px",
           }}
         >
           Contact
         </p>
         <h1
           style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: "clamp(40px, 6vw, 72px)",
+            fontFamily:
+              "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
+            fontSize: "clamp(44px, 6.4vw, 84px)",
             lineHeight: 1.02,
             letterSpacing: "-0.025em",
-            fontWeight: 500,
-            margin: "0 0 24px",
-            color: "#EDF5EC",
-            maxWidth: 820,
+            fontWeight: 900,
+            margin: "0 0 28px",
+            color: "#0F1E1D",
+            maxWidth: 880,
           }}
         >
           Get in touch.
         </h1>
         <p
           style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            fontSize: 18,
-            lineHeight: 1.6,
-            color: "rgba(237, 245, 236, 0.72)",
-            maxWidth: 620,
-            margin: "0 0 64px",
+            fontFamily: "'Inter', 'Inter Tight', sans-serif",
+            fontSize: 19,
+            lineHeight: 1.55,
+            color: "rgba(15, 30, 29, 0.72)",
+            maxWidth: 640,
+            margin: "0 0 72px",
           }}
         >
-          Tell us about your firm and what you are trying to solve. We read every message and reply within one business day.
+          Tell us about your firm and what you are trying to solve. We read every
+          message and reply within one business day.
         </p>
 
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 0.8fr)",
-            gap: 56,
+            gap: 64,
             alignItems: "start",
           }}
           className="contact-grid"
         >
-          <div>
+          <div
+            style={{
+              background: "#FBF7EC",
+              border: "1px solid #E5E0CF",
+              borderRadius: 16,
+              padding: "40px 36px",
+              boxShadow: "0 1px 0 rgba(15, 30, 29, 0.04)",
+            }}
+          >
             <ContactForm />
           </div>
 
           <aside
             style={{
-              padding: "32px 28px",
-              border: "1px solid rgba(237, 245, 236, 0.1)",
-              borderRadius: 8,
-              background: "rgba(255, 255, 255, 0.02)",
+              padding: "36px 32px",
+              border: "1px solid #E5E0CF",
+              borderRadius: 16,
+              background: "#FBF7EC",
             }}
           >
             <p
               style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: 11,
+                fontFamily:
+                  "'Mabbly Repro Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace",
+                fontSize: 10,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "#A8923A",
-                margin: "0 0 14px",
+                color: "#BF461A",
+                fontWeight: 700,
+                margin: "0 0 16px",
               }}
             >
               Prefer a call?
             </p>
             <h2
               style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 22,
-                lineHeight: 1.25,
-                fontWeight: 500,
+                fontFamily:
+                  "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
+                fontSize: 24,
+                lineHeight: 1.2,
+                fontWeight: 900,
+                letterSpacing: "-0.01em",
                 margin: "0 0 14px",
-                color: "#EDF5EC",
+                color: "#0F1E1D",
               }}
             >
               Book a 30 minute working session.
             </h2>
             <p
               style={{
-                fontFamily: "'Inter Tight', sans-serif",
-                fontSize: 14,
+                fontFamily: "'Inter', 'Inter Tight', sans-serif",
+                fontSize: 15,
                 lineHeight: 1.6,
-                color: "rgba(237, 245, 236, 0.65)",
-                margin: "0 0 20px",
+                color: "rgba(15, 30, 29, 0.7)",
+                margin: "0 0 24px",
               }}
             >
-              Skip the form. Pick a time on Richard's calendar and we will walk through your situation live.
+              Skip the form. Pick a time on Richard's calendar and we will walk
+              through your situation live.
             </p>
             <a
               href={CALENDLY_URL}
@@ -187,15 +170,17 @@ export default function Contact() {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 6,
-                fontFamily: "'Inter Tight', sans-serif",
-                fontWeight: 600,
-                fontSize: 13,
-                letterSpacing: "0.04em",
-                color: "#A8923A",
-                padding: "11px 20px",
+                gap: 8,
+                fontFamily:
+                  "'Mabbly Repro', 'Inter Tight', 'Arial Black', 'Helvetica Neue', sans-serif",
+                fontWeight: 900,
+                fontSize: 11,
+                letterSpacing: "0.10em",
+                textTransform: "uppercase",
+                color: "#BF461A",
+                padding: "12px 22px",
                 borderRadius: 999,
-                border: "1px solid rgba(168, 146, 58, 0.55)",
+                border: "1.5px solid #BF461A",
                 background: "transparent",
                 textDecoration: "none",
               }}
