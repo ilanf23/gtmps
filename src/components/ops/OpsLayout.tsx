@@ -18,6 +18,7 @@ const TABS: Array<{ id: string; label: string; icon: string }> = [
   { id: "microsites", label: "Microsites", icon: "◯" },
   { id: "shares", label: "Shares", icon: "⤳" },
   { id: "emails", label: "Emails", icon: "✉" },
+  { id: "leads", label: "Leads", icon: "☍" },
   { id: "bookings", label: "Bookings", icon: "★" },
   { id: "referrals", label: "Referrals", icon: "⇆" },
   { id: "health", label: "Health", icon: "♥" },
