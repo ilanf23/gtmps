@@ -428,8 +428,95 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
         </div>
       </section>
 
-      {/* SECTION 02 · TWO PATHS (NotifySignup dual) */}
+      {/* SECTION 02 · UNIFIED CHECKER (Two Paths + Numbers) */}
       <section className="section">
+        <style>{`
+          .checker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 32px;
+          }
+          @media (max-width: 980px) {
+            .checker-grid { grid-template-columns: repeat(2, 1fr); }
+          }
+          @media (max-width: 600px) {
+            .checker-grid { grid-template-columns: 1fr; }
+          }
+          .checker-tile {
+            position: relative;
+            border-radius: 18px;
+            padding: 34px 32px;
+            min-height: 360px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            overflow: hidden;
+          }
+          .checker-tile.cream {
+            background: #F8F2E5;
+            color: #0F1E1D;
+            border: 1px solid rgba(61, 90, 74, 0.18);
+          }
+          .checker-tile.dark {
+            background: #0F1E1D;
+            color: #EDF5EC;
+            border: 1px solid rgba(255, 186, 26, 0.18);
+          }
+          .checker-tile .ct-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            opacity: 0.62;
+          }
+          .checker-tile .ct-num {
+            font-family: var(--display);
+            font-size: clamp(48px, 6vw, 78px);
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            font-weight: 700;
+            margin: 14px 0 12px;
+          }
+          .checker-tile .ct-sub {
+            font-size: 13px;
+            line-height: 1.55;
+            opacity: 0.78;
+            max-width: 36ch;
+          }
+          .checker-tile .ct-source {
+            font-family: var(--mono);
+            font-size: 9.5px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-top: 18px;
+          }
+          .checker-tile .ct-bar {
+            height: 3px;
+            background: rgba(15, 30, 29, 0.10);
+            border-radius: 2px;
+            margin: 18px 0 10px;
+            overflow: hidden;
+          }
+          .checker-tile.dark .ct-bar { background: rgba(255, 186, 26, 0.18); }
+          .checker-tile .ct-bar-fill {
+            display: block;
+            height: 100%;
+            width: 64%;
+            background: var(--care);
+            border-radius: 2px;
+          }
+          .checker-tile.dark .ct-bar-fill { background: var(--energy); }
+          .checker-tile .ct-viz {
+            position: absolute;
+            right: 22px;
+            bottom: 22px;
+            opacity: 0.85;
+          }
+          .checker-tile.dark .ct-viz svg g { fill: rgba(237, 245, 236, 0.32); }
+        `}</style>
         <div className="container">
           <header className="section-head">
             <Meta num="02" tag="Two paths forward" />
@@ -437,26 +524,37 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
               Pick the door that fits<span className="period">.</span>
             </h2>
             <p className="section-sub reveal d2">
-              Free signal scan, or a conversation about your GTM. Either way, four fields and we take it from there.
+              Free signal scan, or a conversation about your GTM. Either way, four fields and we take it from there. {config.numbers.sub}
             </p>
           </header>
 
-          <div
-            className="reveal d3"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-              gap: 24,
-              marginTop: 32,
-            }}
-          >
-            <NotifySignup
-              variant="ai"
-              source={`vertical:${config.slug}`}
-              headline="Someone in your market just changed jobs, raised a round, or published."
-              sub="Curious how many of your cold contacts are showing buying signals right now? Let's find out."
-              buttonLabel="Get signal scan"
-            />
+          <div className="checker-grid reveal d3">
+            {/* (1,1) cream — Hero stat */}
+            <div className="checker-tile cream">
+              <div>
+                <div className="ct-label">{config.numbers.heroStat.label}</div>
+                <div className="ct-num">{config.numbers.heroStat.num}</div>
+                <div className="ct-sub">{config.numbers.heroStat.sub}</div>
+              </div>
+              <div>
+                <div className="ct-bar"><span className="ct-bar-fill" /></div>
+                <div className="ct-source">{config.numbers.heroStat.source}</div>
+              </div>
+            </div>
+
+            {/* (1,2) dark — Small stat 1 */}
+            <div className="checker-tile dark">
+              <div>
+                <div className="ct-label">{config.numbers.smallStats[0].label}</div>
+                <div className="ct-num"><SmallStatNumberDisplay stat={config.numbers.smallStats[0]} /></div>
+              </div>
+              <div>
+                <div className="ct-source">{config.numbers.smallStats[0].source}</div>
+              </div>
+              <div className="ct-viz"><SmallStatViz kind={config.numbers.smallStats[0].viz} /></div>
+            </div>
+
+            {/* (1,3) cream — COM CTA */}
             <NotifySignup
               variant="com"
               source={`vertical:${config.slug}`}
@@ -464,46 +562,38 @@ export default function VerticalPage({ config }: { config: VerticalConfig }) {
               sub="Tell us about your firm. We'll show you what's possible."
               buttonLabel="Talk to us"
             />
-          </div>
-        </div>
-      </section>
 
-      {/* SECTION 03 · NUMBERS */}
-      <section className="section">
-        <div className="container">
-          <header className="section-head">
-            <Meta num="03" tag={config.numbers.metaTag} />
-            <h2 className="section-headline reveal d1">
-              {config.numbers.headline}
-              <span className="period">.</span>
-            </h2>
-            <p className="section-sub reveal d2">{config.numbers.sub}</p>
-          </header>
+            {/* (2,1) dark — AI CTA */}
+            <NotifySignup
+              variant="ai"
+              source={`vertical:${config.slug}`}
+              headline="Someone in your market just changed jobs, raised a round, or published."
+              sub="Curious how many of your cold contacts are showing buying signals right now? Let's find out."
+              buttonLabel="Get signal scan"
+            />
 
-          <div className="numbers-grid">
-            <div className="hero-stat reveal d3">
-              <div className="hero-stat-label">{config.numbers.heroStat.label}</div>
-              <div className="hero-stat-num">{config.numbers.heroStat.num}</div>
-              <div className="hero-stat-sub">{config.numbers.heroStat.sub}</div>
-              <div className="hero-stat-bar">
-                <div className="hero-stat-fill" />
+            {/* (2,2) cream — Small stat 2 */}
+            <div className="checker-tile cream">
+              <div>
+                <div className="ct-label">{config.numbers.smallStats[1].label}</div>
+                <div className="ct-num"><SmallStatNumberDisplay stat={config.numbers.smallStats[1]} /></div>
               </div>
-              <div className="hero-stat-source">{config.numbers.heroStat.source}</div>
+              <div>
+                <div className="ct-source">{config.numbers.smallStats[1].source}</div>
+              </div>
+              <div className="ct-viz"><SmallStatViz kind={config.numbers.smallStats[1].viz} /></div>
             </div>
 
-            <div className="small-stats">
-              {config.numbers.smallStats.map((s, i) => (
-                <div className={`small-stat reveal d${4 + i}`} key={s.label}>
-                  <div className="small-stat-text">
-                    <div className="small-stat-label">{s.label}</div>
-                    <SmallStatNumberDisplay stat={s} />
-                    <div className="small-stat-source">{s.source}</div>
-                  </div>
-                  <div className="small-stat-viz">
-                    <SmallStatViz kind={s.viz} />
-                  </div>
-                </div>
-              ))}
+            {/* (2,3) dark — Small stat 3 */}
+            <div className="checker-tile dark">
+              <div>
+                <div className="ct-label">{config.numbers.smallStats[2].label}</div>
+                <div className="ct-num"><SmallStatNumberDisplay stat={config.numbers.smallStats[2]} /></div>
+              </div>
+              <div>
+                <div className="ct-source">{config.numbers.smallStats[2].source}</div>
+              </div>
+              <div className="ct-viz"><SmallStatViz kind={config.numbers.smallStats[2].viz} /></div>
             </div>
           </div>
         </div>
