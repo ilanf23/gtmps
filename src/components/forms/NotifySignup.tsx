@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { captureLead } from "@/lib/leadCapture";
 
 export type NotifyVariant = "ai" | "com";
 
@@ -34,6 +35,14 @@ export default function NotifySignup({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!firstName.trim() || !lastName.trim() || !email.trim() || !firm.trim()) return;
+    void captureLead({
+      source: `notify_${variant}`,
+      variant,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      firm,
+    });
     setSubmitted(true);
   };
 
