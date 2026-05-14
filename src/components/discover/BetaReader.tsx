@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { captureLead } from '@/lib/leadCapture';
 
 export default function BetaReader() {
   const [submitted, setSubmitted] = useState(false);
@@ -10,6 +11,13 @@ export default function BetaReader() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!firstName.trim() || !lastName.trim() || !email.trim() || !firm.trim()) return;
+    void captureLead({
+      source: 'beta_reader',
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      firm,
+    });
     setSubmitted(true);
   };
 
