@@ -39,6 +39,18 @@ export async function captureLead(input: LeadInput): Promise<{ ok: boolean; erro
       console.warn("captureLead failed", error);
       return { ok: false, error: error.message };
     }
+    // Fire-and-forget Slack notification to #microsite-gtmps.
+    void supabase.functions.invoke("notify-lead-slack", {
+      body: {
+        source: payload.source,
+        variant: payload.variant,
+        email: payload.email,
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        firm: payload.firm,
+        page_path: payload.page_path,
+      },
+    }).catch(() => { /* best-effort */ });
     return { ok: true };
   } catch (e) {
     console.warn("captureLead exception", e);
