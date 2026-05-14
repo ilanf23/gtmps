@@ -17,12 +17,14 @@ const BodySchema = z.object({
   last_name: z.string().max(120).nullable().optional(),
   firm: z.string().max(200).nullable().optional(),
   page_path: z.string().max(500).nullable().optional(),
+  message: z.string().max(2000).nullable().optional(),
 });
 
 const SOURCE_LABEL: Record<string, string> = {
   beta_reader: "Beta reader signup",
   notify_ai: "Mabbly.ai notify signup",
   notify_com: "Mabbly.com notify signup",
+  contact: "Contact form submission",
 };
 
 Deno.serve(async (req) => {
@@ -63,6 +65,7 @@ Deno.serve(async (req) => {
       `Email: ${p.email}`,
       p.firm ? `Firm: ${p.firm}` : null,
       p.page_path ? `Page: ${p.page_path}` : null,
+      p.message ? `Message: ${p.message}` : null,
     ].filter(Boolean);
     const text = lines.join("\n");
 
