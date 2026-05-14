@@ -24,6 +24,7 @@ const navItems = [
   { label: "About", href: "/about", internal: true },
   { label: "Awards", href: "/awards", internal: true },
   { label: "Podcast", href: PODCAST_HREF, external: true },
+  { label: "Contact", href: "/contact", internal: true },
 ];
 
 const TopNav = () => {

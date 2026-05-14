@@ -267,6 +267,7 @@ export default function VerticalNavBar({
             >
               Podcast
             </a>
+            <a className="vnav-link" href="/contact">Contact</a>
             {mySlugs.length === 1 && (
               <MyMicrositePill
                 slug={mySlugs[0]}
