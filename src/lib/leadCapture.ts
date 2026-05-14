@@ -51,6 +51,7 @@ export async function captureLead(input: LeadInput): Promise<{ ok: boolean; erro
         last_name: payload.last_name,
         firm: payload.firm,
         page_path: payload.page_path,
+        message: payload.message,
       },
     }).catch(() => { /* best-effort */ });
     return { ok: true };
