@@ -221,8 +221,9 @@ export const CSS = `
 .cpage .is-in .hero-stat-fill { width: 78%; }
 .cpage .hero-stat-source { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--muted-soft); }
 
-.cpage .small-stats { display: flex; flex-direction: column; gap: 12px; }
+.cpage .small-stats { display: flex; flex-direction: column; gap: 12px; height: 100%; }
 .cpage .small-stat {
+  flex: 1;
   display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;
   background: var(--cream-card); border: 1px solid var(--cream-border); border-radius: 2px;
   padding: 20px 22px;
